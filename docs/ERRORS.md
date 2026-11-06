@@ -9,12 +9,13 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 | E003 | `FileNotFoundError: '/tmp/problem_blob.txt'` (Windows Python cannot see Git Bash paths) | 1 | 1/1 (pipe data via stdin) |
 | E004 | `FileNotFoundError: [WinError 2]` from `subprocess.run(['.venv/Scripts/python.exe', ...])` | 1 | 1/1 (use `sys.executable`) |
 | E005 | AI expected 13 `##` headings in CLAUDE.md after the edit; it was 14 (AI miscounted) | 1 | 1/1 (recounted: original had 13) |
-| E006 | Plan assumption A1 wrong: AIFS `tp` is in `kg m**-2` (mm), not metres like IFS | 1 | 0/0 (fix = PLAN-003 approved; applied in step 4) |
+| E006 | Plan assumption A1 wrong: AIFS `tp` is in `kg m**-2` (mm), not metres like IFS | 1 | 1/1 (per-message unit conversion, step 4) |
 | E007 | Assumption A3 wrong: IFS has `tp` files up to 360 h, not 240 h (config stops at 240 h) | 1 | 0/0 (needs user decision) |
 | E008 | `PrematureEndOfFileError` crash: `download_run` cannot recover from a truncated `tp.grib2` | 1 | 1/1 (atomic download + `is_complete`) |
 | E009 | During HTTP 503 the client retries every file check (about 20 s each) and then silently treats the run as incomplete | 1 | 1/1 (strict fail-fast search session) |
 | E010 | PLAN-003 had no local preview of the site and no containerised test run (planning gap; user added both) | 1 | 1/1 (step 3b Docker test run works; localhost comes in step 6) |
 | E011 | `requirements.txt` was pinned from the Windows package set only; Linux installs 2 more unpinned packages (eccodeslib, eckitlib) | 1 | 1/1 (pinned with a `sys_platform == "linux"` marker) |
+| E012 | Longitude start assumed to be 0 in my first picture of the grid; both models start at 180 (caught by the planned A2 check, before any output) | 1 | 1/1 (layout in config, checked per message; index verified against eccodes) |
 
 ---
 
@@ -55,7 +56,7 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 - Changed lines: none.
 
 ## E006 — Assumption A1 was half wrong: IFS and AIFS use different precipitation units
-- 2026-11-06 ~19:11 UTC (step 3, GRIB key dump). seen: 1. fix worked / fix tried: 0/0 (the fix is a plan revision, PLAN-003, not yet approved or applied).
+- 2026-11-06 ~19:11 UTC (step 3, GRIB key dump). seen: 1. fix worked / fix tried: 1/1 (see the step 4 result at the end of this entry).
 - What was assumed: PLAN-001/PLAN-002 assumption A1 said `tp` is in metres in both models, and step 4 said "m to mm".
 - What was found (eccodes keys of the downloaded files): IFS `units = m`; AIFS `units = kg m**-2`. 1 kg m**-2 of water is 1 mm, so the AIFS values must NOT be multiplied by 1000. Converting both with the same factor would make AIFS 1000 times too large.
 - Evidence the keys are right (values, not just labels): area-weighted global mean of the cumulative field at the same step: 6 h: IFS x1000 = 0.71 mm, AIFS = 0.71 mm; 120 h: 15.57 vs 15.94 mm; 240 h: 30.89 vs 31.49 mm.
@@ -114,3 +115,17 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 - Fix: added `eccodeslib==2.50.0.34; sys_platform == "linux"` and `eckitlib==2.5.0.34; sys_platform == "linux"` to `requirements.txt`, plus a header note.
 - Re-ran: (1) rebuilt the image; `pip check` clean; (2) the Linux container's `pip freeze` equals the pins in `requirements.txt` (25 packages, `diff` printed nothing); (3) Windows `pip install --dry-run -r requirements.txt` installs nothing new (23 packages). **Worked.**
 - Changed lines: `requirements.txt` (header note + 2 pin lines).
+
+## E006 result — step 4 (2026-11-06 ~20:32 UTC)
+- Fix tried 1, worked 1: `pipeline/process.py` converts every message by its own `units` key using `[units_to_mm]` in `config/pipeline.toml` (`m` -> 1000, `kg m**-2` -> 1); an unknown unit raises `ValueError`.
+- Evidence: the test `test_ifs_and_aifs_files_give_the_same_millimetres` builds one IFS-style file (paramId 228, metres) and one AIFS-style file (paramId 228228, kg m**-2) holding the same rain and reads both through the real reading path: both give 2.5 mm. `test_unit_factor_...` shows `mm` raises. Real run: global mean over 0-240 h is 3.10 mm/day (IFS) vs 3.16 mm/day (AIFS), 1.7 % apart; had one unit been wrong the two would differ by a factor of 1000.
+- Changed lines: `config/pipeline.toml` ([units_to_mm]), new `pipeline/process.py`, `tests/pipeline/test_process.py`.
+
+## E012 — Grid longitude does not start at 0 (assumption caught by the planned check)
+- 2026-11-06 ~20:25 UTC (step 4, GRIB key dump). seen: 1. fix worked / fix tried: 1/1.
+- What was assumed: a global ECMWF 0.25 degree grid would start at longitude 0 and run to 359.75 (my own first picture; the plan only said "verify row order and longitude start (A2)").
+- What was found: `longitudeOfFirstGridPointInDegrees = 180.0`, last 179.75, in both models. Column 0 is 180 E, column 720 is 0 E. Using 0-based longitude would have placed every location half a world away without any error message.
+- Root cause: an assumption from general knowledge, caught by the check the plan had asked for before any output was written.
+- Fix: `[grid]` table in `config/pipeline.toml` (`lon_first = 180.0`); `pipeline/grid.py` checks the layout of every message and `latlon_to_index` uses `lon_first`. Re-ran: index equals `eccodes.codes_grib_find_nearest` at 12 points (wrap and poles included); tests in `tests/pipeline/test_grid.py` pass in Docker. Worked.
+- Changed lines: `config/pipeline.toml` ([grid]), new `pipeline/grid.py`, `tests/pipeline/test_grid.py`.
+

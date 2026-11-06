@@ -23,6 +23,22 @@
 | 2026-11-06 20:04 | Commits `806bfa9`, `5b69d20` (decisions D9 and addendum) | 1.74 h | 70.26 h |
 | 2026-11-06 20:14 | Commit `a9c1f0c` (PLAN-004 adopted) | 1.91 h | 70.09 h |
 | 2026-11-06 20:18 | Commit "Step 3b: Docker test environment..." (hash: see `git log`) | 1.98 h | 70.02 h |
+| 2026-11-06 20:22 | Resume after /compact, same session ID; records re-read | 2.06 h | 69.94 h |
+| 2026-11-06 (see `git log`) | Commit "Step 4: processing core..." (hash and exact time: `git log`) | about 2.3 h | about 69.7 h |
+
+## Step 4 done-check results (run 2026-11-06 ~20:25-20:35 UTC)
+Code: `pipeline/grid.py` (58 lines), `pipeline/process.py` (116), `pipeline/processed.py` (111); config `[grid]`, `[units_to_mm]`, `[process]`, `processed_dir`; tests `test_grid.py`, `test_process.py`, `test_processed.py`, `conftest.py` (20 new tests). Longest function about 17 lines. Decisions D13 (wet threshold 0.5 mm, user), D14 (6 h axis, uint16 format, two marked shortcuts). Errors: E006 fix verified (1/1), new E012 (grid starts at longitude 180).
+- Official test run: `docker compose -f docker/compose.yaml run --rm tests` -> `40 passed` (20 old + 20 new), exit 0; `git status` showed only my intended changes. (Final run before the commit is recorded in the commit message.)
+- Units: a test builds an IFS-style (metres) and an AIFS-style (kg m**-2) GRIB file with the same rain and reads both through the real reading path: both give 2.5 mm; an unknown unit raises.
+- Grid (A2): both models start at longitude 180 (E012). `latlon_to_index` equals `eccodes.codes_grib_find_nearest` at 12 points (wrap, poles). Every message's layout is checked against `[grid]`.
+- Real run in Docker (`run` service, Linux), 12z run: IFS 40 intervals (6..240 h), AIFS 60 (6..360 h); area-weighted global mean 0-240 h: **IFS 3.104, AIFS 3.155 mm/day** (1.7 % apart); the 00z run gave 3.091 / 3.149. Processing the same run on Windows gave **byte-identical** files (sha256 of all three .npy files equal).
+- Negative differences: 146,269 (IFS) and 161,393 (AIFS) cell-intervals of about 41.5 million, most negative about -0.12 mm. Investigated, not waved away: the largest negative is exactly 0.50 of the two packing steps involved, so it is the 12-bit GRIB packing; clipping adds 0.056 % / 0.014 % of the mass (docs/DOMAIN.md, D14).
+- Agreement at 0.5 mm: both dry 67 %, both wet 15 %, disagree 17-18 % (00z and 12z). D13 bet held (about 39 % both wet at 0.1 mm, 9 % at 1.0 mm).
+- Output sizes (git-ignored): ifs.npy 83 MB, aifs-single.npy 125 MB, agreement.npy 42 MB per run (these are the processed grids, not the final site files; step 7 measures what the host receives).
+- Docker `run` service added to `docker/compose.yaml`; checked that it creates `data/` itself when missing and writes only there (the README sentence that said otherwise was corrected before commit).
+- **NOT verified: comparison with a published climatology.** I could not open a source with the number (PMC and MDPI blocked by a browser check/403, Europe PMC error, two other pages gave no value). A search result summary says GPCP V2.3 gives about 2.96 mm/day (1979-2013, Adler et al. 2018, Atmosphere 9(4) 138); I have NOT read that table, so it is not added to SOURCES.md and is not a verified fact. Our 3.1 mm/day is of the same size, but a 10-day sample is not a climatology anyway. The strong checks are the IFS-vs-AIFS match and the unit tests. If you can paste the value from the paper, I will record it.
+- Not tested: a run whose raw files are missing a step (covered by unit test only); memory use beyond this machine (the processing holds about 0.5 GB of float32 arrays); real data other than runs 00z and 12z of 2026-11-06.
+- Small slip, corrected at once: I wrote guessed times into three record headings before checking `date -u`; they now carry the real "~" times.
 
 ## Step 3b done-check results (run 2026-11-06 20:18 UTC)
 Official test command from now on: `docker compose -f docker/compose.yaml run --rm tests`.
@@ -94,7 +110,7 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 - **Open problem (resolved in the plan, not yet in code):** assumption A1 was wrong for AIFS (E006). PLAN-003 was approved 2026-11-06 ~19:20 UTC; the fix is applied and tested in step 4.
 
 ## Current plan
-**`docs/plans/PLAN-004.md`** — approved by the user 2026-11-06 ~20:13 UTC (replaces PLAN-003: Docker as the official test run and a localhost preview, see E010, D10-D12). Status: in progress; steps 1, 1b, 2, 3 done; next is step 3b.
+**`docs/plans/PLAN-004.md`** — approved by the user 2026-11-06 ~20:13 UTC (replaces PLAN-003: Docker as the official test run and a localhost preview, see E010, D10-D12). Status: in progress; steps 1, 1b, 2, 3, 3b, 4 done; next is step 5.
 
 `docs/plans/PLAN-003.md` — approved 2026-11-06 ~19:20 UTC. **Status: superseded by PLAN-004** (reason: no localhost/Docker test run; see E010).
 
@@ -109,7 +125,7 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 | 2 | Python environment + pinned packages | **done** 2026-11-06 19:06 UTC (commit "Step 2: Python 3.11 virtual environment...") |
 | 3 | Fetch (IFS + AIFS `tp`) | **done** 2026-11-06 19:16 UTC (commit `fc08c94`) |
 | 3b | Docker test environment (PLAN-004) | **done** 2026-11-06 20:18 UTC (commit "Step 3b: Docker test environment...") |
-| 4 | Processing core + tests (units per model) | not started |
+| 4 | Processing core + tests (units per model) | **done** 2026-11-06 (commit "Step 4: processing core...", time in `git log`) |
 | 5 | Independent validation | not started |
 | 6 | Front-end spike + decision gate | not started |
 | 7 | Static data export | not started |
@@ -130,7 +146,7 @@ Note: the built-in todo/task-list tool is not available in this session's tool s
 - D9 (user): out-of-date forecast shows a short plain-language warning only, no technical detail (see DECISIONS.md). Applies to plan step 10.
 - D9 addendum (user): technical error detail must remain available to developers (job log now; a status record next to the data is proposed for step 7/10, to be confirmed).
 - D10-D12 (user, 2026-11-06 20:13 UTC): Docker is the official test run; localhost = Vite on host + Docker nginx preview; IFS stays at 240 h for now (E007 open).
-- Still to ask the user before setting it in step 4: the "wet" threshold for the agreement bar.
+- D13 (user, ~20:23 UTC): wet threshold 0.5 mm per 6 h. D14 (AI, step 4): 6 h axis and file format, two marked shortcuts.
 
 ## Known issues
 - Python 3.10 pip is broken; use `py -3.11` (see ENVIRONMENT.md).

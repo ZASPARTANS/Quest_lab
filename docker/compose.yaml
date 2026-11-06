@@ -1,7 +1,8 @@
 # Docker services for the project (decisions D10, D11). Run from the repo root, for example:
 #   docker compose -f docker/compose.yaml run --rm tests
-# Services for fetching/processing (`run`), Node tests/build and the nginx preview are added in the plan
-# steps that need them.
+#   docker compose -f docker/compose.yaml run --rm run                       (process the newest downloaded run)
+#   docker compose -f docker/compose.yaml run --rm run python -m pipeline.fetch   (download a run)
+# Node tests/build and the nginx preview are added in the plan steps that need them.
 services:
   tests:
     # Official test run. The project is mounted read-only, so a test can never change the repo,
@@ -17,3 +18,18 @@ services:
     environment:
       PYTHONDONTWRITEBYTECODE: "1"
     command: ["python", "-m", "pytest", "-q", "-p", "no:cacheprovider"]
+
+  run:
+    # Real data work (fetch, process). The code is read-only; only data/ (git-ignored) is writable;
+    # the network is on because fetching needs it. Same image as `tests`.
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: precip-forecast-tests:local
+    working_dir: /work
+    volumes:
+      - ..:/work:ro
+      - ../data:/work/data
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+    command: ["python", "-m", "pipeline.processed"]
