@@ -35,3 +35,9 @@ Everything below was found by running commands in this session. Times are UTC.
 - Local clock vs servers: local `date -u` agreed with the PyPI `Date` header within about 8 seconds, so the clock used for the time budget is sound.
 - Fetch of the `tp` messages of two models (about 64 MB) took about 49 s on this connection (about 5 MB/s). Free disk on E: is above 600 GB, so the data folder is not a space concern.
 - The ecmwf-opendata client prints a long notice about the 500-connection limit and tqdm progress bars on stderr; harmless noise.
+
+## 2026-11-06 ~19:30 UTC — Docker (offered by the user for Linux testing)
+- Docker 29.9.2 was already running (`docker info`: server 29.9.2, OS type linux, WSL2 kernel `5.15.167.4-microsoft-standard-WSL2`).
+- Pulled the official image `python:3.11-slim` (digest `sha256:65bd3d9f1d7fa268dd1909973ba7eb4bdf41f6dcf2cfbe76ba9528b170f3fd79`, Python 3.11.18). It stays in the local Docker image cache. Containers were run with `--rm`, the project mounted read-only (`-v <project>:/work:ro`) and `PYTHONDONTWRITEBYTECODE=1`; `git status` showed no change afterwards.
+- Git Bash needs `MSYS_NO_PATHCONV=1` and a Windows-style path for `-v` to avoid path mangling.
+- Background processes started from the tool shell keep their own output buffered when piped (`| grep`); use `python -u` to see progress.
