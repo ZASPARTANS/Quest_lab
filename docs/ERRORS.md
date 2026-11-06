@@ -196,7 +196,7 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 - Also corrected on the way (small AI slips, same step): `node --test <directory>` is run as a file by Node 22 (use a glob); a large bash command with many heredocs failed to parse (files written with the editor instead); the first screenshot report counted the COOP warning against the site although it only came from the test browser reaching the site as `http://preview:8080` (the test browser now treats that origin as secure).
 
 ## E021 — Dev server reported stopped but still running
-- 2026-11-06 ~22:35 UTC (step 6 clean-up). seen: 1. fix worked / fix tried: 1/1.
+- 2026-11-06 ~22:18 UTC (step 6 clean-up). seen: 1. fix worked / fix tried: 1/1.
 - What happened: after the first browser run I stopped the background task and later checked `http://127.0.0.1:5173/`, which did not answer, so I wrote "5173 not answering (stopped)". `curl http://localhost:5173/` had returned 200 right after the stop. The server listens on `[::1]` (the config says `localhost`), and `TaskStop` only ended the wrapper shell, not the `node` process. A later start failed with `Error: Port 5173 is already in use`, which exposed it.
 - Root cause (AI): I verified on one address instead of the one the service uses, and trusted the task tool's "Successfully stopped".
 - Fix: listed the node processes with their command lines (the user's own MCP-tool processes were left alone), stopped only `node node_modules\.bin/../vite/bin/vite.js` (PID 32912), verified no answer on `[::1]`, `127.0.0.1` and `localhost`; later starts record the PID and stop by PID.
