@@ -21,11 +21,14 @@
 - Tests: none exist yet (no source code), so none were run. Line counts: no source files yet.
 
 ## Current plan
-**`docs/plans/PLAN-001.md`** — approved by the user 2026-11-06 ~18:42 UTC. Status: in progress.
+**`docs/plans/PLAN-002.md`** — approved by the user 2026-11-06 ~18:49 UTC. Status: in progress.
+
+`docs/plans/PLAN-001.md` — approved 2026-11-06 ~18:42 UTC. **Status: superseded by PLAN-002** (reason: no folder layout; see E002). Step 1 of PLAN-001 was completed and is carried over.
 
 | Step | What | Status |
 |---|---|---|
 | 1 | Repo + records (git init, .gitignore, PROBLEM.md, DECISIONS, ERRORS, first commit) | **done** 2026-11-06 18:43 UTC, commit `ccb24df` |
+| 1b | Apply folder layout (PLAN-002: D5, E002, README, .gitignore) | in progress |
 | 2 | Python environment + pinned packages | not started |
 | 3 | Fetch (IFS + AIFS `tp`) | not started |
 | 4 | Processing core + tests | not started |

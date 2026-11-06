@@ -32,3 +32,29 @@ Append only. Each entry: date/time, what was chosen, alternatives, why, who deci
 - Alternatives: Europe; India / South Asia.
 - Fallback if output is too large for the host: coarser quantisation, bigger chunks, or AIFS only beyond 240 h.
 - Result: pending (size measured in plan step 7).
+
+## D5 — Folder structure (clean, separated by responsibility)
+- 2026-11-06 18:49 UTC. Decided by: **user** (requested the principles; AI proposed the exact layout in PLAN-002; user approved it).
+- Chosen layout (root entries allowed: `README.md`, `.gitignore`, `pyproject.toml`, `requirements.txt`, `.env.example` only if a secret is ever needed, and these folders):
+  - `config/` — ALL settings, no code: `pipeline.toml`, `backend.toml`, `frontend.json`, `validation_points.toml`.
+  - `pipeline/` — data fetching and processing (Python): `fetch.py`, `process.py`, `grid.py`.
+  - `backend/` — builds the static data API the frontend reads (`export.py`: frames, point tiles, `manifest.json`).
+  - `frontend/` — Vite web app (`index.html`, `src/`, `package.json`, `vite.config.js`).
+  - `tests/` — `pipeline/` and `backend/` (pytest), `frontend/` (`node --test`).
+  - `scripts/` — thin command-line entry points only (`run_pipeline.py`, `validate_points.py`).
+  - `docs/` — project records, `plans/`, `evidence/` (screenshots).
+  - `.github/workflows/` — scheduled build and deploy (GitHub requires this path).
+  - `data/` — IGNORED: `raw/`, `processed/`, `site/` (everything downloaded or generated).
+- Why: each responsibility can be read, tested and replaced on its own; the root stays tidy; nothing generated can reach git; settings can be changed without touching code (Python reads TOML with the standard-library `tomllib`).
+- "Backend" meaning: because of D2 there is no live server. `backend/` is the part that publishes the static data API (tiles + manifest). A literal running server would reverse D2 and needs a new decision.
+- Folders are created with their first real file (git cannot hold empty folders; placeholder files would be stray files).
+- Alternatives considered: one `src/` package with sub-packages (less visible separation); export inside `pipeline/` (mixes processing with publishing, which was PLAN-001's shape).
+- Honest limit: the first commit `ccb24df` predates this decision; it holds only `.gitignore` and `docs/`, which already match the layout. History is not rewritten.
+- Any later change to this structure is raised with the user first and recorded here.
+- Checkable bet: the root check (`git ls-files | cut -d/ -f1 | sort -u`) shows only allowed entries at every commit. Result: pending.
+
+## D6 — Python version: 3.11 (not 3.10)
+- 2026-11-06 ~18:52 UTC. Decided by: **user** (message: "use the Python 3.11 as the 3.10 has broken files"; matches the AI's workaround for E001).
+- Chosen: all Python work uses Python 3.11.9 (`py -3.11`) in a virtual environment `.venv/`. `pyproject.toml` will state `requires-python = ">=3.11"` (plan step 2). Python 3.11 also provides `tomllib` for the config files (D5).
+- Alternative: repair the Python 3.10 install. Rejected by the user; the broken `pip` there is not touched (see E001).
+- Checkable bet: step 2 installs all pinned packages into the 3.11 venv without errors. Result: pending.
