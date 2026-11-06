@@ -59,3 +59,7 @@ Everything below was found by running commands in this session. Times are UTC.
 - **Node 22:** `node --test <directory>` runs the directory as a file and fails; use a glob (`tests/frontend/*.test.mjs`). Importing `maplibre-gl` needs named imports (no default export in v6).
 - **Tool-shell limits:** a very large bash command with many heredocs fails to parse (use the editor tool or a script file in `C:\Users\NISHAANTH\AppData\Local\Temp`); `python3 - ... || python ...` fallbacks can fail silently (E022); `git` prints LF-to-CRLF warnings (autocrlf) that are harmless.
 - **Clock:** `date -u` is used at every commit and for every record time; the commit times in `docs/PROGRESS.md` come from `git log`.
+
+## 2026-11-06 ~23:55 UTC — step 7 export runs
+- `docker compose -f docker/compose.yaml run --rm export` (no network, project read-only, `data/` writable) wrote 4281 files (36.0 MB) in 4 min 37 s through the Windows bind mount; the size probe (gzip level 9 over 8 layouts, about 1.6 GB) took 11 min and had to run in the background. A tool call that outlives its time limit is moved to the background; do not poll it, wait for its completion notice.
+- The preview mounts `data/site` read-only; the export replaces that folder, so restart the preview (`down`, then `up -d preview`) after an export or it may keep showing the old inode.

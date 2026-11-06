@@ -41,11 +41,13 @@ docker compose -f docker/compose.yaml run --rm process python -m scripts.validat
 Processing turns both models into millimetres per 6-hour interval, converts each model's own unit, and builds the IFS-vs-AIFS agreement field (details: `docs/DOMAIN.md`, decisions D13 and D14).
 
 ## Looking at the web app locally (two sites, decision D19)
-Work in progress: only a page with one real forecast frame (flat map and globe, MapLibre GL JS) exists so far; no finished app.
+Work in progress: only a page with one exported forecast frame (flat map and globe, MapLibre GL JS) exists so far; no finished app (the day plan is built in steps 8-9).
 
 ```
-# once: put one real frame in data/site (needs a processed run, see above)
-docker compose -f docker/compose.yaml run --rm process python -m scripts.spike_frame
+# once: turn the processed run into the static site data in data/site (tiles, map frames, manifest; about 36 MB; no network)
+docker compose -f docker/compose.yaml run --rm export
+# optional check: what a browser reads from the tiles equals the processed data and the raw files
+docker compose -f docker/compose.yaml run --rm process python -m scripts.validate_site
 
 # testing site, with live reload and a DEV badge: http://localhost:5173
 cd frontend && npm ci --ignore-scripts && npm run dev

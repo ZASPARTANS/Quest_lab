@@ -66,3 +66,11 @@ CesiumJS (`cesium` 1.147.0, `@cesium/engine` 26.5.0, `@cesium/core` 0.1.1) was e
 
 ## 2026-11-06 ~23:02 UTC — Browser builds seen during the Firefox attempt (housekeeping)
 Listing of `/ms-playwright` and `firefox` version inside the pinned Playwright image (`docker compose ... run`): `chromium-1254`, `chromium_headless_shell-1254`, `firefox-1572` (Firefox 159.0 as reported by Playwright), `webkit-2388`, `ffmpeg-1013`. Not downloaded separately. WebKit is the engine closest to Safari that can be tested in Docker; it has not been used yet (Safari is deferred by the user, D23).
+
+## 2026-11-06 ~23:55 UTC — Free static-host limits read for the step 7 size check (official pages, access date 2026-11-06)
+| Host | Page | Limits quoted |
+|---|---|---|
+| GitHub Pages | https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits | published site no larger than 1 GB; soft bandwidth limit 100 GB per month; soft 10 builds per hour (not applying to a custom GitHub Actions workflow); deployment times out after 10 minutes; no file-count or single-file limit stated |
+| Cloudflare Pages (Free) | https://developers.cloudflare.com/pages/platform/limits/ | 20,000 files per site; 25 MiB per file; 500 builds per month; 100 header rules per `_headers` file; no bandwidth limit listed |
+| Netlify (Free) | https://www.netlify.com/pricing/ | 300 credits; bandwidth costs 20 credits per GB and a production deploy 15 credits; no file-count or size limit stated. **My own arithmetic, not a stated limit:** 300 / 15 = about 20 production deploys a month, which cannot carry two scheduled deploys a day (about 60 a month). |
+These are the limits of the day; the hosting choice and a re-check of the terms happen at step 11 (the user decides). Prototype measurements for the same step are in docs/DECISIONS.md D25.

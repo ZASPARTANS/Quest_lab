@@ -4,6 +4,7 @@ The only place derived from code is ROOT, the project folder, found from the loc
 path is written anywhere). It is also where the config folder is looked for, see CONFIG_PATH in pipeline/fetch.py.
 """
 import datetime as dt
+import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -28,3 +29,10 @@ def partial(cfg, path):
 def parse_run(cfg, text):
     """Folder name or command-line text -> run time (UTC datetime); ValueError if it does not fit the format."""
     return dt.datetime.strptime(text, cfg["paths"]["run_folder_format"])
+
+
+def remove_folder(path):
+    """Delete an old output folder if it exists. A failure (e.g. files owned by another user) must stop the run with its real
+    error: ignoring it ended in a misleading "Directory not empty" later (docs/ERRORS.md E015)."""
+    if path.exists():
+        shutil.rmtree(path)

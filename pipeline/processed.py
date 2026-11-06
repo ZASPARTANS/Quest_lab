@@ -10,7 +10,6 @@ Run:  python -m pipeline.processed [run folder name]      (default: newest run f
 import datetime as dt
 import json
 import os
-import shutil
 import sys
 
 import numpy as np
@@ -18,7 +17,7 @@ import numpy as np
 from pipeline import grid as grid_mod
 from pipeline import process
 from pipeline.fetch import describe_messages, expand_steps, load_config
-from pipeline.paths import ROOT, parse_run, partial, raw_file, run_folder
+from pipeline.paths import ROOT, parse_run, partial, raw_file, remove_folder, run_folder
 
 
 def local_runs(cfg):
@@ -71,19 +70,12 @@ def _meta(cfg, run, results, agree_steps, stored):
                                     "disagree": process.AGREE_DISAGREE}}}
 
 
-def _remove_folder(path):
-    """Delete an old output folder. A failure (e.g. files owned by another user) must stop the run with its real
-    error: ignoring it ended in a misleading "Directory not empty" later (docs/ERRORS.md E015)."""
-    if path.exists():
-        shutil.rmtree(path)
-
-
 def save(cfg, run, results, field, agree_steps):
     """Write the processed files. They are built in a partial folder that replaces the final folder at the end."""
     names = cfg["paths"]
     out = run_folder(cfg, "processed", run)
     part = partial(cfg, out)
-    _remove_folder(part)
+    remove_folder(part)
     part.mkdir(parents=True)
     saturated = {}
     for model, r in results.items():
@@ -92,7 +84,7 @@ def save(cfg, run, results, field, agree_steps):
     np.save(part / names["agreement_file"], field)
     meta = _meta(cfg, run, results, agree_steps, saturated)
     (part / names["meta_file"]).write_text(json.dumps(meta, indent=1), encoding="utf-8")
-    _remove_folder(out)
+    remove_folder(out)
     os.replace(part, out)
     return out
 

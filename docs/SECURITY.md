@@ -75,3 +75,8 @@ Could not check in step 6: how the policy behaves with an online geocoder (not a
 - Cesium was removed (D22), so S10 no longer applies. The Content-Security-Policy in `config/headers.conf` was tightened to what MapLibre needs: `script-src 'self'` (no `wasm-unsafe-eval`), no `child-src`; checked in a real browser (no CSP error, no outside host).
 - The dev server listens on the IPv6 loopback address (`[::1]`) on this machine because the config says `localhost`; it refuses the LAN address; three path-traversal attempts on its `/data/` route answered 403 again after the config change.
 - Process lesson (E021): a dev server I thought was stopped kept running; it was found and stopped by its command line, and only after checking the address it really listens on.
+
+### Step 7 export (~23:55 UTC)
+- The `export` container has no network and a read-only project mount; the site data holds no personal data (only forecast numbers, model names, times and the licence).
+- Tiles and the manifest are treated as untrusted by design: every tile has a version, size header and exact length check (`backend/tiles.py`, tests for 6 kinds of malformed file); the manifest has a schema check that runs inside the export; the browser reader (step 8) must repeat the same checks.
+- S04 (public status record) is **still open**: step 7 does not build it (it belongs to the scheduled job, step 11). The proposed rule stays "publish only an error category and a time, never raw error text"; the user's confirmation is still needed.

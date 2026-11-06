@@ -26,6 +26,7 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 | E020 | Vite in the read-only container: `ENOENT: mkdir '/node_modules/.vite-temp'` | 1 | 1/1 (tmpfs at that path) |
 | E021 | I reported the dev server as stopped after checking only 127.0.0.1; it listened on ::1 and kept running (and `TaskStop` ended only the wrapper shell) | 1 | 1/1 (found by command line, stopped by PID, verified on ::1, 127.0.0.1 and localhost) |
 | E022 | A throwaway Firefox script edit failed silently (`python3 - ... \|\| python ...` fallback), so two reported "variant" runs were the original configuration; killed runs left containers behind | 1 | 1/1 (script rewritten, each variant run once, containers removed) |
+| E023 | Map frames resampled by nearest cell dropped small showers (a single wet cell vanished from the overview); found by my test before release | 1 | 1/1 (maximum of the covered cells; tests) |
 
 ---
 
@@ -216,3 +217,11 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 - Root cause (AI): I did not check that the edit had applied (`grep variant` on the file) before running it, and I assumed that killing the client stops the container.
 - Fix: rewrote the script file completely with the editor tool, then ran each of two software-GL variants once with a time limit and removed the leftover containers. Both variants failed to create WebGL (so Firefox stays untested in Docker), and the evidence of the earlier run is not counted.
 - Changed lines: none in the repository (the script lives outside it in `C:\Users\NISHAANTH\AppData\Local\Temp` and was removed).
+
+## E023 — Overview frames lost small showers (nearest-cell resampling)
+- 2026-11-06 ~23:55 UTC (step 7, my own test). seen: 1. fix worked / fix tried: 1/1.
+- What happened: the first `backend/frames.py` (and the throwaway spike script before it) built the 720-pixel Mercator image by taking the NEAREST 0.25 degree cell per pixel. A pixel is 0.5 degrees wide, so every second cell was skipped. The test `a single wet cell lands at its place on the image` failed with `assert 0 >= 1`: one wet cell produced no wet pixel at all. For rain, dropping the small heavy showers from an overview is the wrong error. (The same test run also showed a wrong expectation of mine: the top row of a Mercator frame is at 85 degrees, not at the pole.)
+- Root cause (AI): I treated resampling as pure geometry and did not think about what a downsample must preserve for a rain map; the spike script I copied it from had the same flaw, unnoticed because the spike used a 1440-pixel image (no skipping).
+- Fix: `frames.resample` takes the MAXIMUM of the grid cells each pixel covers (`np.maximum.reduceat` over row and column spans), works for either longitude start (180 or 0), and for the agreement codes lets "disagree" win over "wet" over "dry". New tests: shape and orientation, a single wet cell stays visible and lands within 1 degree of its place, and the longitude column lands in the right image column for both conventions.
+- Also found by self-review in the same step and fixed before any run: a hardcoded model name in the manifest check (D17), a missing `file` key in `scripts/validate_site.py` (the manifest does not carry processed file names), and test fixtures on a non-global grid that the new resampling (correctly) does not accept.
+- Changed lines: `backend/frames.py`, `backend/export.py`, `tests/backend/test_frames.py`, `tests/backend/conftest.py`.
