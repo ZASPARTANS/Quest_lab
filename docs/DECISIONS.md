@@ -58,3 +58,11 @@ Append only. Each entry: date/time, what was chosen, alternatives, why, who deci
 - Chosen: all Python work uses Python 3.11.9 (`py -3.11`) in a virtual environment `.venv/`. `pyproject.toml` will state `requires-python = ">=3.11"` (plan step 2). Python 3.11 also provides `tomllib` for the config files (D5).
 - Alternative: repair the Python 3.10 install. Rejected by the user; the broken `pip` there is not touched (see E001).
 - Checkable bet: step 2 installs all pinned packages into the 3.11 venv without errors. Result: pending.
+
+## D7 — Dependency pinning: exact versions, no hashes (shortcut)
+- 2026-11-06 ~19:00 UTC. Decided by: **AI** (follows the CLAUDE.md rule "pin versions"; the user asked for a proper history of the libraries in `requirements.txt`).
+- Chosen: `requirements.txt` pins every installed package (4 direct + 19 transitive = 23) with `==`, with the direct ones listed first and a reason after each. The history of changes is kept by git (`git log -p requirements.txt`) and by `docs/SOURCES.md`.
+- Shortcut: no `--hash` lines (`--require-hashes`). Reason: time budget; versions are pinned and checked by a fresh-venv rebuild, but a tampered package at the same version would not be caught. Noted in the header of `requirements.txt`; to be listed in the README known limitations.
+- Alternatives: a separate `requirements.in` + lock file (needs another tool and another root file); `pyproject.toml` dependencies (would duplicate the pins).
+- Note: `numpy` 2.5.4 is the newest release but needs Python >= 3.12, so pip chose 2.4.6 on Python 3.11 (D6).
+- Checkable bet: a fresh venv built from `requirements.txt` equals the working one. Result: **held** on 2026-11-06 ~19:00 UTC (both lists identical, 23 packages).
