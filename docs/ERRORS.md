@@ -17,6 +17,7 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 | E011 | `requirements.txt` was pinned from the Windows package set only; Linux installs 2 more unpinned packages (eccodeslib, eckitlib) | 1 | 1/1 (pinned with a `sys_platform == "linux"` marker) |
 | E012 | Longitude start assumed to be 0 in my first picture of the grid; both models start at 180 (caught by the planned A2 check, before any output) | 1 | 1/1 (layout in config, checked per message; index verified against eccodes) |
 | E013 | PLAN-001 to PLAN-004 had no security work or security notes (planning gap; user raised it) | 1 | 0/0 (fix = PLAN-005, awaiting approval) |
+| E015 | `save()` ignored errors when deleting an old output folder; with files left by another user the run died as a misleading `OSError: Directory not empty` | 1 | 1/1 (errors now surface; regression test) |
 | E014 | `requests` became a direct dependency (E008) without being vetted on PyPI/GitHub as the package rule requires | 1 | 0/0 (vetting is step S4 of PLAN-005) |
 
 ---
@@ -143,3 +144,11 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 - Root cause (AI): I treated "already installed" as "already vetted".
 - Fix planned: PLAN-005 step S4 checks `requests` on the PyPI JSON API and its GitHub source, records it in SOURCES.md. Not done yet.
 
+## E015 — Output folder could not be replaced: error hidden, then "Directory not empty"
+- 2026-11-06 ~21:01 UTC (step S3, first real `process` run as a non-root user). seen: 1. fix worked / fix tried: 1/1.
+- Exact error: `OSError: [Errno 39] Directory not empty: '/work/data/processed/2026110612.part' -> '/work/data/processed/2026110612'` from `os.replace` in `pipeline/processed.py` `save()`.
+- Root cause (two parts): (1) the old output folder and its files had been written earlier by the root container, so the new non-root user could not delete them (`PermissionError: [Errno 13] ... 'agreement.npy'`, found by trying `shutil.rmtree` as that user); (2) my step 4 code called `shutil.rmtree(..., ignore_errors=True)`, which swallowed that `PermissionError`, so the failure showed up one line later as the misleading "Directory not empty". Part (2) is an AI coding mistake: errors must not be hidden.
+- Also: my first "hashes identical" check passed only because the old files were still there; I noticed, discarded it and repeated the check after the fix (the `processed_at` stamp in `meta.json` changed from 20:29:34Z to 21:04:12Z, hashes identical to step 4).
+- Fix: `_remove_folder()` deletes without `ignore_errors`, so the real error stops the run; new test `test_an_old_folder_that_cannot_be_deleted_stops_the_run_with_the_real_error` (skipped on Windows). One-time repair of this machine's `data/` ownership with a root one-off container (`--user 0 --cap-add CHOWN ... chown -R 10001:10001 /work/data`). A clean clone has no root-owned leftovers.
+- Re-ran: Docker tests 47 passed; with `ignore_errors=True` put back temporarily the new test fails with the very same "Directory not empty" error; real `process` run regenerated all four files.
+- Changed lines: `pipeline/processed.py` (`_remove_folder`, 2 call sites), `tests/pipeline/test_processed.py` (+1 test).

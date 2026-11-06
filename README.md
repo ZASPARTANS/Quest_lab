@@ -25,12 +25,12 @@ data/                IGNORED by git: raw downloads, processed output, exported s
 Forecast data: ECMWF Open Data (IFS and AIFS), CC-BY-4.0 and the ECMWF Terms of Use. The exact attribution text will be added once verified on the official terms page (plan step 10).
 
 ## Fetching and processing data (Docker, Linux)
-Docker creates the git-ignored `data/` folder on the first run (checked). Then:
+```
+docker compose -f docker/compose.yaml run --rm fetch     # download the newest complete IFS + AIFS run (about 62 MB); the only service with network
+docker compose -f docker/compose.yaml run --rm process   # process it into data/processed/<run>/ and print a summary; no network
+```
 
-```
-docker compose -f docker/compose.yaml run --rm run python -m pipeline.fetch   # download the newest complete IFS + AIFS run (about 64 MB)
-docker compose -f docker/compose.yaml run --rm run                            # process it into data/processed/<run>/ and print a summary
-```
+Every service runs as a normal user (not root) with all Linux capabilities dropped and a read-only file system; only the git-ignored `data/` folder is writable (security finding S03). On Docker Desktop (Windows) `data/` is created on the first run (checked). On Linux, create `data/` yourself and run `export APP_UID=$(id -u) APP_GID=$(id -g)` first, so the files belong to you (not tested: no Linux host here). The base image is pinned by digest, so it gets no operating-system updates until the digest in `docker/Dockerfile` is changed; re-check it before relying on the project for long.
 
 Processing turns both models into millimetres per 6-hour interval, converts each model's own unit, and builds the IFS-vs-AIFS agreement field (details: `docs/DOMAIN.md`, decisions D13 and D14).
 
