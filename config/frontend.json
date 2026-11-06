@@ -23,7 +23,7 @@
   "dev_badge": { "enabled": true, "text": "DEV" },
   "colour_scale": {
     "unit": "mm per 6 h",
-    "_comment": "Colour for a value at or above the first number of each pair; below the first stop the pixel is transparent. Used by the spike frame now and by the final export later.",
+    "_comment": "Colour for a value at or above the first number of each pair; below the first stop the pixel is transparent. Used by the export (backend/export.py) for the map frames and by the page for the legend.",
     "stops": [
       [0.1, "#a6d8ff"],
       [0.5, "#5aaaf0"],
@@ -37,11 +37,9 @@
     "opacity": 0.85
   },
   "spike": {
-    "model": "ifs",
-    "step_hours": 24,
-    "folder": "spike",
-    "mercator_file": "frame_mercator.png",
-    "mercator_size": 1440,
+    "_comment": "The spike page (frontend/spikes/maplibre.js) shows one exported frame (file names: config/backend.toml [frames]); replaced by the real map in plan step 9.",
+    "folder": "frames",
+    "mercator_file": "ifs_24.png",
     "mercator_max_latitude": 85.0511287798
   }
 }

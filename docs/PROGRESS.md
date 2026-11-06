@@ -68,7 +68,7 @@
 | S5 | Identity decision | **done** (D16: keep e-mail as is, no code) |
 | 5 | Independent validation | **done** 2026-11-06 (commit "Step 5...", time in `git log`) |
 | 6 | Front-end spike + decision gate + localhost | **done** 2026-11-06 (commits `c7baf2d`, `ba46ed2`); library MapLibre (D22) |
-| 7 | Static data export: point tiles, optional lower-resolution frames, manifest; size gate (PLAN-006) | not started |
+| 7 | Static data export: point tiles, optional lower-resolution frames, manifest; size gate (PLAN-006) | **done** 2026-11-06 (commit "Step 7: ...", time in `git log`); D25, E023 |
 | 8 | Plan engine + place panel: activities, day cards, best windows, rain totals with a range, saved places, text first (PLAN-006) | not started |
 | 9 | Map and globe as supporting views, model switch, no-WebGL2 message (PLAN-006) | not started |
 | 10 | Provenance + honesty strip, final policy (PLAN-006) | not started |
@@ -78,14 +78,16 @@
 Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
 
 ## Status (live, rewritten in the housekeeping at ~23:03 UTC)
-- **Done:** steps 1-6 and the security steps S1-S5 (see the step table); the data pipeline (fetch, process, validate) runs in Docker; the front end is a one-page spike on two local sites (testing on :5173, public-like on :8080).
-- **Tests:** official command `docker compose -f docker/compose.yaml run --rm tests` = 61 passed; `... run --rm frontend-tests` = 4 passed (both at the last code commit `ba46ed2`; no code changed since).
+- **Done:** steps 1-7 and the security steps S1-S5; the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is step 8** (plan engine and place panel).
+- **Tests:** official command `docker compose -f docker/compose.yaml run --rm tests` = 95 passed; `... run --rm frontend-tests` = 4 passed (at step 7).
 - **Git:** branch `main`, 25 commits, no remote (GitHub login and repo creation are plan step 11 and need the user's approval and link).
 - **Records:** this housekeeping checked every markdown file against the others; its findings and fixes are listed in the last section of this file.
 
 ## Open items (waiting on someone, or on a later step)
 - **User:** confirm that the map and the rain layer draw in Firefox on the user's PC (the user reported "the site loads files"); [innovation ideas: DONE, chosen in D24 / PLAN-006; the list below is kept as history] (~23:03 UTC); confirm the proposed no-WebGL2 message (D23).
 - **User, later:** Safari and phone testing (deferred by the user); confirm the sanitised public status record (S04, step 7/10); the geocoder service (step 8; AI recommends Open-Meteo, D20); the hosting choice (step 11); GitHub login, repo link and approval before any push.
+- **S04 (user, step 7/10):** confirm that the public status record carries only an error category and a time (the record itself is built with the scheduled job, step 11).
+- **Check in step 8:** `DecompressionStream('gzip')` reads the real tiles in Chromium and in the user's Firefox (D25 assumption); time zones in Node tests.
 - **E007:** IFS to 360 h is still deferred (D12).
 - **Pending results of bets:** D2/A6 and D4 (size limits, steps 7 and 11), D8 (once the scheduled job runs), D9 and addendum (steps 7 and 10), D14 (step 7).
 - **Throwaway code to replace:** `scripts/spike_frame.py` (step 7), `frontend/spikes/maplibre.*` and `frontend/index.html` (step 9). Shortcut register: DECISIONS.md.
@@ -288,3 +290,13 @@ User request: "i dont see anything innovative here so from any other steps i wan
 - **I8 Smooth motion between 6 h frames:** motion vectors computed in the pipeline let the browser animate between frames; must be labelled as interpolation. About 8-12 h; research risk.
 - **I9 Offline-capable installable app (PWA):** last forecast cached, age always shown (D9). About 3 h; practical rather than visual.
 AI recommendation was: signature "agreement-first" = I1 + I2 + I3 + I5, with I7 as the everyday-use feature. **The user chose I7 (Plan-my-day) as the signature and asked that extras be genuinely helpful** (saved places, rain totals with a range); the sound, lens, spiral and smooth-motion ideas were dropped. Decision D24, plan PLAN-006 (approved ~23:24 UTC).
+
+## Step 7 done-check results (run 2026-11-06 ~23:29-23:55 UTC)
+Files: new `backend/` (`tiles.py` 91 lines, `frames.py` 68, `manifest.py` 72, `export.py` 96, `readback.py` 29), `config/backend.toml`, `scripts/validate_site.py`, `tests/backend/` (4 files), `tests/hygiene/test_config_consistency.py`, `docker/compose.yaml` (`export` service), `pipeline/paths.py` (`remove_folder` shared); `scripts/spike_frame.py` deleted (replaced). Config: `site_dir`, `backend_config_file` in `pipeline.toml`; the spike page now reads an exported frame. Decision D25; error E023. Plan PLAN-006 step 7.
+- **Size gate (measured first):** prototype on the real 12z run, 8 layouts and 2 tile sizes (D25): chosen 16 x 16, layer-major, byte-shuffled, gzip 9 = 27.9 MB in 4140 files. Naive estimate in the plan was about 200 MB raw before compression (207.6 MB measured raw). **Real export: 36.0 MB in 4281 files** (tiles 27.9 MB, 140 frames 8.1 MB, manifest 10.7 kB); fits GitHub Pages (1 GB) and Cloudflare Pages (20,000 files, 25 MiB per file); no fallback needed; host limits read from the official pages (SOURCES.md).
+- **Official tests:** `95 passed` (93 + 2 config guards; 33 new backend tests: tile geometry incl. longitude start 180, byte layouts, 6 kinds of malformed tile, every cell of a synthetic run read back from tiles equals the processed arrays, frame placement, manifest damage cases, retrieval time, replace-on-export). Node tests 4 passed. Line counts all under 100 per file.
+- **Independent check on the real run:** `scripts/validate_site.py` (Docker, no network): 8 places x 2 models = 16 rows, tile values **identical** to the processed arrays, within 0.05 mm of the raw GRIB read with eccodes' own nearest-point search (0.0312-0.0500 mm), manifest problems: none.
+- **Frames looked at:** the IFS +24 h frame and the agreement frame show the same weather systems as the earlier spike picture; agreement is blue where both wet, orange where they disagree, transparent where both dry.
+- **Real-browser check of the public-like site** with the exported data (Docker Chromium): home, MapLibre flat, MapLibre globe all `ok: true`, no console or policy errors, no outside host, 484 kB loaded per map page; the manifest, a frame and tiles are served (tiles as `application/octet-stream`, which is right for files the browser decompresses itself).
+- **Found on the way:** E023 (small showers lost by nearest-cell resampling) plus four small self-review fixes listed in it. A very slow command (the size probe, 11 min) was moved to the background by the tool.
+- **Not verified yet:** reading the tiles in a browser with `DecompressionStream` (step 8); export time on Linux; behaviour of two consecutive scheduled exports on a real host (step 11); the attribution wording (step 10).

@@ -2,6 +2,7 @@
 #   docker compose -f docker/compose.yaml run --rm tests            official Python test run (no network, project read-only)
 #   docker compose -f docker/compose.yaml run --rm fetch            download the newest complete IFS + AIFS run into data/raw
 #   docker compose -f docker/compose.yaml run --rm process          process data/raw into data/processed (NO network)
+#   docker compose -f docker/compose.yaml run --rm export           turn data/processed into the static site data in data/site (NO network)
 #   docker compose -f docker/compose.yaml run --rm frontend-tests   Node tests of the front-end helper code (no network)
 #   docker compose -f docker/compose.yaml run --rm frontend-build   build the web app into frontend/dist
 #   docker compose -f docker/compose.yaml up -d preview             the "public-like" site on http://localhost:8080 (stop: ... down)
@@ -62,6 +63,15 @@ services:
       - ${DATA_DIR:-../data}:/work/data
     network_mode: none
     command: ["python", "-m", "pipeline.processed"]
+
+  export:
+    # Turns the processed run into the static site data (tiles, frames, manifest) in data/site. No network: it never needs one.
+    <<: *python
+    volumes:
+      - ..:/work:ro
+      - ${DATA_DIR:-../data}:/work/data
+    network_mode: none
+    command: ["python", "-m", "backend.export"]
 
   frontend-build:
     # Builds the web app. No network. Only specific project folders are mounted (read-only): mounting the whole project would show the

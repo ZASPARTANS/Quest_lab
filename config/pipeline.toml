@@ -45,6 +45,8 @@ agreement_file = "agreement.npy"  # processed IFS-vs-AIFS agreement field, same 
 meta_file = "meta.json"           # description of the processed run, same folder
 validation_points_file = "config/validation_points.toml"  # places checked by scripts/validate_points.py (relative to the project folder)
 frontend_config_file = "config/frontend.json"  # settings of the front end; scripts that draw frames read the colour scale from it
+backend_config_file = "config/backend.toml"  # settings of the static data export (backend/)
+site_dir = "data/site"            # ignored by git; the exported static site data (tiles, frames, manifest). frontend.json dev_data_dir must be the same folder
 
 # Grid every GRIB message must have (checked by pipeline/grid.py; verified on real files 2026-11-06,
 # docs/DOMAIN.md). Row 0 is the north edge, column 0 is longitude lon_first = 180 (not 0).

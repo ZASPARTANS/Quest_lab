@@ -1,0 +1,40 @@
+# Settings for the static data export (backend/export.py). No code here. Decisions: D4 (global), D14 (6 h blocks), D24; plan PLAN-006 step 7.
+# Where the site data folder and this file live is set in config/pipeline.toml [paths] (site_dir, backend_config_file).
+
+[tiles]
+# Point tiles: the 6 h series of every grid cell for both models (backend/tiles.py). Measured on the real 2026-11-06 12z run
+# (docs/PROGRESS.md, step 7): 16 x 16 cells, layer-major, byte-shuffled, gzip level 9 = about 28 MB in 4140 files (largest 20 kB);
+# the same data unshuffled was 32 MB, in 32 x 32 tiles 26 MB in 1035 files (but about 25 kB per fetch).
+size = 16
+byte_shuffle = true
+folder = "tiles"
+file = "{row}_{col}.bin.gz"                # plain tile row and column numbers (the browser fills them in), counted from the north-west corner
+
+[frames]
+# Colour map frames for the supporting map view (backend/frames.py): one Web Mercator PNG per model and block, plus the agreement.
+enabled = true
+size = 720                                  # pixels; the overview only, the plan is made from the tiles
+max_latitude = 85.0511287798                # Web Mercator limit
+folder = "frames"
+file = "{kind}_{step}.png"                  # kind = a model name or "agreement"; step = forecast hour at the END of the block
+agreement_opacity = 0.8
+
+[frames.agreement_colours]
+# Colour per agreement class (names as in meta.json "codes"); an empty string means transparent.
+both_dry = ""
+both_wet = "#2a6fd6"
+disagree = "#f28a17"
+
+[manifest]
+file = "manifest.json"
+format_version = 1
+
+[source]
+# Provenance written into the manifest. Licence and terms page: docs/SOURCES.md. The attribution WORDING is verified on the official
+# terms page in plan step 10; until then it stays empty on purpose (nothing is invented).
+name = "ECMWF Open Data"
+data_url = "https://data.ecmwf.int/forecasts"
+licence = "CC BY 4.0"
+terms_url = "https://www.ecmwf.int/en/forecasts/datasets/open-data"
+attribution = ""
+models = { ifs = "IFS HRES 0.25 degree, total precipitation", aifs-single = "AIFS Single 0.25 degree, total precipitation" }
