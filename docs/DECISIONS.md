@@ -154,3 +154,11 @@ Append only. Each entry: date/time, what was chosen, alternatives, why, who deci
 - Alternatives: leave names in code as a "layout contract" (rejected by the user's instruction).
 - Fixed exceptions (written down so they are not hidden): the config file's own location relative to the project folder; container-internal mount points `/work` and `/tmp` in the Docker files (the host side of the data mount is `DATA_DIR`).
 - Result: applied in the fix of E016; checked by the guard test.
+
+## D18 — Pin hashes for every package, all platforms (ends the D7 no-hashes shortcut)
+- 2026-11-06 ~21:28 UTC. Decided by: **user** (chose "Hashes for all platforms (Recommended)" out of: all platforms / Linux set only / keep pins without hashes), after the AI proposed the options in PLAN-005 step S4.
+- Chosen: `requirements.txt` holds, for each of the 25 pinned packages, the sha256 of every file PyPI published for that exact version (430 hashes). `pip install --require-hashes` is used by the Docker image and in the README for the venv. `scripts/pin_hashes.py` (settings in `config/security.toml` [hashes]) regenerates the hash lines after a version change; it needs internet and is run on the host.
+- Alternatives: hashes for the Linux set only (two sets to keep in step); keep D7's pins without hashes (leaves the "replaced package at the same version" risk open).
+- Honest limit: the hashes come from PyPI at the time the script runs. They catch a file that changes later; they cannot catch a file that was already bad when the hashes were generated. The vulnerability scan (SECURITY.md) is a separate control.
+- Effect on D7: the shortcut "no hashes" is gone; the other part of D7 (exact pins, direct before transitive) stays. The README no longer needs to list "no hashes" as a known limitation.
+- Checkable bet: a fresh install from the hashed file reproduces the working environment on both platforms. Result: **held** (Windows fresh venv freeze equals the 23 Windows pins; Linux image freeze equals the 25 pins; `pip check` clean on both).

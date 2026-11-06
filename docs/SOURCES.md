@@ -33,3 +33,11 @@ Transitive (installed by pip, not chosen directly): attrs, certifi, cffi, charse
 ## 2026-11-06 20:18 UTC — Step 3b additions
 - Base image of `docker/Dockerfile`: `python:3.11-slim@sha256:65bd3d9f1d7fa268dd1909973ba7eb4bdf41f6dcf2cfbe76ba9528b170f3fd79` (same digest as pulled earlier, see above). Compared with `docker image inspect` before use.
 - Two Linux-only Python packages, found by the Docker build and verified on the PyPI JSON API on 2026-11-06: `eccodeslib` 2.50.0.34 (https://pypi.org/project/eccodeslib/, requires `eckitlib==2.5.0.34`) and `eckitlib` 2.5.0.34 (https://pypi.org/project/eckitlib/). Used for: the C library behind `eccodes` on Linux. Licence: NOT shown in the PyPI metadata and NOT verified.
+
+## 2026-11-06 ~21:12 UTC — Vetting of `requests` and the vulnerability scanner (step S4 of PLAN-005)
+Access date 2026-11-06. Checked on the official PyPI JSON API with a short script (standard library `urllib`).
+| Package | Version | PyPI JSON page | Source repository | Findings | Used for |
+|---|---|---|---|---|---|
+| requests | 2.34.2 (equals the installed version) | https://pypi.org/pypi/requests/2.34.2/json | https://github.com/psf/requests (from the page's `project_urls`) | name matches, Apache-2.0, not yanked, files uploaded 2026-05-14 (wheel + sdist), requires Python >= 3.10, author listed as Kenneth Reitz | imported directly by `pipeline/fetch.py` (session classes); closes E014. Only the PyPI page was opened; the GitHub repository was not read in this session. |
+| pip-audit | 2.10.1 (pinned for the one-off scan, NOT added to `requirements.txt`) | https://pypi.org/pypi/pip-audit/json | https://github.com/pypa/pip-audit (Python Packaging Authority) | name matches, not yanked, upload 2026-06-10, authors Alex Cameron, Dustin Ingram, William Woodruff; its own dependencies (CacheControl, cyclonedx-python-lib, rich, tomli, ...) were installed by pip into a throwaway container and are NOT vetted one by one | vulnerability scan of `requirements.txt`; vulnerability data comes from PyPI's own service (default of the tool) |
+

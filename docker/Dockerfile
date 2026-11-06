@@ -10,7 +10,7 @@ ENV PIP_NO_CACHE_DIR=1 \
 
 WORKDIR /work
 COPY requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt && pip check
+RUN pip install --require-hashes -r /tmp/requirements.txt && pip check
 
 # Run as a normal user, not root (finding S03): downloaded GRIB files are parsed by a C library.
 # compose.yaml may override the numbers (APP_UID / APP_GID) so that files written to data/ belong to the host user.

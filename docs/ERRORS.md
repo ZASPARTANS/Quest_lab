@@ -17,7 +17,7 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 | E011 | `requirements.txt` was pinned from the Windows package set only; Linux installs 2 more unpinned packages (eccodeslib, eckitlib) | 1 | 1/1 (pinned with a `sys_platform == "linux"` marker) |
 | E012 | Longitude start assumed to be 0 in my first picture of the grid; both models start at 180 (caught by the planned A2 check, before any output) | 1 | 1/1 (layout in config, checked per message; index verified against eccodes) |
 | E013 | PLAN-001 to PLAN-004 had no security work or security notes (planning gap; user raised it) | 1 | 0/0 (fix = PLAN-005, awaiting approval) |
-| E014 | `requests` became a direct dependency (E008) without being vetted on PyPI/GitHub as the package rule requires | 1 | 0/0 (vetting is step S4 of PLAN-005) |
+| E014 | `requests` became a direct dependency (E008) without being vetted on PyPI/GitHub as the package rule requires | 1 | 1/1 (vetted in step S4; recorded in SOURCES.md) |
 | E015 | `save()` ignored errors when deleting an old output folder; with files left by another user the run died as a misleading `OSError: Directory not empty` | 1 | 1/1 (errors now surface; regression test) |
 | E016 | Folder/file names (`tp.grib2`, `meta.json`, `%Y%m%d%H`, `.part`, ...) and the compose data mount were hardcoded, against the config-file rule (user reminder) | 1 | 1/1 (names moved to config `[paths]`, `pipeline/paths.py`, guard test) |
 
@@ -140,10 +140,10 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 - Fix: `docs/plans/PLAN-005.md` (draft, awaiting approval) with the fixes and a security note; from now on every plan carries a short security note (decision D15). Counters stay 0/0 until the fixes are applied and verified.
 
 ## E014 — `requests` used directly without being vetted
-- 2026-11-06 ~20:36 UTC (found during the security audit). seen: 1. fix worked / fix tried: 0/0.
+- 2026-11-06 ~20:36 UTC (found during the security audit). seen: 1. fix worked / fix tried: 1/1.
 - What happened: `requests` was installed by pip as a dependency of ecmwf-opendata and listed under "transitive" in `docs/SOURCES.md`. In the E008/E009 fix I imported it directly in `pipeline/fetch.py` (the `_StrictSession` class) and moved it to the direct section of `requirements.txt`, but did not do the PyPI/GitHub check the package rule asks for.
 - Root cause (AI): I treated "already installed" as "already vetted".
-- Fix planned: PLAN-005 step S4 checks `requests` on the PyPI JSON API and its GitHub source, records it in SOURCES.md. Not done yet.
+- Fix (step S4, ~21:12 UTC): `requests` 2.34.2 checked on the PyPI JSON API (name, version equals the installed one, licence, not yanked, source link psf/requests) and recorded in SOURCES.md. The GitHub repository itself was not read. The `pip-audit` scan found no known vulnerabilities in it. Worked.
 
 ## E015 — Output folder could not be replaced: error hidden, then "Directory not empty"
 - 2026-11-06 ~21:01 UTC (step S3, first real `process` run as a non-root user). seen: 1. fix worked / fix tried: 1/1.

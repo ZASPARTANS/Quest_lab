@@ -51,6 +51,14 @@ Files: `docker/Dockerfile` (+ user `app`, uid 10001), `docker/compose.yaml` (sha
 - `data/` auto-creation re-tested with the non-root user on Docker Desktop: works. Linux hosts: documented (APP_UID/APP_GID, create `data/`), not tested.
 - Not tested: Linux host file ownership; the compose `APP_UID` override with a different id.
 
+## Step S4 done-check results (run 2026-11-06 ~21:12-21:28 UTC)
+Files: `docs/SOURCES.md` (requests, pip-audit), `scripts/pin_hashes.py` (about 85 lines, standard library only), `config/security.toml` ([hashes]), `requirements.txt` (hashes on all 25 packages), `docker/Dockerfile` (`--require-hashes`), `tests/tooling/test_pin_hashes.py` (4 tests), `tests/hygiene/test_requirements_hashed.py`, guard test extended to `scripts/`, README. Decision D18 (user: hashes for all platforms).
+- (a) `requests` 2.34.2 vetted on the PyPI JSON API (E014 closed, 1/1). The GitHub repo itself was not read.
+- (b) `pip-audit` 2.10.1 (vetted first) in a throwaway container (non-root, no capabilities, read-only root, only requirements.txt mounted, no environment): **25 packages checked, 0 vulnerable, 0 skipped**; repeated on the hashed file with the same result and no warning. Data sent: package names and versions to pypi.org.
+- (c) Hashes: 430 hashes written in 3.8 s. Official Docker tests `56 passed` (51 + 4 + 1). No-cache image build with `--require-hashes` succeeded, `pip check` clean. Linux container freeze equals the 25 pins. Fresh Windows venv from the hashed file: exit 0, freeze equals the 23 Windows pins, `pip check` clean. Wrong hash -> refused (exit 1); no hash -> refused (exit 1).
+- Mistakes on the way, all caught by the checks: my first hygiene-test regex misread the continued lines (test failed, rewritten); the first "no hash is refused" check was invalid because the package was already installed (redone with a fresh target folder); a first quoting slip in a test file; the scanner container needed an executable `/tmp` (only for that throwaway container).
+- Not tested: the generator against a real PyPI outage (it stops with an error); regenerating hashes after a real version bump (done once, for the current versions).
+
 ## Fix E016 (no hardcoded paths) results (run 2026-11-06 ~21:03-21:10 UTC)
 Done after S3 and before S4, at the user's reminder; details in ERRORS.md E016 and DECISIONS.md D17. Docker tests `51 passed` (47 + 2 `test_paths` + 2 guard tests); guard test shown to fail on planted names/paths; real `process` and `fetch` runs unchanged in output (sha256 equal to step 4). Line counts: `pipeline/paths.py` 30, `pipeline/fetch.py` 208, `pipeline/processed.py` 127.
 
@@ -144,7 +152,7 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 - **Open problem (resolved in the plan, not yet in code):** assumption A1 was wrong for AIFS (E006). PLAN-003 was approved 2026-11-06 ~19:20 UTC; the fix is applied and tested in step 4.
 
 ## Current plan
-**`docs/plans/PLAN-005.md`** — approved by the user 2026-11-06 ~20:51 UTC (security fixes S1-S5, then PLAN-004's steps 5-12 with security notes). Status: in progress; S5 decided (D16), next S1. **PLAN-004 below is superseded by PLAN-005** (reason: no security work, E013); its steps 1-4 are carried over as done.
+**`docs/plans/PLAN-005.md`** — approved by the user 2026-11-06 ~20:51 UTC (security fixes S1-S5, then PLAN-004's steps 5-12 with security notes). Status: in progress; S1-S5 done (S5 = decision D16, S4 hashes = D18); the E016 path fix (D17) is done; **next is step 5** (independent validation). **PLAN-004 below is superseded by PLAN-005** (reason: no security work, E013); its steps 1-4 are carried over as done.
 
 **`docs/plans/PLAN-004.md`** — approved by the user 2026-11-06 ~20:13 UTC (replaces PLAN-003: Docker as the official test run and a localhost preview, see E010, D10-D12). Status: in progress; steps 1, 1b, 2, 3, 3b, 4 done; next is step 5.
 
@@ -165,7 +173,7 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 | S1 | Repo hygiene: ignore patterns + secret-scan test | **done** 2026-11-06 (commit "Step S1...", time in `git log`) |
 | S2 | Network timeouts | **done** 2026-11-06 (commit "Step S2...", time in `git log`) |
 | S3 | Docker hardening, fetch/process split | **done** 2026-11-06 (commit "Step S3...", time in `git log`) |
-| S4 | Dependency vetting + scan (scan approved) | not started |
+| S4 | Dependency vetting + scan (scan approved) | **done** 2026-11-06 (commit "Step S4...", time in `git log`) |
 | S5 | Identity decision | **done** (D16: keep e-mail as is, no code) |
 | 5 | Independent validation | paused until S1-S4 are done |
 | 6 | Front-end spike + decision gate | not started |
