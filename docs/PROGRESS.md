@@ -41,9 +41,11 @@
 | 2026-11-06 23:03 | Housekeeping review of all markdown files (this edit; its commit time is in `git log`) | 4.74 h | 67.26 h |
 
 ## Current plan
-**`docs/plans/PLAN-005.md`** — approved by the user 2026-11-06 ~20:51 UTC (security fixes S1-S5, then PLAN-004's steps 5-12 with a security note on each). **Current plan.** Status: S1-S5 done (S5 = decision D16, S4 hashes = D18); the E016 path fix (D17) done; steps 1-6 done; **next is step 7** (static data export: frame format, tiles, manifest). **PLAN-004's text is still the step-by-step description for steps 7-12; PLAN-005 only adds the security notes.** The ideas for a more innovative front end (user request, ~23:03 UTC) are not a plan yet: they need the user's choice and then a new plan file.
+**`docs/plans/PLAN-006.md`** — approved by the user 2026-11-06 ~23:24 UTC (Plan-my-day as the signature; steps 7-12 reshaped; saved places and rain totals with a range as the helpful extras; 6-hour blocks; text-first, map second). **Current plan** for steps 7-12; decision D24.
 
-**`docs/plans/PLAN-004.md`** — approved by the user 2026-11-06 ~20:13 UTC (replaces PLAN-003: Docker as the official test run and a localhost preview, see E010, D10-D12). Status: in progress; steps 1, 1b, 2, 3, 3b, 4 done; next is step 5.
+`docs/plans/PLAN-005.md` — approved ~20:51 UTC (security steps S1-S5, then PLAN-004's steps 5-12 with security notes). **Status: S1-S5 and steps 5-6 done under it; superseded by PLAN-006 for steps 7-12.** Its security rules (D15, notes on every step) stay in force.
+
+`docs/plans/PLAN-004.md` — approved by the user 2026-11-06 ~20:13 UTC (replaced PLAN-003: Docker as the official test run and a localhost preview, see E010, D10-D12). **Status: superseded by PLAN-005 (security, E013)**; steps 1-4 were done under it and carried over; its step text for 7-12 is superseded by PLAN-006.
 
 `docs/plans/PLAN-003.md` — approved 2026-11-06 ~19:20 UTC. **Status: superseded by PLAN-004** (reason: no localhost/Docker test run; see E010).
 
@@ -66,10 +68,10 @@
 | S5 | Identity decision | **done** (D16: keep e-mail as is, no code) |
 | 5 | Independent validation | **done** 2026-11-06 (commit "Step 5...", time in `git log`) |
 | 6 | Front-end spike + decision gate + localhost | **done** 2026-11-06 (commits `c7baf2d`, `ba46ed2`); library MapLibre (D22) |
-| 7 | Static data export | not started |
-| 8 | Location panel | not started |
-| 9 | Map / globe views | not started |
-| 10 | Provenance + honesty UI | not started |
+| 7 | Static data export: point tiles, optional lower-resolution frames, manifest; size gate (PLAN-006) | not started |
+| 8 | Plan engine + place panel: activities, day cards, best windows, rain totals with a range, saved places, text first (PLAN-006) | not started |
+| 9 | Map and globe as supporting views, model switch, no-WebGL2 message (PLAN-006) | not started |
+| 10 | Provenance + honesty strip, final policy (PLAN-006) | not started |
 | 11 | Hosting gate + deploy | not started |
 | 12 | README + submission | not started |
 
@@ -82,7 +84,7 @@ Note: the built-in todo/task-list tool is not available in this session's tool s
 - **Records:** this housekeeping checked every markdown file against the others; its findings and fixes are listed in the last section of this file.
 
 ## Open items (waiting on someone, or on a later step)
-- **User:** confirm that the map and the rain layer draw in Firefox on the user's PC (the user reported "the site loads files"); choose from the front-end innovation ideas given in chat (~23:03 UTC); confirm the proposed no-WebGL2 message (D23).
+- **User:** confirm that the map and the rain layer draw in Firefox on the user's PC (the user reported "the site loads files"); [innovation ideas: DONE, chosen in D24 / PLAN-006; the list below is kept as history] (~23:03 UTC); confirm the proposed no-WebGL2 message (D23).
 - **User, later:** Safari and phone testing (deferred by the user); confirm the sanitised public status record (S04, step 7/10); the geocoder service (step 8; AI recommends Open-Meteo, D20); the hosting choice (step 11); GitHub login, repo link and approval before any push.
 - **E007:** IFS to 360 h is still deferred (D12).
 - **Pending results of bets:** D2/A6 and D4 (size limits, steps 7 and 11), D8 (once the scheduled job runs), D9 and addendum (steps 7 and 10), D14 (step 7).
@@ -285,4 +287,4 @@ User request: "i dont see anything innovative here so from any other steps i wan
 - **I7 Plan-my-day:** activity presets (commute, laundry, picnic, cricket, farming) with their own dry thresholds; ranks dry windows in plain words with agreement as confidence. About 3-4 h; very useful.
 - **I8 Smooth motion between 6 h frames:** motion vectors computed in the pipeline let the browser animate between frames; must be labelled as interpolation. About 8-12 h; research risk.
 - **I9 Offline-capable installable app (PWA):** last forecast cached, age always shown (D9). About 3 h; practical rather than visual.
-AI recommendation: signature "agreement-first" = I1 + I2 + I3 + I5, with I7 as the everyday-use feature; I6 and I8 only as stretch goals. Next: the user chooses; then a new plan file (the choice changes steps 7-10; frame format and size budget in step 7 depend on it).
+AI recommendation was: signature "agreement-first" = I1 + I2 + I3 + I5, with I7 as the everyday-use feature. **The user chose I7 (Plan-my-day) as the signature and asked that extras be genuinely helpful** (saved places, rain totals with a range); the sound, lens, spiral and smooth-motion ideas were dropped. Decision D24, plan PLAN-006 (approved ~23:24 UTC).
