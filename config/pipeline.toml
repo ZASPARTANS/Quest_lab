@@ -1,0 +1,30 @@
+# Settings for the data pipeline (fetch + process). No code here. Read with tomllib (Python 3.11).
+# Facts behind these values: docs/DOMAIN.md. Decisions: docs/DECISIONS.md (D1, D4, D5).
+
+[source]
+# Name of a source in the ecmwf-opendata client's own URL table (it maps "ecmwf" to
+# https://data.ecmwf.int/forecasts). Other names (aws, google, azure) are mirrors of the same data.
+name = "ecmwf"
+resolution = "0p25"          # 0.25 degree global grid
+param = "tp"                 # total precipitation
+type = "fc"                  # forecast
+stream = "oper"
+run_hours = [0, 12]          # UTC run hours used (06z/18z IFS runs are shorter, see DOMAIN.md)
+max_retries = 3              # client default is 500 retries x 120 s, far too patient for this app
+retry_after_seconds = 10
+
+# Forecast steps (hours after run time) to fetch per model.
+# Each range is [start, stop] inclusive, every N hours. Step 0 is not fetched: accumulation starts at 0.
+[models.ifs]
+step_ranges = [
+  { start = 3,   stop = 144, every = 3 },
+  { start = 150, stop = 240, every = 6 },
+]
+
+[models.aifs-single]
+step_ranges = [
+  { start = 6, stop = 360, every = 6 },
+]
+
+[paths]
+raw_dir = "data/raw"         # ignored by git; layout: <raw_dir>/<YYYYMMDDHH>/<model>/tp.grib2

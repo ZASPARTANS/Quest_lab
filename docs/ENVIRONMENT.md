@@ -30,3 +30,8 @@ Everything below was found by running commands in this session. Times are UTC.
 - Rebuilding a throwaway venv from `requirements.txt` gave an identical `pip freeze`. During that install pip printed two retries with `getaddrinfo failed` (transient DNS failure); pip recovered and the install completed. No action taken.
 - `pytest -q` with no `tests/` folder exits with code 5 ("no tests collected") and a `PytestConfigWarning: No files were found in testpaths`. Expected until step 4 adds tests.
 - Shell note: Git Bash `mktemp -d` returns a short-name temp path (`NISHAA~1`); Windows warns that the venv location "may have moved due to redirects". Harmless.
+
+## 2026-11-06 ~19:13 UTC — step 3
+- Local clock vs servers: local `date -u` agreed with the PyPI `Date` header within about 8 seconds, so the clock used for the time budget is sound.
+- Fetch of the `tp` messages of two models (about 64 MB) took about 49 s on this connection (about 5 MB/s). Free disk on E: is above 600 GB, so the data folder is not a space concern.
+- The ecmwf-opendata client prints a long notice about the 500-connection limit and tqdm progress bars on stderr; harmless noise.
