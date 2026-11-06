@@ -10,6 +10,9 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 | E004 | `FileNotFoundError: [WinError 2]` from `subprocess.run(['.venv/Scripts/python.exe', ...])` | 1 | 1/1 (use `sys.executable`) |
 | E005 | AI expected 13 `##` headings in CLAUDE.md after the edit; it was 14 (AI miscounted) | 1 | 1/1 (recounted: original had 13) |
 | E006 | Plan assumption A1 wrong: AIFS `tp` is in `kg m**-2` (mm), not metres like IFS | 1 | 0/0 (fix = PLAN-003 approved; applied in step 4) |
+| E007 | Assumption A3 wrong: IFS has `tp` files up to 360 h, not 240 h (config stops at 240 h) | 1 | 0/0 (needs user decision) |
+| E008 | `PrematureEndOfFileError` crash: `download_run` cannot recover from a truncated `tp.grib2` | 1 | 0/0 (fix proposed, not applied) |
+| E009 | During HTTP 503 the client retries every file check (about 20 s each) and then silently treats the run as incomplete | 1 | 0/0 (fix proposed, not applied) |
 
 ---
 
@@ -58,3 +61,26 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 - Planned fix (needs user approval as PLAN-003): step 4 reads each message's `units` key and converts to mm with a factor from `config/pipeline.toml` (`m` -> 1000, `kg m**-2` -> 1); an unknown unit stops the run; tests cover both units.
 - Changed lines: none yet.
 - Status 2026-11-06 ~19:21 UTC: PLAN-003 was approved by the user and written to `docs/plans/PLAN-003.md`. The code fix (per-message unit conversion from config, with tests) is done in step 4; the counters above change only after the failing case is re-run there.
+
+## E007 — Assumption A3 was wrong: IFS runs to 360 h, not 240 h
+- 2026-11-06 ~19:30 UTC (follow-up check of the 12z step list). seen: 1. fix worked / fix tried: 0/0.
+- What was assumed: PLAN-001 to PLAN-003 and `config/pipeline.toml` say IFS has 3 h steps to 144 h and 6 h steps to 240 h. That came from probing only the 240 h file and from general knowledge; the files after 240 h were never probed.
+- What was found: yesterday's complete 12z and 00z runs (2026-11-05) each have 84 IFS files: 3..144 every 3 h plus 150..360 every 6 h. All 64 configured steps exist and 20 more exist beyond them (246, 252, ..., 360). The index of today's 00z IFS 246/300/360 h files contains a `tp` message (about 0.6 MB each).
+- Impact if the user agrees to use them: IFS and AIFS would overlap over 6..360 h (6-hourly), so the model-agreement bar can cover the full 15 days and the planned "AIFS only past 240 h" case disappears. About 12 MB more per run. Needs a plan revision because step 4, step 8 and A3 mention 240 h.
+- Decision status: waiting for the user (extend to 360 h, or keep 240 h). No change made.
+- Changed lines: none yet.
+
+## E008 — A truncated raw file makes the fetch crash instead of re-downloading
+- 2026-11-06 ~19:38 UTC (failure-mode test). seen: 1. fix worked / fix tried: 0/0.
+- Exact error: `gribapi.errors.PrematureEndOfFileError: End of resource reached when reading message`, raised by `fetch.describe_messages` inside `fetch.download_run` (the reuse check) when `data/raw/.../tp.grib2` is cut in the middle of a message (test copy: 14,754,224 of 29,508,202 bytes).
+- Root cause (AI): `download_run` writes straight to the final path and then, on the next run, assumes an existing file can be read. An interrupted download leaves a truncated file at the final path and every later run crashes until someone deletes it by hand. (Whether the client leaves partial files on a mid-stream cut was NOT tested; only the truncated-file reaction was.)
+- Proposed fix: download to `tp.grib2.part`, rename to `tp.grib2` only after success; and treat an unreadable existing file as incomplete so it is downloaded again; add a test.
+- Changed lines: none yet.
+
+## E009 — HTTP 503 makes the run check very slow and can silently pick an older run
+- 2026-11-06 ~19:40 UTC (failure-mode test). seen: 1. fix worked / fix tried: 0/0.
+- Observed (config: 3 retries x 10 s): one HEAD request against a local server that always answers 503 returned `503` after 20.1 s without raising ("Recovering from HTTP error [503 Service Unavailable], attempt 1 of 3 ... attempt 2 of 3"). Against a dead port the same request raised `requests.exceptions.ConnectionError` after 26.1 s.
+- Why it matters: the client's `latest()` sends one HEAD per step file (64 for IFS, 60 for AIFS) and evaluates all of them before judging. With 503 on every request that is about 64 x 20 s = 21 min for one pass of one model (an extrapolation, NOT measured end to end), repeated for up to two days back, two run hours and two models. A first attempt at the full test was stopped by me after about 7 minutes without any output, which fits that behaviour but does not prove it. Also, a 503 is not a 200, so `latest()` treats the run as incomplete and falls back to an older run without saying so.
+- Proposed fix: for the run search use a client with 1 retry (fail fast), and stop with an error if any answer is neither 200 nor 404 instead of falling back; the scheduled job should fail loudly so the previous deployment stays live.
+- Real-server cases that behaved well: a request for a file that does not exist (AIFS step 7) raised `requests.exceptions.HTTPError: 404 ... .index` after 1.2 s and left no file behind; 404 for unpublished files is not retried (the full run search took about 49 s).
+- Changed lines: none yet.

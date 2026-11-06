@@ -17,7 +17,16 @@
 | 2026-11-06 ~18:53 | Commit `ba581ee` (step 1b done-check results) | 0.56 h | 71.44 h |
 | 2026-11-06 19:06 | Commit `785e774` (step 2: Python 3.11 venv, pinned requirements) | 0.79 h | 71.21 h |
 | 2026-11-06 19:16 | Commit `fc08c94` (step 3: fetch IFS and AIFS precipitation) | 0.96 h | 71.04 h |
-| 2026-11-06 19:20 | Commit "Adopt PLAN-003..." (hash: see `git log`) | 1.03 h | 70.97 h |
+| 2026-11-06 19:20 | Commit `1c495fc` (PLAN-003 adopted) | 1.03 h | 70.97 h |
+| 2026-11-06 19:41 | Commit "Record step 3 follow-up verification..." (hash: see `git log`) | 1.37 h | 70.63 h |
+
+## Step 3 follow-up verification (asked for by the user; run 2026-11-06 ~19:25-19:41 UTC)
+The four items listed as "NOT verified" in the step 3 results below were checked. Details: DOMAIN.md (follow-up section), ERRORS.md (E007-E009), ENVIRONMENT.md (Docker).
+- **Linux: PASSED** in the `python:3.11-slim` Docker image (Python 3.11.18): install, `pip check`, `eccodes` 2.50.0 import, `9 passed`, real GRIB files decoded with identical counts, units and grid. Repo untouched (`git status` 0 lines).
+- **12z IFS step list: PASSED, with a surprise.** Yesterday's 12z and 00z runs contain all 64 configured IFS steps and AIFS 60/60. IFS also has 20 more files (246..360 h) that contain `tp` (E007). **Needs your decision.**
+- **Publication lag: MEASURED (one run).** 12z IFS appeared between 19:33 and 19:35 UTC (about 7 h 34 min after run time); 12z AIFS was already complete at the first poll (<= 7 h 09 min). Suggests starting checks about 07:45 and 19:45 UTC.
+- **Error handling: 2 PROBLEMS FOUND, 2 cases fine.** Dead server: loud `ConnectionError` after 26 s (fine). Missing file: `HTTPError 404` after 1.2 s, no file left (fine). Truncated raw file: `download_run` crashes with `PrematureEndOfFileError` (E008, bug). HTTP 503: client retries each file check about 20 s and then silently falls back to an older run (E009; total hang time extrapolated, not measured). **No fix applied yet.**
+- Steps 4+ have NOT started. Step 3 stays "done" for its own done-check; E007-E009 are open and listed in ERRORS.md.
 
 ## Step 1 done-check results (run 2026-11-06 ~18:44 UTC)
 - `git status --short | wc -l` after commit: `0` (clean).
