@@ -10,8 +10,12 @@ param = "tp"                 # total precipitation
 type = "fc"                  # forecast
 stream = "oper"
 run_hours = [0, 12]          # UTC run hours used (06z/18z IFS runs are shorter, see DOMAIN.md)
-max_retries = 3              # client default is 500 retries x 120 s, far too patient for this app
+max_retries = 3              # downloads: client default is 500 retries x 120 s, far too patient for this app
 retry_after_seconds = 10
+# Run search (one HEAD request per step file, about 120 per search): fail fast, because a server
+# that is in trouble would otherwise make every one of those requests wait. See docs/ERRORS.md E009.
+search_max_retries = 2
+search_retry_after_seconds = 5
 
 # Forecast steps (hours after run time) to fetch per model.
 # Each range is [start, stop] inclusive, every N hours. Step 0 is not fetched: accumulation starts at 0.

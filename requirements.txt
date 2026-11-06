@@ -8,6 +8,7 @@
 # --- Direct dependencies (what this project imports or runs) ---
 ecmwf-opendata==0.3.35  # download IFS/AIFS open data (byte-range GRIB messages)
 eccodes==2.50.0  # decode GRIB2 messages (ECMWF official bindings, bundles the C library on Windows)
+requests==2.34.2  # HTTP session for the run search in pipeline/fetch.py (also a dependency of ecmwf-opendata)
 numpy==2.4.6  # array processing
 pytest==9.2.0  # automated tests
 
@@ -27,7 +28,6 @@ pycparser==3.12
 Pygments==2.21.0
 python-dateutil==4.0.0
 pytz==2026.6
-requests==2.34.2
 tqdm==4.70.1
 tzdata==2026.6
 urllib3==2.8.0

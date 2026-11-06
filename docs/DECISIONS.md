@@ -66,3 +66,10 @@ Append only. Each entry: date/time, what was chosen, alternatives, why, who deci
 - Alternatives: a separate `requirements.in` + lock file (needs another tool and another root file); `pyproject.toml` dependencies (would duplicate the pins).
 - Note: `numpy` 2.5.4 is the newest release but needs Python >= 3.12, so pip chose 2.4.6 on Python 3.11 (D6).
 - Checkable bet: a fresh venv built from `requirements.txt` equals the working one. Result: **held** on 2026-11-06 ~19:00 UTC (both lists identical, 23 packages).
+
+## D8 — Run search policy: fail fast and loud on server trouble
+- 2026-11-06 ~19:52 UTC. Decided by: **AI**, following the user's instruction to fix E008 and E009 first (the exact policy was proposed to the user and the user told the AI to fix both).
+- Chosen: during the search for the latest complete run, an answer other than 200 (published) or 404 (not published yet) stops the run with `UnexpectedStatus`; the search uses 2 attempts 5 s apart (config keys `search_max_retries`, `search_retry_after_seconds`). Downloads keep 3 attempts 10 s apart. Downloads are written to a `.part` file and renamed only when the file holds exactly the expected steps.
+- Alternatives: keep the client's default (silent fall-back to an older run on a 503, very slow); retry 503 with long back-off (hides outages and risks the hang seen in E009).
+- Why: a scheduled job that fails loudly leaves the previous deployment live and is visible in the logs; silently serving an older run would be wrong data that looks right.
+- Checkable bet: transient 503/429 from the ECMWF server are rare enough that aborting is acceptable. Result: pending (to be observed once the scheduled job runs).
