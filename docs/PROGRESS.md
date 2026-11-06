@@ -15,7 +15,8 @@
 | 2026-11-06 ~18:45 | Commit `591a24c` (step 1 record) | 0.43 h | 71.57 h |
 | 2026-11-06 18:50 | Commit `7a83bb9` (step 1b: PLAN-002, D5, D6, E002, README) | 0.52 h | 71.48 h |
 | 2026-11-06 ~18:53 | Commit `ba581ee` (step 1b done-check results) | 0.56 h | 71.44 h |
-| 2026-11-06 19:06 | Commit "Step 2: Python 3.11 virtual environment..." (hash not known before committing; see `git log`) | 0.79 h | 71.21 h |
+| 2026-11-06 19:06 | Commit `785e774` (step 2: Python 3.11 venv, pinned requirements) | 0.79 h | 71.21 h |
+| 2026-11-06 19:16 | Commit "Step 3: fetch IFS and AIFS precipitation..." (hash: see `git log`) | 0.96 h | 71.04 h |
 
 ## Step 1 done-check results (run 2026-11-06 ~18:44 UTC)
 - `git status --short | wc -l` after commit: `0` (clean).
@@ -44,6 +45,18 @@
 - Surprise: numpy 2.5.4 (newest) needs Python >= 3.12; pip chose 2.4.6 (recorded in D7, SOURCES).
 - Line counts: no source files yet (`pyproject.toml` is 11 lines, config only).
 
+## Step 3 done-check results (run 2026-11-06 ~19:11 UTC)
+- Command: `.venv/Scripts/python.exe -m pipeline.fetch` (about 49 s). It printed: latest run complete for all models = **2026-11-06 00:00 UTC** (checked at 19:11 UTC).
+- IFS: 64 messages, 34.54 MB. AIFS: 60 messages, 29.51 MB. Total 64.05 MB. "steps missing vs config: []" and "unexpected: []" for both models.
+- eccodes key dump, both models: `shortName=tp`, `stepType=accum`, `startStep=0`, `gridType=regular_ll`, `Ni=1440`, `Nj=721`, `dataDate=20261106`, `dataTime=0`. **units: IFS `m`, AIFS `kg m**-2`** (differs from assumption A1: see E006). IFS endStep 3..240 with gaps {3, 6}; AIFS 6..360 with gaps {6}.
+- Units cross-checked against values (area-weighted global mean of cumulative tp, IFS x1000 vs AIFS): 6 h 0.71 vs 0.71 mm; 120 h 15.57 vs 15.94 mm; 240 h 30.89 vs 31.49 mm. The keys are right.
+- Hard-coded check: `grep -n -wiE "https?|ifs|aifs-single|aifs|data\.ecmwf" pipeline/*.py` printed nothing; URLs and model names come from `config/pipeline.toml` and the client.
+- Tests: `pytest -q` -> `9 passed in 0.72s` (step expansion, bad ranges, real-config step counts 64 and 60, run selection incl. the "12z not published by one model" case, step check).
+- Line counts: `pipeline/fetch.py` 144, `tests/pipeline/test_fetch.py` 57, `config/pipeline.toml` 30 (limits 300/50-line functions respected; longest function `summarise` is about 17 lines).
+- Root check: only `.gitignore`, `README.md`, `config`, `docs`, `pipeline`, `pyproject.toml`, `requirements.txt`, `tests`. `data/` is untracked and ignored (not in `git status`).
+- NOT verified: behaviour when the server is slow or a file is missing mid-download (retries set to 3 x 10 s; not exercised); the 12z IFS step list; Linux.
+- **Open problem:** assumption A1 was wrong for AIFS (E006). The fix changes the wording of plan step 4, so it needs a revised plan (PLAN-003) and your approval before step 4 starts.
+
 ## Current plan
 **`docs/plans/PLAN-002.md`** — approved by the user 2026-11-06 ~18:49 UTC. Status: in progress.
 
@@ -54,7 +67,7 @@
 | 1 | Repo + records (git init, .gitignore, PROBLEM.md, DECISIONS, ERRORS, first commit) | **done** 2026-11-06 18:43 UTC, commit `ccb24df` |
 | 1b | Apply folder layout (PLAN-002: D5, E002, README, .gitignore) | **done** 2026-11-06 18:50 UTC, commit `7a83bb9` |
 | 2 | Python environment + pinned packages | **done** 2026-11-06 19:06 UTC (commit "Step 2: Python 3.11 virtual environment...") |
-| 3 | Fetch (IFS + AIFS `tp`) | not started |
+| 3 | Fetch (IFS + AIFS `tp`) | **done** 2026-11-06 19:16 UTC (commit "Step 3: fetch IFS and AIFS precipitation...") |
 | 4 | Processing core + tests | not started |
 | 5 | Independent validation | not started |
 | 6 | Front-end spike + decision gate | not started |

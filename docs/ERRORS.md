@@ -9,6 +9,7 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 | E003 | `FileNotFoundError: '/tmp/problem_blob.txt'` (Windows Python cannot see Git Bash paths) | 1 | 1/1 (pipe data via stdin) |
 | E004 | `FileNotFoundError: [WinError 2]` from `subprocess.run(['.venv/Scripts/python.exe', ...])` | 1 | 1/1 (use `sys.executable`) |
 | E005 | AI expected 13 `##` headings in CLAUDE.md after the edit; it was 14 (AI miscounted) | 1 | 1/1 (recounted: original had 13) |
+| E006 | Plan assumption A1 wrong: AIFS `tp` is in `kg m**-2` (mm), not metres like IFS | 1 | 0/0 (fix = PLAN-003, awaiting approval) |
 
 ---
 
@@ -47,3 +48,12 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 - What happened: the check was written as "expect 13 headings"; the real result was 14. The original file had 13 `##` headings (listed earlier at lines 5, 12, 26, 35, 41, 49, 52, 57, 62, 66, 72, 76, 86), so 14 is correct with the one new section. The edit was fine; the expectation was wrong.
 - Fix: recounted from the earlier heading list and corrected the expectation in PROGRESS. Worked.
 - Changed lines: none.
+
+## E006 — Assumption A1 was half wrong: IFS and AIFS use different precipitation units
+- 2026-11-06 ~19:11 UTC (step 3, GRIB key dump). seen: 1. fix worked / fix tried: 0/0 (the fix is a plan revision, PLAN-003, not yet approved or applied).
+- What was assumed: PLAN-001/PLAN-002 assumption A1 said `tp` is in metres in both models, and step 4 said "m to mm".
+- What was found (eccodes keys of the downloaded files): IFS `units = m`; AIFS `units = kg m**-2`. 1 kg m**-2 of water is 1 mm, so the AIFS values must NOT be multiplied by 1000. Converting both with the same factor would make AIFS 1000 times too large.
+- Evidence the keys are right (values, not just labels): area-weighted global mean of the cumulative field at the same step: 6 h: IFS x1000 = 0.71 mm, AIFS = 0.71 mm; 120 h: 15.57 vs 15.94 mm; 240 h: 30.89 vs 31.49 mm.
+- Root cause: an assumption made from general knowledge before looking at the files. The step-3 check did its job and caught it before any processing code existed, so no wrong output was produced.
+- Planned fix (needs user approval as PLAN-003): step 4 reads each message's `units` key and converts to mm with a factor from `config/pipeline.toml` (`m` -> 1000, `kg m**-2` -> 1); an unknown unit stops the run; tests cover both units.
+- Changed lines: none yet.

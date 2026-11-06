@@ -19,3 +19,10 @@ Access date 2026-11-06. Versions are those pinned in `requirements.txt`. Licence
 | pytest | 9.2.0 | https://pypi.org/project/pytest/ | automated tests | MIT |
 
 Transitive (installed by pip, not chosen directly): attrs, certifi, cffi, charset-normalizer, colorama, findlibs, idna, iniconfig, multiurl, packaging, pluggy, pycparser, Pygments, python-dateutil, pytz, requests, tqdm, tzdata, urllib3.
+
+## 2026-11-06 ~19:11 UTC — Forecast data actually downloaded (step 3)
+- What: ECMWF Open Data, parameter `tp` (total precipitation), type `fc`, stream `oper`, 0.25 degree global grid, run 2026-11-06 00 UTC.
+  - IFS (model `ifs`): 64 messages, steps 3..240 h, 34.54 MB. AIFS Single (model `aifs-single`): 60 messages, steps 6..360 h, 29.51 MB.
+- Where from: https://data.ecmwf.int/forecasts/20261106/00z/ (via the `ecmwf-opendata` client, source name `ecmwf`). Retrieved 2026-11-06 ~19:11 UTC. Stored in the git-ignored `data/raw/2026110600/<model>/tp.grib2`; re-created by `python -m pipeline.fetch`.
+- Licence / attribution: CC BY 4.0 plus the ECMWF Terms of Use (stated on https://www.ecmwf.int/en/forecasts/datasets/open-data, read 2026-11-06, and printed by the client on download). The exact attribution wording still has to be taken from the official terms page before the app shows data (plan step 10).
+- Units: IFS metres, AIFS kg m**-2 (see DOMAIN.md and E006). Time zone: UTC. Accumulation: since forecast start.
