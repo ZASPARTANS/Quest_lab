@@ -11,13 +11,21 @@
 |---|---|---|---|
 | 2026-11-06 18:19 | First prompt (from log) | 0.0 h | 72.0 h |
 | 2026-11-06 18:19 | `date -u` at first turn, same session ID | ~0.0 h | ~72.0 h |
+| 2026-11-06 18:43 | Commit `ccb24df` (step 1, first commit) | 0.41 h | 71.59 h |
+
+## Step 1 done-check results (run 2026-11-06 ~18:44 UTC)
+- `git status --short | wc -l` after commit: `0` (clean).
+- `git check-ignore -v .claude/settings.local.json`: `.gitignore:2:.claude/` (matched); `git ls-files | grep -c '^.claude'`: `0` (nothing under `.claude/` is tracked).
+- `git show --stat HEAD` lists `docs/PROBLEM.md` (1 line).
+- Byte comparison: `git show HEAD:docs/PROBLEM.md` piped into Python equals the problem statement exactly (217 bytes, no CR). Note: the pasted statement was wrapped over two lines by the terminal; it is saved as one line.
+- Tests: none exist yet (no source code), so none were run. Line counts: no source files yet.
 
 ## Current plan
 **`docs/plans/PLAN-001.md`** — approved by the user 2026-11-06 ~18:42 UTC. Status: in progress.
 
 | Step | What | Status |
 |---|---|---|
-| 1 | Repo + records (git init, .gitignore, PROBLEM.md, DECISIONS, ERRORS, first commit) | in progress |
+| 1 | Repo + records (git init, .gitignore, PROBLEM.md, DECISIONS, ERRORS, first commit) | **done** 2026-11-06 18:43 UTC, commit `ccb24df` |
 | 2 | Python environment + pinned packages | not started |
 | 3 | Fetch (IFS + AIFS `tp`) | not started |
 | 4 | Processing core + tests | not started |
@@ -35,7 +43,7 @@ Note: the built-in todo/task-list tool is not available in this session's tool s
 ## Status
 - Environment check done and recorded in `docs/ENVIRONMENT.md`.
 - Read-only probe of the ECMWF Open Data server done; findings in `docs/DOMAIN.md`, source in `docs/SOURCES.md`.
-- Not a git repo yet (git init is part of plan step 1).
+- Git repo initialised (branch `main`), first commit `ccb24df`. No remote yet (GitHub login and repo creation are plan step 11, needing the user's approval).
 
 ## Known issues
 - Python 3.10 pip is broken; use `py -3.11` (see ENVIRONMENT.md).
