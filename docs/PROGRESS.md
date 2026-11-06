@@ -85,8 +85,7 @@ Note: the built-in todo/task-list tool is not available in this session's tool s
 
 ## Open items (waiting on someone, or on a later step)
 - **User:** confirm that the map and the rain layer draw in Firefox on the user's PC (the user reported "the site loads files"); [innovation ideas: DONE, chosen in D24 / PLAN-006; the list below is kept as history] (~23:03 UTC); confirm the proposed no-WebGL2 message (D23).
-- **User, later:** Safari and phone testing (deferred by the user); confirm the sanitised public status record (S04, step 7/10); the geocoder service (step 8; AI recommends Open-Meteo, D20); the hosting choice (step 11); GitHub login, repo link and approval before any push.
-- **S04 (user, step 7/10):** confirm that the public status record carries only an error category and a time (the record itself is built with the scheduled job, step 11).
+- **User, later:** Safari and phone testing (deferred by the user); the geocoder service (step 8; AI recommends Open-Meteo, D20); the hosting choice (step 11); GitHub login, repo link and approval before any push.
 - **Check in step 8:** `DecompressionStream('gzip')` reads the real tiles in Chromium and in the user's Firefox (D25 assumption); time zones in Node tests.
 - **E007:** IFS to 360 h is still deferred (D12).
 - **Pending results of bets:** D2/A6 and D4 (size limits, steps 7 and 11), D8 (once the scheduled job runs), D9 and addendum (steps 7 and 10), D14 (step 7).
