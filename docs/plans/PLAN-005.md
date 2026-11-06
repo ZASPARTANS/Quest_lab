@@ -2,7 +2,7 @@
 
 - Drafted: 2026-11-06 ~20:43 UTC, after the audit in `docs/SECURITY.md` (written 20:41 UTC)
 - Session: `3e56a452-e5f8-4bb9-b353-63bad43748f4`; first prompt 2026-11-06T18:19:13Z; deadline 2026-11-09T18:19:13Z
-- Approval: **PENDING.** Written as a draft at the user's request ("write the fixes as the next plan file ... and wait for my approval"). No code is changed before the user approves. The approval line is filled in when the user answers.
+- Approval: **approved by the user (Nishaanth Senthilkumar) in chat, 2026-11-06 ~20:51 UTC** ("yes for plan 5, so the S4 and S5, the S5 is fine it can have my email"). It was written as a draft first, at the user's request, and the plan text below is unchanged; only this line was filled in. The AI reads the message as: plan approved, the S4 dependency scan approved, S5 = keep the e-mail as is. The S4 hash choice was not answered and is asked again at S4.
 - **Replaces: PLAN-004** (approved 2026-11-06 ~20:13 UTC). Steps 1, 1b, 2, 3, 3b and 4 are done and carried over as done.
 
 ## Why PLAN-004 is replaced

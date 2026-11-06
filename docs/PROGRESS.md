@@ -26,11 +26,19 @@
 | 2026-11-06 20:22 | Resume after /compact, same session ID; records re-read | 2.06 h | 69.94 h |
 | 2026-11-06 (see `git log`) | Commit "Step 4: processing core..." (hash and exact time: `git log`) | about 2.3 h | about 69.7 h |
 
+## Step S1 done-check results (run 2026-11-06 ~20:52-20:55 UTC)
+Files: `.gitignore` (+9 patterns), new `config/security.toml` (9 key formats, skip list), new `tests/hygiene/test_no_secrets.py` (3 tests, about 55 lines). Code ladder: standard library only (`re`, `tomllib`, `os.walk`).
+- `git check-ignore -v` matched `site.pem`, `server.key`, `id_rsa`, `id_rsa.pub`, `credentials.json`, `my.token`, `bundle.p12`, `cert.pfx`, `id_ed25519`.
+- Official Docker test command: `43 passed` (40 + 3 new), 7.8 s. The scan of the real repo finds nothing.
+- Scanner proof: on a planted fake GitHub-style key, a scanner with no patterns finds `[]` and the configured scanner finds `[('leak.txt', 1, 'github_token')]`; the tests also cover all seven formats built at run time, skipped folders and binary files; results contain the file, line and pattern name, never the value.
+- Defect found and fixed in my first version: walking `.venv/` through the Docker bind mount made the run take 141 s; switching to `os.walk` with pruned folders brought it back to 7.8 s.
+- Not covered: secret formats not in the list; the git history and the session log (those are checked by hand at submission, see the checklist below).
+
 ## Security audit (user request, run 2026-11-06 ~20:35-20:43 UTC)
 - State when paused: step 4 finished and committed (`dc2535c`); `git status` clean on `main`; no remote; step 5 not started.
 - Result: `docs/SECURITY.md` (findings S01-S09: no Critical or High; 5 Medium/Low items need code or setup changes, 2 need the user's decision). Not checkable yet: live-site items (HTTPS, headers, CORS, rate limiting), the front end, GitHub settings, a dependency vulnerability scan.
 - Errors recorded: E013 (no security in earlier plans), E014 (`requests` used directly without vetting). Decision: D15.
-- Fixes: written as the DRAFT `docs/plans/PLAN-005.md` (steps S1-S5, then steps 5-12 with security notes). **Waiting for the user's approval; no code changed.**
+- Fixes: `docs/plans/PLAN-005.md` (steps S1-S5, then steps 5-12 with security notes), **approved by the user ~20:51 UTC**; work in progress, see the step table.
 
 ## Step 4 done-check results (run 2026-11-06 ~20:25-20:35 UTC)
 Code: `pipeline/grid.py` (58 lines), `pipeline/process.py` (116), `pipeline/processed.py` (111); config `[grid]`, `[units_to_mm]`, `[process]`, `processed_dir`; tests `test_grid.py`, `test_process.py`, `test_processed.py`, `conftest.py` (20 new tests). Longest function about 17 lines. Decisions D13 (wet threshold 0.5 mm, user), D14 (6 h axis, uint16 format, two marked shortcuts). Errors: E006 fix verified (1/1), new E012 (grid starts at longitude 180).
@@ -116,7 +124,7 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 - **Open problem (resolved in the plan, not yet in code):** assumption A1 was wrong for AIFS (E006). PLAN-003 was approved 2026-11-06 ~19:20 UTC; the fix is applied and tested in step 4.
 
 ## Current plan
-**Pending:** `docs/plans/PLAN-005.md` (security fixes S1-S5, then PLAN-004's steps 5-12) is a DRAFT awaiting the user's approval. Until it is approved, PLAN-004 below stays the current plan and step 5 is paused.
+**`docs/plans/PLAN-005.md`** — approved by the user 2026-11-06 ~20:51 UTC (security fixes S1-S5, then PLAN-004's steps 5-12 with security notes). Status: in progress; S5 decided (D16), next S1. **PLAN-004 below is superseded by PLAN-005** (reason: no security work, E013); its steps 1-4 are carried over as done.
 
 **`docs/plans/PLAN-004.md`** — approved by the user 2026-11-06 ~20:13 UTC (replaces PLAN-003: Docker as the official test run and a localhost preview, see E010, D10-D12). Status: in progress; steps 1, 1b, 2, 3, 3b, 4 done; next is step 5.
 
@@ -134,8 +142,12 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 | 3 | Fetch (IFS + AIFS `tp`) | **done** 2026-11-06 19:16 UTC (commit `fc08c94`) |
 | 3b | Docker test environment (PLAN-004) | **done** 2026-11-06 20:18 UTC (commit "Step 3b: Docker test environment...") |
 | 4 | Processing core + tests (units per model) | **done** 2026-11-06 (commit "Step 4: processing core...", time in `git log`) |
-| S1-S5 | Security fixes (PLAN-005, draft) | waiting for approval |
-| 5 | Independent validation | paused until PLAN-005 is decided |
+| S1 | Repo hygiene: ignore patterns + secret-scan test | **done** 2026-11-06 (commit "Step S1...", time in `git log`) |
+| S2 | Network timeouts | not started |
+| S3 | Docker hardening, fetch/process split | not started |
+| S4 | Dependency vetting + scan (scan approved) | not started |
+| S5 | Identity decision | **done** (D16: keep e-mail as is, no code) |
+| 5 | Independent validation | paused until S1-S4 are done |
 | 6 | Front-end spike + decision gate | not started |
 | 7 | Static data export | not started |
 | 8 | Location panel | not started |
@@ -155,7 +167,7 @@ Note: the built-in todo/task-list tool is not available in this session's tool s
 - D9 (user): out-of-date forecast shows a short plain-language warning only, no technical detail (see DECISIONS.md). Applies to plan step 10.
 - D9 addendum (user): technical error detail must remain available to developers (job log now; a status record next to the data is proposed for step 7/10, to be confirmed).
 - D10-D12 (user, 2026-11-06 20:13 UTC): Docker is the official test run; localhost = Vite on host + Docker nginx preview; IFS stays at 240 h for now (E007 open).
-- D15 (user, ~20:43 UTC): security first. Waiting for: approval of PLAN-005; the S06 identity/privacy choice; confirmation of S04 (sanitised status record); approval for the dependency scan (S4).
+- D15 (user, ~20:43 UTC): security first. PLAN-005 approved ~20:51 UTC; S06 decided (D16: keep e-mail). Still waiting for: the hash choice at S4 (Linux set only / both / none) and confirmation of S04 (sanitised status record, at step 7/10).
 - D13 (user, ~20:23 UTC): wet threshold 0.5 mm per 6 h. D14 (AI, step 4): 6 h axis and file format, two marked shortcuts.
 
 ## Submission checklist — security (added at the user's request, 2026-11-06 ~20:43 UTC)

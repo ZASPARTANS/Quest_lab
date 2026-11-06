@@ -1,9 +1,17 @@
 # Personal Claude Code settings: never commit
 .claude/
 
-# Secrets
+# Secrets (the list of key formats the secret-scan test looks for is config/security.toml)
 .env
 .env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*.token
+id_rsa*
+id_ed25519*
+credentials*
 
 # Python
 .venv/

@@ -141,3 +141,9 @@ Append only. Each entry: date/time, what was chosen, alternatives, why, who deci
 - Alternatives: fix the findings immediately (rejected by the user's instruction: plan first, approval first); postpone security to the end (rejected: S03 and S01 are cheaper to fix before more code depends on them).
 - Result of the audit: no Critical or High finding; nine findings (S01-S09); see SECURITY.md. Result of the decision: pending the approval of PLAN-005.
 
+## D16 — Identity in the public repo: keep the author e-mail as is (S06)
+- 2026-11-06 ~20:51 UTC. Decided by: **user** (message: "the S5 is fine it can have my email").
+- Chosen: the commits keep the author e-mail they already have (the user's own address); no history rewrite, no noreply address. Machine name, local paths and the user's name in `docs/` also stay (the session-log path is required by the submission checklist anyway).
+- Alternatives offered: GitHub noreply address for new commits; noreply plus rewriting the 14 local commits before the first push.
+- Consequence the user accepted: the address will be public in the git history once the repo is pushed, and cannot be removed afterwards without rewriting a public history.
+- Checkable bet: none. Result: PLAN-005 step S5 is complete with this decision (no code change).
