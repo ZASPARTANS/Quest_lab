@@ -273,3 +273,16 @@ Gaps found and fixed:
 - **PROGRESS (this file):** the result sections were out of order and the time table stopped after step 4; the table is rebuilt from `git log`, results are in chronological order, and Status, Open items and Known issues are rewritten.
 Found but not changed (no code changes allowed): `frontend/spikes/maplibre.js` exposes `window.__map` without a `shortcut:` marker (recorded in the shortcut register).
 Two things noticed about my own work: three times this session I wrote a time into a record before checking the clock (corrected each time, E021 and earlier slips), and the first Firefox "variants" were not what I thought (E022).
+
+## Front-end innovation ideas offered to the user (~23:06 UTC; NOT decisions)
+User request: "i dont see anything innovative here so from any other steps i want you to give me ideas to make the front end genuinely innovative." The ideas build on what this project uniquely has: two independent models (IFS physics, AIFS machine learning), an agreement field for 6-240 h, a static data approach, and rendering in the visitor's own browser (no server GPU, D23). Hour figures are the AI's rough estimates, not measurements.
+- **I1 Agreement-aware rain map:** one map that shows how much rain AND how sure the two models are (colour for amount; hatching or desaturation where they disagree). Replaces the separate agreement bar. About 4-6 h. Risk: legibility and colour-blind safety; must always say agreement is not a probability (D3).
+- **I2 Butterfly timeline for the chosen place:** IFS mm bars above the axis, AIFS mirrored below, shaded where they agree; scrubbing moves the map and the chart together. About 3-4 h.
+- **I3 Compare lens:** drag a circle (or a curtain slider) over the map; inside it you see the other model. Two synchronised maps. About 2-3 h; doubles map memory.
+- **I4 Rain spiral:** a 10-day clock, one ring per day, angle = local hour, colour = rain; shows daily rhythms at a glance. About 3-4 h; novelty versus readability.
+- **I5 Hear the forecast:** Web Audio plays the 10 days in about 20 s as rain sound (loudness = mm, IFS left ear, AIFS right ear); doubles as an accessibility feature. About 2-3 h; needs a click to start (browser rule).
+- **I6 Storm tour:** the pipeline finds the biggest rain systems of each run; the globe flies to them with auto-written captions. About 6-8 h; accuracy risk for captions.
+- **I7 Plan-my-day:** activity presets (commute, laundry, picnic, cricket, farming) with their own dry thresholds; ranks dry windows in plain words with agreement as confidence. About 3-4 h; very useful.
+- **I8 Smooth motion between 6 h frames:** motion vectors computed in the pipeline let the browser animate between frames; must be labelled as interpolation. About 8-12 h; research risk.
+- **I9 Offline-capable installable app (PWA):** last forecast cached, age always shown (D9). About 3 h; practical rather than visual.
+AI recommendation: signature "agreement-first" = I1 + I2 + I3 + I5, with I7 as the everyday-use feature; I6 and I8 only as stretch goals. Next: the user chooses; then a new plan file (the choice changes steps 7-10; frame format and size budget in step 7 depend on it).
