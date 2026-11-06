@@ -249,3 +249,10 @@ The README's "known limitations" (step 12) must list every item above and every 
 - Known limit: the export took 4 min 37 s through the Windows bind mount (4281 small file writes); on Linux it should be faster (not measured).
 - Alternatives not chosen: 32 x 32 tiles (fewer files, bigger fetches); plain or cell-major layouts (larger); a coarser storage grid or a land-only store (not needed at this size).
 - Checkable bet: the browser reader (step 8) returns the same numbers as the Python read-back. Result: pending (step 8, Node test on a real tile).
+
+## D26 — Public status file: error category and time only (closes S04)
+- 2026-11-06 ~23:57 UTC. Decided by: **user** (chose "Category and time only (Recommended)" out of: category and time / full error text / no public status file).
+- Chosen: when the scheduled job (step 11) writes a status file next to the data, it contains only the time of the last successful forecast, the time of the last attempt and a problem category (for example "data source unavailable", "run incomplete", "processing failed"). No URLs, paths, library messages or raw error text. Developers keep the full error in the job log (D9 addendum).
+- Alternatives not chosen: full error text in the public file; no public status file (visitors would rely only on the age warning from the manifest's run time).
+- Consequence: the categories are a fixed list in config (D17), written by the job; the file is built at step 11, and the browser shows nothing from it except what D9 allows (a plain out-of-date warning).
+- Checkable bet: a stale forecast can be diagnosed from the category and the job log without exposing internals. Result: pending (step 11).
