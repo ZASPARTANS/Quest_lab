@@ -15,9 +15,9 @@ __pycache__/
 node_modules/
 dist/
 
-# Big data stays out of git: re-fetch with the pipeline scripts
+# Big data stays out of git: re-fetch with the pipeline scripts.
+# data/ holds everything downloaded or generated: raw/, processed/, site/
 /data/
-/site-data/
 *.grib2
 *.grib
 *.idx
