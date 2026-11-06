@@ -63,11 +63,18 @@ def _meta(cfg, run, results, agree_steps, stored):
                                     "disagree": process.AGREE_DISAGREE}}}
 
 
+def _remove_folder(path):
+    """Delete an old output folder. A failure (e.g. files owned by another user) must stop the run with its real
+    error: ignoring it ended in a misleading "Directory not empty" later (docs/ERRORS.md E015)."""
+    if path.exists():
+        shutil.rmtree(path)
+
+
 def save(cfg, run, results, field, agree_steps):
     """Write the processed files. They are built in a .part folder that replaces the final folder at the end."""
     out = ROOT / cfg["paths"]["processed_dir"] / run.strftime("%Y%m%d%H")
     part = out.with_name(out.name + ".part")
-    shutil.rmtree(part, ignore_errors=True)
+    _remove_folder(part)
     part.mkdir(parents=True)
     saturated = {}
     for model, r in results.items():
@@ -76,7 +83,7 @@ def save(cfg, run, results, field, agree_steps):
     np.save(part / "agreement.npy", field)
     meta = _meta(cfg, run, results, agree_steps, saturated)
     (part / "meta.json").write_text(json.dumps(meta, indent=1), encoding="utf-8")
-    shutil.rmtree(out, ignore_errors=True)
+    _remove_folder(out)
     os.replace(part, out)
     return out
 

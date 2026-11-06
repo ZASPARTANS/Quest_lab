@@ -4,8 +4,10 @@ TEST FIXTURES ONLY (see conftest.py): invented rain amounts on a 16 x 31 grid, r
 """
 import datetime as dt
 import json
+import sys
 
 import numpy as np
+import pytest
 
 from pipeline import process, processed
 
@@ -61,3 +63,17 @@ def test_saving_again_replaces_the_old_output(cfg, write_grib, const_field):
     (out / "stale.txt").write_text("left over from an earlier run")
     processed.save(cfg, RUN, results, field, steps)
     assert not (out / "stale.txt").exists()
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="folder permissions work differently on Windows; the official run is Linux")
+def test_an_old_folder_that_cannot_be_deleted_stops_the_run_with_the_real_error(cfg, write_grib, const_field):
+    # E015: files left by another user used to end as a confusing "Directory not empty"
+    _make_raw(cfg, write_grib, const_field)
+    results, field, steps = processed.build(cfg, RUN)
+    out = processed.save(cfg, RUN, results, field, steps)
+    out.chmod(0o555)  # nobody may delete files inside any more
+    try:
+        with pytest.raises(PermissionError):
+            processed.save(cfg, RUN, results, field, steps)
+    finally:
+        out.chmod(0o755)

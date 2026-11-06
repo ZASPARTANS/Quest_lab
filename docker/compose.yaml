@@ -1,35 +1,53 @@
-# Docker services for the project (decisions D10, D11). Run from the repo root, for example:
-#   docker compose -f docker/compose.yaml run --rm tests
-#   docker compose -f docker/compose.yaml run --rm run                       (process the newest downloaded run)
-#   docker compose -f docker/compose.yaml run --rm run python -m pipeline.fetch   (download a run)
+# Docker services for the project (decisions D10, D11, D15). Run from the repo root:
+#   docker compose -f docker/compose.yaml run --rm tests     official test run (no network, project read-only)
+#   docker compose -f docker/compose.yaml run --rm fetch     download the newest complete IFS + AIFS run into data/raw
+#   docker compose -f docker/compose.yaml run --rm process   process data/raw into data/processed (NO network)
 # Node tests/build and the nginx preview are added in the plan steps that need them.
+#
+# Hardening shared by every service (finding S03 in docs/SECURITY.md): not root, no Linux capabilities,
+# no privilege gain, read-only root filesystem (only /tmp is writable, in memory), project mounted read-only.
+# On Linux set APP_UID / APP_GID to your own ids (`export APP_UID=$(id -u) APP_GID=$(id -g)`) and create data/
+# yourself, so the files written to data/ belong to you; on Docker Desktop the defaults work.
+x-hardened: &hardened
+  build:
+    context: ..
+    dockerfile: docker/Dockerfile
+  image: precip-forecast:local
+  working_dir: /work
+  user: "${APP_UID:-10001}:${APP_GID:-10001}"
+  read_only: true
+  tmpfs:
+    - /tmp
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+  environment:
+    PYTHONDONTWRITEBYTECODE: "1"
+
 services:
   tests:
     # Official test run. The project is mounted read-only, so a test can never change the repo,
     # and the container has no network, so a test that secretly needs the internet fails.
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
-    image: precip-forecast-tests:local
-    working_dir: /work
+    <<: *hardened
     volumes:
       - ..:/work:ro
     network_mode: none
-    environment:
-      PYTHONDONTWRITEBYTECODE: "1"
     command: ["python", "-m", "pytest", "-q", "-p", "no:cacheprovider"]
 
-  run:
-    # Real data work (fetch, process). The code is read-only; only data/ (git-ignored) is writable;
-    # the network is on because fetching needs it. Same image as `tests`.
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
-    image: precip-forecast-tests:local
-    working_dir: /work
+  fetch:
+    # The only service with network access. Only data/ (git-ignored) is writable.
+    <<: *hardened
     volumes:
       - ..:/work:ro
       - ../data:/work/data
-    environment:
-      PYTHONDONTWRITEBYTECODE: "1"
+    command: ["python", "-m", "pipeline.fetch"]
+
+  process:
+    # Reads the downloaded files and writes data/processed. No network: it never needs one.
+    <<: *hardened
+    volumes:
+      - ..:/work:ro
+      - ../data:/work/data
+    network_mode: none
     command: ["python", "-m", "pipeline.processed"]

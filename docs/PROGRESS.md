@@ -42,6 +42,15 @@ Files: `pipeline/fetch.py` (+`_TimeoutSession`, `_StrictSession` now builds on i
 - Real server, Docker `run` service: the search found the 12z run (reused files) in about 30 s as before; then the 12z files were moved aside and downloaded again: both files `(downloaded)`, all 64 and 60 steps present, **sha256 identical to the earlier download**, about 64 s. So the 60 s read timeout does not cut a normal download.
 - Not tested: a real server that stalls in the middle of a download (the local silent server stalls from the first byte); the values 10 s / 60 s are my choice, not measured on ECMWF's slowest hour.
 
+## Step S3 done-check results (run 2026-11-06 ~20:59-21:04 UTC)
+Files: `docker/Dockerfile` (+ user `app`, uid 10001), `docker/compose.yaml` (shared `x-hardened` block; services `tests`, `fetch`, `process`; the old `run` service is gone, `no such service: run`), `pipeline/processed.py`, `tests/pipeline/test_processed.py`, README. Image renamed `precip-forecast:local`.
+- Inside each of the three containers (script piped through stdin): uid/gid 10001; `CapEff` and `CapPrm` all zero; `NoNewPrivs: 1`; writing to `/etc`, `/usr/local`, `/work`, `/work/pipeline` is blocked (errno 30, read-only); `/tmp` writable; `/work/data` writable only in `process` and `fetch`; connection to `data.ecmwf.int:443`: `tests` and `process` -> no connection (gaierror), `fetch` -> CONNECTED.
+- Official test command: `47 passed` (46 + 1 new regression test).
+- `fetch` on the real run: `(reused)` for both models, all steps present. `process` on the real 12z run: all four files regenerated (`processed_at` changed 20:29:34Z -> 21:04:12Z), sha256 of the three .npy files identical to step 4 (`42a40773...`, `f44f1c34...`, `bdf8a927...`), no `.part` folder left.
+- Found on the way: E015 (above). First attempt of this check was invalid and was redone.
+- `data/` auto-creation re-tested with the non-root user on Docker Desktop: works. Linux hosts: documented (APP_UID/APP_GID, create `data/`), not tested.
+- Not tested: Linux host file ownership; the compose `APP_UID` override with a different id.
+
 ## Security audit (user request, run 2026-11-06 ~20:35-20:43 UTC)
 - State when paused: step 4 finished and committed (`dc2535c`); `git status` clean on `main`; no remote; step 5 not started.
 - Result: `docs/SECURITY.md` (findings S01-S09: no Critical or High; 5 Medium/Low items need code or setup changes, 2 need the user's decision). Not checkable yet: live-site items (HTTPS, headers, CORS, rate limiting), the front end, GitHub settings, a dependency vulnerability scan.
@@ -152,7 +161,7 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 | 4 | Processing core + tests (units per model) | **done** 2026-11-06 (commit "Step 4: processing core...", time in `git log`) |
 | S1 | Repo hygiene: ignore patterns + secret-scan test | **done** 2026-11-06 (commit "Step S1...", time in `git log`) |
 | S2 | Network timeouts | **done** 2026-11-06 (commit "Step S2...", time in `git log`) |
-| S3 | Docker hardening, fetch/process split | not started |
+| S3 | Docker hardening, fetch/process split | **done** 2026-11-06 (commit "Step S3...", time in `git log`) |
 | S4 | Dependency vetting + scan (scan approved) | not started |
 | S5 | Identity decision | **done** (D16: keep e-mail as is, no code) |
 | 5 | Independent validation | paused until S1-S4 are done |
