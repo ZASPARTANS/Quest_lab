@@ -1,0 +1,4 @@
+# BuildKit reads this file next to the Dockerfile, so the repo root needs no .dockerignore.
+# The image needs only requirements.txt; everything else (.venv, data, code) stays out of the build context.
+*
+!requirements.txt

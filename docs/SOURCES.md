@@ -29,3 +29,7 @@ Transitive (installed by pip, not chosen directly): attrs, certifi, cffi, charse
 
 ## 2026-11-06 ~19:30 UTC — Docker image used for the Linux check
 - `python:3.11-slim` from Docker Hub (official `python` image), digest `sha256:65bd3d9f1d7fa268dd1909973ba7eb4bdf41f6dcf2cfbe76ba9528b170f3fd79`, pulled 2026-11-06. Used only to run `pip install -r requirements.txt`, the tests and the GRIB decode check on Linux. Not part of the deliverable; licences of the image contents were not reviewed.
+
+## 2026-11-06 20:18 UTC — Step 3b additions
+- Base image of `docker/Dockerfile`: `python:3.11-slim@sha256:65bd3d9f1d7fa268dd1909973ba7eb4bdf41f6dcf2cfbe76ba9528b170f3fd79` (same digest as pulled earlier, see above). Compared with `docker image inspect` before use.
+- Two Linux-only Python packages, found by the Docker build and verified on the PyPI JSON API on 2026-11-06: `eccodeslib` 2.50.0.34 (https://pypi.org/project/eccodeslib/, requires `eckitlib==2.5.0.34`) and `eckitlib` 2.5.0.34 (https://pypi.org/project/eckitlib/). Used for: the C library behind `eccodes` on Linux. Licence: NOT shown in the PyPI metadata and NOT verified.
