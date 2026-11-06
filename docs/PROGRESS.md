@@ -2,142 +2,112 @@
 
 ## Time budget (72 h)
 - First user prompt (from the session log): **2026-11-06T18:19:13.452Z**
-- Session ID: `3e56a452-e5f8-4bb9-b353-63bad43748f4`
+- Session ID: `3e56a452-e5f8-4bb9-b353-63bad43748f4` (unchanged since the first turn; the only resume so far was the /compact at 20:22 UTC)
 - Log file: `<Claude Code config folder>/projects/<project folder>/3e56a452-e5f8-4bb9-b353-63bad43748f4.jsonl`
 - Deadline (first prompt + 72 h): **2026-11-09T18:19:13Z**
-- Warnings due at 24 h (2026-11-07 18:19Z), 48 h (2026-11-08 18:19Z), 60 h (2026-11-09 06:19Z). No new features after hour 64 (2026-11-09 10:19Z).
+- Warnings due at 24 h (2026-11-07 18:19Z), 48 h (2026-11-08 18:19Z), 60 h (2026-11-09 06:19Z). No new features after hour 64 (2026-11-09 10:19Z). None of the three warnings is due yet.
+- The table below is rebuilt from `git log` (commit times are the committer times, UTC); every row is a real commit or an event noted at the time.
 
 | Date/time (UTC) | Event | Elapsed | Remaining |
 |---|---|---|---|
-| 2026-11-06 18:19 | First prompt (from log) | 0.0 h | 72.0 h |
-| 2026-11-06 18:19 | `date -u` at first turn, same session ID | ~0.0 h | ~72.0 h |
-| 2026-11-06 18:43 | Commit `ccb24df` (step 1, first commit) | 0.41 h | 71.59 h |
-| 2026-11-06 ~18:45 | Commit `591a24c` (step 1 record) | 0.43 h | 71.57 h |
-| 2026-11-06 18:50 | Commit `7a83bb9` (step 1b: PLAN-002, D5, D6, E002, README) | 0.52 h | 71.48 h |
-| 2026-11-06 ~18:53 | Commit `ba581ee` (step 1b done-check results) | 0.56 h | 71.44 h |
-| 2026-11-06 19:06 | Commit `785e774` (step 2: Python 3.11 venv, pinned requirements) | 0.79 h | 71.21 h |
-| 2026-11-06 19:16 | Commit `fc08c94` (step 3: fetch IFS and AIFS precipitation) | 0.96 h | 71.04 h |
-| 2026-11-06 19:20 | Commit `1c495fc` (PLAN-003 adopted) | 1.03 h | 70.97 h |
-| 2026-11-06 19:41 | Commit `ca6cd60` (step 3 follow-up verification records) | 1.37 h | 70.63 h |
-| 2026-11-06 19:52 | Commit `d3a75eb` (fix E008 and E009 in the fetch step) | 1.56 h | 70.44 h |
-| 2026-11-06 20:04 | Commits `806bfa9`, `5b69d20` (decisions D9 and addendum) | 1.74 h | 70.26 h |
-| 2026-11-06 20:14 | Commit `a9c1f0c` (PLAN-004 adopted) | 1.91 h | 70.09 h |
-| 2026-11-06 20:18 | Commit "Step 3b: Docker test environment..." (hash: see `git log`) | 1.98 h | 70.02 h |
-| 2026-11-06 20:22 | Resume after /compact, same session ID; records re-read | 2.06 h | 69.94 h |
-| 2026-11-06 (see `git log`) | Commit "Step 4: processing core..." (hash and exact time: `git log`) | about 2.3 h | about 69.7 h |
+| 2026-11-06 18:19 | First prompt (from the session log) | 0.00 h | 72.00 h |
+| 2026-11-06 18:19 | `date -u` at the first turn, same session ID | ~0.0 h | ~72.0 h |
+| 2026-11-06 18:43 | Commit `ccb24df`: Start project: repo, problem statement, approved plan and records | 0.40 h | 71.60 h |
+| 2026-11-06 18:43 | Commit `591a24c`: Record step 1 done-check results in PROGRESS and ENVIRONMENT | 0.41 h | 71.59 h |
+| 2026-11-06 18:50 | Commit `7a83bb9`: Adopt PLAN-002: fixed folder layout, config-file rule and Python 3.11 | 0.52 h | 71.48 h |
+| 2026-11-06 18:51 | Commit `ba581ee`: Record step 1b done-check results; mark step 1b done | 0.53 h | 71.47 h |
+| 2026-11-06 19:07 | Commit `785e774`: Step 2: Python 3.11 virtual environment and pinned requirements | 0.80 h | 71.20 h |
+| 2026-11-06 19:14 | Commit `fc08c94`: Step 3: fetch IFS and AIFS precipitation for the latest complete run | 0.92 h | 71.08 h |
+| 2026-11-06 19:21 | Commit `1c495fc`: Adopt PLAN-003: units are handled per model (fixes wrong assumption A1) | 1.03 h | 70.97 h |
+| 2026-11-06 19:42 | Commit `ca6cd60`: Record step 3 follow-up verification: Linux ok, IFS goes to 360 h, two fetch problems | 1.38 h | 70.62 h |
+| 2026-11-06 19:52 | Commit `d3a75eb`: Fix E008 and E009 in the fetch step: safe downloads and a fail-fast run search | 1.56 h | 70.44 h |
+| 2026-11-06 20:03 | Commit `5b69d20`: Record decision D9: out-of-date forecast shows a plain warning only | 1.73 h | 70.27 h |
+| 2026-11-06 20:04 | Commit `806bfa9`: Record D9 addendum: technical error detail stays available to developers | 1.75 h | 70.25 h |
+| 2026-11-06 20:14 | Commit `a9c1f0c`: Adopt PLAN-004: Docker as the official test run and a localhost preview | 1.92 h | 70.08 h |
+| 2026-11-06 20:18 | Commit `e61441d`: Step 3b: Docker test environment (official test run) and Linux-complete pins | 1.99 h | 70.01 h |
+| 2026-11-06 20:22 | Resume after /compact, same session ID; PROGRESS, DECISIONS and the ERRORS table re-read first | 2.06 h | 69.94 h |
+| 2026-11-06 20:33 | Commit `dc2535c`: Step 4: processing core (units per model, 6 h intervals, model agreement) | 2.24 h | 69.76 h |
+| 2026-11-06 20:44 | Commit `ec0c104`: Security audit report and draft PLAN-005 (awaiting approval) | 2.41 h | 69.59 h |
+| 2026-11-06 20:55 | Commit `4dafae8`: Step S1: repo hygiene (secret patterns in .gitignore, secret-scan test); PLAN-005 approved | 2.60 h | 69.40 h |
+| 2026-11-06 20:59 | Commit `aeb3a92`: Step S2: network timeouts on every request (finding S01) | 2.67 h | 69.33 h |
+| 2026-11-06 21:05 | Commit `79b0d1e`: Step S3: Docker hardening, fetch/process split (finding S03); fix E015 | 2.77 h | 69.23 h |
+| 2026-11-06 21:10 | Commit `21c9d46`: Fix E016: no hardcoded paths (user rule, decision D17) | 2.86 h | 69.14 h |
+| 2026-11-06 21:29 | Commit `76d4d49`: Step S4: dependency vetting, vulnerability scan, hashes on all packages (finding S02) | 3.17 h | 68.83 h |
+| 2026-11-06 21:36 | Commit `8008a9c`: Step 5: independent validation of the processed data against the raw GRIB | 3.29 h | 68.71 h |
+| 2026-11-06 21:39 | Commit `c9fbe00`: Record D19: testing on localhost, public-like preview, one hosted site deployed automatically | 3.34 h | 68.66 h |
+| 2026-11-06 22:14 | Commit `c7baf2d`: Step 6 (part 1): front-end spike, two local sites, Docker build/tests/screenshots | 3.93 h | 68.07 h |
+| 2026-11-06 22:21 | Commit `ba46ed2`: Step 6 (part 2): adopt MapLibre GL JS and Natural Earth outlines, remove Cesium (D22) | 4.04 h | 67.96 h |
+| 2026-11-06 22:21 | Commit `fb92a96`: Correct a guessed time in ERRORS E021 (found by checking the clock) | 4.04 h | 67.96 h |
+| 2026-11-06 23:03 | Housekeeping review of all markdown files (this edit; its commit time is in `git log`) | 4.74 h | 67.26 h |
 
-## Step S1 done-check results (run 2026-11-06 ~20:52-20:55 UTC)
-Files: `.gitignore` (+9 patterns), new `config/security.toml` (9 key formats, skip list), new `tests/hygiene/test_no_secrets.py` (3 tests, about 55 lines). Code ladder: standard library only (`re`, `tomllib`, `os.walk`).
-- `git check-ignore -v` matched `site.pem`, `server.key`, `id_rsa`, `id_rsa.pub`, `credentials.json`, `my.token`, `bundle.p12`, `cert.pfx`, `id_ed25519`.
-- Official Docker test command: `43 passed` (40 + 3 new), 7.8 s. The scan of the real repo finds nothing.
-- Scanner proof: on a planted fake GitHub-style key, a scanner with no patterns finds `[]` and the configured scanner finds `[('leak.txt', 1, 'github_token')]`; the tests also cover all seven formats built at run time, skipped folders and binary files; results contain the file, line and pattern name, never the value.
-- Defect found and fixed in my first version: walking `.venv/` through the Docker bind mount made the run take 141 s; switching to `os.walk` with pruned folders brought it back to 7.8 s.
-- Not covered: secret formats not in the list; the git history and the session log (those are checked by hand at submission, see the checklist below).
+## Current plan
+**`docs/plans/PLAN-005.md`** — approved by the user 2026-11-06 ~20:51 UTC (security fixes S1-S5, then PLAN-004's steps 5-12 with a security note on each). **Current plan.** Status: S1-S5 done (S5 = decision D16, S4 hashes = D18); the E016 path fix (D17) done; steps 1-6 done; **next is step 7** (static data export: frame format, tiles, manifest). **PLAN-004's text is still the step-by-step description for steps 7-12; PLAN-005 only adds the security notes.** The ideas for a more innovative front end (user request, ~23:03 UTC) are not a plan yet: they need the user's choice and then a new plan file.
 
-## Step S2 done-check results (run 2026-11-06 ~20:56-20:59 UTC)
-Files: `pipeline/fetch.py` (+`_TimeoutSession`, `_StrictSession` now builds on it, `_client` always sets the session; 208 lines), `config/pipeline.toml` (`connect_timeout_seconds = 10`, `read_timeout_seconds = 60`), `tests/pipeline/test_fetch_failures.py` (+3 tests). Code ladder: a small subclass of the already-installed `requests.Session`; no new package.
-- Root cause confirmed in the installed source: the ecmwf-opendata client and multiurl pass `timeout=None` explicitly, so setting a default on the session is not enough; the subclass replaces a `None` timeout in `request()`.
-- Official Docker test command: `46 passed` (43 + 3 new), 12.0 s.
-- Silent server (accepts, never answers): a session with timeout (1, 1) raised `ReadTimeout` after 1.0 s; the same through `multiurl.download` (1 retry) raised `ReadTimeout` after 3.0 s. **Control:** a session with no timeout was still hanging when killed after 6 s (exit code 124).
-- Real server, Docker `run` service: the search found the 12z run (reused files) in about 30 s as before; then the 12z files were moved aside and downloaded again: both files `(downloaded)`, all 64 and 60 steps present, **sha256 identical to the earlier download**, about 64 s. So the 60 s read timeout does not cut a normal download.
-- Not tested: a real server that stalls in the middle of a download (the local silent server stalls from the first byte); the values 10 s / 60 s are my choice, not measured on ECMWF's slowest hour.
+**`docs/plans/PLAN-004.md`** — approved by the user 2026-11-06 ~20:13 UTC (replaces PLAN-003: Docker as the official test run and a localhost preview, see E010, D10-D12). Status: in progress; steps 1, 1b, 2, 3, 3b, 4 done; next is step 5.
 
-## Step S3 done-check results (run 2026-11-06 ~20:59-21:04 UTC)
-Files: `docker/Dockerfile` (+ user `app`, uid 10001), `docker/compose.yaml` (shared `x-hardened` block; services `tests`, `fetch`, `process`; the old `run` service is gone, `no such service: run`), `pipeline/processed.py`, `tests/pipeline/test_processed.py`, README. Image renamed `precip-forecast:local`.
-- Inside each of the three containers (script piped through stdin): uid/gid 10001; `CapEff` and `CapPrm` all zero; `NoNewPrivs: 1`; writing to `/etc`, `/usr/local`, `/work`, `/work/pipeline` is blocked (errno 30, read-only); `/tmp` writable; `/work/data` writable only in `process` and `fetch`; connection to `data.ecmwf.int:443`: `tests` and `process` -> no connection (gaierror), `fetch` -> CONNECTED.
-- Official test command: `47 passed` (46 + 1 new regression test).
-- `fetch` on the real run: `(reused)` for both models, all steps present. `process` on the real 12z run: all four files regenerated (`processed_at` changed 20:29:34Z -> 21:04:12Z), sha256 of the three .npy files identical to step 4 (`42a40773...`, `f44f1c34...`, `bdf8a927...`), no `.part` folder left.
-- Found on the way: E015 (above). First attempt of this check was invalid and was redone.
-- `data/` auto-creation re-tested with the non-root user on Docker Desktop: works. Linux hosts: documented (APP_UID/APP_GID, create `data/`), not tested.
-- Not tested: Linux host file ownership; the compose `APP_UID` override with a different id.
+`docs/plans/PLAN-003.md` — approved 2026-11-06 ~19:20 UTC. **Status: superseded by PLAN-004** (reason: no localhost/Docker test run; see E010).
 
-## Step 6 (part 2: second gate and clean-up) results (run 2026-11-06 ~22:15-22:21 UTC)
-Decision D22 (user): MapLibre GL JS, self-hosted Natural Earth outlines, dependency scans when needed. Error E021 (my process slip).
-- **Cesium removed:** code, packages (`cesium`, `@cesium/engine`, `@cesium/core`), config section, Vite copy step, compose mounts, screenshot pages. npm tree 98 -> 70 packages; production build 13 MB -> **1.7 MB** (JS 329 kB gzip, worker 147 kB gzip, 10 kB CSS). The two Cesium comparison screenshots stay in `docs/evidence/` as evidence for the decision.
-- **`npm audit`** (standing approval, throwaway hardened container, lock file only): 70 packages, **0 vulnerabilities**.
-- **Policy tightened** in `config/headers.conf` (`script-src 'self'`, no `child-src`); real-browser run on the public-like site (Docker Chromium): home, MapLibre flat, MapLibre globe all `ok: true`, no console/CSP errors, no outside host, no DEV badge; about 0.57 MB loaded per map page.
-- **Testing site re-verified** with the final config (host Edge): DEV badge on every page, pages ready, `/data/` served, 3 traversal attempts -> 403; stopped by PID and verified on `[::1]`, `127.0.0.1`, `localhost`.
-- Tests: Python 61 passed, Node 4 passed (Docker). Line counts: `frontend/vite.config.js` 70, `scripts/spike_frame.py` 77, `config/frontend.json` 47.
-- Known leftovers (for later steps): `scripts/spike_frame.py` and `frontend/spikes/maplibre.*` are throwaway/spike code (`shortcut:` marked) replaced in steps 7 and 9; `config/headers.conf` is the only copy of the headers (converter for the public host at step 10/11); the frame format is still undecided (step 7).
+`docs/plans/PLAN-002.md` — approved 2026-11-06 ~18:49 UTC. **Status: superseded by PLAN-003** (reason: A1 wrong for AIFS units; see E006). Steps 1b, 2, 3 were completed under it and carried over.
 
-## Step 6 (part 1: spike, local sites, Docker) results (run 2026-11-06 ~21:40-22:14 UTC)
-Files: `frontend/` (package.json + lock, vite.config.js, index.html, src/{badge,geo,outlines}.js, spikes/{maplibre,cesium}.{html,js}, tools/screenshots.mjs), `config/frontend.json`, `config/headers.conf`, `docker/{Dockerfile.node,Dockerfile.node.dockerignore,nginx.conf,compose.yaml}`, `scripts/spike_frame.py` (throwaway), `tests/frontend/geo.test.mjs`, `docs/evidence/`. Decisions D19-D21; errors E017-E020; security S10-S14.
-- **Gate answers (D20):** spike MapLibre + Cesium; node:22-slim + nginx + Playwright (digests pinned, SOURCES.md); online geocoder (service chosen at step 8); base map: user asked for research (done, D20) and decides at the second gate.
-- **Done-check, localhost:** the testing site `http://localhost:5173` (Vite dev server on the host) answers 200, serves `/data/` and `/cesium/`, shows the DEV badge on every page (host Edge screenshots); the public-like site `http://localhost:8080` (Docker nginx) answers 200 with the five security headers, serves the data folder, shows no badge. Both refuse connections via the LAN address. Dev data route: 3 traversal attempts -> 403; nginx -> 400.
-- **Done-check, Docker:** `frontend-build` (no network) builds the app into `frontend/dist` (13 MB, Cesium static folders 7 MB of it); `frontend-tests` (`node --test`) 4 passed; Python tests 61 passed; `screenshots` (Playwright image) reports `ok: true` for all 5 pages: finished drawing, no console/CSP error, no host other than the preview, no DEV badge.
-- **Screenshots** (`docs/evidence/step6-*.png` from Docker; `docs/evidence/dev-server/` from host Edge: home with DEV badge, and the MapLibre flat->globe toggle).
-- **Runtime toggle (MapLibre):** centre 78E 13N and zoom 2.4 identical after flat -> globe -> flat, rain layer kept, no console errors. Cesium's switch was not tested.
-- **Not done yet in step 6:** the second gate (the user chooses the library and base map), then removing the unused spike code; the frame format is decided in step 7. `npm audit` not run (needs approval).
-- Not verified: behaviour on a phone or in Firefox/Safari (only Chromium and Edge); real GPU in Docker; the `.vite-temp` tmpfs and read-only mounts on a Linux host.
+`docs/plans/PLAN-001.md` — approved 2026-11-06 ~18:42 UTC. **Status: superseded by PLAN-002** (reason: no folder layout; see E002). Step 1 of PLAN-001 was completed and is carried over.
 
-## Step 5 done-check results (run 2026-11-06 ~21:33-21:35 UTC)
-Files: new `pipeline/validate.py` (80 lines), `scripts/validate_points.py` (35), `config/validation_points.toml` (8 places + tolerance), `config/pipeline.toml` (`validation_points_file`), `tests/pipeline/test_validate.py` (5 tests), README. Security note (PLAN-005): reads local files only, runs in the `process` container (no network), no new package; the optional Open-Meteo second source was NOT used (it would send coordinates to a third party; not approved).
-- Independence: the processed side uses `pipeline/grid.py` index maths and `codes_get_values` on whole fields; the check side reads each raw message with eccodes' own `codes_grib_find_nearest`. Shared on purpose and stated in the module: the unit table from the config, the step list, and the 0.1 mm storage step.
-- Real run, 12z, `docker compose -f docker/compose.yaml run --rm process python -m scripts.validate_points`: 8 places x 2 models = **16 of 16 rows within tolerance** (0.05 mm + 0.001 slack), exit 0; in every row both code paths picked the **same grid cell** (including Auckland and Suva near the date line). Largest differences: IFS 0.0441-0.0496 mm, AIFS up to 0.0500 mm; mean differences 0.006-0.029 mm. The ceiling of 0.05 mm is exactly half the storage step, as expected. Rain in the series reached 24.2 mm per 6 h at Chennai (AIFS), so the comparison is on real rain, not zeros.
-- The 00z run: also 16 of 16.
-- The check can fail: 5 new tests (Docker, 61 passed in total) break one thing on purpose and require the validation to flag it: a stored value changed by 0.7 mm, the longitude start set to 180 for a file starting at 0 (the E012 kind of error; shows as a different cell), IFS metres processed as mm (the E006 kind of error), plus the run listing. The matching case must pass for both models and both places.
-- Not covered: the unit table itself is shared, so a wrong entry there would not be caught by this script (it is covered by the unit tests and by the IFS-vs-AIFS global means agreeing within 1.7 %); only 8 places and 2 runs; Open-Meteo or another outside source not used.
+| Step | What | Status |
+|---|---|---|
+| 1 | Repo + records (git init, .gitignore, PROBLEM.md, DECISIONS, ERRORS, first commit) | **done** 2026-11-06 18:43 UTC, commit `ccb24df` |
+| 1b | Apply folder layout (PLAN-002: D5, E002, README, .gitignore) | **done** 2026-11-06 18:50 UTC, commit `7a83bb9` |
+| 2 | Python environment + pinned packages | **done** 2026-11-06 19:06 UTC (commit "Step 2: Python 3.11 virtual environment...") |
+| 3 | Fetch (IFS + AIFS `tp`) | **done** 2026-11-06 19:16 UTC (commit `fc08c94`) |
+| 3b | Docker test environment (PLAN-004) | **done** 2026-11-06 20:18 UTC (commit "Step 3b: Docker test environment...") |
+| 4 | Processing core + tests (units per model) | **done** 2026-11-06 (commit "Step 4: processing core...", time in `git log`) |
+| S1 | Repo hygiene: ignore patterns + secret-scan test | **done** 2026-11-06 (commit "Step S1...", time in `git log`) |
+| S2 | Network timeouts | **done** 2026-11-06 (commit "Step S2...", time in `git log`) |
+| S3 | Docker hardening, fetch/process split | **done** 2026-11-06 (commit "Step S3...", time in `git log`) |
+| S4 | Dependency vetting + scan (scan approved) | **done** 2026-11-06 (commit "Step S4...", time in `git log`) |
+| S5 | Identity decision | **done** (D16: keep e-mail as is, no code) |
+| 5 | Independent validation | **done** 2026-11-06 (commit "Step 5...", time in `git log`) |
+| 6 | Front-end spike + decision gate + localhost | **done** 2026-11-06 (commits `c7baf2d`, `ba46ed2`); library MapLibre (D22) |
+| 7 | Static data export | not started |
+| 8 | Location panel | not started |
+| 9 | Map / globe views | not started |
+| 10 | Provenance + honesty UI | not started |
+| 11 | Hosting gate + deploy | not started |
+| 12 | README + submission | not started |
 
-## Step S4 done-check results (run 2026-11-06 ~21:12-21:28 UTC)
-Files: `docs/SOURCES.md` (requests, pip-audit), `scripts/pin_hashes.py` (about 85 lines, standard library only), `config/security.toml` ([hashes]), `requirements.txt` (hashes on all 25 packages), `docker/Dockerfile` (`--require-hashes`), `tests/tooling/test_pin_hashes.py` (4 tests), `tests/hygiene/test_requirements_hashed.py`, guard test extended to `scripts/`, README. Decision D18 (user: hashes for all platforms).
-- (a) `requests` 2.34.2 vetted on the PyPI JSON API (E014 closed, 1/1). The GitHub repo itself was not read.
-- (b) `pip-audit` 2.10.1 (vetted first) in a throwaway container (non-root, no capabilities, read-only root, only requirements.txt mounted, no environment): **25 packages checked, 0 vulnerable, 0 skipped**; repeated on the hashed file with the same result and no warning. Data sent: package names and versions to pypi.org.
-- (c) Hashes: 430 hashes written in 3.8 s. Official Docker tests `56 passed` (51 + 4 + 1). No-cache image build with `--require-hashes` succeeded, `pip check` clean. Linux container freeze equals the 25 pins. Fresh Windows venv from the hashed file: exit 0, freeze equals the 23 Windows pins, `pip check` clean. Wrong hash -> refused (exit 1); no hash -> refused (exit 1).
-- Mistakes on the way, all caught by the checks: my first hygiene-test regex misread the continued lines (test failed, rewritten); the first "no hash is refused" check was invalid because the package was already installed (redone with a fresh target folder); a first quoting slip in a test file; the scanner container needed an executable `/tmp` (only for that throwaway container).
-- Not tested: the generator against a real PyPI outage (it stops with an error); regenerating hashes after a real version bump (done once, for the current versions).
+Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
 
-## Fix E016 (no hardcoded paths) results (run 2026-11-06 ~21:03-21:10 UTC)
-Done after S3 and before S4, at the user's reminder; details in ERRORS.md E016 and DECISIONS.md D17. Docker tests `51 passed` (47 + 2 `test_paths` + 2 guard tests); guard test shown to fail on planted names/paths; real `process` and `fetch` runs unchanged in output (sha256 equal to step 4). Line counts: `pipeline/paths.py` 30, `pipeline/fetch.py` 208, `pipeline/processed.py` 127.
+## Status (live, rewritten in the housekeeping at ~23:03 UTC)
+- **Done:** steps 1-6 and the security steps S1-S5 (see the step table); the data pipeline (fetch, process, validate) runs in Docker; the front end is a one-page spike on two local sites (testing on :5173, public-like on :8080).
+- **Tests:** official command `docker compose -f docker/compose.yaml run --rm tests` = 61 passed; `... run --rm frontend-tests` = 4 passed (both at the last code commit `ba46ed2`; no code changed since).
+- **Git:** branch `main`, 25 commits, no remote (GitHub login and repo creation are plan step 11 and need the user's approval and link).
+- **Records:** this housekeeping checked every markdown file against the others; its findings and fixes are listed in the last section of this file.
 
-## Security audit (user request, run 2026-11-06 ~20:35-20:43 UTC)
-- State when paused: step 4 finished and committed (`dc2535c`); `git status` clean on `main`; no remote; step 5 not started.
-- Result: `docs/SECURITY.md` (findings S01-S09: no Critical or High; 5 Medium/Low items need code or setup changes, 2 need the user's decision). Not checkable yet: live-site items (HTTPS, headers, CORS, rate limiting), the front end, GitHub settings, a dependency vulnerability scan.
-- Errors recorded: E013 (no security in earlier plans), E014 (`requests` used directly without vetting). Decision: D15.
-- Fixes: `docs/plans/PLAN-005.md` (steps S1-S5, then steps 5-12 with security notes), **approved by the user ~20:51 UTC**; work in progress, see the step table.
+## Open items (waiting on someone, or on a later step)
+- **User:** confirm that the map and the rain layer draw in Firefox on the user's PC (the user reported "the site loads files"); choose from the front-end innovation ideas given in chat (~23:03 UTC); confirm the proposed no-WebGL2 message (D23).
+- **User, later:** Safari and phone testing (deferred by the user); confirm the sanitised public status record (S04, step 7/10); the geocoder service (step 8; AI recommends Open-Meteo, D20); the hosting choice (step 11); GitHub login, repo link and approval before any push.
+- **E007:** IFS to 360 h is still deferred (D12).
+- **Pending results of bets:** D2/A6 and D4 (size limits, steps 7 and 11), D8 (once the scheduled job runs), D9 and addendum (steps 7 and 10), D14 (step 7).
+- **Throwaway code to replace:** `scripts/spike_frame.py` (step 7), `frontend/spikes/maplibre.*` and `frontend/index.html` (step 9). Shortcut register: DECISIONS.md.
+- **Not yet created by design:** `docs/SUBMISSION.md` and the final README (step 12), `backend/` (step 7), `.github/workflows/` (step 11).
 
-## Step 4 done-check results (run 2026-11-06 ~20:25-20:35 UTC)
-Code: `pipeline/grid.py` (58 lines), `pipeline/process.py` (116), `pipeline/processed.py` (111); config `[grid]`, `[units_to_mm]`, `[process]`, `processed_dir`; tests `test_grid.py`, `test_process.py`, `test_processed.py`, `conftest.py` (20 new tests). Longest function about 17 lines. Decisions D13 (wet threshold 0.5 mm, user), D14 (6 h axis, uint16 format, two marked shortcuts). Errors: E006 fix verified (1/1), new E012 (grid starts at longitude 180).
-- Official test run: `docker compose -f docker/compose.yaml run --rm tests` -> `40 passed` (20 old + 20 new), exit 0; `git status` showed only my intended changes. (Final run before the commit is recorded in the commit message.)
-- Units: a test builds an IFS-style (metres) and an AIFS-style (kg m**-2) GRIB file with the same rain and reads both through the real reading path: both give 2.5 mm; an unknown unit raises.
-- Grid (A2): both models start at longitude 180 (E012). `latlon_to_index` equals `eccodes.codes_grib_find_nearest` at 12 points (wrap, poles). Every message's layout is checked against `[grid]`.
-- Real run in Docker (`run` service, Linux), 12z run: IFS 40 intervals (6..240 h), AIFS 60 (6..360 h); area-weighted global mean 0-240 h: **IFS 3.104, AIFS 3.155 mm/day** (1.7 % apart); the 00z run gave 3.091 / 3.149. Processing the same run on Windows gave **byte-identical** files (sha256 of all three .npy files equal).
-- Negative differences: 146,269 (IFS) and 161,393 (AIFS) cell-intervals of about 41.5 million, most negative about -0.12 mm. Investigated, not waved away: the largest negative is exactly 0.50 of the two packing steps involved, so it is the 12-bit GRIB packing; clipping adds 0.056 % / 0.014 % of the mass (docs/DOMAIN.md, D14).
-- Agreement at 0.5 mm: both dry 67 %, both wet 15 %, disagree 17-18 % (00z and 12z). D13 bet held (about 39 % both wet at 0.1 mm, 9 % at 1.0 mm).
-- Output sizes (git-ignored): ifs.npy 83 MB, aifs-single.npy 125 MB, agreement.npy 42 MB per run (these are the processed grids, not the final site files; step 7 measures what the host receives).
-- Docker `run` service added to `docker/compose.yaml`; checked that it creates `data/` itself when missing and writes only there (the README sentence that said otherwise was corrected before commit).
-- **NOT verified: comparison with a published climatology.** I could not open a source with the number (PMC and MDPI blocked by a browser check/403, Europe PMC error, two other pages gave no value). A search result summary says GPCP V2.3 gives about 2.96 mm/day (1979-2013, Adler et al. 2018, Atmosphere 9(4) 138); I have NOT read that table, so it is not added to SOURCES.md and is not a verified fact. Our 3.1 mm/day is of the same size, but a 10-day sample is not a climatology anyway. The strong checks are the IFS-vs-AIFS match and the unit tests. If you can paste the value from the paper, I will record it.
-- Not tested: a run whose raw files are missing a step (covered by unit test only); memory use beyond this machine (the processing holds about 0.5 GB of float32 arrays); real data other than runs 00z and 12z of 2026-11-06.
-- Small slip, corrected at once: I wrote guessed times into three record headings before checking `date -u`; they now carry the real "~" times.
+## Known issues
+- Python 3.10's pip is broken (E001); use `py -3.11`.
+- Firefox cannot create a WebGL context inside the Docker test container (environment limit); Firefox is tested by the user on a real PC. Safari and phones are untested.
+- A browser without WebGL2 shows a blank dark page with no message (D23 proposes a message and a fallback).
+- Linux hosts: file ownership of `data/` and the `APP_UID`/`APP_GID` override are documented but untested (no Linux host).
+- The processed 6 h values carry up to about 0.24 mm (IFS, late steps) or 0.125 mm (AIFS) of GRIB packing rounding (DOMAIN.md, D14).
+- Test runs of this session used one pair of forecast runs (00z and 12z of 2026-11-06); the publication-lag estimate (about 7.5 h) is from one run.
 
-## Step 3b done-check results (run 2026-11-06 20:18 UTC)
-Official test command from now on: `docker compose -f docker/compose.yaml run --rm tests`.
-- (a) `docker info`: server 29.9.2 (linux) running; the local `python:3.11-slim` digest equals the one recorded in SOURCES.md.
-- (b) `docker compose -f docker/compose.yaml build`: succeeded; `transferring context: 1.46kB` (1.88 kB after the requirements change), so `.venv/` and `data/` are not sent (A11 verified). `pip check` in the image: "No broken requirements found".
-- (c) `docker compose -f docker/compose.yaml run --rm tests` -> `20 passed in 5.88s`, exit code 0.
-- (d) Inside the tests container a connection to `data.ecmwf.int:443` fails with `gaierror` ("no network, as intended") while loopback works; the tests pass anyway, so they need no internet.
-- (e) After the runs `git status --short` showed only my intended changes (`requirements.txt` modified, `docker/` new): nothing was written into the repo. Root check: tracked root entries unchanged; new top-level folder `docker` only.
-- (f) Windows `.venv`: `20 passed in 3.72s` (same result, not used as proof).
-- Extra: failure exit codes pass through `docker compose run` (pytest "no tests selected" -> 5; a failing command -> 1), so the scheduled job can rely on it.
-- **Found and fixed on the way: E011.** The Linux image installs two packages that the Windows-made `requirements.txt` did not pin (`eccodeslib`, `eckitlib`). They are now pinned with a Linux-only marker; the Linux container's `pip freeze` equals the pins (25 packages), and Windows still needs only its 23 (`pip install --dry-run` installs nothing).
-- Line counts: `docker/Dockerfile` 13, `docker/compose.yaml` 19, `docker/Dockerfile.dockerignore` 4; no Python changed in this step.
-- Not done yet from PLAN-004: the localhost half (Vite dev server and nginx preview) comes in step 6; the `run` service (fetch/processing inside Docker) is added in step 4.
+## Submission checklist — security (added at the user's request, 2026-11-06 ~20:43 UTC)
+Each item is ticked in `docs/SUBMISSION.md` only after running the check. These come on top of the checklist in CLAUDE.md.
+- [ ] Secret scan of the working tree, of every commit (`git grep` over `git rev-list --all`) and of the session log: key formats, plus the values of any token-like environment variables. Zero matches.
+- [ ] The Docker test command (which includes the repo secret scan) passes on the final commit.
+- [ ] Dependency scan of the final `requirements.txt` and the npm lockfile recorded in `docs/SECURITY.md`, or "not approved" recorded.
+- [ ] `curl -I` of the live URL: HTTPS only, the agreed security headers present (or the CSP `<meta>` fallback documented).
+- [ ] Every finding in `docs/SECURITY.md` is marked fixed, accepted (with the reason) or open, and the "could not check" list is updated.
+- [ ] Public/private check: only the intended files are in the public repo; the identity decision (S06) is applied; no token or personal data beyond the decision appears in any log or file.
+- [ ] Every plan file since D15 contains a "Security note".
 
-## E008 and E009 fixes (asked for by the user; run 2026-11-06 ~19:45-19:53 UTC)
-Files changed: `pipeline/fetch.py` (190 lines), `config/pipeline.toml`, `requirements.txt` (`requests` moved to the direct section: it is now imported directly), new `tests/pipeline/test_fetch_failures.py` (140 lines). Details and counters: ERRORS.md E008, E009; decision D8.
-- Tests: `pytest -q` -> `20 passed in 3.42s` on Windows (9 old + 11 new); the same suite in the `python:3.11-slim` Docker image -> `20 passed in 5.03s`, `pip check` clean.
-- E008 on real data: truncated the real 12z AIFS file to half (14,750,374 of 29,500,748 bytes) and ran `python -m pipeline.fetch`: IFS `(reused)`, AIFS `(downloaded)`, final file byte-identical (same size, same sha256 prefix), no `.part` left. **Fixed.**
-- E009 end to end (local servers, real config values): always-503 -> `UnexpectedStatus` after 0.0 s; always-404 -> `ValueError: no run is complete for every model` after 0.8 s; dead port -> `ConnectionError` after 9.1 s. Real server: search found the 12z run (published about 19:34) at 19:49 UTC with 64 and 60 steps. **Fixed.**
-- `requirements.txt` pins equal `pip freeze` (diff printed nothing). Root check: only the allowed entries. `data/` untracked and ignored.
-- Not tested: a real network cut in the middle of a download; the original multi-hour 503 worst case (an extrapolation) was not reproduced.
-- **Still open: E007 (IFS to 360 h).** The user wants it done only if the 240 h setup works perfectly after these fixes. Evidence now: two full real runs (00z and 12z) with all steps, 20 passing tests on Windows and Linux, recovery from a corrupted file, fail-fast on server trouble. It needs a plan revision (PLAN-004) and the user's approval before any change.
-
-## Step 3 follow-up verification (asked for by the user; run 2026-11-06 ~19:25-19:41 UTC)
-The four items listed as "NOT verified" in the step 3 results below were checked. Details: DOMAIN.md (follow-up section), ERRORS.md (E007-E009), ENVIRONMENT.md (Docker).
-- **Linux: PASSED** in the `python:3.11-slim` Docker image (Python 3.11.18): install, `pip check`, `eccodes` 2.50.0 import, `9 passed`, real GRIB files decoded with identical counts, units and grid. Repo untouched (`git status` 0 lines).
-- **12z IFS step list: PASSED, with a surprise.** Yesterday's 12z and 00z runs contain all 64 configured IFS steps and AIFS 60/60. IFS also has 20 more files (246..360 h) that contain `tp` (E007). **Needs your decision.**
-- **Publication lag: MEASURED (one run).** 12z IFS appeared between 19:33 and 19:35 UTC (about 7 h 34 min after run time); 12z AIFS was already complete at the first poll (<= 7 h 09 min). Suggests starting checks about 07:45 and 19:45 UTC.
-- **Error handling: 2 PROBLEMS FOUND, 2 cases fine.** Dead server: loud `ConnectionError` after 26 s (fine). Missing file: `HTTPError 404` after 1.2 s, no file left (fine). Truncated raw file: `download_run` crashes with `PrematureEndOfFileError` (E008, bug). HTTP 503: client retries each file check about 20 s and then silently falls back to an older run (E009; total hang time extrapolated, not measured). **No fix applied yet.**
-- Steps 4+ have NOT started. Step 3 stays "done" for its own done-check; E007-E009 are open and listed in ERRORS.md.
+# Results log (oldest first)
 
 ## Step 1 done-check results (run 2026-11-06 ~18:44 UTC)
 - `git status --short | wc -l` after commit: `0` (clean).
@@ -178,64 +148,128 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 - NOT verified: behaviour when the server is slow or a file is missing mid-download (retries set to 3 x 10 s; not exercised); the 12z IFS step list; Linux.
 - **Open problem (resolved in the plan, not yet in code):** assumption A1 was wrong for AIFS (E006). PLAN-003 was approved 2026-11-06 ~19:20 UTC; the fix is applied and tested in step 4.
 
-## Current plan
-**`docs/plans/PLAN-005.md`** — approved by the user 2026-11-06 ~20:51 UTC (security fixes S1-S5, then PLAN-004's steps 5-12 with security notes). Status: in progress; S1-S5 done (S5 = decision D16, S4 hashes = D18); the E016 path fix (D17) is done; steps 1-6 are done; **next is step 7** (static data export: frame format, tiles, manifest). **PLAN-004 below is superseded by PLAN-005** (reason: no security work, E013); its steps 1-4 are carried over as done.
+## Step 3 follow-up verification (asked for by the user; run 2026-11-06 ~19:25-19:41 UTC)
+The four items listed as "NOT verified" in the step 3 results below were checked. Details: DOMAIN.md (follow-up section), ERRORS.md (E007-E009), ENVIRONMENT.md (Docker).
+- **Linux: PASSED** in the `python:3.11-slim` Docker image (Python 3.11.18): install, `pip check`, `eccodes` 2.50.0 import, `9 passed`, real GRIB files decoded with identical counts, units and grid. Repo untouched (`git status` 0 lines).
+- **12z IFS step list: PASSED, with a surprise.** Yesterday's 12z and 00z runs contain all 64 configured IFS steps and AIFS 60/60. IFS also has 20 more files (246..360 h) that contain `tp` (E007). **Needs your decision.**
+- **Publication lag: MEASURED (one run).** 12z IFS appeared between 19:33 and 19:35 UTC (about 7 h 34 min after run time); 12z AIFS was already complete at the first poll (<= 7 h 09 min). Suggests starting checks about 07:45 and 19:45 UTC.
+- **Error handling: 2 PROBLEMS FOUND, 2 cases fine.** Dead server: loud `ConnectionError` after 26 s (fine). Missing file: `HTTPError 404` after 1.2 s, no file left (fine). Truncated raw file: `download_run` crashes with `PrematureEndOfFileError` (E008, bug). HTTP 503: client retries each file check about 20 s and then silently falls back to an older run (E009; total hang time extrapolated, not measured). **No fix applied yet.**
+- Steps 4+ have NOT started. Step 3 stays "done" for its own done-check; E007-E009 are open and listed in ERRORS.md.
 
-**`docs/plans/PLAN-004.md`** — approved by the user 2026-11-06 ~20:13 UTC (replaces PLAN-003: Docker as the official test run and a localhost preview, see E010, D10-D12). Status: in progress; steps 1, 1b, 2, 3, 3b, 4 done; next is step 5.
+## E008 and E009 fixes (asked for by the user; run 2026-11-06 ~19:45-19:53 UTC)
+Files changed: `pipeline/fetch.py` (190 lines), `config/pipeline.toml`, `requirements.txt` (`requests` moved to the direct section: it is now imported directly), new `tests/pipeline/test_fetch_failures.py` (140 lines). Details and counters: ERRORS.md E008, E009; decision D8.
+- Tests: `pytest -q` -> `20 passed in 3.42s` on Windows (9 old + 11 new); the same suite in the `python:3.11-slim` Docker image -> `20 passed in 5.03s`, `pip check` clean.
+- E008 on real data: truncated the real 12z AIFS file to half (14,750,374 of 29,500,748 bytes) and ran `python -m pipeline.fetch`: IFS `(reused)`, AIFS `(downloaded)`, final file byte-identical (same size, same sha256 prefix), no `.part` left. **Fixed.**
+- E009 end to end (local servers, real config values): always-503 -> `UnexpectedStatus` after 0.0 s; always-404 -> `ValueError: no run is complete for every model` after 0.8 s; dead port -> `ConnectionError` after 9.1 s. Real server: search found the 12z run (published about 19:34) at 19:49 UTC with 64 and 60 steps. **Fixed.**
+- `requirements.txt` pins equal `pip freeze` (diff printed nothing). Root check: only the allowed entries. `data/` untracked and ignored.
+- Not tested: a real network cut in the middle of a download; the original multi-hour 503 worst case (an extrapolation) was not reproduced.
+- **Still open: E007 (IFS to 360 h).** The user wants it done only if the 240 h setup works perfectly after these fixes. Evidence now: two full real runs (00z and 12z) with all steps, 20 passing tests on Windows and Linux, recovery from a corrupted file, fail-fast on server trouble. It needs a plan revision (PLAN-004) and the user's approval before any change.
 
-`docs/plans/PLAN-003.md` — approved 2026-11-06 ~19:20 UTC. **Status: superseded by PLAN-004** (reason: no localhost/Docker test run; see E010).
+## Step 3b done-check results (run 2026-11-06 20:18 UTC)
+Official test command from now on: `docker compose -f docker/compose.yaml run --rm tests`.
+- (a) `docker info`: server 29.9.2 (linux) running; the local `python:3.11-slim` digest equals the one recorded in SOURCES.md.
+- (b) `docker compose -f docker/compose.yaml build`: succeeded; `transferring context: 1.46kB` (1.88 kB after the requirements change), so `.venv/` and `data/` are not sent (A11 verified). `pip check` in the image: "No broken requirements found".
+- (c) `docker compose -f docker/compose.yaml run --rm tests` -> `20 passed in 5.88s`, exit code 0.
+- (d) Inside the tests container a connection to `data.ecmwf.int:443` fails with `gaierror` ("no network, as intended") while loopback works; the tests pass anyway, so they need no internet.
+- (e) After the runs `git status --short` showed only my intended changes (`requirements.txt` modified, `docker/` new): nothing was written into the repo. Root check: tracked root entries unchanged; new top-level folder `docker` only.
+- (f) Windows `.venv`: `20 passed in 3.72s` (same result, not used as proof).
+- Extra: failure exit codes pass through `docker compose run` (pytest "no tests selected" -> 5; a failing command -> 1), so the scheduled job can rely on it.
+- **Found and fixed on the way: E011.** The Linux image installs two packages that the Windows-made `requirements.txt` did not pin (`eccodeslib`, `eckitlib`). They are now pinned with a Linux-only marker; the Linux container's `pip freeze` equals the pins (25 packages), and Windows still needs only its 23 (`pip install --dry-run` installs nothing).
+- Line counts: `docker/Dockerfile` 13, `docker/compose.yaml` 19, `docker/Dockerfile.dockerignore` 4; no Python changed in this step.
+- Not done yet from PLAN-004: the localhost half (Vite dev server and nginx preview) comes in step 6; the `run` service (fetch/processing inside Docker) is added in step 4.
 
-`docs/plans/PLAN-002.md` — approved 2026-11-06 ~18:49 UTC. **Status: superseded by PLAN-003** (reason: A1 wrong for AIFS units; see E006). Steps 1b, 2, 3 were completed under it and carried over.
+## Step 4 done-check results (run 2026-11-06 ~20:25-20:35 UTC)
+Code: `pipeline/grid.py` (58 lines), `pipeline/process.py` (116), `pipeline/processed.py` (111); config `[grid]`, `[units_to_mm]`, `[process]`, `processed_dir`; tests `test_grid.py`, `test_process.py`, `test_processed.py`, `conftest.py` (20 new tests). Longest function about 17 lines. Decisions D13 (wet threshold 0.5 mm, user), D14 (6 h axis, uint16 format, two marked shortcuts). Errors: E006 fix verified (1/1), new E012 (grid starts at longitude 180).
+- Official test run: `docker compose -f docker/compose.yaml run --rm tests` -> `40 passed` (20 old + 20 new), exit 0; `git status` showed only my intended changes. (Final run before the commit is recorded in the commit message.)
+- Units: a test builds an IFS-style (metres) and an AIFS-style (kg m**-2) GRIB file with the same rain and reads both through the real reading path: both give 2.5 mm; an unknown unit raises.
+- Grid (A2): both models start at longitude 180 (E012). `latlon_to_index` equals `eccodes.codes_grib_find_nearest` at 12 points (wrap, poles). Every message's layout is checked against `[grid]`.
+- Real run in Docker (`run` service, Linux), 12z run: IFS 40 intervals (6..240 h), AIFS 60 (6..360 h); area-weighted global mean 0-240 h: **IFS 3.104, AIFS 3.155 mm/day** (1.7 % apart); the 00z run gave 3.091 / 3.149. Processing the same run on Windows gave **byte-identical** files (sha256 of all three .npy files equal).
+- Negative differences: 146,269 (IFS) and 161,393 (AIFS) cell-intervals of about 41.5 million, most negative about -0.12 mm. Investigated, not waved away: the largest negative is exactly 0.50 of the two packing steps involved, so it is the 12-bit GRIB packing; clipping adds 0.056 % / 0.014 % of the mass (docs/DOMAIN.md, D14).
+- Agreement at 0.5 mm: both dry 67 %, both wet 15 %, disagree 17-18 % (00z and 12z). D13 bet held (about 39 % both wet at 0.1 mm, 9 % at 1.0 mm).
+- Output sizes (git-ignored): ifs.npy 83 MB, aifs-single.npy 125 MB, agreement.npy 42 MB per run (these are the processed grids, not the final site files; step 7 measures what the host receives).
+- Docker `run` service added to `docker/compose.yaml`; checked that it creates `data/` itself when missing and writes only there (the README sentence that said otherwise was corrected before commit).
+- **NOT verified: comparison with a published climatology.** I could not open a source with the number (PMC and MDPI blocked by a browser check/403, Europe PMC error, two other pages gave no value). A search result summary says GPCP V2.3 gives about 2.96 mm/day (1979-2013, Adler et al. 2018, Atmosphere 9(4) 138); I have NOT read that table, so it is not added to SOURCES.md and is not a verified fact. Our 3.1 mm/day is of the same size, but a 10-day sample is not a climatology anyway. The strong checks are the IFS-vs-AIFS match and the unit tests. If you can paste the value from the paper, I will record it.
+- Not tested: a run whose raw files are missing a step (covered by unit test only); memory use beyond this machine (the processing holds about 0.5 GB of float32 arrays); real data other than runs 00z and 12z of 2026-11-06.
+- Small slip, corrected at once: I wrote guessed times into three record headings before checking `date -u`; they now carry the real "~" times.
 
-`docs/plans/PLAN-001.md` — approved 2026-11-06 ~18:42 UTC. **Status: superseded by PLAN-002** (reason: no folder layout; see E002). Step 1 of PLAN-001 was completed and is carried over.
+## Security audit (user request, run 2026-11-06 ~20:35-20:43 UTC)
+- State when paused: step 4 finished and committed (`dc2535c`); `git status` clean on `main`; no remote; step 5 not started.
+- Result: `docs/SECURITY.md` (findings S01-S09: no Critical or High; 5 Medium/Low items need code or setup changes, 2 need the user's decision). Not checkable yet: live-site items (HTTPS, headers, CORS, rate limiting), the front end, GitHub settings, a dependency vulnerability scan.
+- Errors recorded: E013 (no security in earlier plans), E014 (`requests` used directly without vetting). Decision: D15.
+- Fixes: `docs/plans/PLAN-005.md` (steps S1-S5, then steps 5-12 with security notes), **approved by the user ~20:51 UTC**; work in progress, see the step table.
 
-| Step | What | Status |
-|---|---|---|
-| 1 | Repo + records (git init, .gitignore, PROBLEM.md, DECISIONS, ERRORS, first commit) | **done** 2026-11-06 18:43 UTC, commit `ccb24df` |
-| 1b | Apply folder layout (PLAN-002: D5, E002, README, .gitignore) | **done** 2026-11-06 18:50 UTC, commit `7a83bb9` |
-| 2 | Python environment + pinned packages | **done** 2026-11-06 19:06 UTC (commit "Step 2: Python 3.11 virtual environment...") |
-| 3 | Fetch (IFS + AIFS `tp`) | **done** 2026-11-06 19:16 UTC (commit `fc08c94`) |
-| 3b | Docker test environment (PLAN-004) | **done** 2026-11-06 20:18 UTC (commit "Step 3b: Docker test environment...") |
-| 4 | Processing core + tests (units per model) | **done** 2026-11-06 (commit "Step 4: processing core...", time in `git log`) |
-| S1 | Repo hygiene: ignore patterns + secret-scan test | **done** 2026-11-06 (commit "Step S1...", time in `git log`) |
-| S2 | Network timeouts | **done** 2026-11-06 (commit "Step S2...", time in `git log`) |
-| S3 | Docker hardening, fetch/process split | **done** 2026-11-06 (commit "Step S3...", time in `git log`) |
-| S4 | Dependency vetting + scan (scan approved) | **done** 2026-11-06 (commit "Step S4...", time in `git log`) |
-| S5 | Identity decision | **done** (D16: keep e-mail as is, no code) |
-| 5 | Independent validation | **done** 2026-11-06 (commit "Step 5...", time in `git log`) |
-| 6 | Front-end spike + decision gate + localhost | **done** 2026-11-06 (commit "Step 6: ...", time in `git log`); library MapLibre (D22) |
-| 7 | Static data export | not started |
-| 8 | Location panel | not started |
-| 9 | Map / globe views | not started |
-| 10 | Provenance + honesty UI | not started |
-| 11 | Hosting gate + deploy | not started |
-| 12 | README + submission | not started |
+## Step S1 done-check results (run 2026-11-06 ~20:52-20:55 UTC)
+Files: `.gitignore` (+9 patterns), new `config/security.toml` (9 key formats, skip list), new `tests/hygiene/test_no_secrets.py` (3 tests, about 55 lines). Code ladder: standard library only (`re`, `tomllib`, `os.walk`).
+- `git check-ignore -v` matched `site.pem`, `server.key`, `id_rsa`, `id_rsa.pub`, `credentials.json`, `my.token`, `bundle.p12`, `cert.pfx`, `id_ed25519`.
+- Official Docker test command: `43 passed` (40 + 3 new), 7.8 s. The scan of the real repo finds nothing.
+- Scanner proof: on a planted fake GitHub-style key, a scanner with no patterns finds `[]` and the configured scanner finds `[('leak.txt', 1, 'github_token')]`; the tests also cover all seven formats built at run time, skipped folders and binary files; results contain the file, line and pattern name, never the value.
+- Defect found and fixed in my first version: walking `.venv/` through the Docker bind mount made the run take 141 s; switching to `os.walk` with pruned folders brought it back to 7.8 s.
+- Not covered: secret formats not in the list; the git history and the session log (those are checked by hand at submission, see the checklist below).
 
-Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
+## Step S2 done-check results (run 2026-11-06 ~20:56-20:59 UTC)
+Files: `pipeline/fetch.py` (+`_TimeoutSession`, `_StrictSession` now builds on it, `_client` always sets the session; 208 lines), `config/pipeline.toml` (`connect_timeout_seconds = 10`, `read_timeout_seconds = 60`), `tests/pipeline/test_fetch_failures.py` (+3 tests). Code ladder: a small subclass of the already-installed `requests.Session`; no new package.
+- Root cause confirmed in the installed source: the ecmwf-opendata client and multiurl pass `timeout=None` explicitly, so setting a default on the session is not enough; the subclass replaces a `None` timeout in `request()`.
+- Official Docker test command: `46 passed` (43 + 3 new), 12.0 s.
+- Silent server (accepts, never answers): a session with timeout (1, 1) raised `ReadTimeout` after 1.0 s; the same through `multiurl.download` (1 retry) raised `ReadTimeout` after 3.0 s. **Control:** a session with no timeout was still hanging when killed after 6 s (exit code 124).
+- Real server, Docker `run` service: the search found the 12z run (reused files) in about 30 s as before; then the 12z files were moved aside and downloaded again: both files `(downloaded)`, all 64 and 60 steps present, **sha256 identical to the earlier download**, about 64 s. So the 60 s read timeout does not cut a normal download.
+- Not tested: a real server that stalls in the middle of a download (the local silent server stalls from the first byte); the values 10 s / 60 s are my choice, not measured on ECMWF's slowest hour.
 
-## Status
-- Environment check done and recorded in `docs/ENVIRONMENT.md`.
-- Read-only probe of the ECMWF Open Data server done; findings in `docs/DOMAIN.md`, source in `docs/SOURCES.md`.
-- Git repo initialised (branch `main`), first commit `ccb24df`. No remote yet (GitHub login and repo creation are plan step 11, needing the user's approval).
+## Step S3 done-check results (run 2026-11-06 ~20:59-21:04 UTC)
+Files: `docker/Dockerfile` (+ user `app`, uid 10001), `docker/compose.yaml` (shared `x-hardened` block; services `tests`, `fetch`, `process`; the old `run` service is gone, `no such service: run`), `pipeline/processed.py`, `tests/pipeline/test_processed.py`, README. Image renamed `precip-forecast:local`.
+- Inside each of the three containers (script piped through stdin): uid/gid 10001; `CapEff` and `CapPrm` all zero; `NoNewPrivs: 1`; writing to `/etc`, `/usr/local`, `/work`, `/work/pipeline` is blocked (errno 30, read-only); `/tmp` writable; `/work/data` writable only in `process` and `fetch`; connection to `data.ecmwf.int:443`: `tests` and `process` -> no connection (gaierror), `fetch` -> CONNECTED.
+- Official test command: `47 passed` (46 + 1 new regression test).
+- `fetch` on the real run: `(reused)` for both models, all steps present. `process` on the real 12z run: all four files regenerated (`processed_at` changed 20:29:34Z -> 21:04:12Z), sha256 of the three .npy files identical to step 4 (`42a40773...`, `f44f1c34...`, `bdf8a927...`), no `.part` folder left.
+- Found on the way: E015 (above). First attempt of this check was invalid and was redone.
+- `data/` auto-creation re-tested with the non-root user on Docker Desktop: works. Linux hosts: documented (APP_UID/APP_GID, create `data/`), not tested.
+- Not tested: Linux host file ownership; the compose `APP_UID` override with a different id.
 
-## Decisions waiting / recorded since last commit
-- D9 (user): out-of-date forecast shows a short plain-language warning only, no technical detail (see DECISIONS.md). Applies to plan step 10.
-- D9 addendum (user): technical error detail must remain available to developers (job log now; a status record next to the data is proposed for step 7/10, to be confirmed).
-- D10-D12 (user, 2026-11-06 20:13 UTC): Docker is the official test run; localhost = Vite on host + Docker nginx preview; IFS stays at 240 h for now (E007 open).
-- Step 6 second gate answered (D22): MapLibre, self-hosted Natural Earth outlines, dependency scans when needed.
-- Hosting request (user, ~21:36 UTC) resolved as D19 (~21:39 UTC): localhost 5173 = testing, localhost 8080 = public-like, one hosted public site deployed automatically after tests pass; no plan change.
-- D15 (user, ~20:43 UTC): security first. PLAN-005 approved ~20:51 UTC; S06 decided (D16: keep e-mail). Still waiting for: the hash choice at S4 (Linux set only / both / none) and confirmation of S04 (sanitised status record, at step 7/10).
-- D13 (user, ~20:23 UTC): wet threshold 0.5 mm per 6 h. D14 (AI, step 4): 6 h axis and file format, two marked shortcuts.
+## Fix E016 (no hardcoded paths) results (run 2026-11-06 ~21:03-21:10 UTC)
+Done after S3 and before S4, at the user's reminder; details in ERRORS.md E016 and DECISIONS.md D17. Docker tests `51 passed` (47 + 2 `test_paths` + 2 guard tests); guard test shown to fail on planted names/paths; real `process` and `fetch` runs unchanged in output (sha256 equal to step 4). Line counts: `pipeline/paths.py` 30, `pipeline/fetch.py` 208, `pipeline/processed.py` 127.
 
-## Submission checklist — security (added at the user's request, 2026-11-06 ~20:43 UTC)
-Each item is ticked in `docs/SUBMISSION.md` only after running the check. These come on top of the checklist in CLAUDE.md.
-- [ ] Secret scan of the working tree, of every commit (`git grep` over `git rev-list --all`) and of the session log: key formats, plus the values of any token-like environment variables. Zero matches.
-- [ ] The Docker test command (which includes the repo secret scan) passes on the final commit.
-- [ ] Dependency scan of the final `requirements.txt` and the npm lockfile recorded in `docs/SECURITY.md`, or "not approved" recorded.
-- [ ] `curl -I` of the live URL: HTTPS only, the agreed security headers present (or the CSP `<meta>` fallback documented).
-- [ ] Every finding in `docs/SECURITY.md` is marked fixed, accepted (with the reason) or open, and the "could not check" list is updated.
-- [ ] Public/private check: only the intended files are in the public repo; the identity decision (S06) is applied; no token or personal data beyond the decision appears in any log or file.
-- [ ] Every plan file since D15 contains a "Security note".
+## Step S4 done-check results (run 2026-11-06 ~21:12-21:28 UTC)
+Files: `docs/SOURCES.md` (requests, pip-audit), `scripts/pin_hashes.py` (about 85 lines, standard library only), `config/security.toml` ([hashes]), `requirements.txt` (hashes on all 25 packages), `docker/Dockerfile` (`--require-hashes`), `tests/tooling/test_pin_hashes.py` (4 tests), `tests/hygiene/test_requirements_hashed.py`, guard test extended to `scripts/`, README. Decision D18 (user: hashes for all platforms).
+- (a) `requests` 2.34.2 vetted on the PyPI JSON API (E014 closed, 1/1). The GitHub repo itself was not read.
+- (b) `pip-audit` 2.10.1 (vetted first) in a throwaway container (non-root, no capabilities, read-only root, only requirements.txt mounted, no environment): **25 packages checked, 0 vulnerable, 0 skipped**; repeated on the hashed file with the same result and no warning. Data sent: package names and versions to pypi.org.
+- (c) Hashes: 430 hashes written in 3.8 s. Official Docker tests `56 passed` (51 + 4 + 1). No-cache image build with `--require-hashes` succeeded, `pip check` clean. Linux container freeze equals the 25 pins. Fresh Windows venv from the hashed file: exit 0, freeze equals the 23 Windows pins, `pip check` clean. Wrong hash -> refused (exit 1); no hash -> refused (exit 1).
+- Mistakes on the way, all caught by the checks: my first hygiene-test regex misread the continued lines (test failed, rewritten); the first "no hash is refused" check was invalid because the package was already installed (redone with a fresh target folder); a first quoting slip in a test file; the scanner container needed an executable `/tmp` (only for that throwaway container).
+- Not tested: the generator against a real PyPI outage (it stops with an error); regenerating hashes after a real version bump (done once, for the current versions).
 
-## Known issues
-- Python 3.10 pip is broken; use `py -3.11` (see ENVIRONMENT.md).
+## Step 5 done-check results (run 2026-11-06 ~21:33-21:35 UTC)
+Files: new `pipeline/validate.py` (80 lines), `scripts/validate_points.py` (35), `config/validation_points.toml` (8 places + tolerance), `config/pipeline.toml` (`validation_points_file`), `tests/pipeline/test_validate.py` (5 tests), README. Security note (PLAN-005): reads local files only, runs in the `process` container (no network), no new package; the optional Open-Meteo second source was NOT used (it would send coordinates to a third party; not approved).
+- Independence: the processed side uses `pipeline/grid.py` index maths and `codes_get_values` on whole fields; the check side reads each raw message with eccodes' own `codes_grib_find_nearest`. Shared on purpose and stated in the module: the unit table from the config, the step list, and the 0.1 mm storage step.
+- Real run, 12z, `docker compose -f docker/compose.yaml run --rm process python -m scripts.validate_points`: 8 places x 2 models = **16 of 16 rows within tolerance** (0.05 mm + 0.001 slack), exit 0; in every row both code paths picked the **same grid cell** (including Auckland and Suva near the date line). Largest differences: IFS 0.0441-0.0496 mm, AIFS up to 0.0500 mm; mean differences 0.006-0.029 mm. The ceiling of 0.05 mm is exactly half the storage step, as expected. Rain in the series reached 24.2 mm per 6 h at Chennai (AIFS), so the comparison is on real rain, not zeros.
+- The 00z run: also 16 of 16.
+- The check can fail: 5 new tests (Docker, 61 passed in total) break one thing on purpose and require the validation to flag it: a stored value changed by 0.7 mm, the longitude start set to 180 for a file starting at 0 (the E012 kind of error; shows as a different cell), IFS metres processed as mm (the E006 kind of error), plus the run listing. The matching case must pass for both models and both places.
+- Not covered: the unit table itself is shared, so a wrong entry there would not be caught by this script (it is covered by the unit tests and by the IFS-vs-AIFS global means agreeing within 1.7 %); only 8 places and 2 runs; Open-Meteo or another outside source not used.
+
+## Step 6 (part 1: spike, local sites, Docker) results (run 2026-11-06 ~21:40-22:14 UTC)
+Files: `frontend/` (package.json + lock, vite.config.js, index.html, src/{badge,geo,outlines}.js, spikes/{maplibre,cesium}.{html,js}, tools/screenshots.mjs), `config/frontend.json`, `config/headers.conf`, `docker/{Dockerfile.node,Dockerfile.node.dockerignore,nginx.conf,compose.yaml}`, `scripts/spike_frame.py` (throwaway), `tests/frontend/geo.test.mjs`, `docs/evidence/`. Decisions D19-D21; errors E017-E020; security S10-S14.
+- **Gate answers (D20):** spike MapLibre + Cesium; node:22-slim + nginx + Playwright (digests pinned, SOURCES.md); online geocoder (service chosen at step 8); base map: user asked for research (done, D20) and decides at the second gate.
+- **Done-check, localhost:** the testing site `http://localhost:5173` (Vite dev server on the host) answers 200, serves `/data/` and `/cesium/`, shows the DEV badge on every page (host Edge screenshots); the public-like site `http://localhost:8080` (Docker nginx) answers 200 with the five security headers, serves the data folder, shows no badge. Both refuse connections via the LAN address. Dev data route: 3 traversal attempts -> 403; nginx -> 400.
+- **Done-check, Docker:** `frontend-build` (no network) builds the app into `frontend/dist` (13 MB, Cesium static folders 7 MB of it); `frontend-tests` (`node --test`) 4 passed; Python tests 61 passed; `screenshots` (Playwright image) reports `ok: true` for all 5 pages: finished drawing, no console/CSP error, no host other than the preview, no DEV badge.
+- **Screenshots** (`docs/evidence/step6-*.png` from Docker; `docs/evidence/dev-server/` from host Edge: home with DEV badge, and the MapLibre flat->globe toggle).
+- **Runtime toggle (MapLibre):** centre 78E 13N and zoom 2.4 identical after flat -> globe -> flat, rain layer kept, no console errors. Cesium's switch was not tested.
+- **Not done yet in step 6:** the second gate (the user chooses the library and base map), then removing the unused spike code; the frame format is decided in step 7. `npm audit` not run (needs approval).
+- Not verified: behaviour on a phone or in Firefox/Safari (only Chromium and Edge); real GPU in Docker; the `.vite-temp` tmpfs and read-only mounts on a Linux host.
+
+## Step 6 (part 2: second gate and clean-up) results (run 2026-11-06 ~22:15-22:21 UTC)
+Decision D22 (user): MapLibre GL JS, self-hosted Natural Earth outlines, dependency scans when needed. Error E021 (my process slip).
+- **Cesium removed:** code, packages (`cesium`, `@cesium/engine`, `@cesium/core`), config section, Vite copy step, compose mounts, screenshot pages. npm tree 98 -> 70 packages; production build 13 MB -> **1.7 MB** (JS 329 kB gzip, worker 147 kB gzip, 10 kB CSS). The two Cesium comparison screenshots stay in `docs/evidence/` as evidence for the decision.
+- **`npm audit`** (standing approval, throwaway hardened container, lock file only): 70 packages, **0 vulnerabilities**.
+- **Policy tightened** in `config/headers.conf` (`script-src 'self'`, no `child-src`); real-browser run on the public-like site (Docker Chromium): home, MapLibre flat, MapLibre globe all `ok: true`, no console/CSP errors, no outside host, no DEV badge; about 0.57 MB loaded per map page.
+- **Testing site re-verified** with the final config (host Edge): DEV badge on every page, pages ready, `/data/` served, 3 traversal attempts -> 403; stopped by PID and verified on `[::1]`, `127.0.0.1`, `localhost`.
+- Tests: Python 61 passed, Node 4 passed (Docker). Line counts: `frontend/vite.config.js` 70, `scripts/spike_frame.py` 77, `config/frontend.json` 47.
+- Known leftovers (for later steps): `scripts/spike_frame.py` and `frontend/spikes/maplibre.*` are throwaway/spike code (`shortcut:` marked) replaced in steps 7 and 9; `config/headers.conf` is the only copy of the headers (converter for the public host at step 10/11); the frame format is still undecided (step 7).
+
+## Housekeeping review of all markdown files (run 2026-11-06 ~23:00-23:03 UTC; user request, markdown only, no code or config changed)
+Checked: README, PROBLEM, PLAN-001..005, PROGRESS, DECISIONS, ERRORS, SOURCES, DOMAIN, ENVIRONMENT, SECURITY (14 files). `docs/SUBMISSION.md` does not exist yet (created at step 12). Plan files were not touched (rule: approved plans are never edited).
+Gaps found and fixed:
+- **README:** status line, folder list and a stale sentence ("no front end or localhost preview yet") were out of date; added a "Browser support and what was tested" section (Chromium Docker, Edge host, Firefox user-reported, Safari and phones later, no GPU, WebGL2 requirement).
+- **ENVIRONMENT:** stopped at step 3b; added the facts of steps 4-6 (images and digests, no-GPU constraint, Firefox in the container, IPv6 loopback and PowerShell quirk, netstat limits, process-stopping lessons, Windows versus Linux `node_modules`, tmpfs `noexec`, Node 22 `--test`, tool-shell limits).
+- **SECURITY:** header and scope now say it was extended through `fb92a96`; S06 status updated to accepted (D16); three "could not check" items that were no longer true (vulnerability scan, front end, npm) were replaced; public/private table and the controls section updated for the front end, the self-hosted base map and the online geocoder.
+- **DECISIONS:** results appended for bets that were still "pending" although the evidence exists (D1, D3, D5, D6, D7, D11, D19, D20); a shortcut register (4 markers in code, where each is recorded; the headers-file shortcut was missing); new D23.
+- **ERRORS:** E010 and E013 counters and fix records brought up to date; E022 added.
+- **DOMAIN / SOURCES:** front-end rendering facts and the browser builds of the Playwright image added.
+- **PROGRESS (this file):** the result sections were out of order and the time table stopped after step 4; the table is rebuilt from `git log`, results are in chronological order, and Status, Open items and Known issues are rewritten.
+Found but not changed (no code changes allowed): `frontend/spikes/maplibre.js` exposes `window.__map` without a `shortcut:` marker (recorded in the shortcut register).
+Two things noticed about my own work: three times this session I wrote a time into a record before checking the clock (corrected each time, E021 and earlier slips), and the first Firefox "variants" were not what I thought (E022).

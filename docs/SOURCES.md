@@ -63,3 +63,6 @@ Pages opened for the decision gate (research results are in docs/DECISIONS.md D2
 
 ## 2026-11-06 ~22:21 UTC — Update after the library decision (D22)
 CesiumJS (`cesium` 1.147.0, `@cesium/engine` 26.5.0, `@cesium/core` 0.1.1) was evaluated and then **removed** from `frontend/package.json` and the lock file; the npm tree is now 70 packages (direct: maplibre-gl 6.16.0, topojson-client 3.1.0, world-atlas 2.0.2, vite 8.3.6, playwright 1.65.0). `npm audit` on that lock file, run 2026-11-06 under the user's standing approval in a throwaway container from the pinned node image (`--package-lock-only`, no install): 70 packages, 0 vulnerabilities (sent to the npm registry: package names and versions).
+
+## 2026-11-06 ~23:02 UTC — Browser builds seen during the Firefox attempt (housekeeping)
+Listing of `/ms-playwright` and `firefox` version inside the pinned Playwright image (`docker compose ... run`): `chromium-1254`, `chromium_headless_shell-1254`, `firefox-1572` (Firefox 159.0 as reported by Playwright), `webkit-2388`, `ffmpeg-1013`. Not downloaded separately. WebKit is the engine closest to Safari that can be tested in Docker; it has not been used yet (Safari is deferred by the user, D23).

@@ -13,10 +13,10 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 | E007 | Assumption A3 wrong: IFS has `tp` files up to 360 h, not 240 h (config stops at 240 h) | 1 | 0/0 (needs user decision) |
 | E008 | `PrematureEndOfFileError` crash: `download_run` cannot recover from a truncated `tp.grib2` | 1 | 1/1 (atomic download + `is_complete`) |
 | E009 | During HTTP 503 the client retries every file check (about 20 s each) and then silently treats the run as incomplete | 1 | 1/1 (strict fail-fast search session) |
-| E010 | PLAN-003 had no local preview of the site and no containerised test run (planning gap; user added both) | 1 | 1/1 (step 3b Docker test run works; localhost comes in step 6) |
+| E010 | PLAN-003 had no local preview of the site and no containerised test run (planning gap; user added both) | 1 | 1/1 (Docker test run in step 3b; localhost sites in step 6) |
 | E011 | `requirements.txt` was pinned from the Windows package set only; Linux installs 2 more unpinned packages (eccodeslib, eckitlib) | 1 | 1/1 (pinned with a `sys_platform == "linux"` marker) |
 | E012 | Longitude start assumed to be 0 in my first picture of the grid; both models start at 180 (caught by the planned A2 check, before any output) | 1 | 1/1 (layout in config, checked per message; index verified against eccodes) |
-| E013 | PLAN-001 to PLAN-004 had no security work or security notes (planning gap; user raised it) | 1 | 0/0 (fix = PLAN-005, awaiting approval) |
+| E013 | PLAN-001 to PLAN-004 had no security work or security notes (planning gap; user raised it) | 1 | 1/1 (PLAN-005 steps S1-S5 done; security note in every plan, D15) |
 | E014 | `requests` became a direct dependency (E008) without being vetted on PyPI/GitHub as the package rule requires | 1 | 1/1 (vetted in step S4; recorded in SOURCES.md) |
 | E015 | `save()` ignored errors when deleting an old output folder; with files left by another user the run died as a misleading `OSError: Directory not empty` | 1 | 1/1 (errors now surface; regression test) |
 | E016 | Folder/file names (`tp.grib2`, `meta.json`, `%Y%m%d%H`, `.part`, ...) and the compose data mount were hardcoded, against the config-file rule (user reminder) | 1 | 1/1 (names moved to config `[paths]`, `pipeline/paths.py`, guard test) |
@@ -25,6 +25,7 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 | E019 | CesiumJS `Viewer` fails under a strict CSP: `Evaluating a string as JavaScript violates ... 'unsafe-eval'` (Knockout) | 1 | 1/1 (use `CesiumWidget` from `@cesium/engine`) |
 | E020 | Vite in the read-only container: `ENOENT: mkdir '/node_modules/.vite-temp'` | 1 | 1/1 (tmpfs at that path) |
 | E021 | I reported the dev server as stopped after checking only 127.0.0.1; it listened on ::1 and kept running (and `TaskStop` ended only the wrapper shell) | 1 | 1/1 (found by command line, stopped by PID, verified on ::1, 127.0.0.1 and localhost) |
+| E022 | A throwaway Firefox script edit failed silently (`python3 - ... \|\| python ...` fallback), so two reported "variant" runs were the original configuration; killed runs left containers behind | 1 | 1/1 (script rewritten, each variant run once, containers removed) |
 
 ---
 
@@ -139,7 +140,7 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 - Changed lines: `config/pipeline.toml` ([grid]), new `pipeline/grid.py`, `tests/pipeline/test_grid.py`.
 
 ## E013 — No security work in PLAN-001 to PLAN-004 (planning gap)
-- 2026-11-06 ~20:35 UTC (user message before step 5). seen: 1. fix worked / fix tried: 0/0.
+- 2026-11-06 ~20:35 UTC (user message before step 5). seen: 1. fix worked / fix tried: 1/1 (see the fix record at the end of this entry).
 - What happened: four plans were approved with a secrets rule (CLAUDE.md) but no security review, no threat list, no hardening step and no security note. The user said "which I forgot to mention" and asked for an audit. A professional plan for a public web app should have proposed one without being asked, as with E002 (folder layout) and E010 (Docker, localhost).
 - Evidence: the audit in `docs/SECURITY.md` found no Critical/High issue but nine findings (S01-S09), e.g. no request timeouts (S01) and a root container parsing downloaded files (S03).
 - Fix: `docs/plans/PLAN-005.md` (draft, awaiting approval) with the fixes and a security note; from now on every plan carries a short security note (decision D15). Counters stay 0/0 until the fixes are applied and verified.
@@ -202,3 +203,16 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 - Fix: listed the node processes with their command lines (the user's own MCP-tool processes were left alone), stopped only `node node_modules\.bin/../vite/bin/vite.js` (PID 32912), verified no answer on `[::1]`, `127.0.0.1` and `localhost`; later starts record the PID and stop by PID.
 - Also: I deleted two tracked evidence screenshots from the working tree during clean-up and restored them with `git checkout`.
 - Changed lines: none (process handling).
+
+### Fix record E010, localhost half (23:03 UTC, housekeeping)
+- The localhost part of E010 was delivered in step 6 (decisions D19, D20, D22): the testing site on http://localhost:5173 (Vite, DEV badge) and the public-like site on http://localhost:8080 (Docker nginx) both answered 200 and were checked with real browsers. The Docker test run was delivered in step 3b. Both halves are now done: 1/1.
+
+### Fix record E013 (23:03 UTC, housekeeping)
+- PLAN-005 was approved (~20:51 UTC) and its steps S1-S5 were done and verified (`docs/PROGRESS.md`, `docs/SECURITY.md` statuses S01, S02, S03, S05 fixed, S06 accepted, S08 documented). Every plan since D15 carries a "Security note" (PLAN-005 does; no later plan file exists yet). Open security items that are not part of this error: S04 (design, to be confirmed at step 7/10) and S14 (hosting requirements, step 11).
+
+## E022 — Throwaway Firefox script edit failed silently; stray containers
+- 23:03 UTC (housekeeping, Firefox attempt). seen: 1. fix worked / fix tried: 1/1.
+- What happened: I edited the one-off Firefox test script with a shell command of the form `python3 - ... || .venv/.../python.exe -I - ...`; the edit did not apply and nothing said so. The "variant" runs that followed were the original configuration, and I almost reported them as extra attempts. Separately, `timeout` killed the `docker compose run` client but not the containers, so two test containers kept running (one hung for minutes) until removed with `docker rm -f`.
+- Root cause (AI): I did not check that the edit had applied (`grep variant` on the file) before running it, and I assumed that killing the client stops the container.
+- Fix: rewrote the script file completely with the editor tool, then ran each of two software-GL variants once with a time limit and removed the leftover containers. Both variants failed to create WebGL (so Firefox stays untested in Docker), and the evidence of the earlier run is not counted.
+- Changed lines: none in the repository (the script lives outside it in `<temp folder>` and was removed).
