@@ -1,0 +1,57 @@
+{
+  "_comment": "Settings of the front end (read by Vite and by the browser code). No code here. Decisions: D17 (no hardcoded paths), D19 (dev badge).",
+  "data_url_path": "/data/",
+  "dev_data_dir": "data/site",
+  "dev_server": { "host": "localhost", "port": 5173 },
+  "cesium": {
+    "_comment": "CesiumJS needs its own folders (workers, assets) served next to the page. The package subfolder is looked up inside the installed cesium package; the url path is where the page asks for them.",
+    "url_path": "/cesium/",
+    "package_subdir": "Build/Cesium",
+    "copy_folders": ["Workers", "ThirdParty", "Assets", "Widgets"],
+    "skip_folders": ["Assets/Textures/NaturalEarthII"]
+  },
+  "build_pages": ["index.html", "spikes/maplibre.html", "spikes/cesium.html"],
+  "screenshots": {
+    "_comment": "Read by frontend/tools/screenshots.mjs (a real browser in Docker). The base URL and the output folder come from the environment variables named here.",
+    "base_url_env": "SCREENSHOT_BASE_URL",
+    "out_dir_env": "SCREENSHOT_OUT_DIR",
+    "browser_channel_env": "SCREENSHOT_BROWSER_CHANNEL",
+    "viewport": { "width": 1280, "height": 720 },
+    "ready_timeout_seconds": 90,
+    "file_prefix": "step6-",
+    "pages": [
+      { "name": "home", "path": "/" },
+      { "name": "maplibre-flat", "path": "/spikes/maplibre.html?mode=2d", "wait_for_ready": true },
+      { "name": "maplibre-globe", "path": "/spikes/maplibre.html?mode=3d", "wait_for_ready": true },
+      { "name": "cesium-flat", "path": "/spikes/cesium.html?mode=2d", "wait_for_ready": true },
+      { "name": "cesium-globe", "path": "/spikes/cesium.html?mode=3d", "wait_for_ready": true }
+    ]
+  },
+  "build_dir_env": "FRONTEND_OUT_DIR",
+  "cache_dir_env": "VITE_CACHE_DIR",
+  "dev_badge": { "enabled": true, "text": "DEV" },
+  "colour_scale": {
+    "unit": "mm per 6 h",
+    "_comment": "Colour for a value at or above the first number of each pair; below the first stop the pixel is transparent. Used by the spike frames now and by the final export later.",
+    "stops": [
+      [0.1, "#a6d8ff"],
+      [0.5, "#5aaaf0"],
+      [1.0, "#2a6fd6"],
+      [2.0, "#16b34a"],
+      [5.0, "#f2d517"],
+      [10.0, "#f28a17"],
+      [20.0, "#d6281e"],
+      [40.0, "#8a1fa8"]
+    ],
+    "opacity": 0.85
+  },
+  "spike": {
+    "model": "ifs",
+    "step_hours": 24,
+    "folder": "spike",
+    "equirectangular_file": "frame_equirect.png",
+    "mercator_file": "frame_mercator.png",
+    "mercator_size": 1440,
+    "mercator_max_latitude": 85.0511287798
+  }
+}

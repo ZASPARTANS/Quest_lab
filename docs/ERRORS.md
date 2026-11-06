@@ -20,6 +20,10 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 | E014 | `requests` became a direct dependency (E008) without being vetted on PyPI/GitHub as the package rule requires | 1 | 1/1 (vetted in step S4; recorded in SOURCES.md) |
 | E015 | `save()` ignored errors when deleting an old output folder; with files left by another user the run died as a misleading `OSError: Directory not empty` | 1 | 1/1 (errors now surface; regression test) |
 | E016 | Folder/file names (`tp.grib2`, `meta.json`, `%Y%m%d%H`, `.part`, ...) and the compose data mount were hardcoded, against the config-file rule (user reminder) | 1 | 1/1 (names moved to config `[paths]`, `pipeline/paths.py`, guard test) |
+| E017 | MapLibre `Worker failed to load`: the bundler did not emit `maplibre-gl-worker.mjs` (and v6 has no default export) | 1 | 1/1 (`?url` import + `setWorkerUrl`) |
+| E018 | nginx served `.mjs` as `application/octet-stream`; with `nosniff` the browser refuses the worker module | 1 | 1/1 (`types { text/javascript mjs; }`) |
+| E019 | CesiumJS `Viewer` fails under a strict CSP: `Evaluating a string as JavaScript violates ... 'unsafe-eval'` (Knockout) | 1 | 1/1 (use `CesiumWidget` from `@cesium/engine`) |
+| E020 | Vite in the read-only container: `ENOENT: mkdir '/node_modules/.vite-temp'` | 1 | 1/1 (tmpfs at that path) |
 
 ---
 
@@ -162,3 +166,30 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 - Re-ran: Docker tests 51 passed; the guard test fails when `"tp.grib2"` or `"/work/data/raw"` / a Windows user-folder path is planted in `grid.py` (restored with `git checkout`); real `process` regenerated the run (`processed_at` 21:04:12Z -> 21:08:10Z) with sha256 identical to step 4; real `fetch` reused the run; `process 2026110600` works; `process not-a-run` stops with `ValueError: time data 'not-a-run' does not match format '%Y%m%d%H'`.
 - Deliberate exception, stated plainly: the location of the config file itself (`ROOT / "config" / "pipeline.toml"` in `pipeline/fetch.py`, and the same pattern for `security.toml` and the guard tests) is fixed relative to the project folder, found from the code file's location. Also the container-side mount `/work/data` must match the first folder of the config paths (the compose file says so; a mismatch fails loudly because the project mount is read-only).
 - Changed lines: `config/pipeline.toml` ([paths]), new `pipeline/paths.py`, `pipeline/fetch.py`, `pipeline/processed.py`, `docker/compose.yaml`, tests as above.
+
+## E017 — MapLibre worker not loaded (and a wrong default import)
+- 2026-11-06 ~21:57 UTC (step 6, first browser run). seen: 1. fix worked / fix tried: 1/1.
+- Exact errors: build `[MISSING_EXPORT] "default" is not exported by "node_modules/maplibre-gl/dist/maplibre-gl.mjs"` (my wrong import: v6 has only named exports); then in the browser `Error: Worker failed to load. Check that the worker URL is correct.` with `request failed: .../assets/maplibre-gl-worker.mjs?v=6.16.0 net::ERR_FAILED`.
+- Root cause: (AI) I assumed the v5-style default export from memory. MapLibre 6 locates its worker file at run time; Vite did not emit that file, so the request 404ed (the `.mjs` MIME problem of E018 was a second, separate blocker found by `curl`).
+- Fix: `import { Map, setWorkerUrl } from 'maplibre-gl'` and `import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url'; setWorkerUrl(workerUrl)`. Re-ran: the worker file appears in `dist/assets` and both MapLibre pages finish drawing in the browser with no errors. Worked.
+- Changed lines: `frontend/spikes/maplibre.js`.
+
+## E018 — nginx serves .mjs files as octet-stream
+- 2026-11-06 ~21:58 UTC. seen: 1. fix worked / fix tried: 1/1.
+- Evidence: `curl -I .../assets/maplibre-gl-worker-*.mjs` -> `Content-Type: application/octet-stream`; `grep mjs /etc/nginx/mime.types` -> no entry. With `X-Content-Type-Options: nosniff` a module worker with that type is refused.
+- Fix: `types { text/javascript mjs; }` in `docker/nginx.conf`; re-checked: `.mjs` -> `text/javascript`, `.js`, `.css`, `.png` still correct. The public host (step 11) must serve `.mjs` as JavaScript too: added as a hosting criterion.
+- Changed lines: `docker/nginx.conf`.
+
+## E019 — CesiumJS Viewer needs 'unsafe-eval'
+- 2026-11-06 ~21:59 UTC (browser run with the real security headers). seen: 1. fix worked / fix tried: 1/1.
+- Exact error: `page error: Evaluating a string as JavaScript violates the following Content Security Policy directive because 'unsafe-eval' is not an allowed source of script`; the Cesium pages never became ready (92 s timeout).
+- Root cause: found by searching the built bundle: Knockout (used by Cesium's `Viewer` widgets) runs `(0,eval)('this')` at load. The only other dynamic-code hits (`Function(...)`) are in the KTX2/Emscripten texture decoders, not used here.
+- Fix: use `CesiumWidget` from `@cesium/engine` (no Knockout) and draw the outlines as polylines; no `'unsafe-eval'` in the policy. Re-ran: both Cesium pages finish drawing with the strict policy and no console errors. Worked. Consequence recorded in D21: Cesium's ready-made widgets (Viewer, timeline, geocoder) are not usable with a strict policy.
+- Changed lines: `frontend/spikes/cesium.js`, `frontend/package.json` (+ `@cesium/engine`, `@cesium/core`).
+
+## E020 — Vite cannot write its temporary config in the read-only container
+- 2026-11-06 ~21:54 UTC. seen: 1. fix worked / fix tried: 1/1.
+- Exact error: `Error: ENOENT: no such file or directory, mkdir '/node_modules/.vite-temp'` (Vite bundles `vite.config.js` into a temp folder beside the nearest `node_modules`, which is `/node_modules` in the image, read-only).
+- Fix: an in-memory tmpfs mounted at `/node_modules/.vite-temp` in the `frontend-build` service; the rest of the file system stays read-only. Re-ran: build succeeds, no network. Worked.
+- Changed lines: `docker/compose.yaml`.
+- Also corrected on the way (small AI slips, same step): `node --test <directory>` is run as a file by Node 22 (use a glob); a large bash command with many heredocs failed to parse (files written with the editor instead); the first screenshot report counted the COOP warning against the site although it only came from the test browser reaching the site as `http://preview:8080` (the test browser now treats that origin as secure).

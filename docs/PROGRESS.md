@@ -51,6 +51,16 @@ Files: `docker/Dockerfile` (+ user `app`, uid 10001), `docker/compose.yaml` (sha
 - `data/` auto-creation re-tested with the non-root user on Docker Desktop: works. Linux hosts: documented (APP_UID/APP_GID, create `data/`), not tested.
 - Not tested: Linux host file ownership; the compose `APP_UID` override with a different id.
 
+## Step 6 (part 1: spike, local sites, Docker) results (run 2026-11-06 ~21:40-22:14 UTC)
+Files: `frontend/` (package.json + lock, vite.config.js, index.html, src/{badge,geo,outlines}.js, spikes/{maplibre,cesium}.{html,js}, tools/screenshots.mjs), `config/frontend.json`, `config/headers.conf`, `docker/{Dockerfile.node,Dockerfile.node.dockerignore,nginx.conf,compose.yaml}`, `scripts/spike_frame.py` (throwaway), `tests/frontend/geo.test.mjs`, `docs/evidence/`. Decisions D19-D21; errors E017-E020; security S10-S14.
+- **Gate answers (D20):** spike MapLibre + Cesium; node:22-slim + nginx + Playwright (digests pinned, SOURCES.md); online geocoder (service chosen at step 8); base map: user asked for research (done, D20) and decides at the second gate.
+- **Done-check, localhost:** the testing site `http://localhost:5173` (Vite dev server on the host) answers 200, serves `/data/` and `/cesium/`, shows the DEV badge on every page (host Edge screenshots); the public-like site `http://localhost:8080` (Docker nginx) answers 200 with the five security headers, serves the data folder, shows no badge. Both refuse connections via the LAN address (192.168.1.117). Dev data route: 3 traversal attempts -> 403; nginx -> 400.
+- **Done-check, Docker:** `frontend-build` (no network) builds the app into `frontend/dist` (13 MB, Cesium static folders 7 MB of it); `frontend-tests` (`node --test`) 4 passed; Python tests 61 passed; `screenshots` (Playwright image) reports `ok: true` for all 5 pages: finished drawing, no console/CSP error, no host other than the preview, no DEV badge.
+- **Screenshots** (`docs/evidence/step6-*.png` from Docker; `docs/evidence/dev-server/` from host Edge: home with DEV badge, and the MapLibre flat->globe toggle).
+- **Runtime toggle (MapLibre):** centre 78E 13N and zoom 2.4 identical after flat -> globe -> flat, rain layer kept, no console errors. Cesium's switch was not tested.
+- **Not done yet in step 6:** the second gate (the user chooses the library and base map), then removing the unused spike code; the frame format is decided in step 7. `npm audit` not run (needs approval).
+- Not verified: behaviour on a phone or in Firefox/Safari (only Chromium and Edge); real GPU in Docker; the `.vite-temp` tmpfs and read-only mounts on a Linux host.
+
 ## Step 5 done-check results (run 2026-11-06 ~21:33-21:35 UTC)
 Files: new `pipeline/validate.py` (80 lines), `scripts/validate_points.py` (35), `config/validation_points.toml` (8 places + tolerance), `config/pipeline.toml` (`validation_points_file`), `tests/pipeline/test_validate.py` (5 tests), README. Security note (PLAN-005): reads local files only, runs in the `process` container (no network), no new package; the optional Open-Meteo second source was NOT used (it would send coordinates to a third party; not approved).
 - Independence: the processed side uses `pipeline/grid.py` index maths and `codes_get_values` on whole fields; the check side reads each raw message with eccodes' own `codes_grib_find_nearest`. Shared on purpose and stated in the module: the unit table from the config, the step list, and the 0.1 mm storage step.
@@ -184,7 +194,7 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 | S4 | Dependency vetting + scan (scan approved) | **done** 2026-11-06 (commit "Step S4...", time in `git log`) |
 | S5 | Identity decision | **done** (D16: keep e-mail as is, no code) |
 | 5 | Independent validation | **done** 2026-11-06 (commit "Step 5...", time in `git log`) |
-| 6 | Front-end spike + decision gate | not started |
+| 6 | Front-end spike + decision gate + localhost | **in progress:** spike, both local sites and Docker build/tests done and verified; waiting for the user's second-gate decisions (library, base map) |
 | 7 | Static data export | not started |
 | 8 | Location panel | not started |
 | 9 | Map / globe views | not started |
@@ -203,6 +213,7 @@ Note: the built-in todo/task-list tool is not available in this session's tool s
 - D9 (user): out-of-date forecast shows a short plain-language warning only, no technical detail (see DECISIONS.md). Applies to plan step 10.
 - D9 addendum (user): technical error detail must remain available to developers (job log now; a status record next to the data is proposed for step 7/10, to be confirmed).
 - D10-D12 (user, 2026-11-06 20:13 UTC): Docker is the official test run; localhost = Vite on host + Docker nginx preview; IFS stays at 240 h for now (E007 open).
+- Step 6 second gate (user): library (AI recommends MapLibre, D21), base map (AI recommends self-hosted Natural Earth outlines, D20), may `npm audit` be run?
 - Hosting request (user, ~21:36 UTC) resolved as D19 (~21:39 UTC): localhost 5173 = testing, localhost 8080 = public-like, one hosted public site deployed automatically after tests pass; no plan change.
 - D15 (user, ~20:43 UTC): security first. PLAN-005 approved ~20:51 UTC; S06 decided (D16: keep e-mail). Still waiting for: the hash choice at S4 (Linux set only / both / none) and confirmation of S04 (sanitised status record, at step 7/10).
 - D13 (user, ~20:23 UTC): wet threshold 0.5 mm per 6 h. D14 (AI, step 4): 6 h axis and file format, two marked shortcuts.

@@ -41,3 +41,22 @@ Access date 2026-11-06. Checked on the official PyPI JSON API with a short scrip
 | requests | 2.34.2 (equals the installed version) | https://pypi.org/pypi/requests/2.34.2/json | https://github.com/psf/requests (from the page's `project_urls`) | name matches, Apache-2.0, not yanked, files uploaded 2026-05-14 (wheel + sdist), requires Python >= 3.10, author listed as Kenneth Reitz | imported directly by `pipeline/fetch.py` (session classes); closes E014. Only the PyPI page was opened; the GitHub repository was not read in this session. |
 | pip-audit | 2.10.1 (pinned for the one-off scan, NOT added to `requirements.txt`) | https://pypi.org/pypi/pip-audit/json | https://github.com/pypa/pip-audit (Python Packaging Authority) | name matches, not yanked, upload 2026-06-10, authors Alex Cameron, Dustin Ingram, William Woodruff; its own dependencies (CacheControl, cyclonedx-python-lib, rich, tomli, ...) were installed by pip into a throwaway container and are NOT vetted one by one | vulnerability scan of `requirements.txt`; vulnerability data comes from PyPI's own service (default of the tool) |
 
+## 2026-11-06 ~22:14 UTC — Front-end packages, images and pages used in step 6
+Access date 2026-11-06. npm facts from the registry JSON API (registry.npmjs.org) and from the installed packages; images by `docker buildx imagetools inspect` (digests) and `docker pull` (nginx only).
+| Package | Pinned | Licence (registry) | Used for | Notes |
+|---|---|---|---|---|
+| maplibre-gl | 6.16.0 (published 2026-10-25) | BSD-3-Clause | flat map and globe (spike) | no default export in v6 (named imports); worker file must be emitted and registered (`setWorkerUrl`), E017 |
+| cesium | 1.147.0 (2026-11-02) | Apache-2.0 | its static folders (Workers, ThirdParty, Assets, Widgets) served next to the page | 80 MB unpacked |
+| @cesium/engine | 26.5.0 | Apache-2.0 | `CesiumWidget` etc. (the page code imports it directly) | exact version `cesium` 1.147.0 requires; added as a direct pin because the page imports it |
+| @cesium/core | 0.1.1 | Apache-2.0 | `Cartesian3`, `Color`, `Rectangle` (moved there in CesiumJS 1.146; the old location prints deprecation warnings and is removed in 1.150) | direct pin for the same reason |
+| topojson-client | 3.1.0 (2019) | ISC | decode world outline data | |
+| world-atlas | 2.0.2 (2019) | ISC (package); data is Natural Earth, public domain | coastlines and country borders (110m) | |
+| vite | 8.3.6 (2026-11-05) | MIT | dev server and production build | uses Rolldown |
+| playwright | 1.65.0 (2026-11-05) | Apache-2.0 | browser screenshots and checks (dev dependency) | same version as the browser image |
+Whole npm tree from `frontend/package-lock.json`: 98 packages, all from registry.npmjs.org, all with sha512 integrity, **one install script (`fsevents`, macOS-only optional; never installed here)**; licences: MIT 49, ISC 12, Apache-2.0 13, MPL-2.0 12 (weak copyleft, used unmodified), BSD 8, others 4. Only the 8 direct packages were looked at on the registry; the other 90 were not vetted one by one. No `npm audit` was run (it sends the package list to the registry; asks the user first). All installs use `--ignore-scripts`.
+| Image | Digest | Used for |
+|---|---|---|
+| node:22-slim | sha256:5ec23b7c622b00547753bc6ffd78085dd868a68aeb41c8e0a1418f033e13d96d | front-end build and Node tests (Node 22 = the host's line, 22.23.4) |
+| nginx:stable-alpine (nginx 1.30.6) | sha256:583b7f2fce1cdb8da5ad5c39ebd3c33b98b87d493190e548bdee1fa8c619c311 | the "public-like" preview on localhost:8080 |
+| mcr.microsoft.com/playwright:v1.65.0-noble | sha256:6e3fb709361521eb27161606e6da6d2674e5e89fa16516cb37d6fdd91372273d | headless browser for screenshots and browser tests |
+Pages opened for the decision gate (research results are in docs/DECISIONS.md D20): https://www.naturalearthdata.com/about/terms-of-use/ (public domain), https://operations.osmfoundation.org/policies/tiles/ , https://operations.osmfoundation.org/policies/nominatim/ , https://open-meteo.com/en/docs/geocoding-api , https://open-meteo.com/en/terms , https://openfreemap.org/ ; a real request to geocoding-api.open-meteo.com for the CORS header. Not opened (blocked or empty): open-meteo.com/en/license, the PMC and MDPI copies of the GPCP paper. Node release lines from https://nodejs.org/dist/index.json.

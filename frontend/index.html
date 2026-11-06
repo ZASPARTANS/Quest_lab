@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>Precipitation forecast - front-end spike</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 2rem auto; max-width: 40rem; padding: 0 1rem; background: #0b1d33; color: #e8f0fa; }
+    a { color: #8cc4ff; }
+    #env-badge { position: fixed; top: 0; right: 0; background: #d6281e; color: #fff; font: 700 12px system-ui; padding: 4px 10px; letter-spacing: .1em; z-index: 10; }
+  </style>
+</head>
+<body>
+  <div id="env-badge" hidden></div>
+  <h1>Precipitation forecast</h1>
+  <p><strong>Work in progress.</strong> This page only compares two map libraries with one real forecast frame
+  (ECMWF IFS, a 6 h interval). It is not the finished app.</p>
+  <ul>
+    <li>MapLibre GL JS: <a href="/spikes/maplibre.html?mode=2d">flat map</a> | <a href="/spikes/maplibre.html?mode=3d">globe</a></li>
+    <li>CesiumJS: <a href="/spikes/cesium.html?mode=2d">flat map</a> | <a href="/spikes/cesium.html?mode=3d">globe</a></li>
+  </ul>
+  <script type="module" src="/src/badge.js"></script>
+</body>
+</html>
