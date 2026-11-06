@@ -12,6 +12,10 @@ stream = "oper"
 run_hours = [0, 12]          # UTC run hours used (06z/18z IFS runs are shorter, see DOMAIN.md)
 max_retries = 3              # downloads: client default is 500 retries x 120 s, far too patient for this app
 retry_after_seconds = 10
+# Timeouts for every request (finding S01): without them a server that goes silent hangs the job for ever.
+# connect = time to open the connection; read = longest silence while waiting for data (not the whole download).
+connect_timeout_seconds = 10
+read_timeout_seconds = 60
 # Run search (one HEAD request per step file, about 120 per search): fail fast, because a server
 # that is in trouble would otherwise make every one of those requests wait. See docs/ERRORS.md E009.
 search_max_retries = 2

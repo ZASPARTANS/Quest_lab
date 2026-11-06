@@ -53,7 +53,25 @@ class UnexpectedStatus(RuntimeError):
     """The server answered something other than 200 (published) or 404 (not published yet)."""
 
 
-class _StrictSession(requests.Session):
+class _TimeoutSession(requests.Session):
+    """Session that gives every request a (connect, read) timeout in seconds.
+
+    The client and its download library pass `timeout=None` (wait forever), so a server that accepts a
+    connection and then goes silent would hang the job for ever (finding S01 in docs/SECURITY.md).
+    `timeout=None` here means "no limit" and is only used by tests; `_client` always passes the config values.
+    """
+
+    def __init__(self, timeout=None):
+        super().__init__()
+        self.timeout = timeout
+
+    def request(self, method, url, **kwargs):
+        if kwargs.get("timeout") is None:
+            kwargs["timeout"] = self.timeout
+        return super().request(method, url, **kwargs)
+
+
+class _StrictSession(_TimeoutSession):
     """HEAD requests of the run search: any answer except 200/404 means the server is in trouble.
 
     The client would otherwise count e.g. a 503 as "run incomplete" and quietly use an older run (E009).
@@ -72,8 +90,8 @@ def _client(cfg, model, search=False):
     retries, wait = ((s["search_max_retries"], s["search_retry_after_seconds"]) if search
                      else (s["max_retries"], s["retry_after_seconds"]))
     client = Client(source=s["name"], model=model, resol=s["resolution"], maximum_retries=retries, retry_after=wait)
-    if search:
-        client.session = _StrictSession()
+    timeout = (s["connect_timeout_seconds"], s["read_timeout_seconds"])
+    client.session = _StrictSession(timeout) if search else _TimeoutSession(timeout)
     return client
 
 
