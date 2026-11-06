@@ -51,6 +51,14 @@ Files: `docker/Dockerfile` (+ user `app`, uid 10001), `docker/compose.yaml` (sha
 - `data/` auto-creation re-tested with the non-root user on Docker Desktop: works. Linux hosts: documented (APP_UID/APP_GID, create `data/`), not tested.
 - Not tested: Linux host file ownership; the compose `APP_UID` override with a different id.
 
+## Step 5 done-check results (run 2026-11-06 ~21:33-21:35 UTC)
+Files: new `pipeline/validate.py` (80 lines), `scripts/validate_points.py` (35), `config/validation_points.toml` (8 places + tolerance), `config/pipeline.toml` (`validation_points_file`), `tests/pipeline/test_validate.py` (5 tests), README. Security note (PLAN-005): reads local files only, runs in the `process` container (no network), no new package; the optional Open-Meteo second source was NOT used (it would send coordinates to a third party; not approved).
+- Independence: the processed side uses `pipeline/grid.py` index maths and `codes_get_values` on whole fields; the check side reads each raw message with eccodes' own `codes_grib_find_nearest`. Shared on purpose and stated in the module: the unit table from the config, the step list, and the 0.1 mm storage step.
+- Real run, 12z, `docker compose -f docker/compose.yaml run --rm process python -m scripts.validate_points`: 8 places x 2 models = **16 of 16 rows within tolerance** (0.05 mm + 0.001 slack), exit 0; in every row both code paths picked the **same grid cell** (including Auckland and Suva near the date line). Largest differences: IFS 0.0441-0.0496 mm, AIFS up to 0.0500 mm; mean differences 0.006-0.029 mm. The ceiling of 0.05 mm is exactly half the storage step, as expected. Rain in the series reached 24.2 mm per 6 h at Chennai (AIFS), so the comparison is on real rain, not zeros.
+- The 00z run: also 16 of 16.
+- The check can fail: 5 new tests (Docker, 61 passed in total) break one thing on purpose and require the validation to flag it: a stored value changed by 0.7 mm, the longitude start set to 180 for a file starting at 0 (the E012 kind of error; shows as a different cell), IFS metres processed as mm (the E006 kind of error), plus the run listing. The matching case must pass for both models and both places.
+- Not covered: the unit table itself is shared, so a wrong entry there would not be caught by this script (it is covered by the unit tests and by the IFS-vs-AIFS global means agreeing within 1.7 %); only 8 places and 2 runs; Open-Meteo or another outside source not used.
+
 ## Step S4 done-check results (run 2026-11-06 ~21:12-21:28 UTC)
 Files: `docs/SOURCES.md` (requests, pip-audit), `scripts/pin_hashes.py` (about 85 lines, standard library only), `config/security.toml` ([hashes]), `requirements.txt` (hashes on all 25 packages), `docker/Dockerfile` (`--require-hashes`), `tests/tooling/test_pin_hashes.py` (4 tests), `tests/hygiene/test_requirements_hashed.py`, guard test extended to `scripts/`, README. Decision D18 (user: hashes for all platforms).
 - (a) `requests` 2.34.2 vetted on the PyPI JSON API (E014 closed, 1/1). The GitHub repo itself was not read.
@@ -152,7 +160,7 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 - **Open problem (resolved in the plan, not yet in code):** assumption A1 was wrong for AIFS (E006). PLAN-003 was approved 2026-11-06 ~19:20 UTC; the fix is applied and tested in step 4.
 
 ## Current plan
-**`docs/plans/PLAN-005.md`** — approved by the user 2026-11-06 ~20:51 UTC (security fixes S1-S5, then PLAN-004's steps 5-12 with security notes). Status: in progress; S1-S5 done (S5 = decision D16, S4 hashes = D18); the E016 path fix (D17) is done; **next is step 5** (independent validation). **PLAN-004 below is superseded by PLAN-005** (reason: no security work, E013); its steps 1-4 are carried over as done.
+**`docs/plans/PLAN-005.md`** — approved by the user 2026-11-06 ~20:51 UTC (security fixes S1-S5, then PLAN-004's steps 5-12 with security notes). Status: in progress; S1-S5 done (S5 = decision D16, S4 hashes = D18); the E016 path fix (D17) is done; step 5 (independent validation) is done; **next is step 6**, but the user asked for TWO hosted sites (public-like and testing), which needs a plan revision first (see Decisions waiting). **PLAN-004 below is superseded by PLAN-005** (reason: no security work, E013); its steps 1-4 are carried over as done.
 
 **`docs/plans/PLAN-004.md`** — approved by the user 2026-11-06 ~20:13 UTC (replaces PLAN-003: Docker as the official test run and a localhost preview, see E010, D10-D12). Status: in progress; steps 1, 1b, 2, 3, 3b, 4 done; next is step 5.
 
@@ -175,7 +183,7 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 | S3 | Docker hardening, fetch/process split | **done** 2026-11-06 (commit "Step S3...", time in `git log`) |
 | S4 | Dependency vetting + scan (scan approved) | **done** 2026-11-06 (commit "Step S4...", time in `git log`) |
 | S5 | Identity decision | **done** (D16: keep e-mail as is, no code) |
-| 5 | Independent validation | paused until S1-S4 are done |
+| 5 | Independent validation | **done** 2026-11-06 (commit "Step 5...", time in `git log`) |
 | 6 | Front-end spike + decision gate | not started |
 | 7 | Static data export | not started |
 | 8 | Location panel | not started |
@@ -195,6 +203,7 @@ Note: the built-in todo/task-list tool is not available in this session's tool s
 - D9 (user): out-of-date forecast shows a short plain-language warning only, no technical detail (see DECISIONS.md). Applies to plan step 10.
 - D9 addendum (user): technical error detail must remain available to developers (job log now; a status record next to the data is proposed for step 7/10, to be confirmed).
 - D10-D12 (user, 2026-11-06 20:13 UTC): Docker is the official test run; localhost = Vite on host + Docker nginx preview; IFS stays at 240 h for now (E007 open).
+- NEW REQUEST (user, ~21:36 UTC, during step 5): "we need to host one is similar to how public user see and other is for testing" = two hosted sites (a public-like one and a testing one). Affects step 11 (and parts of 6); not decided yet: options go to the user, then a new plan file (PLAN-006).
 - D15 (user, ~20:43 UTC): security first. PLAN-005 approved ~20:51 UTC; S06 decided (D16: keep e-mail). Still waiting for: the hash choice at S4 (Linux set only / both / none) and confirmation of S04 (sanitised status record, at step 7/10).
 - D13 (user, ~20:23 UTC): wet threshold 0.5 mm per 6 h. D14 (AI, step 4): 6 h axis and file format, two marked shortcuts.
 

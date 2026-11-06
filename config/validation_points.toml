@@ -1,0 +1,48 @@
+# Places used by scripts/validate_points.py to compare the processed data with the raw GRIB files (plan step 5).
+# Chosen to cover: both hemispheres, a monsoon coast, the tropics, a rainy mountain city, high latitude, and two places
+# near the date line where the longitude wrap matters (grid column 0 is 180 E, see docs/DOMAIN.md).
+# Coordinates are approximate city centres in degrees (north and east positive); they only need to be the same for both paths.
+
+[tolerance]
+max_abs_diff_mm = 0.05   # half of quantise_mm (0.1 mm) in config/pipeline.toml: the most that storing in tenths of a mm can change a value
+float_slack_mm = 0.001   # room for float32 versus float64 rounding
+
+[[points]]
+name = "Chennai"
+lat = 13.08
+lon = 80.27
+
+[[points]]
+name = "London"
+lat = 51.51
+lon = -0.13
+
+[[points]]
+name = "Honolulu"
+lat = 21.31
+lon = -157.86
+
+[[points]]
+name = "Sydney"
+lat = -33.87
+lon = 151.21
+
+[[points]]
+name = "Quito"
+lat = -0.18
+lon = -78.47
+
+[[points]]
+name = "Anchorage"
+lat = 61.22
+lon = -149.90
+
+[[points]]
+name = "Auckland"
+lat = -36.85
+lon = 174.76
+
+[[points]]
+name = "Suva (Fiji)"
+lat = -18.14
+lon = 178.44
