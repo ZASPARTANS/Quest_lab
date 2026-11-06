@@ -51,6 +51,15 @@ Files: `docker/Dockerfile` (+ user `app`, uid 10001), `docker/compose.yaml` (sha
 - `data/` auto-creation re-tested with the non-root user on Docker Desktop: works. Linux hosts: documented (APP_UID/APP_GID, create `data/`), not tested.
 - Not tested: Linux host file ownership; the compose `APP_UID` override with a different id.
 
+## Step 6 (part 2: second gate and clean-up) results (run 2026-11-06 ~22:15-22:21 UTC)
+Decision D22 (user): MapLibre GL JS, self-hosted Natural Earth outlines, dependency scans when needed. Error E021 (my process slip).
+- **Cesium removed:** code, packages (`cesium`, `@cesium/engine`, `@cesium/core`), config section, Vite copy step, compose mounts, screenshot pages. npm tree 98 -> 70 packages; production build 13 MB -> **1.7 MB** (JS 329 kB gzip, worker 147 kB gzip, 10 kB CSS). The two Cesium comparison screenshots stay in `docs/evidence/` as evidence for the decision.
+- **`npm audit`** (standing approval, throwaway hardened container, lock file only): 70 packages, **0 vulnerabilities**.
+- **Policy tightened** in `config/headers.conf` (`script-src 'self'`, no `child-src`); real-browser run on the public-like site (Docker Chromium): home, MapLibre flat, MapLibre globe all `ok: true`, no console/CSP errors, no outside host, no DEV badge; about 0.57 MB loaded per map page.
+- **Testing site re-verified** with the final config (host Edge): DEV badge on every page, pages ready, `/data/` served, 3 traversal attempts -> 403; stopped by PID and verified on `[::1]`, `127.0.0.1`, `localhost`.
+- Tests: Python 61 passed, Node 4 passed (Docker). Line counts: `frontend/vite.config.js` 70, `scripts/spike_frame.py` 77, `config/frontend.json` 47.
+- Known leftovers (for later steps): `scripts/spike_frame.py` and `frontend/spikes/maplibre.*` are throwaway/spike code (`shortcut:` marked) replaced in steps 7 and 9; `config/headers.conf` is the only copy of the headers (converter for the public host at step 10/11); the frame format is still undecided (step 7).
+
 ## Step 6 (part 1: spike, local sites, Docker) results (run 2026-11-06 ~21:40-22:14 UTC)
 Files: `frontend/` (package.json + lock, vite.config.js, index.html, src/{badge,geo,outlines}.js, spikes/{maplibre,cesium}.{html,js}, tools/screenshots.mjs), `config/frontend.json`, `config/headers.conf`, `docker/{Dockerfile.node,Dockerfile.node.dockerignore,nginx.conf,compose.yaml}`, `scripts/spike_frame.py` (throwaway), `tests/frontend/geo.test.mjs`, `docs/evidence/`. Decisions D19-D21; errors E017-E020; security S10-S14.
 - **Gate answers (D20):** spike MapLibre + Cesium; node:22-slim + nginx + Playwright (digests pinned, SOURCES.md); online geocoder (service chosen at step 8); base map: user asked for research (done, D20) and decides at the second gate.
@@ -170,7 +179,7 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 - **Open problem (resolved in the plan, not yet in code):** assumption A1 was wrong for AIFS (E006). PLAN-003 was approved 2026-11-06 ~19:20 UTC; the fix is applied and tested in step 4.
 
 ## Current plan
-**`docs/plans/PLAN-005.md`** — approved by the user 2026-11-06 ~20:51 UTC (security fixes S1-S5, then PLAN-004's steps 5-12 with security notes). Status: in progress; S1-S5 done (S5 = decision D16, S4 hashes = D18); the E016 path fix (D17) is done; step 5 (independent validation) is done; **next is step 6** (front-end spike + decision gate; the user decides library, basemap, search fallback and images there). **PLAN-004 below is superseded by PLAN-005** (reason: no security work, E013); its steps 1-4 are carried over as done.
+**`docs/plans/PLAN-005.md`** — approved by the user 2026-11-06 ~20:51 UTC (security fixes S1-S5, then PLAN-004's steps 5-12 with security notes). Status: in progress; S1-S5 done (S5 = decision D16, S4 hashes = D18); the E016 path fix (D17) is done; steps 1-6 are done; **next is step 7** (static data export: frame format, tiles, manifest). **PLAN-004 below is superseded by PLAN-005** (reason: no security work, E013); its steps 1-4 are carried over as done.
 
 **`docs/plans/PLAN-004.md`** — approved by the user 2026-11-06 ~20:13 UTC (replaces PLAN-003: Docker as the official test run and a localhost preview, see E010, D10-D12). Status: in progress; steps 1, 1b, 2, 3, 3b, 4 done; next is step 5.
 
@@ -194,7 +203,7 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 | S4 | Dependency vetting + scan (scan approved) | **done** 2026-11-06 (commit "Step S4...", time in `git log`) |
 | S5 | Identity decision | **done** (D16: keep e-mail as is, no code) |
 | 5 | Independent validation | **done** 2026-11-06 (commit "Step 5...", time in `git log`) |
-| 6 | Front-end spike + decision gate + localhost | **in progress:** spike, both local sites and Docker build/tests done and verified; waiting for the user's second-gate decisions (library, base map) |
+| 6 | Front-end spike + decision gate + localhost | **done** 2026-11-06 (commit "Step 6: ...", time in `git log`); library MapLibre (D22) |
 | 7 | Static data export | not started |
 | 8 | Location panel | not started |
 | 9 | Map / globe views | not started |
@@ -213,7 +222,7 @@ Note: the built-in todo/task-list tool is not available in this session's tool s
 - D9 (user): out-of-date forecast shows a short plain-language warning only, no technical detail (see DECISIONS.md). Applies to plan step 10.
 - D9 addendum (user): technical error detail must remain available to developers (job log now; a status record next to the data is proposed for step 7/10, to be confirmed).
 - D10-D12 (user, 2026-11-06 20:13 UTC): Docker is the official test run; localhost = Vite on host + Docker nginx preview; IFS stays at 240 h for now (E007 open).
-- Step 6 second gate (user): library (AI recommends MapLibre, D21), base map (AI recommends self-hosted Natural Earth outlines, D20), may `npm audit` be run?
+- Step 6 second gate answered (D22): MapLibre, self-hosted Natural Earth outlines, dependency scans when needed.
 - Hosting request (user, ~21:36 UTC) resolved as D19 (~21:39 UTC): localhost 5173 = testing, localhost 8080 = public-like, one hosted public site deployed automatically after tests pass; no plan change.
 - D15 (user, ~20:43 UTC): security first. PLAN-005 approved ~20:51 UTC; S06 decided (D16: keep e-mail). Still waiting for: the hash choice at S4 (Linux set only / both / none) and confirmation of S04 (sanitised status record, at step 7/10).
 - D13 (user, ~20:23 UTC): wet threshold 0.5 mm per 6 h. D14 (AI, step 4): 6 h axis and file format, two marked shortcuts.

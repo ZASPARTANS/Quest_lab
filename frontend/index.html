@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="data:,">
-  <title>Precipitation forecast - front-end spike</title>
+  <title>Precipitation forecast - work in progress</title>
   <style>
     body { font: 16px/1.5 system-ui, sans-serif; margin: 2rem auto; max-width: 40rem; padding: 0 1rem; background: #0b1d33; color: #e8f0fa; }
     a { color: #8cc4ff; }
@@ -14,11 +14,10 @@
 <body>
   <div id="env-badge" hidden></div>
   <h1>Precipitation forecast</h1>
-  <p><strong>Work in progress.</strong> This page only compares two map libraries with one real forecast frame
-  (ECMWF IFS, a 6 h interval). It is not the finished app.</p>
+  <p><strong>Work in progress.</strong> This page only shows one real forecast frame
+  (ECMWF IFS, a 6 h interval) on a map and on a globe. It is not the finished app.</p>
   <ul>
-    <li>MapLibre GL JS: <a href="/spikes/maplibre.html?mode=2d">flat map</a> | <a href="/spikes/maplibre.html?mode=3d">globe</a></li>
-    <li>CesiumJS: <a href="/spikes/cesium.html?mode=2d">flat map</a> | <a href="/spikes/cesium.html?mode=3d">globe</a></li>
+    <li><a href="/spikes/maplibre.html?mode=2d">Flat map</a> | <a href="/spikes/maplibre.html?mode=3d">Globe</a></li>
   </ul>
   <script type="module" src="/src/badge.js"></script>
 </body>

@@ -1,4 +1,4 @@
-// SPIKE: one real rainfall frame on MapLibre GL JS, flat (?mode=2d) or globe (?mode=3d). No outside requests: the style has no
+// SPIKE (library chosen: MapLibre GL JS, D22): one real rainfall frame, flat (?mode=2d) or globe (?mode=3d). No outside requests: the style has no
 // online sources. The rainfall is an image source (Web Mercator image, see scripts/spike_frame.py).
 import { Map as MapLibreMap, setWorkerUrl } from 'maplibre-gl';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url'; // the worker is a separate file the bundler must emit and name

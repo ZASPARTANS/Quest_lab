@@ -1,9 +1,8 @@
 """SPIKE ONLY (plan step 6): draw ONE real rainfall interval as colour images for the library comparison.
 
 shortcut: throwaway code. The real export (tiles, manifest, final frame format) is plan step 7 (backend/export.py) and
-replaces this script; the frame format is decided after the library gate. Reads the newest processed run, takes the model
-and forecast hour from config/frontend.json ("spike"), and writes two PNG files into the front end's data folder:
-  the latitude/longitude image (for CesiumJS) and the Web Mercator image (for MapLibre GL JS; Mercator stops at 85.05 N/S).
+replaces this script. Reads the newest processed run, takes the model and forecast hour from config/frontend.json ("spike"),
+and writes one PNG file into the front end's data folder: the Web Mercator image for MapLibre GL JS (D22; Mercator stops at 85.05 N/S).
 Run:  docker compose -f docker/compose.yaml run --rm process python -m scripts.spike_frame
 """
 import json
@@ -63,16 +62,15 @@ def main(argv):
     out_dir = ROOT / fe["dev_data_dir"] / spike["folder"]
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    # columns run from lon_first (180 E = -180) eastwards, rows from the north: that already is the usual image layout
-    write_png(out_dir / spike["equirectangular_file"], colourise(mm, fe["colour_scale"]))
+    # grid columns run from lon_first (180 E = -180) eastwards and rows from the north: that already is the usual image layout
     size, lat = spike["mercator_size"], mercator_rows(spike["mercator_size"], spike["mercator_max_latitude"])
     rows = np.clip(np.rint((grid["lat_first"] - lat) / grid["step_degrees"]).astype(int), 0, grid["nj"] - 1)
     cols = np.rint(((np.arange(size) + 0.5) / size * 360) / grid["step_degrees"]).astype(int) % grid["ni"]
     write_png(out_dir / spike["mercator_file"], colourise(mm[np.ix_(rows, cols)], fe["colour_scale"]))
     print(f"run {run:%Y-%m-%d %H:%M} UTC, {spike['model']}, interval ending +{spike['step_hours']} h "
           f"(valid {info['valid_times'][k]}): max {float(mm.max()):.1f} mm, wet cells {100 * float((mm >= 0.1).mean()):.1f} %")
-    for name in (spike["equirectangular_file"], spike["mercator_file"]):
-        print(f"  {out_dir.relative_to(ROOT) / name}  {(out_dir / name).stat().st_size / 1e3:.0f} kB")
+    name = spike["mercator_file"]
+    print(f"  {out_dir.relative_to(ROOT) / name}  {(out_dir / name).stat().st_size / 1e3:.0f} kB")
 
 
 if __name__ == "__main__":
