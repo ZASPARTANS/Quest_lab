@@ -5,11 +5,15 @@ and the HTTP server is a local throwaway server.
 """
 import datetime as dt
 import http.server
+import socket
 import threading
+import time
 from pathlib import Path
 
 import eccodes
+import multiurl
 import pytest
+import requests
 
 from pipeline import fetch
 
@@ -138,3 +142,39 @@ def test_strict_session_passes_published_and_not_yet_published(server_url, statu
 def test_strict_session_raises_on_server_trouble(server_url, status):
     with pytest.raises(fetch.UnexpectedStatus):
         fetch._StrictSession().head(f"{server_url}/{status}")
+
+
+# ---- S01: no request may wait for ever (docs/SECURITY.md)
+
+@pytest.fixture
+def silent_url():
+    """A local server that accepts connections and never answers."""
+    server = socket.socket()
+    server.bind(("127.0.0.1", 0))
+    server.listen(5)
+    yield f"http://127.0.0.1:{server.getsockname()[1]}/file"
+    server.close()
+
+
+def test_session_gives_up_on_a_server_that_never_answers(silent_url):
+    start = time.monotonic()
+    with pytest.raises(requests.exceptions.Timeout):
+        fetch._TimeoutSession((1, 1)).head(silent_url)
+    assert time.monotonic() - start < 5
+
+
+def test_download_library_cannot_switch_the_timeout_off(silent_url, tmp_path):
+    # multiurl, used by the ecmwf-opendata client, passes timeout=None on every call; the session must still apply its own limit
+    start = time.monotonic()
+    with pytest.raises(requests.exceptions.Timeout):
+        multiurl.download(silent_url, target=str(tmp_path / "f"), session=fetch._TimeoutSession((1, 1)),
+                          maximum_retries=1, retry_after=0.1)
+    assert time.monotonic() - start < 15
+
+
+def test_both_kinds_of_client_get_the_configured_timeout():
+    cfg = fetch.load_config()
+    want = (cfg["source"]["connect_timeout_seconds"], cfg["source"]["read_timeout_seconds"])
+    download, search = fetch._client(cfg, "ifs").session, fetch._client(cfg, "ifs", search=True).session
+    assert type(download) is fetch._TimeoutSession and download.timeout == want
+    assert type(search) is fetch._StrictSession and search.timeout == want

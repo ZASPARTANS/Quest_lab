@@ -34,6 +34,14 @@ Files: `.gitignore` (+9 patterns), new `config/security.toml` (9 key formats, sk
 - Defect found and fixed in my first version: walking `.venv/` through the Docker bind mount made the run take 141 s; switching to `os.walk` with pruned folders brought it back to 7.8 s.
 - Not covered: secret formats not in the list; the git history and the session log (those are checked by hand at submission, see the checklist below).
 
+## Step S2 done-check results (run 2026-11-06 ~20:56-20:59 UTC)
+Files: `pipeline/fetch.py` (+`_TimeoutSession`, `_StrictSession` now builds on it, `_client` always sets the session; 208 lines), `config/pipeline.toml` (`connect_timeout_seconds = 10`, `read_timeout_seconds = 60`), `tests/pipeline/test_fetch_failures.py` (+3 tests). Code ladder: a small subclass of the already-installed `requests.Session`; no new package.
+- Root cause confirmed in the installed source: the ecmwf-opendata client and multiurl pass `timeout=None` explicitly, so setting a default on the session is not enough; the subclass replaces a `None` timeout in `request()`.
+- Official Docker test command: `46 passed` (43 + 3 new), 12.0 s.
+- Silent server (accepts, never answers): a session with timeout (1, 1) raised `ReadTimeout` after 1.0 s; the same through `multiurl.download` (1 retry) raised `ReadTimeout` after 3.0 s. **Control:** a session with no timeout was still hanging when killed after 6 s (exit code 124).
+- Real server, Docker `run` service: the search found the 12z run (reused files) in about 30 s as before; then the 12z files were moved aside and downloaded again: both files `(downloaded)`, all 64 and 60 steps present, **sha256 identical to the earlier download**, about 64 s. So the 60 s read timeout does not cut a normal download.
+- Not tested: a real server that stalls in the middle of a download (the local silent server stalls from the first byte); the values 10 s / 60 s are my choice, not measured on ECMWF's slowest hour.
+
 ## Security audit (user request, run 2026-11-06 ~20:35-20:43 UTC)
 - State when paused: step 4 finished and committed (`dc2535c`); `git status` clean on `main`; no remote; step 5 not started.
 - Result: `docs/SECURITY.md` (findings S01-S09: no Critical or High; 5 Medium/Low items need code or setup changes, 2 need the user's decision). Not checkable yet: live-site items (HTTPS, headers, CORS, rate limiting), the front end, GitHub settings, a dependency vulnerability scan.
@@ -143,7 +151,7 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 | 3b | Docker test environment (PLAN-004) | **done** 2026-11-06 20:18 UTC (commit "Step 3b: Docker test environment...") |
 | 4 | Processing core + tests (units per model) | **done** 2026-11-06 (commit "Step 4: processing core...", time in `git log`) |
 | S1 | Repo hygiene: ignore patterns + secret-scan test | **done** 2026-11-06 (commit "Step S1...", time in `git log`) |
-| S2 | Network timeouts | not started |
+| S2 | Network timeouts | **done** 2026-11-06 (commit "Step S2...", time in `git log`) |
 | S3 | Docker hardening, fetch/process split | not started |
 | S4 | Dependency vetting + scan (scan approved) | not started |
 | S5 | Identity decision | **done** (D16: keep e-mail as is, no code) |
