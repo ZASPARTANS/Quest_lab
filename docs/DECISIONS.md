@@ -73,3 +73,11 @@ Append only. Each entry: date/time, what was chosen, alternatives, why, who deci
 - Alternatives: keep the client's default (silent fall-back to an older run on a 503, very slow); retry 503 with long back-off (hides outages and risks the hang seen in E009).
 - Why: a scheduled job that fails loudly leaves the previous deployment live and is visible in the logs; silently serving an older run would be wrong data that looks right.
 - Checkable bet: transient 503/429 from the ECMWF server are rare enough that aborting is acceptable. Result: pending (to be observed once the scheduled job runs).
+
+## D9 — Old or missing forecast: plain-language warning only
+- 2026-11-06 20:03 UTC. Decided by: **user** (message: "we will just stick to the warning instead of giving detailed information because not all users know what it means").
+- Chosen: when the shown forecast is older than a threshold (set in `config/frontend.json`), the app shows one short, plain-language warning that the forecast is out of date, together with the forecast's run time. It does NOT show technical causes (server errors, HTTP codes, "ECMWF source unavailable"). The technical detail stays in the pipeline logs and in docs/ERRORS.md.
+- Alternatives: name the cause in the UI ("data source unavailable"); show an empty/error page instead of the last good forecast. Not chosen.
+- Context: because of D2 the site is static and never contacts ECMWF; if a scheduled job fails, the last good forecast stays online (plan step 11), so the age warning is what tells a visitor the data is old (plan step 10).
+- Not built yet: no front end exists. The exact wording and threshold are decided in plan step 10 and shown to the user before use.
+- Checkable bet: visitors understand a simple age warning. Result: pending.

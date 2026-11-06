@@ -107,5 +107,9 @@ Note: the built-in todo/task-list tool is not available in this session's tool s
 - Read-only probe of the ECMWF Open Data server done; findings in `docs/DOMAIN.md`, source in `docs/SOURCES.md`.
 - Git repo initialised (branch `main`), first commit `ccb24df`. No remote yet (GitHub login and repo creation are plan step 11, needing the user's approval).
 
+## Decisions waiting / recorded since last commit
+- D9 (user): out-of-date forecast shows a short plain-language warning only, no technical detail (see DECISIONS.md). Applies to plan step 10.
+- Waiting for the user: whether to write PLAN-004 to extend IFS to 360 h (E007), or go straight to step 4.
+
 ## Known issues
 - Python 3.10 pip is broken; use `py -3.11` (see ENVIRONMENT.md).
