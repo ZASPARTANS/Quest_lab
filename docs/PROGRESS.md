@@ -160,7 +160,7 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 - **Open problem (resolved in the plan, not yet in code):** assumption A1 was wrong for AIFS (E006). PLAN-003 was approved 2026-11-06 ~19:20 UTC; the fix is applied and tested in step 4.
 
 ## Current plan
-**`docs/plans/PLAN-005.md`** — approved by the user 2026-11-06 ~20:51 UTC (security fixes S1-S5, then PLAN-004's steps 5-12 with security notes). Status: in progress; S1-S5 done (S5 = decision D16, S4 hashes = D18); the E016 path fix (D17) is done; step 5 (independent validation) is done; **next is step 6**, but the user asked for TWO hosted sites (public-like and testing), which needs a plan revision first (see Decisions waiting). **PLAN-004 below is superseded by PLAN-005** (reason: no security work, E013); its steps 1-4 are carried over as done.
+**`docs/plans/PLAN-005.md`** — approved by the user 2026-11-06 ~20:51 UTC (security fixes S1-S5, then PLAN-004's steps 5-12 with security notes). Status: in progress; S1-S5 done (S5 = decision D16, S4 hashes = D18); the E016 path fix (D17) is done; step 5 (independent validation) is done; **next is step 6** (front-end spike + decision gate; the user decides library, basemap, search fallback and images there). **PLAN-004 below is superseded by PLAN-005** (reason: no security work, E013); its steps 1-4 are carried over as done.
 
 **`docs/plans/PLAN-004.md`** — approved by the user 2026-11-06 ~20:13 UTC (replaces PLAN-003: Docker as the official test run and a localhost preview, see E010, D10-D12). Status: in progress; steps 1, 1b, 2, 3, 3b, 4 done; next is step 5.
 
@@ -203,7 +203,7 @@ Note: the built-in todo/task-list tool is not available in this session's tool s
 - D9 (user): out-of-date forecast shows a short plain-language warning only, no technical detail (see DECISIONS.md). Applies to plan step 10.
 - D9 addendum (user): technical error detail must remain available to developers (job log now; a status record next to the data is proposed for step 7/10, to be confirmed).
 - D10-D12 (user, 2026-11-06 20:13 UTC): Docker is the official test run; localhost = Vite on host + Docker nginx preview; IFS stays at 240 h for now (E007 open).
-- NEW REQUEST (user, ~21:36 UTC, during step 5): "we need to host one is similar to how public user see and other is for testing" = two hosted sites (a public-like one and a testing one). Affects step 11 (and parts of 6); not decided yet: options go to the user, then a new plan file (PLAN-006).
+- Hosting request (user, ~21:36 UTC) resolved as D19 (~21:39 UTC): localhost 5173 = testing, localhost 8080 = public-like, one hosted public site deployed automatically after tests pass; no plan change.
 - D15 (user, ~20:43 UTC): security first. PLAN-005 approved ~20:51 UTC; S06 decided (D16: keep e-mail). Still waiting for: the hash choice at S4 (Linux set only / both / none) and confirmation of S04 (sanitised status record, at step 7/10).
 - D13 (user, ~20:23 UTC): wet threshold 0.5 mm per 6 h. D14 (AI, step 4): 6 h axis and file format, two marked shortcuts.
 
