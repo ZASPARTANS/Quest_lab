@@ -32,6 +32,12 @@ docker compose -f docker/compose.yaml run --rm process   # process it into data/
 
 Every service runs as a normal user (not root) with all Linux capabilities dropped and a read-only file system; only the git-ignored `data/` folder is writable (security finding S03). On Docker Desktop (Windows) `data/` is created on the first run (checked). On Linux, create `data/` yourself and run `export APP_UID=$(id -u) APP_GID=$(id -g)` first, so the files belong to you (not tested: no Linux host here). The base image is pinned by digest, so it gets no operating-system updates until the digest in `docker/Dockerfile` is changed; re-check it before relying on the project for long.
 
+To check the processed data against the raw files (eccodes' own nearest-point search at 8 named places, tolerance 0.05 mm):
+
+```
+docker compose -f docker/compose.yaml run --rm process python -m scripts.validate_points
+```
+
 Processing turns both models into millimetres per 6-hour interval, converts each model's own unit, and builds the IFS-vs-AIFS agreement field (details: `docs/DOMAIN.md`, decisions D13 and D14).
 
 ## Running the tests (the official way)
