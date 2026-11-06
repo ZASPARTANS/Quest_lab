@@ -81,3 +81,11 @@ Append only. Each entry: date/time, what was chosen, alternatives, why, who deci
 - Context: because of D2 the site is static and never contacts ECMWF; if a scheduled job fails, the last good forecast stays online (plan step 11), so the age warning is what tells a visitor the data is old (plan step 10).
 - Not built yet: no front end exists. The exact wording and threshold are decided in plan step 10 and shown to the user before use.
 - Checkable bet: visitors understand a simple age warning. Result: pending.
+
+### D9 addendum — technical detail stays available to developers
+- 2026-11-06 20:04 UTC. Decided by: **user** (message: "the technical warning can be helpful for developer to find the exact error"). The exact place was proposed by the AI and is to be confirmed with the user in plan step 10.
+- Chosen: visitors see only the plain age warning (D9). Developers get the exact technical error from places visitors do not look at:
+  1. the pipeline log and the failed scheduled job (already true today: errors carry the exception type, URL and status, e.g. `UnexpectedStatus: HEAD <url> answered 503`);
+  2. recommended addition, not built yet: a small machine-readable status record published next to the data (last successful run time, last attempt time, last error text), readable with `curl` but not shown on the page.
+- Alternative not chosen for now: a "Details" toggle on the page. It would put technical text in front of visitors, which D9 wanted to avoid.
+- Checkable bet: the status record is enough to find the cause of a stale forecast without opening the job logs. Result: pending.

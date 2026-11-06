@@ -109,6 +109,7 @@ Note: the built-in todo/task-list tool is not available in this session's tool s
 
 ## Decisions waiting / recorded since last commit
 - D9 (user): out-of-date forecast shows a short plain-language warning only, no technical detail (see DECISIONS.md). Applies to plan step 10.
+- D9 addendum (user): technical error detail must remain available to developers (job log now; a status record next to the data is proposed for step 7/10, to be confirmed).
 - Waiting for the user: whether to write PLAN-004 to extend IFS to 360 h (E007), or go straight to step 4.
 
 ## Known issues
