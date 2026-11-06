@@ -19,7 +19,9 @@
 | 2026-11-06 19:16 | Commit `fc08c94` (step 3: fetch IFS and AIFS precipitation) | 0.96 h | 71.04 h |
 | 2026-11-06 19:20 | Commit `1c495fc` (PLAN-003 adopted) | 1.03 h | 70.97 h |
 | 2026-11-06 19:41 | Commit `ca6cd60` (step 3 follow-up verification records) | 1.37 h | 70.63 h |
-| 2026-11-06 19:52 | Commit "Fix E008 and E009 in the fetch step..." (hash: see `git log`) | 1.56 h | 70.44 h |
+| 2026-11-06 19:52 | Commit `d3a75eb` (fix E008 and E009 in the fetch step) | 1.56 h | 70.44 h |
+| 2026-11-06 20:04 | Commits `806bfa9`, `5b69d20` (decisions D9 and addendum) | 1.74 h | 70.26 h |
+| 2026-11-06 20:14 | Commit "Adopt PLAN-004..." (hash: see `git log`) | 1.91 h | 70.09 h |
 
 ## E008 and E009 fixes (asked for by the user; run 2026-11-06 ~19:45-19:53 UTC)
 Files changed: `pipeline/fetch.py` (190 lines), `config/pipeline.toml`, `requirements.txt` (`requests` moved to the direct section: it is now imported directly), new `tests/pipeline/test_fetch_failures.py` (140 lines). Details and counters: ERRORS.md E008, E009; decision D8.
@@ -78,7 +80,9 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 - **Open problem (resolved in the plan, not yet in code):** assumption A1 was wrong for AIFS (E006). PLAN-003 was approved 2026-11-06 ~19:20 UTC; the fix is applied and tested in step 4.
 
 ## Current plan
-**`docs/plans/PLAN-003.md`** — approved by the user 2026-11-06 ~19:20 UTC (replaces PLAN-002: assumption A1, units per model, see E006). Status: in progress; steps 1, 1b, 2, 3 done.
+**`docs/plans/PLAN-004.md`** — approved by the user 2026-11-06 ~20:13 UTC (replaces PLAN-003: Docker as the official test run and a localhost preview, see E010, D10-D12). Status: in progress; steps 1, 1b, 2, 3 done; next is step 3b.
+
+`docs/plans/PLAN-003.md` — approved 2026-11-06 ~19:20 UTC. **Status: superseded by PLAN-004** (reason: no localhost/Docker test run; see E010).
 
 `docs/plans/PLAN-002.md` — approved 2026-11-06 ~18:49 UTC. **Status: superseded by PLAN-003** (reason: A1 wrong for AIFS units; see E006). Steps 1b, 2, 3 were completed under it and carried over.
 
@@ -90,7 +94,8 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 | 1b | Apply folder layout (PLAN-002: D5, E002, README, .gitignore) | **done** 2026-11-06 18:50 UTC, commit `7a83bb9` |
 | 2 | Python environment + pinned packages | **done** 2026-11-06 19:06 UTC (commit "Step 2: Python 3.11 virtual environment...") |
 | 3 | Fetch (IFS + AIFS `tp`) | **done** 2026-11-06 19:16 UTC (commit `fc08c94`) |
-| 4 | Processing core + tests (units per model, PLAN-003) | not started |
+| 3b | Docker test environment (PLAN-004) | in progress |
+| 4 | Processing core + tests (units per model) | not started |
 | 5 | Independent validation | not started |
 | 6 | Front-end spike + decision gate | not started |
 | 7 | Static data export | not started |
@@ -110,7 +115,8 @@ Note: the built-in todo/task-list tool is not available in this session's tool s
 ## Decisions waiting / recorded since last commit
 - D9 (user): out-of-date forecast shows a short plain-language warning only, no technical detail (see DECISIONS.md). Applies to plan step 10.
 - D9 addendum (user): technical error detail must remain available to developers (job log now; a status record next to the data is proposed for step 7/10, to be confirmed).
-- Waiting for the user: whether to write PLAN-004 to extend IFS to 360 h (E007), or go straight to step 4.
+- D10-D12 (user, 2026-11-06 20:13 UTC): Docker is the official test run; localhost = Vite on host + Docker nginx preview; IFS stays at 240 h for now (E007 open).
+- Still to ask the user before setting it in step 4: the "wet" threshold for the agreement bar.
 
 ## Known issues
 - Python 3.10 pip is broken; use `py -3.11` (see ENVIRONMENT.md).

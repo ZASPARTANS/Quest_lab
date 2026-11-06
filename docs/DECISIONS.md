@@ -89,3 +89,23 @@ Append only. Each entry: date/time, what was chosen, alternatives, why, who deci
   2. recommended addition, not built yet: a small machine-readable status record published next to the data (last successful run time, last attempt time, last error text), readable with `curl` but not shown on the page.
 - Alternative not chosen for now: a "Details" toggle on the page. It would put technical text in front of visitors, which D9 wanted to avoid.
 - Checkable bet: the status record is enough to find the cause of a stale forecast without opening the job logs. Result: pending.
+
+## D10 — Docker is the official test run; new `docker/` folder (layout change to D5)
+- 2026-11-06 20:13 UTC. Decided by: **user** ("we will use the docker to do all the testing"; chose "Docker is the official test run"); the exact files were proposed by the AI in PLAN-004 and approved.
+- Chosen: "tests pass" means `docker compose -f docker/compose.yaml run --rm tests` passes. The image is `python:3.11-slim` pinned by digest with only `requirements.txt` installed; project code is mounted read-only at run time; the tests container has no network. The Windows `.venv` stays for quick trying only, never as proof.
+- Layout change (raised with the user before doing it, as the rule requires): new top-level folder `docker/` holding `Dockerfile`, `Dockerfile.dockerignore`, `compose.yaml`. No new file in the repo root.
+- Alternatives: Docker only and remove the Windows venv (slower to iterate; drops what step 2 built); keep both with no rule (no guaranteed Linux proof per commit).
+- Why: most servers run Linux (the user's reason), and the scheduled job will run the same command, so local and CI results match.
+- Checkable bet: the Docker run gives the same `20 passed` as the venv and writes nothing into the repo. Result: pending (plan step 3b).
+
+## D11 — Localhost preview: Vite dev server on the host plus a Docker nginx preview
+- 2026-11-06 20:13 UTC. Decided by: **user** (chose "Both: Vite on host + Docker preview").
+- Chosen: `npm run dev` on Windows at http://localhost:5173 (instant reload) and a Docker `preview` service serving the built site and `data/site/` at http://localhost:8080 (closest to a real static host). Images (Node, nginx, Playwright) are chosen and pinned at the plan step 6 decision gate.
+- Alternatives: everything in Docker (file-change detection through Windows folders is unreliable); host only (nothing tests the built site as a static host serves it).
+- Checkable bet: both URLs answer 200 and show the same site (plan steps 6 and 9). Result: pending.
+
+## D12 — IFS stays at 240 h for now (E007 stays open)
+- 2026-11-06 20:13 UTC. Decided by: **user** (chose "Not now, keep 240 h").
+- Chosen: `config/pipeline.toml` keeps IFS steps 3..240 h. The agreement bar is computed only over 6..240 h; beyond that the app shows AIFS only. IFS files exist up to 360 h with precipitation (E007), so this can be revisited later as a small config change plus re-verification.
+- Alternative: extend to 360 h now (full 15-day agreement, about 12 MB more per run).
+- Result: pending.
