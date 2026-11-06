@@ -17,3 +17,9 @@ jwt                 = 'eyJ[A-Za-z0-9_-]{15,}\.[A-Za-z0-9_-]{15,}\.'
 # Folders that are not part of the repository (ignored by git or not ours); everything else is scanned.
 skip_dirs = [".git", ".venv", "data", "node_modules", "dist", ".claude", ".pytest_cache", "__pycache__"]
 max_file_bytes = 1000000     # larger files are skipped (none expected in the repo)
+
+[hashes]
+# scripts/pin_hashes.py adds the sha256 of every published file of each pinned package to this file (finding S02).
+requirements_file = "requirements.txt"                       # relative to the project folder
+pypi_json_url = "https://pypi.org/pypi/{name}/{version}/json"  # PyPI's JSON API; lists every file of a release with its sha256
+timeout_seconds = 30

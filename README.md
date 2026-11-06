@@ -41,4 +41,4 @@ Tests run in Docker on Linux, with the project mounted read-only and no network:
 docker compose -f docker/compose.yaml run --rm tests
 ```
 
-The first run builds the image from `requirements.txt` (about 30 s). The Windows `.venv/` (`py -3.11 -m venv .venv`, then `pip install -r requirements.txt`) is only for quick trying; its result is not the proof. There is no front end or localhost preview yet (planned in plan step 6).
+The first run builds the image from `requirements.txt` (about 30 s). The Windows `.venv/` (`py -3.11 -m venv .venv`, then `pip install --require-hashes -r requirements.txt`; after changing a version run `python -m scripts.pin_hashes`) is only for quick trying; its result is not the proof. There is no front end or localhost preview yet (planned in plan step 6).
