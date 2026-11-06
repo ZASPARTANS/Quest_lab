@@ -41,7 +41,7 @@ docker compose -f docker/compose.yaml run --rm process python -m scripts.validat
 Processing turns both models into millimetres per 6-hour interval, converts each model's own unit, and builds the IFS-vs-AIFS agreement field (details: `docs/DOMAIN.md`, decisions D13 and D14).
 
 ## Looking at the web app locally (two sites, decision D19)
-Work in progress: only a comparison page with one real forecast frame exists so far (no finished app).
+Work in progress: only a page with one real forecast frame (flat map and globe, MapLibre GL JS) exists so far; no finished app.
 
 ```
 # once: put one real frame in data/site (needs a processed run, see above)
