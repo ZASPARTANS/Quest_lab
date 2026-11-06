@@ -14,6 +14,8 @@
 | 2026-11-06 18:43 | Commit `ccb24df` (step 1, first commit) | 0.41 h | 71.59 h |
 | 2026-11-06 ~18:45 | Commit `591a24c` (step 1 record) | 0.43 h | 71.57 h |
 | 2026-11-06 18:50 | Commit `7a83bb9` (step 1b: PLAN-002, D5, D6, E002, README) | 0.52 h | 71.48 h |
+| 2026-11-06 ~18:53 | Commit `ba581ee` (step 1b done-check results) | 0.56 h | 71.44 h |
+| 2026-11-06 19:06 | Commit "Step 2: Python 3.11 virtual environment..." (hash not known before committing; see `git log`) | 0.79 h | 71.21 h |
 
 ## Step 1 done-check results (run 2026-11-06 ~18:44 UTC)
 - `git status --short | wc -l` after commit: `0` (clean).
@@ -32,6 +34,16 @@
 - No git remote exists (`git remote -v` prints nothing). Nothing has been pushed. The GitHub repo link will be given by the user later; repo creation and push still need the user's approval (plan step 11).
 - Tests: none exist yet. Line counts: no source files yet.
 
+## Step 2 done-check results (run 2026-11-06 ~19:05 UTC)
+- Venv: `py -3.11 -m venv .venv` inside the project (git-ignored: `.gitignore:9:.venv/`). Python 3.11.9, pip 24.0.
+- `.venv/Scripts/python.exe -c "import eccodes; print(eccodes.codes_get_api_version())"` printed `2.50.0` (also numpy 2.4.6). `findlibs.find('eccodes')` returned `None` and `eccodes.dll` sits inside the wheel's folder, so the library is bundled (A5 holds on Windows; Linux not yet checked).
+- `pip check`: "No broken requirements found".
+- `requirements.txt` pins 23 packages (4 direct, 19 transitive). A throwaway venv built only from it gave a `pip freeze` identical to the real venv (`diff` printed nothing; 23 lines each). Two transient `getaddrinfo failed` retries during that install; pip recovered.
+- A4 (client downloads only the requested messages): confirmed by reading `ecmwf/opendata/client.py` `get_parts`; not yet run against the server.
+- `pytest -q`: no tests collected, exit code 5, `PytestConfigWarning: No files were found in testpaths` (expected: `tests/` is created in step 4).
+- Surprise: numpy 2.5.4 (newest) needs Python >= 3.12; pip chose 2.4.6 (recorded in D7, SOURCES).
+- Line counts: no source files yet (`pyproject.toml` is 11 lines, config only).
+
 ## Current plan
 **`docs/plans/PLAN-002.md`** — approved by the user 2026-11-06 ~18:49 UTC. Status: in progress.
 
@@ -41,7 +53,7 @@
 |---|---|---|
 | 1 | Repo + records (git init, .gitignore, PROBLEM.md, DECISIONS, ERRORS, first commit) | **done** 2026-11-06 18:43 UTC, commit `ccb24df` |
 | 1b | Apply folder layout (PLAN-002: D5, E002, README, .gitignore) | **done** 2026-11-06 18:50 UTC, commit `7a83bb9` |
-| 2 | Python environment + pinned packages | not started |
+| 2 | Python environment + pinned packages | **done** 2026-11-06 19:06 UTC (commit "Step 2: Python 3.11 virtual environment...") |
 | 3 | Fetch (IFS + AIFS `tp`) | not started |
 | 4 | Processing core + tests | not started |
 | 5 | Independent validation | not started |

@@ -1,0 +1,33 @@
+# Pinned Python dependencies. Python 3.11 only (decision D6): create with `py -3.11 -m venv .venv`,
+# then `.venv\Scripts\python -m pip install -r requirements.txt` (Windows) or `.venv/bin/python -m pip install -r requirements.txt`.
+# History: first resolved and installed 2026-11-06 (UTC) on Python 3.11.9 / pip 24.0; checked with `pip check`.
+# Later changes: see `git log -p requirements.txt`. Every package added or upgraded is also listed in docs/SOURCES.md.
+# numpy is held below the newest release (2.5.4 needs Python >= 3.12), so pip resolved 2.4.6.
+# No hashes are used (shortcut, see docs/DECISIONS.md D7).
+
+# --- Direct dependencies (what this project imports or runs) ---
+ecmwf-opendata==0.3.35  # download IFS/AIFS open data (byte-range GRIB messages)
+eccodes==2.50.0  # decode GRIB2 messages (ECMWF official bindings, bundles the C library on Windows)
+numpy==2.4.6  # array processing
+pytest==9.2.0  # automated tests
+
+# --- Transitive dependencies (installed automatically by the packages above) ---
+attrs==26.1.0
+certifi==2026.10.23
+cffi==2.1.1
+charset-normalizer==3.5.2
+colorama==0.4.6
+findlibs==0.1.5
+idna==3.20
+iniconfig==2.3.1
+multiurl==0.3.9
+packaging==26.3
+pluggy==1.7.0
+pycparser==3.12
+Pygments==2.21.0
+python-dateutil==4.0.0
+pytz==2026.6
+requests==2.34.2
+tqdm==4.70.1
+tzdata==2026.6
+urllib3==2.8.0

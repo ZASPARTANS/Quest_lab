@@ -1,0 +1,11 @@
+[project]
+name = "precip-forecast"
+version = "0.0.0"
+description = "Precipitation forecast app from ECMWF Open Data (IFS + AIFS)"
+requires-python = ">=3.11"
+# Dependencies are pinned in requirements.txt (single source of truth for versions).
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Lets tests import the top-level packages (pipeline, backend) without installing the project.
+pythonpath = ["."]
