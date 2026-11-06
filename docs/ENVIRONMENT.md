@@ -1,0 +1,19 @@
+# ENVIRONMENT
+
+Everything below was found by running commands in this session. Times are UTC.
+
+## 2026-11-06 18:19 UTC — initial check
+- OS: Windows 11 Home Single Language 10.0.26300, 64-bit (`Get-CimInstance Win32_OperatingSystem`). 
+- Shells: PowerShell 5.1.26100.9818 (primary tool shell); Git Bash (GNU bash 5.3.15, MINGW64) for POSIX scripts.
+- git 2.56.0.windows.1. `gh` 2.74.2 is installed but NOT logged in (`gh auth status`: "You are not logged into any GitHub hosts").
+- Node v22.23.4, npm 10.9.9.
+- Python: `python` = 3.10.11, `py -3.11` = 3.11.9.
+- Free disk: C: 5.2 GB, D: 271.5 GB, E: 603.7 GB. Project is on E:, so space is not a constraint.
+- Project folder `<project folder>`: not a git repo yet; contains only `.claude/settings.local.json`.
+- Session log (`.jsonl`) is in `<Claude Code config folder>/projects/<project folder>/` (config folder is `<config folder>`, not `~/.claude`).
+
+## Surprises / blockers found
+- **Python 3.10 pip is broken**: `python -m pip --version` fails with `ModuleNotFoundError: No module named 'pip._vendor.pyparsing.core'`. Use Python 3.11 (`py -3.11`), whose pip 24.0 works.
+- Python 3.11 has NO data/web packages installed: only ipykernel/ipython and their dependencies. numpy, xarray, cfgrib, eccodes, ecmwf-opendata, pandas, fastapi, pytest are all absent. Everything needed must be installed into a virtual environment, after verifying each package name (see CLAUDE.md package rules).
+- Not yet checked: whether the eccodes C library is usable on Windows via pip wheels. This is a risk for reading GRIB2 and is a planned early check.
+- Network: `https://data.ecmwf.int/forecasts/` answered HTTP 200 from this machine.

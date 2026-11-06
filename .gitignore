@@ -1,0 +1,23 @@
+# Personal Claude Code settings: never commit
+.claude/
+
+# Secrets
+.env
+.env.*
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Node / frontend build
+node_modules/
+dist/
+
+# Big data stays out of git: re-fetch with the pipeline scripts
+/data/
+/site-data/
+*.grib2
+*.grib
+*.idx
