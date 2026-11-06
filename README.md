@@ -2,7 +2,7 @@
 
 QUEST Lab application, Project 1: fetch precipitation forecasts from ECMWF Open Data (IFS and AIFS), process them, and deploy a public web app that presents the forecast through an innovative front end.
 
-**Status: work in progress. Nothing runs yet.** This README will be rewritten at the end to say what works, what does not, how to run it and what was verified. The problem statement is in `docs/PROBLEM.md`; the plan in `docs/plans/`; the live status in `docs/PROGRESS.md`.
+**Status: work in progress. Only the data part runs so far (download and processing; no web app yet).** This README will be rewritten at the end to say what works, what does not, how to run it and what was verified. The problem statement is in `docs/PROBLEM.md`; the plan in `docs/plans/`; the live status in `docs/PROGRESS.md`.
 
 ## Intended folder layout (decision D5 in `docs/DECISIONS.md`)
 
@@ -23,6 +23,16 @@ data/                IGNORED by git: raw downloads, processed output, exported s
 
 ## Data and licence
 Forecast data: ECMWF Open Data (IFS and AIFS), CC-BY-4.0 and the ECMWF Terms of Use. The exact attribution text will be added once verified on the official terms page (plan step 10).
+
+## Fetching and processing data (Docker, Linux)
+Docker creates the git-ignored `data/` folder on the first run (checked). Then:
+
+```
+docker compose -f docker/compose.yaml run --rm run python -m pipeline.fetch   # download the newest complete IFS + AIFS run (about 64 MB)
+docker compose -f docker/compose.yaml run --rm run                            # process it into data/processed/<run>/ and print a summary
+```
+
+Processing turns both models into millimetres per 6-hour interval, converts each model's own unit, and builds the IFS-vs-AIFS agreement field (details: `docs/DOMAIN.md`, decisions D13 and D14).
 
 ## Running the tests (the official way)
 Tests run in Docker on Linux, with the project mounted read-only and no network:

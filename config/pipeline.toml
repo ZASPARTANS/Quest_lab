@@ -32,3 +32,25 @@ step_ranges = [
 
 [paths]
 raw_dir = "data/raw"         # ignored by git; layout: <raw_dir>/<YYYYMMDDHH>/<model>/tp.grib2
+processed_dir = "data/processed"  # ignored by git; layout: <processed_dir>/<YYYYMMDDHH>/ (see pipeline/process.py)
+
+# Grid every GRIB message must have (checked by pipeline/grid.py; verified on real files 2026-11-06,
+# docs/DOMAIN.md). Row 0 is the north edge, column 0 is longitude lon_first = 180 (not 0).
+[grid]
+ni = 1440
+nj = 721
+step_degrees = 0.25
+lat_first = 90.0
+lon_first = 180.0
+
+# Multiply the value of a GRIB message by this to get millimetres, chosen from the message's own `units`
+# key. IFS writes metres, AIFS writes kg m**-2 (= mm) (docs/ERRORS.md E006). Any other unit stops the run.
+[units_to_mm]
+"m" = 1000.0
+"kg m**-2" = 1.0
+
+[process]
+interval_hours = 6                 # common time axis: IFS 3 h data is used at its 6 h steps only
+wet_threshold_mm = 0.5             # a 6 h interval is "wet" at or above this (decision D13)
+quantise_mm = 0.1                  # stored as whole multiples of this in uint16 (max 6553.5 mm per interval)
+agreement_models = ["ifs", "aifs-single"]   # compared where both have data (6-240 h)

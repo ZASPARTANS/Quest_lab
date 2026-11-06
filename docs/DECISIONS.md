@@ -115,3 +115,22 @@ Append only. Each entry: date/time, what was chosen, alternatives, why, who deci
 
 ### D10 result (2026-11-06 20:18 UTC)
 - Held. The Docker test run gives the same `20 passed` as the venv, writes nothing into the repo (`git status` showed only my intended changes), runs with no network, and passes failure exit codes through (5 for "no tests selected", 1 for a failing command). Details: PROGRESS.md, step 3b.
+
+## D13 — "Wet" threshold for the agreement bar: 0.5 mm per 6 h
+- 2026-11-06 ~20:23 UTC. Decided by: **user** (chose the AI-recommended option out of 0.1 / 0.5 / 1.0 mm per 6 h).
+- Chosen: a 6-hour interval counts as wet for a model when its precipitation is >= 0.5 mm. Agreement per interval and grid cell: both wet, both dry, or disagree. The value lives in `config/pipeline.toml` (`wet_threshold_mm`), so changing it needs no code change.
+- Alternatives: 0.1 mm (most sensitive, models spread faint drizzle widely, so "both wet" could dominate); 1.0 mm (clean signal, but light showers count as dry).
+- Why: 0.5 mm is rain a person would notice, and it ignores model drizzle noise. The AI's reasoning here is a judgement, not a measurement.
+- Checkable bet: the share of "both wet" cells on a real run is neither near 0 nor near the share at 0.1 mm. Result: pending (to be printed in the step 4 real-run summary).
+
+## D14 — Processed data: one 6-hour axis for both models, uint16 files (two shortcuts)
+- 2026-11-06 ~20:32 UTC. Decided by: **AI**, following PLAN-004 step 4 (the plan already said "aggregate IFS 3 h to 6 h on the common axis"); the details below were not asked of the user.
+- Chosen: both models are stored as mm per 6 h interval (IFS 40 intervals to 240 h, AIFS 60 to 360 h). Format: `data/processed/<YYYYMMDDHH>/<model>.npy` (uint16, units of `quantise_mm` = 0.1 mm, shape intervals x 721 x 1440, row 0 = north, column 0 = 180 E), `agreement.npy` (uint8: 0 both dry, 1 both wet, 2 disagree) and `meta.json`. The folder is built as `<run>.part` and replaces the final folder at the end.
+- Shortcut 1 (marked `shortcut:` in `pipeline/process.py`): IFS 3-hourly detail (0-144 h) is dropped. IFS 6 h = difference of its own 6-hourly accumulations, which is exact, so only the 3 h view is lost. Reason: one common axis keeps the agreement, the export and the front end simple. Reversible by adding a second axis later (new plan).
+- Shortcut 2 (marked in the same place): negative differences are set to 0 and counted, not carried into the next interval. Measured cost: 0.056 % (IFS) and 0.014 % (AIFS) of the precipitation mass.
+- Not a shortcut but a limit: the GRIB fields are packed at 12 bits, so a 6 h value can be off by up to about 0.24 mm (IFS, late) or 0.125 mm (AIFS) (docs/DOMAIN.md). 0.1 mm storage is finer than that, so no precision is lost by quantising.
+- Alternatives: keep IFS 3 h as a second array (about 1.6x larger IFS file, a second time axis for the front end); `.npz` compressed (slower, no benefit while the data stays out of git).
+- Checkable bet: the export step (7) can build map frames and point tiles from these arrays within the host limits (A6). Result: pending.
+
+### D13 result (2026-11-06 ~20:32 UTC)
+- Held on two runs (00z and 12z of 2026-11-06): "both wet" is 15.3 % / 15.1 % of cell-intervals at 0.5 mm, against about 39 % at 0.1 mm and 8.8 % at 1.0 mm, so the value is neither extreme. Note: AIFS has more light-rain cells than IFS (27 % vs 20 % at 0.5 mm), a model difference the UI must not hide.
