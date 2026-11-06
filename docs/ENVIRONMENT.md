@@ -17,3 +17,8 @@ Everything below was found by running commands in this session. Times are UTC.
 - Python 3.11 has NO data/web packages installed: only ipykernel/ipython and their dependencies. numpy, xarray, cfgrib, eccodes, ecmwf-opendata, pandas, fastapi, pytest are all absent. Everything needed must be installed into a virtual environment, after verifying each package name (see CLAUDE.md package rules).
 - Not yet checked: whether the eccodes C library is usable on Windows via pip wheels. This is a risk for reading GRIB2 and is a planned early check.
 - Network: `https://data.ecmwf.int/forecasts/` answered HTTP 200 from this machine.
+
+## 2026-11-06 18:44 UTC — found during step 1
+- git `core.autocrlf` is `true`. Git warns "LF will be replaced by CRLF" on commit, but the committed blob of `docs/PROBLEM.md` has no CR (checked with `git show HEAD:docs/PROBLEM.md`). Working-tree files on this machine may show CRLF after checkout.
+- Windows Python cannot see Git Bash paths such as `/tmp/...` (a script opening `/tmp/problem_blob.txt` failed with `FileNotFoundError`). Pass data via stdin or use Windows paths. No fix needed in the code.
+- git identity is already configured (name and email set), so commits work. `git init -b main` was used; the default branch is `main`.
