@@ -1,0 +1,1 @@
+Precipitation forecast app. Fetch precipitation forecasts from ECMWF Open Data (IFS or AIFS), process them, and deploy a web application that presents the forecast through an innovative front end and user experience.
