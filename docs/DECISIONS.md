@@ -134,3 +134,10 @@ Append only. Each entry: date/time, what was chosen, alternatives, why, who deci
 
 ### D13 result (2026-11-06 ~20:32 UTC)
 - Held on two runs (00z and 12z of 2026-11-06): "both wet" is 15.3 % / 15.1 % of cell-intervals at 0.5 mm, against about 39 % at 0.1 mm and 8.8 % at 1.0 mm, so the value is neither extreme. Note: AIFS has more light-rain cells than IFS (27 % vs 20 % at 0.5 mm), a model difference the UI must not hide.
+
+## D15 — Security first: audit now, fixes as a plan, a security note in every plan
+- 2026-11-06 ~20:43 UTC. Decided by: **user** (message before step 5: "we need to make sure about the security which I forgot to mention", with a five-point instruction).
+- Chosen: (1) step 4 is finished and committed (`dc2535c`), step 5 is paused; (2) the whole project so far is audited and the result is in `docs/SECURITY.md`; (3) the fixes are written as `docs/plans/PLAN-005.md` and no code is changed before the user approves; (4) a security check is added to the submission checklist in `docs/PROGRESS.md`; (5) every plan from now on contains a short "Security note".
+- Alternatives: fix the findings immediately (rejected by the user's instruction: plan first, approval first); postpone security to the end (rejected: S03 and S01 are cheaper to fix before more code depends on them).
+- Result of the audit: no Critical or High finding; nine findings (S01-S09); see SECURITY.md. Result of the decision: pending the approval of PLAN-005.
+

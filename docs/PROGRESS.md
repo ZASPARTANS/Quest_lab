@@ -26,6 +26,12 @@
 | 2026-11-06 20:22 | Resume after /compact, same session ID; records re-read | 2.06 h | 69.94 h |
 | 2026-11-06 (see `git log`) | Commit "Step 4: processing core..." (hash and exact time: `git log`) | about 2.3 h | about 69.7 h |
 
+## Security audit (user request, run 2026-11-06 ~20:35-20:43 UTC)
+- State when paused: step 4 finished and committed (`dc2535c`); `git status` clean on `main`; no remote; step 5 not started.
+- Result: `docs/SECURITY.md` (findings S01-S09: no Critical or High; 5 Medium/Low items need code or setup changes, 2 need the user's decision). Not checkable yet: live-site items (HTTPS, headers, CORS, rate limiting), the front end, GitHub settings, a dependency vulnerability scan.
+- Errors recorded: E013 (no security in earlier plans), E014 (`requests` used directly without vetting). Decision: D15.
+- Fixes: written as the DRAFT `docs/plans/PLAN-005.md` (steps S1-S5, then steps 5-12 with security notes). **Waiting for the user's approval; no code changed.**
+
 ## Step 4 done-check results (run 2026-11-06 ~20:25-20:35 UTC)
 Code: `pipeline/grid.py` (58 lines), `pipeline/process.py` (116), `pipeline/processed.py` (111); config `[grid]`, `[units_to_mm]`, `[process]`, `processed_dir`; tests `test_grid.py`, `test_process.py`, `test_processed.py`, `conftest.py` (20 new tests). Longest function about 17 lines. Decisions D13 (wet threshold 0.5 mm, user), D14 (6 h axis, uint16 format, two marked shortcuts). Errors: E006 fix verified (1/1), new E012 (grid starts at longitude 180).
 - Official test run: `docker compose -f docker/compose.yaml run --rm tests` -> `40 passed` (20 old + 20 new), exit 0; `git status` showed only my intended changes. (Final run before the commit is recorded in the commit message.)
@@ -110,6 +116,8 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 - **Open problem (resolved in the plan, not yet in code):** assumption A1 was wrong for AIFS (E006). PLAN-003 was approved 2026-11-06 ~19:20 UTC; the fix is applied and tested in step 4.
 
 ## Current plan
+**Pending:** `docs/plans/PLAN-005.md` (security fixes S1-S5, then PLAN-004's steps 5-12) is a DRAFT awaiting the user's approval. Until it is approved, PLAN-004 below stays the current plan and step 5 is paused.
+
 **`docs/plans/PLAN-004.md`** — approved by the user 2026-11-06 ~20:13 UTC (replaces PLAN-003: Docker as the official test run and a localhost preview, see E010, D10-D12). Status: in progress; steps 1, 1b, 2, 3, 3b, 4 done; next is step 5.
 
 `docs/plans/PLAN-003.md` — approved 2026-11-06 ~19:20 UTC. **Status: superseded by PLAN-004** (reason: no localhost/Docker test run; see E010).
@@ -126,7 +134,8 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 | 3 | Fetch (IFS + AIFS `tp`) | **done** 2026-11-06 19:16 UTC (commit `fc08c94`) |
 | 3b | Docker test environment (PLAN-004) | **done** 2026-11-06 20:18 UTC (commit "Step 3b: Docker test environment...") |
 | 4 | Processing core + tests (units per model) | **done** 2026-11-06 (commit "Step 4: processing core...", time in `git log`) |
-| 5 | Independent validation | not started |
+| S1-S5 | Security fixes (PLAN-005, draft) | waiting for approval |
+| 5 | Independent validation | paused until PLAN-005 is decided |
 | 6 | Front-end spike + decision gate | not started |
 | 7 | Static data export | not started |
 | 8 | Location panel | not started |
@@ -146,7 +155,18 @@ Note: the built-in todo/task-list tool is not available in this session's tool s
 - D9 (user): out-of-date forecast shows a short plain-language warning only, no technical detail (see DECISIONS.md). Applies to plan step 10.
 - D9 addendum (user): technical error detail must remain available to developers (job log now; a status record next to the data is proposed for step 7/10, to be confirmed).
 - D10-D12 (user, 2026-11-06 20:13 UTC): Docker is the official test run; localhost = Vite on host + Docker nginx preview; IFS stays at 240 h for now (E007 open).
+- D15 (user, ~20:43 UTC): security first. Waiting for: approval of PLAN-005; the S06 identity/privacy choice; confirmation of S04 (sanitised status record); approval for the dependency scan (S4).
 - D13 (user, ~20:23 UTC): wet threshold 0.5 mm per 6 h. D14 (AI, step 4): 6 h axis and file format, two marked shortcuts.
+
+## Submission checklist — security (added at the user's request, 2026-11-06 ~20:43 UTC)
+Each item is ticked in `docs/SUBMISSION.md` only after running the check. These come on top of the checklist in CLAUDE.md.
+- [ ] Secret scan of the working tree, of every commit (`git grep` over `git rev-list --all`) and of the session log: key formats, plus the values of any token-like environment variables. Zero matches.
+- [ ] The Docker test command (which includes the repo secret scan) passes on the final commit.
+- [ ] Dependency scan of the final `requirements.txt` and the npm lockfile recorded in `docs/SECURITY.md`, or "not approved" recorded.
+- [ ] `curl -I` of the live URL: HTTPS only, the agreed security headers present (or the CSP `<meta>` fallback documented).
+- [ ] Every finding in `docs/SECURITY.md` is marked fixed, accepted (with the reason) or open, and the "could not check" list is updated.
+- [ ] Public/private check: only the intended files are in the public repo; the identity decision (S06) is applied; no token or personal data beyond the decision appears in any log or file.
+- [ ] Every plan file since D15 contains a "Security note".
 
 ## Known issues
 - Python 3.10 pip is broken; use `py -3.11` (see ENVIRONMENT.md).
