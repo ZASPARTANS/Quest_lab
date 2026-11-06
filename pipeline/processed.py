@@ -1,10 +1,11 @@
-"""Process a downloaded run and write it to <processed_dir>/<YYYYMMDDHH>/ (git-ignored).
+"""Process a downloaded run and write it to <processed_dir>/<run folder>/ (git-ignored).
 
+All folder and file names come from the [paths] table of config/pipeline.toml (names in brackets are the config keys).
 Files written (shapes are (intervals, rows, columns); row 0 = north, column 0 = lon_first, see pipeline/grid.py):
-  <model>.npy      uint16, precipitation per 6 h interval in multiples of `quantise_mm`
-  agreement.npy    uint8, 0 both dry / 1 both wet / 2 disagree, for the intervals both models have
-  meta.json        run time, valid times, units, thresholds, counts
-Run:  python -m pipeline.processed [YYYYMMDDHH]      (default: newest run found in the raw folder)
+  one file per model (model_file)   uint16, precipitation per 6 h interval in multiples of `quantise_mm`
+  agreement_file                    uint8, 0 both dry / 1 both wet / 2 disagree, for the intervals both models have
+  meta_file                         run time, valid times, units, thresholds, counts
+Run:  python -m pipeline.processed [run folder name]      (default: newest run found in the raw folder)
 """
 import datetime as dt
 import json
@@ -16,20 +17,26 @@ import numpy as np
 
 from pipeline import grid as grid_mod
 from pipeline import process
-from pipeline.fetch import ROOT, describe_messages, expand_steps, load_config
+from pipeline.fetch import describe_messages, expand_steps, load_config
+from pipeline.paths import ROOT, parse_run, partial, raw_file, run_folder
 
 
 def local_runs(cfg):
-    """Runs (UTC datetimes) in the raw folder that hold a tp.grib2 for every configured model, oldest first."""
+    """Runs (UTC datetimes) in the raw folder that hold the downloaded file of every configured model, oldest first."""
     raw = ROOT / cfg["paths"]["raw_dir"]
-    runs = [dt.datetime.strptime(d.name, "%Y%m%d%H") for d in sorted(raw.glob("??????????")) if d.is_dir()]
-    return [r for r in runs if all((raw / r.strftime("%Y%m%d%H") / m / "tp.grib2").exists() for m in cfg["models"])]
+    runs = []
+    for folder in sorted(raw.iterdir()) if raw.is_dir() else []:
+        try:
+            runs.append(parse_run(cfg, folder.name))
+        except ValueError:  # not a run folder (e.g. a partial or foreign folder)
+            continue
+    return [r for r in runs if all(raw_file(cfg, r, m).exists() for m in cfg["models"])]
 
 
 def process_model(cfg, run, model):
     """Read one model's GRIB file and return its 6 h intervals in mm plus what was seen on the way."""
     interval = cfg["process"]["interval_hours"]
-    path = ROOT / cfg["paths"]["raw_dir"] / run.strftime("%Y%m%d%H") / model / "tp.grib2"
+    path = raw_file(cfg, run, model)
     steps = process.interval_steps(expand_steps(cfg["models"][model]["step_ranges"]), interval)
     cumulative = process.read_cumulative_mm(path, steps, run, cfg)
     mm, negative, worst = process.deaccumulate(cumulative, steps)
@@ -48,7 +55,8 @@ def build(cfg, run):
 
 def _meta(cfg, run, results, agree_steps, stored):
     p = cfg["process"]
-    models = {m: {"file": f"{m}.npy", "steps": r["steps"],
+    names = cfg["paths"]
+    models = {m: {"file": names["model_file"].format(model=m), "steps": r["steps"],
                   "valid_times": [t.strftime("%Y-%m-%dT%H:%M:%SZ") for t in process.valid_times(run, r["steps"])],
                   "source_units": r["source_units"], "negative_cells_set_to_zero": r["negative_cells"],
                   "most_negative_mm": r["most_negative_mm"], "values_at_uint16_maximum": stored[m]}
@@ -57,7 +65,7 @@ def _meta(cfg, run, results, agree_steps, stored):
             "processed_at": dt.datetime.now(dt.UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "interval_hours": p["interval_hours"], "unit": "mm per interval", "quantise_mm": p["quantise_mm"],
             "grid": cfg["grid"], "models": models,
-            "agreement": {"file": "agreement.npy", "models": p["agreement_models"], "steps": agree_steps,
+            "agreement": {"file": names["agreement_file"], "models": p["agreement_models"], "steps": agree_steps,
                           "wet_threshold_mm": p["wet_threshold_mm"],
                           "codes": {"both_dry": process.AGREE_BOTH_DRY, "both_wet": process.AGREE_BOTH_WET,
                                     "disagree": process.AGREE_DISAGREE}}}
@@ -71,18 +79,19 @@ def _remove_folder(path):
 
 
 def save(cfg, run, results, field, agree_steps):
-    """Write the processed files. They are built in a .part folder that replaces the final folder at the end."""
-    out = ROOT / cfg["paths"]["processed_dir"] / run.strftime("%Y%m%d%H")
-    part = out.with_name(out.name + ".part")
+    """Write the processed files. They are built in a partial folder that replaces the final folder at the end."""
+    names = cfg["paths"]
+    out = run_folder(cfg, "processed", run)
+    part = partial(cfg, out)
     _remove_folder(part)
     part.mkdir(parents=True)
     saturated = {}
     for model, r in results.items():
         stored, saturated[model] = process.quantise(r["mm"], cfg["process"]["quantise_mm"])
-        np.save(part / f"{model}.npy", stored)
-    np.save(part / "agreement.npy", field)
+        np.save(part / names["model_file"].format(model=model), stored)
+    np.save(part / names["agreement_file"], field)
     meta = _meta(cfg, run, results, agree_steps, saturated)
-    (part / "meta.json").write_text(json.dumps(meta, indent=1), encoding="utf-8")
+    (part / names["meta_file"]).write_text(json.dumps(meta, indent=1), encoding="utf-8")
     _remove_folder(out)
     os.replace(part, out)
     return out
@@ -107,7 +116,7 @@ def main(argv):
     runs = local_runs(cfg)
     if not runs:
         raise SystemExit("no complete downloaded run found; run `python -m pipeline.fetch` first")
-    run = dt.datetime.strptime(argv[0], "%Y%m%d%H") if argv else runs[-1]
+    run = parse_run(cfg, argv[0]) if argv else runs[-1]
     results, field, agree_steps = build(cfg, run)
     out = save(cfg, run, results, field, agree_steps)
     print(f"processed run {run:%Y-%m-%d %H:%M} UTC -> {out.relative_to(ROOT)}")

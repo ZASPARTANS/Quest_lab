@@ -36,7 +36,13 @@ step_ranges = [
 
 [paths]
 raw_dir = "data/raw"         # ignored by git; layout: <raw_dir>/<YYYYMMDDHH>/<model>/tp.grib2
-processed_dir = "data/processed"  # ignored by git; layout: <processed_dir>/<YYYYMMDDHH>/ (see pipeline/process.py)
+processed_dir = "data/processed"  # ignored by git; layout: <processed_dir>/<run folder>/ (see pipeline/processed.py)
+run_folder_format = "%Y%m%d%H"    # name of the folder of one run (UTC run time) under both folders above
+raw_file = "tp.grib2"             # downloaded file: <raw_dir>/<run folder>/<model>/<raw_file>
+partial_suffix = ".part"          # a file or folder is built under this extra ending and renamed when complete
+model_file = "{model}.npy"        # processed file of one model: <processed_dir>/<run folder>/<model_file>
+agreement_file = "agreement.npy"  # processed IFS-vs-AIFS agreement field, same folder
+meta_file = "meta.json"           # description of the processed run, same folder
 
 # Grid every GRIB message must have (checked by pipeline/grid.py; verified on real files 2026-11-06,
 # docs/DOMAIN.md). Row 0 is the north edge, column 0 is longitude lon_first = 180 (not 0).

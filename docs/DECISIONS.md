@@ -147,3 +147,10 @@ Append only. Each entry: date/time, what was chosen, alternatives, why, who deci
 - Alternatives offered: GitHub noreply address for new commits; noreply plus rewriting the 14 local commits before the first push.
 - Consequence the user accepted: the address will be public in the git history once the repo is pushed, and cannot be removed afterwards without rewriting a public history.
 - Checkable bet: none. Result: PLAN-005 step S5 is complete with this decision (no code change).
+
+## D17 — No hardcoded paths: every folder, file name and format comes from config
+- 2026-11-06 ~21:03 UTC. Decided by: **user** (message: "also dont forget no HARDCODING THE PATH"); it restates the config rule already in CLAUDE.md.
+- Chosen: no absolute path anywhere in the code; all folder names, file names, name formats and suffixes of the data layout are in `config/pipeline.toml` `[paths]` and are read through `pipeline/paths.py`. A test fails if one of those names appears as a string literal in `pipeline/*.py` or if an absolute path appears (`tests/hygiene/test_no_hardcoded_paths.py`). The same rule applies to everything built from now on (export, front end, scripts, workflows).
+- Alternatives: leave names in code as a "layout contract" (rejected by the user's instruction).
+- Fixed exceptions (written down so they are not hidden): the config file's own location relative to the project folder; container-internal mount points `/work` and `/tmp` in the Docker files (the host side of the data mount is `DATA_DIR`).
+- Result: applied in the fix of E016; checked by the guard test.
