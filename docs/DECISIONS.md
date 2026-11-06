@@ -200,3 +200,31 @@ Append only. Each entry: date/time, what was chosen, alternatives, why, who deci
 - Done as a result (same day): Cesium code, packages, config and build step removed; the npm tree went from 98 to 70 packages and the production build from 13 MB to 1.7 MB; the Content-Security-Policy was tightened (`wasm-unsafe-eval` and `child-src` removed) and re-checked in a real browser (3 pages ok, no CSP error, no outside host). `npm audit` (run under the standing approval, throwaway hardened container, lock file only): **70 packages audited, 0 vulnerabilities**.
 - Consequences accepted with the choice: frames are Web Mercator images or tiles (step 7); the poles beyond 85.05 degrees are not drawn; the globe is MapLibre's simple unlit globe.
 - Checkable bet: the runtime flat <-> globe switch keeps time and place in the finished app (plan step 9). Result: held in the spike (view and layer unchanged after switching); pending in the app.
+
+## Results of checkable bets that were still marked "pending" (housekeeping, ~23:03 UTC)
+Appended because the evidence now exists; the original entries above are unchanged.
+- **D1** (both models publish the full step range on 00z and 12z): **held.** The 00z and 12z runs of 2026-11-05 and 2026-11-06 were complete for both models; IFS even has 20 more steps than configured (E007), AIFS 60 of 60 (docs/DOMAIN.md, step 3 follow-up).
+- **D3** (one library can serve both the flat map and the globe): **held.** MapLibre GL JS 6.16 draws the rain frame on both and switches at run time while keeping place and zoom (D21, D22).
+- **D5** (the root check shows only allowed entries at every commit): **held** at every commit checked; at the last one the tracked root entries were `.gitignore`, `README.md`, `config`, `docker`, `docs`, `frontend`, `pipeline`, `pyproject.toml`, `requirements.txt`, `scripts`, `tests`.
+- **D6** (all pinned packages install into the 3.11 venv without errors): **held** in step 2; later rebuilds with `--require-hashes` also worked on Windows and Linux (D18).
+- **D7** (no hashes, a shortcut): **ended** by D18 on 2026-11-06 (hashes for every package on all platforms).
+- **D11** (both local URLs answer 200 and show the same site): **held for the spike** (5173 and 8080 answered 200 with the same pages, only 5173 shows the DEV badge); to be re-checked with the finished app in step 9.
+- **D19** (the two local sites show the same content and only the testing site shows the badge): **held for the spike** (screenshots in `docs/evidence/`).
+- **D20** (one of the two libraries draws the frame correctly in both modes): **held for both** libraries (D21).
+- Still pending, by design: D2/A6 and D4 (size limits, measured in step 7 and 11), D8 (observed once the scheduled job runs), D9 and its addendum (steps 7 and 10), D12 (IFS stays at 240 h; E007 open), D14 (export step 7).
+
+## Shortcut register (housekeeping, ~23:03 UTC)
+Every `shortcut:` marker found by `grep -rn "shortcut:"` in the code and config, and where it is recorded:
+1. `pipeline/process.py`: IFS 3-hourly detail dropped, 6 h common axis (D14, shortcut 1).
+2. `pipeline/process.py`: negative differences set to 0, not carried to the next interval (D14, shortcut 2).
+3. `scripts/spike_frame.py`: throwaway spike frame generator, replaced by `backend/export.py` in step 7 (D21).
+4. `config/headers.conf`: the security headers exist as one copy for the local preview; a converter for the public host's own format comes at step 10/11 (D19, D21; recorded here because it was not listed in DECISIONS before).
+Shortcuts that are known but not yet marked in code (no code changes were allowed in this housekeeping; mark them when the files are next touched): `frontend/spikes/maplibre.js` exposes `window.__map` for the browser test (spike only, goes away with the spike in step 9); the spike pages and `frontend/index.html` are not the finished app.
+The README's "known limitations" (step 12) must list every item above and every item still open in `docs/PROGRESS.md`.
+
+## D23 — Browsers to test, no GPU anywhere, and what a visitor without WebGL2 must see
+- 2026-11-06 ~23:03 UTC. Decided by: **user** for items 1-2 (messages: "lets test the firefox now and phones and safari later. Also we cant have the GPU as when we host we are using free so we cant have the GPU"; then "i can open it in firefox and see if it loads", later "the site loads files"). Item 3 is the **AI's proposal and needs the user's confirmation**.
+- Chosen: (1) **Browser order:** Chromium (Docker) and Edge (host) are done; **Firefox now**; **phones and Safari later**. The AI could not test Firefox in Docker (no WebGL context in 3 configurations, ENVIRONMENT.md), so Firefox is tested by the user on their own PC: the user reports that the site loads; whether the map and rain layer drew correctly has not been confirmed. (2) **No GPU on the server side:** the pipeline and the hosting must never need one (free static hosting has none); the map is drawn in the visitor's browser, so Docker browser tests deliberately use software rendering, and anything GPU-heavy on the visitor's side must degrade gracefully.
+- Proposed (needs confirmation, steps 9-10): (3) detect missing WebGL2 and show a short plain message instead of a blank page (found by the Firefox attempt: `docs/evidence/firefox-headless-maplibre-flat.png`), ideally with a non-WebGL fallback (for example a simple table or still image of the forecast for the visitor's place).
+- Alternatives: test Safari/phones now (deferred by the user); a hosted GPU (not possible on free hosting).
+- Checkable bet: the app shows the map in Firefox on the user's PC. Result: pending the user's confirmation.
