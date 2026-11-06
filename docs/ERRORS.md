@@ -16,6 +16,8 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 | E010 | PLAN-003 had no local preview of the site and no containerised test run (planning gap; user added both) | 1 | 1/1 (step 3b Docker test run works; localhost comes in step 6) |
 | E011 | `requirements.txt` was pinned from the Windows package set only; Linux installs 2 more unpinned packages (eccodeslib, eckitlib) | 1 | 1/1 (pinned with a `sys_platform == "linux"` marker) |
 | E012 | Longitude start assumed to be 0 in my first picture of the grid; both models start at 180 (caught by the planned A2 check, before any output) | 1 | 1/1 (layout in config, checked per message; index verified against eccodes) |
+| E013 | PLAN-001 to PLAN-004 had no security work or security notes (planning gap; user raised it) | 1 | 0/0 (fix = PLAN-005, awaiting approval) |
+| E014 | `requests` became a direct dependency (E008) without being vetted on PyPI/GitHub as the package rule requires | 1 | 0/0 (vetting is step S4 of PLAN-005) |
 
 ---
 
@@ -128,4 +130,16 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 - Root cause: an assumption from general knowledge, caught by the check the plan had asked for before any output was written.
 - Fix: `[grid]` table in `config/pipeline.toml` (`lon_first = 180.0`); `pipeline/grid.py` checks the layout of every message and `latlon_to_index` uses `lon_first`. Re-ran: index equals `eccodes.codes_grib_find_nearest` at 12 points (wrap and poles included); tests in `tests/pipeline/test_grid.py` pass in Docker. Worked.
 - Changed lines: `config/pipeline.toml` ([grid]), new `pipeline/grid.py`, `tests/pipeline/test_grid.py`.
+
+## E013 — No security work in PLAN-001 to PLAN-004 (planning gap)
+- 2026-11-06 ~20:35 UTC (user message before step 5). seen: 1. fix worked / fix tried: 0/0.
+- What happened: four plans were approved with a secrets rule (CLAUDE.md) but no security review, no threat list, no hardening step and no security note. The user said "which I forgot to mention" and asked for an audit. A professional plan for a public web app should have proposed one without being asked, as with E002 (folder layout) and E010 (Docker, localhost).
+- Evidence: the audit in `docs/SECURITY.md` found no Critical/High issue but nine findings (S01-S09), e.g. no request timeouts (S01) and a root container parsing downloaded files (S03).
+- Fix: `docs/plans/PLAN-005.md` (draft, awaiting approval) with the fixes and a security note; from now on every plan carries a short security note (decision D15). Counters stay 0/0 until the fixes are applied and verified.
+
+## E014 — `requests` used directly without being vetted
+- 2026-11-06 ~20:36 UTC (found during the security audit). seen: 1. fix worked / fix tried: 0/0.
+- What happened: `requests` was installed by pip as a dependency of ecmwf-opendata and listed under "transitive" in `docs/SOURCES.md`. In the E008/E009 fix I imported it directly in `pipeline/fetch.py` (the `_StrictSession` class) and moved it to the direct section of `requirements.txt`, but did not do the PyPI/GitHub check the package rule asks for.
+- Root cause (AI): I treated "already installed" as "already vetted".
+- Fix planned: PLAN-005 step S4 checks `requests` on the PyPI JSON API and its GitHub source, records it in SOURCES.md. Not done yet.
 
