@@ -8,6 +8,9 @@
 # no privilege gain, read-only root filesystem (only /tmp is writable, in memory), project mounted read-only.
 # On Linux set APP_UID / APP_GID to your own ids (`export APP_UID=$(id -u) APP_GID=$(id -g)`) and create data/
 # yourself, so the files written to data/ belong to you; on Docker Desktop the defaults work.
+# Data folder: the host folder is DATA_DIR (default ../data, the project's data folder). Inside the container it must
+# be the first folder of the raw_dir / processed_dir paths in config/pipeline.toml ([paths], now "data"); if the config
+# points somewhere else, writing fails loudly (the project mount is read-only) instead of going to the wrong place.
 x-hardened: &hardened
   build:
     context: ..
@@ -40,7 +43,7 @@ services:
     <<: *hardened
     volumes:
       - ..:/work:ro
-      - ../data:/work/data
+      - ${DATA_DIR:-../data}:/work/data
     command: ["python", "-m", "pipeline.fetch"]
 
   process:
@@ -48,6 +51,6 @@ services:
     <<: *hardened
     volumes:
       - ..:/work:ro
-      - ../data:/work/data
+      - ${DATA_DIR:-../data}:/work/data
     network_mode: none
     command: ["python", "-m", "pipeline.processed"]

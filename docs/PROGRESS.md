@@ -51,6 +51,9 @@ Files: `docker/Dockerfile` (+ user `app`, uid 10001), `docker/compose.yaml` (sha
 - `data/` auto-creation re-tested with the non-root user on Docker Desktop: works. Linux hosts: documented (APP_UID/APP_GID, create `data/`), not tested.
 - Not tested: Linux host file ownership; the compose `APP_UID` override with a different id.
 
+## Fix E016 (no hardcoded paths) results (run 2026-11-06 ~21:03-21:10 UTC)
+Done after S3 and before S4, at the user's reminder; details in ERRORS.md E016 and DECISIONS.md D17. Docker tests `51 passed` (47 + 2 `test_paths` + 2 guard tests); guard test shown to fail on planted names/paths; real `process` and `fetch` runs unchanged in output (sha256 equal to step 4). Line counts: `pipeline/paths.py` 30, `pipeline/fetch.py` 208, `pipeline/processed.py` 127.
+
 ## Security audit (user request, run 2026-11-06 ~20:35-20:43 UTC)
 - State when paused: step 4 finished and committed (`dc2535c`); `git status` clean on `main`; no remote; step 5 not started.
 - Result: `docs/SECURITY.md` (findings S01-S09: no Critical or High; 5 Medium/Low items need code or setup changes, 2 need the user's decision). Not checkable yet: live-site items (HTTPS, headers, CORS, rate limiting), the front end, GitHub settings, a dependency vulnerability scan.

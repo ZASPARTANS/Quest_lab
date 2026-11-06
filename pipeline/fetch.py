@@ -11,14 +11,14 @@ Run:  python -m pipeline.fetch
 import datetime as dt
 import os
 import tomllib
-from pathlib import Path
 
 import eccodes
 import requests
 from ecmwf.opendata import Client
 
-ROOT = Path(__file__).resolve().parent.parent
-CONFIG_PATH = ROOT / "config" / "pipeline.toml"
+from pipeline.paths import ROOT, partial, raw_file
+
+CONFIG_PATH = ROOT / "config" / "pipeline.toml"  # the one fixed location: the config folder of the project
 GRIB_KEYS = ("shortName", "units", "stepType", "startStep", "endStep", "dataDate", "dataTime", "gridType", "Ni", "Nj")
 
 
@@ -154,14 +154,14 @@ def is_complete(path, expected):
 def download_run(cfg, run, model):
     """Download the precipitation messages of one model and run; reuse a complete earlier download.
 
-    The download goes to tp.grib2.part and is renamed only after it has been checked, so a failed or
+    The download goes to a partial file (`partial_suffix` in the config) and is renamed only after it has been checked, so a failed or
     interrupted download never leaves a broken file at the final path.
     """
-    target = ROOT / cfg["paths"]["raw_dir"] / run.strftime("%Y%m%d%H") / model / "tp.grib2"
+    target = raw_file(cfg, run, model)
     expected = expand_steps(cfg["models"][model]["step_ranges"])
     if is_complete(target, expected):
         return target, True
-    part = target.with_name(target.name + ".part")
+    part = partial(cfg, target)
     target.parent.mkdir(parents=True, exist_ok=True)
     part.unlink(missing_ok=True)
     request = _request(cfg, model, run.hour) | {"date": run.strftime("%Y%m%d")}

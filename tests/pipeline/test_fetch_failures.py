@@ -15,7 +15,7 @@ import multiurl
 import pytest
 import requests
 
-from pipeline import fetch
+from pipeline import fetch, paths
 
 RUN = dt.datetime(2026, 11, 6, 0)
 
@@ -35,7 +35,7 @@ def _truncated(path):
 def _cfg(tmp_path, stop=0):
     return {"source": {"type": "fc", "stream": "oper", "param": "tp"},
             "models": {"m": {"step_ranges": [{"start": 0, "stop": stop, "every": 6}]}},
-            "paths": {"raw_dir": str(tmp_path / "raw")}}
+            "paths": fetch.load_config()["paths"] | {"raw_dir": str(tmp_path / "raw")}}
 
 
 class FakeClient:
@@ -53,7 +53,7 @@ def _use_fake_client(monkeypatch, writer):
 
 
 def _target(tmp_path):
-    return tmp_path / "raw" / "2026110600" / "m" / "tp.grib2"
+    return paths.raw_file(_cfg(tmp_path), RUN, "m")
 
 
 # ---- E008: broken files must never be trusted or left at the final path
@@ -79,7 +79,7 @@ def test_download_run_renames_when_complete_and_reuses_next_time(tmp_path, monke
     _use_fake_client(monkeypatch, lambda target: _write_sample_grib(target))
     target, reused = fetch.download_run(_cfg(tmp_path), RUN, "m")
     assert (target, reused) == (_target(tmp_path), False)
-    assert not target.with_name("tp.grib2.part").exists()
+    assert not paths.partial(_cfg(tmp_path), target).exists()
     assert fetch.download_run(_cfg(tmp_path), RUN, "m")[1] is True
 
 
@@ -93,7 +93,7 @@ def test_interrupted_download_leaves_no_file_at_the_final_path(tmp_path, monkeyp
     with pytest.raises(OSError):
         fetch.download_run(_cfg(tmp_path), RUN, "m")
     assert not _target(tmp_path).exists()
-    assert not _target(tmp_path).with_name("tp.grib2.part").exists()
+    assert not paths.partial(_cfg(tmp_path), _target(tmp_path)).exists()
 
 
 def test_truncated_file_from_an_earlier_run_is_downloaded_again(tmp_path, monkeypatch):

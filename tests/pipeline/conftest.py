@@ -48,5 +48,5 @@ def cfg(tmp_path):
     c["grid"] = dict(GRID)
     c["models"] = {"ifs": {"step_ranges": [{"start": 3, "stop": 12, "every": 3}]},
                    "aifs-single": {"step_ranges": [{"start": 6, "stop": 18, "every": 6}]}}
-    c["paths"] = {"raw_dir": str(tmp_path / "raw"), "processed_dir": str(tmp_path / "processed")}
+    c["paths"] = c["paths"] | {"raw_dir": str(tmp_path / "raw"), "processed_dir": str(tmp_path / "processed")}
     return c
