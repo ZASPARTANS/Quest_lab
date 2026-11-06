@@ -1,22 +1,22 @@
-# Docker services for the project (decisions D10, D11, D15). Run from the repo root:
-#   docker compose -f docker/compose.yaml run --rm tests     official test run (no network, project read-only)
-#   docker compose -f docker/compose.yaml run --rm fetch     download the newest complete IFS + AIFS run into data/raw
-#   docker compose -f docker/compose.yaml run --rm process   process data/raw into data/processed (NO network)
-# Node tests/build and the nginx preview are added in the plan steps that need them.
+# Docker services for the project (decisions D10, D11, D15, D19, D20). Run from the repo root:
+#   docker compose -f docker/compose.yaml run --rm tests            official Python test run (no network, project read-only)
+#   docker compose -f docker/compose.yaml run --rm fetch            download the newest complete IFS + AIFS run into data/raw
+#   docker compose -f docker/compose.yaml run --rm process          process data/raw into data/processed (NO network)
+#   docker compose -f docker/compose.yaml run --rm frontend-tests   Node tests of the front-end helper code (no network)
+#   docker compose -f docker/compose.yaml run --rm frontend-build   build the web app into frontend/dist
+#   docker compose -f docker/compose.yaml up -d preview             the "public-like" site on http://localhost:8080 (stop: ... down)
+#   docker compose -f docker/compose.yaml run --rm screenshots      browser screenshots of the preview into docs/evidence (starts preview)
+# After changing frontend/package.json add --build to the first `run` so the image is rebuilt.
 #
 # Hardening shared by every service (finding S03 in docs/SECURITY.md): not root, no Linux capabilities,
-# no privilege gain, read-only root filesystem (only /tmp is writable, in memory), project mounted read-only.
+# no privilege gain, read-only root filesystem (only /tmp is writable, in memory), the project is mounted read-only.
 # On Linux set APP_UID / APP_GID to your own ids (`export APP_UID=$(id -u) APP_GID=$(id -g)`) and create data/
 # yourself, so the files written to data/ belong to you; on Docker Desktop the defaults work.
 # Data folder: the host folder is DATA_DIR (default ../data, the project's data folder). Inside the container it must
 # be the first folder of the raw_dir / processed_dir paths in config/pipeline.toml ([paths], now "data"); if the config
 # points somewhere else, writing fails loudly (the project mount is read-only) instead of going to the wrong place.
-x-hardened: &hardened
-  build:
-    context: ..
-    dockerfile: docker/Dockerfile
-  image: precip-forecast:local
-  working_dir: /work
+# Image pins (digests) are checked and recorded in docs/SOURCES.md; change them only together with that record.
+x-security: &security
   user: "${APP_UID:-10001}:${APP_GID:-10001}"
   read_only: true
   tmpfs:
@@ -25,6 +25,14 @@ x-hardened: &hardened
     - ALL
   security_opt:
     - no-new-privileges:true
+
+x-python: &python
+  <<: *security
+  build:
+    context: ..
+    dockerfile: docker/Dockerfile
+  image: precip-forecast:local
+  working_dir: /work
   environment:
     PYTHONDONTWRITEBYTECODE: "1"
 
@@ -32,15 +40,15 @@ services:
   tests:
     # Official test run. The project is mounted read-only, so a test can never change the repo,
     # and the container has no network, so a test that secretly needs the internet fails.
-    <<: *hardened
+    <<: *python
     volumes:
       - ..:/work:ro
     network_mode: none
     command: ["python", "-m", "pytest", "-q", "-p", "no:cacheprovider"]
 
   fetch:
-    # The only service with network access. Only data/ (git-ignored) is writable.
-    <<: *hardened
+    # The only Python service with network access. Only data/ (git-ignored) is writable.
+    <<: *python
     volumes:
       - ..:/work:ro
       - ${DATA_DIR:-../data}:/work/data
@@ -48,9 +56,96 @@ services:
 
   process:
     # Reads the downloaded files and writes data/processed. No network: it never needs one.
-    <<: *hardened
+    <<: *python
     volumes:
       - ..:/work:ro
       - ${DATA_DIR:-../data}:/work/data
     network_mode: none
     command: ["python", "-m", "pipeline.processed"]
+
+  frontend-build:
+    # Builds the web app. No network. Only specific project folders are mounted (read-only): mounting the whole project would show the
+    # host's Windows node_modules folder instead of the Linux one inside the image (/node_modules).
+    <<: *security
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.node
+      args:
+        BASE_IMAGE: node:22-slim@sha256:5ec23b7c622b00547753bc6ffd78085dd868a68aeb41c8e0a1418f033e13d96d
+    image: precip-frontend:local
+    working_dir: /work/frontend
+    network_mode: none
+    tmpfs:
+      - /tmp
+      - /node_modules/.vite-temp  # Vite writes its bundled config here, next to the nearest node_modules
+    environment:
+      HOME: /tmp
+      VITE_CACHE_DIR: /tmp/vite
+      FRONTEND_OUT_DIR: /dist
+    volumes:
+      - ../config:/work/config:ro
+      - ../frontend/package.json:/work/frontend/package.json:ro
+      - ../frontend/vite.config.js:/work/frontend/vite.config.js:ro
+      - ../frontend/index.html:/work/frontend/index.html:ro
+      - ../frontend/src:/work/frontend/src:ro
+      - ../frontend/spikes:/work/frontend/spikes:ro
+      - ${FRONTEND_DIST_DIR:-../frontend/dist}:/dist
+    command: ["/node_modules/.bin/vite", "build"]
+
+  frontend-tests:
+    # Node tests of the front-end helper code (node --test). No network, read-only mounts of only what the tests need.
+    <<: *security
+    image: precip-frontend:local
+    working_dir: /work
+    network_mode: none
+    environment:
+      HOME: /tmp
+    volumes:
+      - ../frontend/src:/work/frontend/src:ro
+      - ../tests/frontend:/work/tests/frontend:ro
+    command: ["node", "--test", "tests/frontend/*.test.mjs"]
+
+  preview:
+    # The "public-like" site: the production build plus the forecast data, served by nginx the way a static host would,
+    # with the security headers of config/headers.conf. Reachable from this computer only (127.0.0.1).
+    image: nginx:stable-alpine@sha256:583b7f2fce1cdb8da5ad5c39ebd3c33b98b87d493190e548bdee1fa8c619c311
+    user: "101:101"
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    entrypoint: ["nginx", "-c", "/etc/nginx/nginx.conf", "-g", "daemon off;"]
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../config/headers.conf:/etc/nginx/headers.conf:ro
+      - ${FRONTEND_DIST_DIR:-../frontend/dist}:/srv/site:ro
+      - ${DATA_DIR:-../data}/site:/srv/data:ro
+
+  screenshots:
+    # A real browser (Playwright image) opens the preview and saves screenshots plus a report of what the page loaded.
+    # Chromium runs with its own sandbox off (--no-sandbox: the container is the sandbox) and only talks to the preview.
+    <<: *security
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.node
+      args:
+        BASE_IMAGE: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:6e3fb709361521eb27161606e6da6d2674e5e89fa16516cb37d6fdd91372273d
+    image: precip-playwright:local
+    working_dir: /work/frontend
+    shm_size: 1gb
+    depends_on:
+      - preview
+    environment:
+      HOME: /tmp
+      SCREENSHOT_BASE_URL: http://preview:8080
+      SCREENSHOT_OUT_DIR: /out
+    volumes:
+      - ../config:/work/config:ro
+      - ../frontend/tools:/work/frontend/tools:ro
+      - ../docs/evidence:/out
+    command: ["node", "tools/screenshots.mjs"]

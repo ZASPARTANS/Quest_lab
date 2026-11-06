@@ -1,0 +1,4 @@
+# BuildKit reads this file next to docker/Dockerfile.node. Only the package list and the lock file are needed in the image.
+*
+!frontend/package.json
+!frontend/package-lock.json

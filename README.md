@@ -40,6 +40,27 @@ docker compose -f docker/compose.yaml run --rm process python -m scripts.validat
 
 Processing turns both models into millimetres per 6-hour interval, converts each model's own unit, and builds the IFS-vs-AIFS agreement field (details: `docs/DOMAIN.md`, decisions D13 and D14).
 
+## Looking at the web app locally (two sites, decision D19)
+Work in progress: only a comparison page with one real forecast frame exists so far (no finished app).
+
+```
+# once: put one real frame in data/site (needs a processed run, see above)
+docker compose -f docker/compose.yaml run --rm process python -m scripts.spike_frame
+
+# testing site, with live reload and a DEV badge: http://localhost:5173
+cd frontend && npm ci --ignore-scripts && npm run dev
+
+# public-like site, the production build as nginx serves it: http://localhost:8080
+docker compose -f docker/compose.yaml run --rm frontend-build
+docker compose -f docker/compose.yaml up -d preview        # stop with: docker compose -f docker/compose.yaml down
+
+# automatic checks
+docker compose -f docker/compose.yaml run --rm frontend-tests     # Node tests
+docker compose -f docker/compose.yaml run --rm screenshots        # real browser: screenshots + errors + hosts contacted (starts the preview)
+```
+
+Both sites listen on this computer only. The settings (ports, folders, pages, colours) are in `config/frontend.json`, the security headers in `config/headers.conf`.
+
 ## Running the tests (the official way)
 Tests run in Docker on Linux, with the project mounted read-only and no network:
 

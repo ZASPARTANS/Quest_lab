@@ -1,0 +1,13 @@
+# Front-end image (decisions D10, D20). Used for two services with different base images (set in compose.yaml, pinned by digest):
+# the Node image for building/testing and the Playwright image for screenshots and browser tests.
+# Dependencies are installed from the lock file to /node_modules, so /work/frontend (a read-only mount of the project) finds them by
+# the normal upward lookup, and the Windows node_modules folder of the host is never mixed with these Linux ones.
+# --ignore-scripts: no package may run an install script (docs/SECURITY.md). `npm ci` checks every file against the lock file's hashes.
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ENV NPM_CONFIG_UPDATE_NOTIFIER=false NPM_CONFIG_FUND=false NPM_CONFIG_AUDIT=false
+WORKDIR /
+COPY frontend/package.json frontend/package-lock.json /
+RUN npm ci --ignore-scripts
+WORKDIR /work/frontend
