@@ -11,8 +11,8 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 | E005 | AI expected 13 `##` headings in CLAUDE.md after the edit; it was 14 (AI miscounted) | 1 | 1/1 (recounted: original had 13) |
 | E006 | Plan assumption A1 wrong: AIFS `tp` is in `kg m**-2` (mm), not metres like IFS | 1 | 0/0 (fix = PLAN-003 approved; applied in step 4) |
 | E007 | Assumption A3 wrong: IFS has `tp` files up to 360 h, not 240 h (config stops at 240 h) | 1 | 0/0 (needs user decision) |
-| E008 | `PrematureEndOfFileError` crash: `download_run` cannot recover from a truncated `tp.grib2` | 1 | 0/0 (fix proposed, not applied) |
-| E009 | During HTTP 503 the client retries every file check (about 20 s each) and then silently treats the run as incomplete | 1 | 0/0 (fix proposed, not applied) |
+| E008 | `PrematureEndOfFileError` crash: `download_run` cannot recover from a truncated `tp.grib2` | 1 | 1/1 (atomic download + `is_complete`) |
+| E009 | During HTTP 503 the client retries every file check (about 20 s each) and then silently treats the run as incomplete | 1 | 1/1 (strict fail-fast search session) |
 
 ---
 
@@ -84,3 +84,14 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 - Proposed fix: for the run search use a client with 1 retry (fail fast), and stop with an error if any answer is neither 200 nor 404 instead of falling back; the scheduled job should fail loudly so the previous deployment stays live.
 - Real-server cases that behaved well: a request for a file that does not exist (AIFS step 7) raised `requests.exceptions.HTTPError: 404 ... .index` after 1.2 s and left no file behind; 404 for unpublished files is not retried (the full run search took about 49 s).
 - Changed lines: none yet.
+
+### Fix record E008 (2026-11-06 ~19:50 UTC)
+- Fix attempt 1: `pipeline/fetch.py` got `is_complete()` (catches `eccodes.CodesInternalError`, so a truncated or non-GRIB file counts as incomplete) and `download_run()` now downloads to `tp.grib2.part`, checks it with `is_complete`, and only then `os.replace`s it to `tp.grib2` (a `finally` removes the `.part`). 6 new tests in `tests/pipeline/test_fetch_failures.py` (truncated, garbage, interrupted, wrong steps, rename, reuse).
+- Re-ran the failing case on real data: the 12z AIFS file (29,500,748 bytes, sha256 starting `f0a91853c6c494a8`) was cut in place to 14,750,374 bytes; `python -m pipeline.fetch` then printed `[ifs] ... (reused)` and `[aifs-single] ... (downloaded)`, and the new file had the same size and the same sha256 prefix. No `.part` file was left. **Worked.** fix worked / tried: 1/1.
+- Not tested: an interruption in the middle of a real network download (only simulated by a fake client that writes half a file and raises).
+
+### Fix record E009 (2026-11-06 ~19:52 UTC)
+- Fix attempt 1: `config/pipeline.toml` got `search_max_retries = 2` and `search_retry_after_seconds = 5`. `pipeline/fetch.py` got `_StrictSession` (a `requests.Session` whose `head()` raises `UnexpectedStatus` for any status other than 200 or 404) and `_client(..., search=True)`, used only by `find_latest_run`. Downloads keep their own retry settings (3 x 10 s). 5 new tests (200/404 pass, 429/500/503 raise) with a local HTTP server.
+- Re-ran the failing case end to end with the real `find_latest_run` and real config values against local servers: always-503 -> `pipeline.fetch.UnexpectedStatus` after 0.0 s (was: `503` returned after 20.1 s per request); always-404 -> `ValueError: no run is complete for every model` after 0.8 s; dead port -> `requests.exceptions.ConnectionError` after 9.1 s. Against the real server the search still works (run 1 and run 2 on 2026-11-06 ~19:49-19:50 UTC found the 12z run). **Worked.** fix worked / tried: 1/1.
+- Trade-off accepted (decision D8): a single transient 503 now aborts the run instead of being retried for minutes; the scheduled job (step 11) simply runs again later.
+- Not re-measured: the original multi-hour worst case was an extrapolation and was not reproduced end to end.

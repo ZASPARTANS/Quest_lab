@@ -9,10 +9,12 @@ Rung of the "code ladder": the official ecmwf-opendata client does the downloadi
 Run:  python -m pipeline.fetch
 """
 import datetime as dt
+import os
 import tomllib
 from pathlib import Path
 
 import eccodes
+import requests
 from ecmwf.opendata import Client
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -47,10 +49,32 @@ def latest_common_run(latest_by_hour):
     return max(candidates)
 
 
-def _client(cfg, model):
+class UnexpectedStatus(RuntimeError):
+    """The server answered something other than 200 (published) or 404 (not published yet)."""
+
+
+class _StrictSession(requests.Session):
+    """HEAD requests of the run search: any answer except 200/404 means the server is in trouble.
+
+    The client would otherwise count e.g. a 503 as "run incomplete" and quietly use an older run (E009).
+    """
+
+    def head(self, *args, **kwargs):
+        response = super().head(*args, **kwargs)
+        if response.status_code not in (200, 404):
+            raise UnexpectedStatus(f"HEAD {response.url} answered {response.status_code}")
+        return response
+
+
+def _client(cfg, model, search=False):
+    """Client for downloads, or (search=True) a fail-fast client for finding the latest run."""
     s = cfg["source"]
-    return Client(source=s["name"], model=model, resol=s["resolution"],
-                  maximum_retries=s["max_retries"], retry_after=s["retry_after_seconds"])
+    retries, wait = ((s["search_max_retries"], s["search_retry_after_seconds"]) if search
+                     else (s["max_retries"], s["retry_after_seconds"]))
+    client = Client(source=s["name"], model=model, resol=s["resolution"], maximum_retries=retries, retry_after=wait)
+    if search:
+        client.session = _StrictSession()
+    return client
 
 
 def _request(cfg, model, hour):
@@ -66,7 +90,7 @@ def find_latest_run(cfg):
         runs = []
         for model in cfg["models"]:
             try:
-                runs.append(_client(cfg, model).latest(_request(cfg, model, hour)))
+                runs.append(_client(cfg, model, search=True).latest(_request(cfg, model, hour)))
             except ValueError:  # client found no complete run within its search window
                 runs = []
                 break
@@ -99,15 +123,37 @@ def check_steps(messages, expected):
     return sorted(set(expected) - got), sorted(got - set(expected))
 
 
+def is_complete(path, expected):
+    """True if path is a readable GRIB file whose messages are exactly the expected end steps."""
+    if not path.exists():
+        return False
+    try:
+        return not any(check_steps(describe_messages(path), expected))
+    except eccodes.CodesInternalError:  # truncated file or not a GRIB file (E008)
+        return False
+
+
 def download_run(cfg, run, model):
-    """Download the precipitation messages of one model and run; reuse a complete earlier download."""
+    """Download the precipitation messages of one model and run; reuse a complete earlier download.
+
+    The download goes to tp.grib2.part and is renamed only after it has been checked, so a failed or
+    interrupted download never leaves a broken file at the final path.
+    """
     target = ROOT / cfg["paths"]["raw_dir"] / run.strftime("%Y%m%d%H") / model / "tp.grib2"
     expected = expand_steps(cfg["models"][model]["step_ranges"])
-    if target.exists() and not any(check_steps(describe_messages(target), expected)):
+    if is_complete(target, expected):
         return target, True
+    part = target.with_name(target.name + ".part")
     target.parent.mkdir(parents=True, exist_ok=True)
+    part.unlink(missing_ok=True)
     request = _request(cfg, model, run.hour) | {"date": run.strftime("%Y%m%d")}
-    _client(cfg, model).retrieve(request, target=str(target))
+    try:
+        _client(cfg, model).retrieve(request, target=str(part))
+        if not is_complete(part, expected):
+            raise ValueError(f"{model}: downloaded file does not hold exactly the expected steps")
+        os.replace(part, target)
+    finally:
+        part.unlink(missing_ok=True)
     return target, False
 
 

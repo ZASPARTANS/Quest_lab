@@ -18,7 +18,17 @@
 | 2026-11-06 19:06 | Commit `785e774` (step 2: Python 3.11 venv, pinned requirements) | 0.79 h | 71.21 h |
 | 2026-11-06 19:16 | Commit `fc08c94` (step 3: fetch IFS and AIFS precipitation) | 0.96 h | 71.04 h |
 | 2026-11-06 19:20 | Commit `1c495fc` (PLAN-003 adopted) | 1.03 h | 70.97 h |
-| 2026-11-06 19:41 | Commit "Record step 3 follow-up verification..." (hash: see `git log`) | 1.37 h | 70.63 h |
+| 2026-11-06 19:41 | Commit `ca6cd60` (step 3 follow-up verification records) | 1.37 h | 70.63 h |
+| 2026-11-06 19:52 | Commit "Fix E008 and E009 in the fetch step..." (hash: see `git log`) | 1.56 h | 70.44 h |
+
+## E008 and E009 fixes (asked for by the user; run 2026-11-06 ~19:45-19:53 UTC)
+Files changed: `pipeline/fetch.py` (190 lines), `config/pipeline.toml`, `requirements.txt` (`requests` moved to the direct section: it is now imported directly), new `tests/pipeline/test_fetch_failures.py` (140 lines). Details and counters: ERRORS.md E008, E009; decision D8.
+- Tests: `pytest -q` -> `20 passed in 3.42s` on Windows (9 old + 11 new); the same suite in the `python:3.11-slim` Docker image -> `20 passed in 5.03s`, `pip check` clean.
+- E008 on real data: truncated the real 12z AIFS file to half (14,750,374 of 29,500,748 bytes) and ran `python -m pipeline.fetch`: IFS `(reused)`, AIFS `(downloaded)`, final file byte-identical (same size, same sha256 prefix), no `.part` left. **Fixed.**
+- E009 end to end (local servers, real config values): always-503 -> `UnexpectedStatus` after 0.0 s; always-404 -> `ValueError: no run is complete for every model` after 0.8 s; dead port -> `ConnectionError` after 9.1 s. Real server: search found the 12z run (published about 19:34) at 19:49 UTC with 64 and 60 steps. **Fixed.**
+- `requirements.txt` pins equal `pip freeze` (diff printed nothing). Root check: only the allowed entries. `data/` untracked and ignored.
+- Not tested: a real network cut in the middle of a download; the original multi-hour 503 worst case (an extrapolation) was not reproduced.
+- **Still open: E007 (IFS to 360 h).** The user wants it done only if the 240 h setup works perfectly after these fixes. Evidence now: two full real runs (00z and 12z) with all steps, 20 passing tests on Windows and Linux, recovery from a corrupted file, fail-fast on server trouble. It needs a plan revision (PLAN-004) and the user's approval before any change.
 
 ## Step 3 follow-up verification (asked for by the user; run 2026-11-06 ~19:25-19:41 UTC)
 The four items listed as "NOT verified" in the step 3 results below were checked. Details: DOMAIN.md (follow-up section), ERRORS.md (E007-E009), ENVIRONMENT.md (Docker).
