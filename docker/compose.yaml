@@ -1,0 +1,19 @@
+# Docker services for the project (decisions D10, D11). Run from the repo root, for example:
+#   docker compose -f docker/compose.yaml run --rm tests
+# Services for fetching/processing (`run`), Node tests/build and the nginx preview are added in the plan
+# steps that need them.
+services:
+  tests:
+    # Official test run. The project is mounted read-only, so a test can never change the repo,
+    # and the container has no network, so a test that secretly needs the internet fails.
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: precip-forecast-tests:local
+    working_dir: /work
+    volumes:
+      - ..:/work:ro
+    network_mode: none
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+    command: ["python", "-m", "pytest", "-q", "-p", "no:cacheprovider"]

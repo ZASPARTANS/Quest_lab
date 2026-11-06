@@ -6,7 +6,7 @@ QUEST Lab application, Project 1: fetch precipitation forecasts from ECMWF Open 
 
 ## Intended folder layout (decision D5 in `docs/DECISIONS.md`)
 
-Folders appear when their first real file is added. Only `docs/` exists so far.
+Folders appear when their first real file is added. Existing so far: `config/`, `pipeline/`, `tests/`, `docker/`, `docs/`.
 
 ```
 README.md            this file
@@ -23,3 +23,12 @@ data/                IGNORED by git: raw downloads, processed output, exported s
 
 ## Data and licence
 Forecast data: ECMWF Open Data (IFS and AIFS), CC-BY-4.0 and the ECMWF Terms of Use. The exact attribution text will be added once verified on the official terms page (plan step 10).
+
+## Running the tests (the official way)
+Tests run in Docker on Linux, with the project mounted read-only and no network:
+
+```
+docker compose -f docker/compose.yaml run --rm tests
+```
+
+The first run builds the image from `requirements.txt` (about 30 s). The Windows `.venv/` (`py -3.11 -m venv .venv`, then `pip install -r requirements.txt`) is only for quick trying; its result is not the proof. There is no front end or localhost preview yet (planned in plan step 6).

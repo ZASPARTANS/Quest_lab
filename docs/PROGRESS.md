@@ -21,7 +21,21 @@
 | 2026-11-06 19:41 | Commit `ca6cd60` (step 3 follow-up verification records) | 1.37 h | 70.63 h |
 | 2026-11-06 19:52 | Commit `d3a75eb` (fix E008 and E009 in the fetch step) | 1.56 h | 70.44 h |
 | 2026-11-06 20:04 | Commits `806bfa9`, `5b69d20` (decisions D9 and addendum) | 1.74 h | 70.26 h |
-| 2026-11-06 20:14 | Commit "Adopt PLAN-004..." (hash: see `git log`) | 1.91 h | 70.09 h |
+| 2026-11-06 20:14 | Commit `a9c1f0c` (PLAN-004 adopted) | 1.91 h | 70.09 h |
+| 2026-11-06 20:18 | Commit "Step 3b: Docker test environment..." (hash: see `git log`) | 1.98 h | 70.02 h |
+
+## Step 3b done-check results (run 2026-11-06 20:18 UTC)
+Official test command from now on: `docker compose -f docker/compose.yaml run --rm tests`.
+- (a) `docker info`: server 29.9.2 (linux) running; the local `python:3.11-slim` digest equals the one recorded in SOURCES.md.
+- (b) `docker compose -f docker/compose.yaml build`: succeeded; `transferring context: 1.46kB` (1.88 kB after the requirements change), so `.venv/` and `data/` are not sent (A11 verified). `pip check` in the image: "No broken requirements found".
+- (c) `docker compose -f docker/compose.yaml run --rm tests` -> `20 passed in 5.88s`, exit code 0.
+- (d) Inside the tests container a connection to `data.ecmwf.int:443` fails with `gaierror` ("no network, as intended") while loopback works; the tests pass anyway, so they need no internet.
+- (e) After the runs `git status --short` showed only my intended changes (`requirements.txt` modified, `docker/` new): nothing was written into the repo. Root check: tracked root entries unchanged; new top-level folder `docker` only.
+- (f) Windows `.venv`: `20 passed in 3.72s` (same result, not used as proof).
+- Extra: failure exit codes pass through `docker compose run` (pytest "no tests selected" -> 5; a failing command -> 1), so the scheduled job can rely on it.
+- **Found and fixed on the way: E011.** The Linux image installs two packages that the Windows-made `requirements.txt` did not pin (`eccodeslib`, `eckitlib`). They are now pinned with a Linux-only marker; the Linux container's `pip freeze` equals the pins (25 packages), and Windows still needs only its 23 (`pip install --dry-run` installs nothing).
+- Line counts: `docker/Dockerfile` 13, `docker/compose.yaml` 19, `docker/Dockerfile.dockerignore` 4; no Python changed in this step.
+- Not done yet from PLAN-004: the localhost half (Vite dev server and nginx preview) comes in step 6; the `run` service (fetch/processing inside Docker) is added in step 4.
 
 ## E008 and E009 fixes (asked for by the user; run 2026-11-06 ~19:45-19:53 UTC)
 Files changed: `pipeline/fetch.py` (190 lines), `config/pipeline.toml`, `requirements.txt` (`requests` moved to the direct section: it is now imported directly), new `tests/pipeline/test_fetch_failures.py` (140 lines). Details and counters: ERRORS.md E008, E009; decision D8.
@@ -94,7 +108,7 @@ The four items listed as "NOT verified" in the step 3 results below were checked
 | 1b | Apply folder layout (PLAN-002: D5, E002, README, .gitignore) | **done** 2026-11-06 18:50 UTC, commit `7a83bb9` |
 | 2 | Python environment + pinned packages | **done** 2026-11-06 19:06 UTC (commit "Step 2: Python 3.11 virtual environment...") |
 | 3 | Fetch (IFS + AIFS `tp`) | **done** 2026-11-06 19:16 UTC (commit `fc08c94`) |
-| 3b | Docker test environment (PLAN-004) | in progress |
+| 3b | Docker test environment (PLAN-004) | **done** 2026-11-06 20:18 UTC (commit "Step 3b: Docker test environment...") |
 | 4 | Processing core + tests (units per model) | not started |
 | 5 | Independent validation | not started |
 | 6 | Front-end spike + decision gate | not started |

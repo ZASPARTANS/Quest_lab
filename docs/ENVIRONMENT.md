@@ -41,3 +41,8 @@ Everything below was found by running commands in this session. Times are UTC.
 - Pulled the official image `python:3.11-slim` (digest `sha256:65bd3d9f1d7fa268dd1909973ba7eb4bdf41f6dcf2cfbe76ba9528b170f3fd79`, Python 3.11.18). It stays in the local Docker image cache. Containers were run with `--rm`, the project mounted read-only (`-v <project>:/work:ro`) and `PYTHONDONTWRITEBYTECODE=1`; `git status` showed no change afterwards.
 - Git Bash needs `MSYS_NO_PATHCONV=1` and a Windows-style path for `-v` to avoid path mangling.
 - Background processes started from the tool shell keep their own output buffered when piped (`| grep`); use `python -u` to see progress.
+
+## 2026-11-06 20:18 UTC — step 3b (Docker test environment)
+- Docker Compose 5.6.1 and buildx 0.38.1 are installed; Docker server 29.9.2 (Linux, WSL2, 16 CPUs, about 16.6 GB). Ports 5173 and 8080 were free (`netstat`).
+- The test image `precip-forecast-tests:local` is built from `docker/Dockerfile`; the build context is about 1.9 kB because `docker/Dockerfile.dockerignore` lets only `requirements.txt` through (the Dockerfile-specific ignore file works, so the repo root needs no `.dockerignore`).
+- Official test command (run from the repo root, any shell): `docker compose -f docker/compose.yaml run --rm tests`. In Git Bash set `MSYS_NO_PATHCONV=1` when calling `docker run -v` by hand; `docker compose` itself needed no workaround.

@@ -36,3 +36,6 @@ Facts learned about the subject. No raw data here; point to the command or scrip
 ## 2026-11-06 ~19:50 UTC — Notes from the fixed fetch run (12z)
 - Fact: the GRIB key `dataTime` is an HHMM number: `0` for the 00z run and `1200` for the 12z run. Where learned: key dump of the 12z files (`dataTime: ['1200']`), earlier 00z dump (`['0']`).
 - Fact: the 12z run of 2026-11-06 was complete for both models when the fixed search ran at 19:49 UTC (about 7 h 49 min after run time; the IFS files had appeared at about 19:34, see the lag note above). Sizes: IFS 32.05 MB (64 messages), AIFS 29.50 MB (60 messages). The 00z IFS file was 34.54 MB, so sizes vary with the weather.
+
+## 2026-11-06 20:18 UTC — Tooling fact (Linux eccodes)
+- Fact: on Linux the `eccodes` 2.50.0 package depends on `eccodeslib` 2.50.0.34 (which depends on `eckitlib` 2.5.0.34) for its C library; on Windows the wheel bundles the library. Where learned: Docker build log and `pip show eccodes eccodeslib eckitlib` inside the image (see E011). This corrects the earlier note that "the Linux wheel also carries its library": the Linux install gets the library through those two extra packages.

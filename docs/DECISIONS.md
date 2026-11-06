@@ -109,3 +109,9 @@ Append only. Each entry: date/time, what was chosen, alternatives, why, who deci
 - Chosen: `config/pipeline.toml` keeps IFS steps 3..240 h. The agreement bar is computed only over 6..240 h; beyond that the app shows AIFS only. IFS files exist up to 360 h with precipitation (E007), so this can be revisited later as a small config change plus re-verification.
 - Alternative: extend to 360 h now (full 15-day agreement, about 12 MB more per run).
 - Result: pending.
+
+### D7 correction (2026-11-06 20:18 UTC)
+- The D7 result "held (both lists identical, 23 packages)" was true for Windows only. Linux needs 25 packages (E011). `requirements.txt` now pins both sets with a `sys_platform == "linux"` marker on the two extra packages. The no-hashes shortcut is unchanged.
+
+### D10 result (2026-11-06 20:18 UTC)
+- Held. The Docker test run gives the same `20 passed` as the venv, writes nothing into the repo (`git status` showed only my intended changes), runs with no network, and passes failure exit codes through (5 for "no tests selected", 1 for a failing command). Details: PROGRESS.md, step 3b.
