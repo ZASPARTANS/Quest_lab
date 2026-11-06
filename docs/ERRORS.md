@@ -9,7 +9,7 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 | E003 | `FileNotFoundError: '/tmp/problem_blob.txt'` (Windows Python cannot see Git Bash paths) | 1 | 1/1 (pipe data via stdin) |
 | E004 | `FileNotFoundError: [WinError 2]` from `subprocess.run(['.venv/Scripts/python.exe', ...])` | 1 | 1/1 (use `sys.executable`) |
 | E005 | AI expected 13 `##` headings in CLAUDE.md after the edit; it was 14 (AI miscounted) | 1 | 1/1 (recounted: original had 13) |
-| E006 | Plan assumption A1 wrong: AIFS `tp` is in `kg m**-2` (mm), not metres like IFS | 1 | 0/0 (fix = PLAN-003, awaiting approval) |
+| E006 | Plan assumption A1 wrong: AIFS `tp` is in `kg m**-2` (mm), not metres like IFS | 1 | 0/0 (fix = PLAN-003 approved; applied in step 4) |
 
 ---
 
@@ -57,3 +57,4 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 - Root cause: an assumption made from general knowledge before looking at the files. The step-3 check did its job and caught it before any processing code existed, so no wrong output was produced.
 - Planned fix (needs user approval as PLAN-003): step 4 reads each message's `units` key and converts to mm with a factor from `config/pipeline.toml` (`m` -> 1000, `kg m**-2` -> 1); an unknown unit stops the run; tests cover both units.
 - Changed lines: none yet.
+- Status 2026-11-06 ~19:21 UTC: PLAN-003 was approved by the user and written to `docs/plans/PLAN-003.md`. The code fix (per-message unit conversion from config, with tests) is done in step 4; the counters above change only after the failing case is re-run there.

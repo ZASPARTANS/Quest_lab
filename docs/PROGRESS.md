@@ -16,7 +16,8 @@
 | 2026-11-06 18:50 | Commit `7a83bb9` (step 1b: PLAN-002, D5, D6, E002, README) | 0.52 h | 71.48 h |
 | 2026-11-06 ~18:53 | Commit `ba581ee` (step 1b done-check results) | 0.56 h | 71.44 h |
 | 2026-11-06 19:06 | Commit `785e774` (step 2: Python 3.11 venv, pinned requirements) | 0.79 h | 71.21 h |
-| 2026-11-06 19:16 | Commit "Step 3: fetch IFS and AIFS precipitation..." (hash: see `git log`) | 0.96 h | 71.04 h |
+| 2026-11-06 19:16 | Commit `fc08c94` (step 3: fetch IFS and AIFS precipitation) | 0.96 h | 71.04 h |
+| 2026-11-06 19:20 | Commit "Adopt PLAN-003..." (hash: see `git log`) | 1.03 h | 70.97 h |
 
 ## Step 1 done-check results (run 2026-11-06 ~18:44 UTC)
 - `git status --short | wc -l` after commit: `0` (clean).
@@ -55,10 +56,12 @@
 - Line counts: `pipeline/fetch.py` 144, `tests/pipeline/test_fetch.py` 57, `config/pipeline.toml` 30 (limits 300/50-line functions respected; longest function `summarise` is about 17 lines).
 - Root check: only `.gitignore`, `README.md`, `config`, `docs`, `pipeline`, `pyproject.toml`, `requirements.txt`, `tests`. `data/` is untracked and ignored (not in `git status`).
 - NOT verified: behaviour when the server is slow or a file is missing mid-download (retries set to 3 x 10 s; not exercised); the 12z IFS step list; Linux.
-- **Open problem:** assumption A1 was wrong for AIFS (E006). The fix changes the wording of plan step 4, so it needs a revised plan (PLAN-003) and your approval before step 4 starts.
+- **Open problem (resolved in the plan, not yet in code):** assumption A1 was wrong for AIFS (E006). PLAN-003 was approved 2026-11-06 ~19:20 UTC; the fix is applied and tested in step 4.
 
 ## Current plan
-**`docs/plans/PLAN-002.md`** — approved by the user 2026-11-06 ~18:49 UTC. Status: in progress.
+**`docs/plans/PLAN-003.md`** — approved by the user 2026-11-06 ~19:20 UTC (replaces PLAN-002: assumption A1, units per model, see E006). Status: in progress; steps 1, 1b, 2, 3 done.
+
+`docs/plans/PLAN-002.md` — approved 2026-11-06 ~18:49 UTC. **Status: superseded by PLAN-003** (reason: A1 wrong for AIFS units; see E006). Steps 1b, 2, 3 were completed under it and carried over.
 
 `docs/plans/PLAN-001.md` — approved 2026-11-06 ~18:42 UTC. **Status: superseded by PLAN-002** (reason: no folder layout; see E002). Step 1 of PLAN-001 was completed and is carried over.
 
@@ -67,8 +70,8 @@
 | 1 | Repo + records (git init, .gitignore, PROBLEM.md, DECISIONS, ERRORS, first commit) | **done** 2026-11-06 18:43 UTC, commit `ccb24df` |
 | 1b | Apply folder layout (PLAN-002: D5, E002, README, .gitignore) | **done** 2026-11-06 18:50 UTC, commit `7a83bb9` |
 | 2 | Python environment + pinned packages | **done** 2026-11-06 19:06 UTC (commit "Step 2: Python 3.11 virtual environment...") |
-| 3 | Fetch (IFS + AIFS `tp`) | **done** 2026-11-06 19:16 UTC (commit "Step 3: fetch IFS and AIFS precipitation...") |
-| 4 | Processing core + tests | not started |
+| 3 | Fetch (IFS + AIFS `tp`) | **done** 2026-11-06 19:16 UTC (commit `fc08c94`) |
+| 4 | Processing core + tests (units per model, PLAN-003) | not started |
 | 5 | Independent validation | not started |
 | 6 | Front-end spike + decision gate | not started |
 | 7 | Static data export | not started |
