@@ -434,3 +434,6 @@ Gone since the earlier register: `scripts/spike_frame.py` (deleted at step 7), t
 - What is lost: a planned side-by-side look at the rain over London, Chennai, a coast and mountains at zoom 3, 5 and 7, with the opacity and soft edge tuned for them. The rain opacity stays at the value in `config/frontend.json`.
 - Where the one useful part goes: the screenshots at several sizes and the contrast test of the design pass (PLAN-007 step 9.5) will include the map with rain at zoom 3, 5 and 7 for a place or two; if a legibility problem shows there, it is fixed there, in config only.
 - Bet that can be checked later: no legibility defect of the rain over the base map shows in step 9.5 or in the user's later looks. Result: not known yet.
+
+### D38 result of step 9.3d-4 (2026-11-07 14:32 UTC)
+- Two browser scenarios now guard the base map (range requests answered 206 from our own site; the page and the rain keep working when the file is missing): Chromium (Docker) and Edge (real GPU) 11 of 11. Not proven in Firefox or WebKit (no WebGL in the container). The bet "no outside request and the map degrades safely" held in the two engines that can draw it. The hosting requirements for step 11 are listed in PROGRESS (step 9.3d-4 results).
