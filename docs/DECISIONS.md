@@ -445,3 +445,6 @@ Gone since the earlier register: `scripts/spike_frame.py` (deleted at step 7), t
 
 ### Saved places made findable (2026-11-07 16:40 UTC)
 - Decided by: **user** (feedback "there is not option for it at all", then "do it now" to the proposal), details by the **AI**. The Save button stays in the place header but is clearer (star, "Saved (press to remove)"), the saved places move above the search and the box hides when empty, and the privacy text is short with the full text in an expandable part. This is an early part of the design pass (PLAN-007 step 9.5), not a new plan. Bet to check: the user finds the Save button without help (their next look). Result: not known yet.
+
+### D29/D31 result of step 9.4 (2026-11-07 16:59 UTC)
+- The 1/4 plan + 3/4 map layout (D29, user) is now measured by a browser check: on 1280 px the plan is a quarter within 4 points, and on 390 px the map stacks above the plan with no sideways scroll. The globe start and the fly-in (D31) are guarded by scenarios in four engines (Edge with the real GPU). Bet "the map layout works on a phone-sized window" held for the stacking itself; the controls crowd a small map (design pass).

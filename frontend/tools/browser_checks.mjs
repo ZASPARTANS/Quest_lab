@@ -2,13 +2,14 @@
 // (allowed and refused), from a place search, saved places, hostile input and no WebGL. The site is reached as http://localhost:8080
 // (the browser container shares the preview's network), so the browser treats it as a secure context like the HTTPS public site.
 // The place search is answered by a MOCK geocoder unless the real-search switch is set (then one real request goes to Open-Meteo).
-// Base-map scenarios are in basemap_scenarios.mjs, live-layer scenarios in live_scenarios.mjs. Exit code 1 if any scenario fails. Engines: chromium | firefox | webkit (BROWSER_NAME). WebKit is the engine of Safari, not Safari itself.
+// Base-map scenarios are in basemap_scenarios.mjs, live-layer scenarios in live_scenarios.mjs, map-page scenarios in map_scenarios.mjs. Exit code 1 if any scenario fails. Engines: chromium | firefox | webkit (BROWSER_NAME). WebKit is the engine of Safari, not Safari itself.
 import assert from 'node:assert/strict';
 import { mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { chromium, firefox, webkit } from 'playwright';
 import { basemapScenarios } from './basemap_scenarios.mjs';
 import { liveScenarios } from './live_scenarios.mjs';
+import { mapScenarios } from './map_scenarios.mjs';
 
 const frontend = JSON.parse(readFileSync(new URL('../../config/frontend.json', import.meta.url), 'utf8'));
 const cfg = frontend.browser_checks;
@@ -262,7 +263,7 @@ const scenarios = {
 };
 
 const helpers = { open, mapState, assertLanded, checkPlanShown, shot, base, frontend, ADDRESS, siteHost, timeout };
-Object.assign(scenarios, basemapScenarios(helpers), liveScenarios(helpers));
+Object.assign(scenarios, basemapScenarios(helpers), liveScenarios(helpers), mapScenarios(helpers));
 
 const engines = { chromium, firefox, webkit };
 const launchOptions = engineName === 'chromium' ? (channel ? { channel } : { args: ['--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] }) : {};
