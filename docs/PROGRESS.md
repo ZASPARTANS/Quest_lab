@@ -45,9 +45,13 @@
 | 2026-11-07 00:42 | Checkpoint requested by the user after their feedback; all markdown files updated (commit time in `git log`) | 6.39 h | 65.61 h |
 | 2026-11-07 10:41 | The user was away about 10 hours; they replied with the layout (1/4 plan + 3/4 globe) and approved PLAN-007; clock read with `date -u` | 16.37 h | 55.63 h |
 | 2026-11-07 12:11 | PLAN-008 approved (sharper pictures); 17.87 h used | 17.87 h | 54.13 h |
+| 2026-11-07 13:41 | PLAN-010 approved (stored vector base map); 19.37 h used | 19.37 h | 52.63 h |
 | 2026-11-07 13:12 | PLAN-009 approved (browser-side drawing, close fly-in, name fix); 18.88 h used | 18.88 h | 53.12 h |
 
 ## Current plan
+**`docs/plans/PLAN-010.md`** - approved by the user 2026-11-07 13:41 UTC: a stored vector base map (OpenStreetMap through Protomaps, dark style, self-hosted fonts and sprites, English labels) under the rain, measured first; nothing paid (D37); steps 9.3d-1 to 9.3d-4. It supersedes the "outlines only" base map of D22; PLAN-009 step 9.3c-4 and PLAN-007 steps 9.4 and 9.5 follow.
+
+`docs/plans/PLAN-009.md` (steps 9.3c-0 to 9.3c-3 done; step 9.3c-4 follows PLAN-010):
 **`docs/plans/PLAN-009.md`** - approved by the user 2026-11-07 13:12 UTC: the rain is drawn in the browser at screen sharpness from the exact tile values (live layer above zoom 4.5), the fly-in goes close (zoom 8 for the device location), the place name is fixed (E030) and a "My place" button is added (steps 9.3c-0 to 9.3c-4). It supersedes PLAN-008 assumption A19 and its step 9.3b-3 (the sharper pictures did not pass the user's look, E031); PLAN-007 steps 9.4 and 9.5 follow.
 
 `docs/plans/PLAN-008.md` (steps 9.3b-1 and 9.3b-2 done; A19 and 9.3b-3 superseded by PLAN-009):
@@ -97,7 +101,11 @@
 | 9.3c-1 | Drawing core: smooth sampling, continuous colours, soft agreement (pure, tested) (PLAN-009) | **done** 2026-11-07 13:21 UTC (commit "Step 9.3c-1: ...") |
 | 9.3c-2 | Data window: tiles for the view and a layer accessor (PLAN-009) | **done** 2026-11-07 13:23 UTC (commit "Step 9.3c-2: ...") |
 | 9.3c-3 | Map integration: live layer above zoom 4.5, fallback picture (PLAN-009) | **done** 2026-11-07 13:29 UTC (commit "Step 9.3c-3: ..."); D36 |
-| 9.3c-4 | Browser checks in the engines, Edge look, records (PLAN-009) | not started |
+| 9.3c-4 | Browser checks in the engines, Edge look, records (PLAN-009) | not started (after PLAN-010) |
+| 9.3d-1 | Gate: measure the stored base map (extract sizes z4-z7, fonts and sprites) and show the user (PLAN-010) | not started |
+| 9.3d-2 | Serve and style: nginx, the two packages, the dark style, rain below labels, outlines removed (PLAN-010) | not started |
+| 9.3d-3 | Fit the rain to the map: opacity, legibility, looks at several zooms (PLAN-010) | not started |
+| 9.3d-4 | Browser-check scenarios, records, hosting requirement for step 11 (PLAN-010) | not started |
 | 9.4 | Browser checks in three engines, real GPU in Edge, records (PLAN-007) | not started |
 | 9.5 | Design pass with the frontend-design skill, user review (PLAN-007) | not started |
 | 10 | Provenance + honesty strip, final policy (PLAN-006) | not started |
@@ -107,7 +115,7 @@
 Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
 
 ## Status (live, rewritten in the housekeeping at ~23:03 UTC)
-- **Done:** steps 1-8, 9.1, 9.2 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next: the user's look at http://localhost:8080 in their Firefox, then step 9.3c-4** (browser-check scenarios for the live layer in the engines, records), then PLAN-007 steps 9.4 and 9.5.
+- **Done:** steps 1-8, 9.1, 9.2 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is step 9.3d-1** (PLAN-010: measure the stored base map and show the user the numbers), then 9.3d-2..4, then PLAN-009 step 9.3c-4 and PLAN-007 steps 9.4 and 9.5. The user's own look at the live layer in Firefox is still pending.
 - **Tests (step 9.3b-2):** Python 105 passed, Node 53 passed. Earlier: official command `docker compose -f docker/compose.yaml run --rm tests` = 99 passed; `... run --rm frontend-tests` = 41 passed (at step 8); `... run --rm frontend-check` = 8 places x 8 activities match; `BROWSER_NAME=<engine> ... run --rm browser-checks` = 8 of 8 scenarios in chromium, firefox and webkit.
 - **Git:** branch `main`, 25 commits, no remote (GitHub login and repo creation are plan step 11 and need the user's approval and link).
 - **Records:** this housekeeping checked every markdown file against the others; its findings and fixes are listed in the last section of this file.
