@@ -74,3 +74,9 @@ Facts learned about the subject. No raw data here; point to the command or scrip
 - The style `projection` can be an expression of the zoom, `['interpolate', ['linear'], ['zoom'], 2.5, 'vertical-perspective', 4.5, 'mercator']`; the map renders a globe when zoomed out and morphs to the flat map between zoom 2.5 and 4.5. Checked in Chromium 158 (software WebGL) and Microsoft Edge (real GPU). `map.flyTo({center, zoom, duration, essential: true})` ended exactly on the target in both ways tried (centre offset 0, zoom 4.500).
 - The installed typings say the type `globe` "has internally switched to mercator" at high zoom and `vertical-perspective` "doesn't change to mercator"; so the morph uses `vertical-perspective` for the globe side.
 - The 720 x 720 frames show 0.5 degree pixels: at zoom 4.5 each pixel is about 25 screen pixels wide at 1280 x 720 (blocky with `raster-resampling: nearest`).
+
+## 2026-11-07 12:27 UTC — Picture quality facts (step 9.3b-1, measured)
+- The forecast grid is 0.25 degree; a 720 px Web Mercator picture is 0.5 degree per pixel, so cells were lost or doubled; at the fly-in zoom 4.5 the map is about 11,585 screen pixels wide for the whole world, so a 1440 px picture is magnified about 8 times (each picture pixel about 8 screen pixels).
+- Picture size is driven by the number of distinct colour contours, not only by pixel count: a smooth continuous gradient as 24-bit RGBA is 1.6 MB at 1440 px, the same picture as a 160-level palette PNG 0.7 MB, with 16 levels 0.39 MB (row filters chosen per row). Rain pictures of other blocks will differ (this was IFS +24 h of the 12z run), so the export prints the largest.
+- MapLibre GL JS 6.16 raster layers support `raster-resampling` = `linear` or `nearest` and no colour ramp (`raster-color` is not in the installed typings), so the colours have to be in the picture.
+- 50 m Natural Earth countries (world-atlas 2.0.2): 756 kB raw, 236 kB gzipped; 110 m: 108 kB raw, 39 kB gzipped.

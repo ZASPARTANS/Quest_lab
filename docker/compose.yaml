@@ -100,6 +100,7 @@ services:
       - ../frontend/vite.config.js:/work/frontend/vite.config.js:ro
       - ../frontend/index.html:/work/frontend/index.html:ro
       - ../frontend/src:/work/frontend/src:ro
+      - ../frontend/spikes:/work/frontend/spikes:ro  # TEMPORARY (PLAN-008 gate 9.3b-1): the picture-quality viewer page; removed with it
       - ${FRONTEND_DIST_DIR:-../frontend/dist}:/dist
     command: ["/node_modules/.bin/vite", "build"]
 

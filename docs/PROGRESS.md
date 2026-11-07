@@ -44,8 +44,12 @@
 | 2026-11-07 00:27 | Commit `1e15254`: Step 8: Plan-my-day page (plan engine, place search, saved places) checked against an independent Python calculation | 6.13 h | 65.87 h |
 | 2026-11-07 00:42 | Checkpoint requested by the user after their feedback; all markdown files updated (commit time in `git log`) | 6.39 h | 65.61 h |
 | 2026-11-07 10:41 | The user was away about 10 hours; they replied with the layout (1/4 plan + 3/4 globe) and approved PLAN-007; clock read with `date -u` | 16.37 h | 55.63 h |
+| 2026-11-07 12:11 | PLAN-008 approved (sharper pictures); 17.87 h used | 17.87 h | 54.13 h |
 
 ## Current plan
+**`docs/plans/PLAN-008.md`** - approved by the user 2026-11-07 12:11 UTC: sharper rain pictures (step 9.3b: measure, then smooth higher-resolution frames) after the user's feedback "the image does not look good at all"; it supersedes PLAN-007 assumption A17 (E027) and adds step 9.3b; PLAN-007 steps 9.4 and 9.5 remain in force.
+
+`docs/plans/PLAN-007.md` (still the plan for the map and the design pass; its A17 is superseded by PLAN-008):
 **`docs/plans/PLAN-007.md`** - approved by the user 2026-11-07 about 10:41 UTC: the home page is split, the plan panel about 1/4 of the width on the left and the globe/map about 3/4 on the right; the globe opens first, flies to the chosen place and settles into the flat 2D map; then a design pass (steps 9.1-9.5). It replaces PLAN-006 step 9; PLAN-006 steps 10-12 stay.
 
 `docs/plans/PLAN-006.md` - approved ~23:24 UTC on 2026-11-06 (Plan-my-day, steps 7-12). **Status: steps 7-8 done under it; step 9 superseded by PLAN-007; steps 10-12 remain in force.** Its original entry:
@@ -82,6 +86,9 @@
 | 9.1 | Spike gate: fly-in from globe and flatten, two ways, screenshots (PLAN-007) | **done** 2026-11-07 ~10:45 UTC (commit "Step 9.1: ..."); D31 |
 | 9.2 | Data contract (frames in the manifest, agreement colours) and pure map helpers (PLAN-007) | **done** 2026-11-07 ~10:53 UTC (commit "Step 9.2: ...") |
 | 9.3 | Map module, controls, 1/4 + 3/4 layout, spike removed (PLAN-007) | **in progress** (11:07 UTC): built and working in Chromium; open: frame quality (E027), real-service check of D32 |
+| 9.3b-1 | Gate Q1: measure and look at four ways to make the rain pictures sharper (PLAN-008) | **done** 2026-11-07 12:27 UTC (commit "Step 9.3b-1: ..."); D34 |
+| 9.3b-2 | Build the sharper frames: smooth up-sampling, agreement per pixel, config, tests, re-export (PLAN-008) | not started |
+| 9.3b-3 | Look and confirm (Chromium, Edge, the user), records (PLAN-008) | not started |
 | 9.4 | Browser checks in three engines, real GPU in Edge, records (PLAN-007) | not started |
 | 9.5 | Design pass with the frontend-design skill, user review (PLAN-007) | not started |
 | 10 | Provenance + honesty strip, final policy (PLAN-006) | not started |
@@ -91,7 +98,7 @@
 Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
 
 ## Status (live, rewritten in the housekeeping at ~23:03 UTC)
-- **Done:** steps 1-8, 9.1, 9.2 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is step 9.3** (PLAN-007: the map module, controls and the 1/4 + 3/4 layout).
+- **Done:** steps 1-8, 9.1, 9.2 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is step 9.3b-2** (PLAN-008: build the sharper frames).
 - **Tests:** official command `docker compose -f docker/compose.yaml run --rm tests` = 99 passed; `... run --rm frontend-tests` = 41 passed (at step 8); `... run --rm frontend-check` = 8 places x 8 activities match; `BROWSER_NAME=<engine> ... run --rm browser-checks` = 8 of 8 scenarios in chromium, firefox and webkit.
 - **Git:** branch `main`, 25 commits, no remote (GitHub login and repo creation are plan step 11 and need the user's approval and link).
 - **Records:** this housekeeping checked every markdown file against the others; its findings and fixes are listed in the last section of this file.
@@ -351,3 +358,10 @@ Files: `backend/manifest.py` (agreement colours in `frames`, checked by `validat
 - User feedback during the step: the search box kept an old search after "Use my location" (fixed, D32); "can we cache the globe loading" (D33, measured); "integrated GPUs" (right, see D33); **"the image does not look good at all"** (E027: the frames are too coarse; the fix needs a revised plan, PLAN-008, before any change).
 - Verified: Node 53 passed, Python 102 passed, Chromium browser checks 8 of 8 (incl. the search box and the device name with a MOCK reverse service), screenshots of the globe start and of an address place (flat, zoom 4.5). Load times in Edge (real GPU) in D33.
 - Not verified: Firefox and WebKit with the new page, the real BigDataCloud call, map scenarios of step 9.4, the image quality fix.
+
+## Step 9.3b-1 done-check results (run 2026-11-07 12:27 UTC; 18.14 h used)
+Files: `scripts/proto_frames.py` (prototype, removed in 9.3b-2), `frontend/spikes/quality.{html,js}` and `frontend/tools/spike_quality.mjs` (throwaway viewer and driver, removed in 9.3b-2), `config/frontend.json` (`build_pages` + the viewer, `docker/compose.yaml` spikes mount: both temporary), screenshots `docs/evidence/step9-3b-chromium-*.png`. Decision D34.
+- Table of sizes and times and the choice: D34 (1440 px, 16-level gradient in a palette PNG with adaptive row filters = 390 kB for the largest measured frame; limits from the plan respected: about 400 kB per frame, about 100 MB for the export).
+- Looked at in Chromium (Docker): today's picture is blocky; 2048 px with hard bands still stair-steps at zoom 4.5; the gradient looks like a normal weather map at zoom 4.5 and zoom 3.5; 50 m coastlines show the real coast shape. The user chose the 50 m outlines (+197 kB gzipped, first visit only).
+- Measured on one block (IFS +24 h of the 12z run); the real export prints the largest frame so the limit is checked on all 140.
+- Not done in the gate: Edge with the real GPU (9.3b-3), the load-time effect of larger pictures (9.3b-3), the user's own look (9.3b-3).

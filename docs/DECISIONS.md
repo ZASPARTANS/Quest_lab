@@ -327,3 +327,27 @@ The README's "known limitations" (step 12) must list every item above and every 
 - Result after the change (same test): repeat visit 6 of 7 files from the browser cache, 1 network request, 0 kB, map drawn at about 0.32 s. First visit unchanged. On localhost the network is instant, so a real host with latency gains more.
 - Hosting requirement for step 11: the public host must send the same cache rules (Cloudflare Pages: a `_headers` file; GitHub Pages cannot set headers and uses its own short cache, so repeat visits there would revalidate more). Not a service worker/offline app (D24: not chosen).
 - Lighter library question (user): no lighter library gives both a globe and a flat map; MapLibre (D22) is the user's choice and its chunk is about 335 kB gzipped, loaded after the plan. The user's point that normal PCs, laptops and phones have integrated GPUs is right: the "no GPU" constraint (D23) is about the free server and my Docker test browsers, not about visitors.
+
+## D34 — Sharper rain pictures: 1440 px, smooth values, a 16-level colour gradient in a palette PNG (PLAN-008 gate Q1)
+- 2026-11-07 12:27 UTC (clock read by the script). Decided by: **AI** within the approved PLAN-008 for the picture format; the **user** decided the outlines (asked, chose "Yes, 50 m coastlines (Recommended)").
+- Measured on the real 2026-11-06 12z run, IFS +24 h block and its agreement (`scripts/proto_frames.py`, one run each; PNG kB, rain / agreement):
+
+| variant | px | rain kB | agreement kB | looks |
+|---|---|---|---|---|
+| A today: maximum of covered cells, hard bands | 720 | 78.6 | 36.6 | blocks (the user's complaint) |
+| C bilinear values, hard bands | 1440 | 191.9 | 91.1 | smoother, still stair-steps |
+| D bilinear, hard bands | 2048 | 327.5 | 161.4 | still stair-steps at zoom 4.5 |
+| E continuous gradient, 24-bit RGBA | 1440 | 1561.2 | 91.1 | very smooth, **far too big** |
+| F continuous gradient, 24-bit RGBA | 2048 | 3335.4 | 161.4 | too big |
+| G / H gradient, 160 levels, palette PNG | 1440 / 2048 | 707.4 / 1391.1 | | too big |
+| L16 gradient, 16 levels, palette PNG, Sub filter | 1440 | 420.3 | 91.1 | smooth |
+| **L16, palette PNG, best of 2 row filters per row** | **1440** | **389.9** | | **smooth** |
+| L24 / L32, adaptive filters | 1440 | 430.8 / 462.3 | | slightly smoother |
+
+- Chosen: frames of **1440 px**; the stored values are interpolated bilinearly between grid cell centres (wrapping at the date line) before colouring; colours are a **continuous gradient in log10(mm) quantised to 16 levels**, with a soft edge (alpha rising from 0 at 0.05 mm to full at the first stop, colour never black); written as an **8-bit palette PNG** (PLTE + tRNS) with the better of the Sub and Up row filters chosen per row; the browser draws it with `raster-resampling: linear`. Agreement frames: the same interpolation of both models' stored values, classified per pixel with the plan's rule (`rint(value) >= wet_limit`, D28), written as a 3-colour palette PNG. Size budget: the biggest rain frame is about 390 kB (limit set in the plan: about 400 kB); estimated export frames about 40 MB, whole site about 70 MB (limit in the plan: about 100 MB; GitHub Pages allows 1 GB). Make time about 0.2 s and PNG writing about 1.4 s per frame, so about 3 minutes more for 140 frames.
+- Looked at (Chromium Docker, `docs/evidence/step9-3b-chromium-*.png`): at the fly-in zoom 4.5 the gradient picture reads as a normal weather map; 16 levels is very slightly less smooth than the full gradient at that zoom and looks excellent at zoom 3.5. **Not yet looked at in Edge with the real GPU**: that is part of 9.3b-3 on the final frames.
+- Visible consequences the user should know: the colour scale changes from hard bands to a smooth gradient (same colours at the same values, the legend becomes a gradient bar); light rain gets soft edges; the page will say the map is smoothed between forecast grid points while the plan uses the exact values (A19).
+- Outlines: 50 m Natural Earth (`world-atlas` `countries-50m.json`, public domain, already installed) instead of 110 m: **+197 kB gzipped** (236 kB against 39 kB) in the map code, adopted by the user's choice; it is the map code only, cached for a year after the first visit (D33).
+- Proposed with this (AI, config only, easy to change): the fly-in zoom 4.0 instead of 4.5 so each picture pixel is smaller on screen; decided after the user's look in 9.3b-3.
+- Alternatives not chosen: 2048 px (the palette gradient is 834 kB, too big); full gradient in 24-bit PNG (1.6-3.3 MB); hard bands at higher resolution (still stair-steps); a colour ramp in the browser (MapLibre 6.16 has no `raster-color`, checked in the installed typings).
+- Checkable bet: the user finds the map good-looking at the fly-in zoom. Result: pending (9.3b-3).
