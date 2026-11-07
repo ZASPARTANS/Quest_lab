@@ -33,6 +33,8 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 | E027 | PLAN-007 assumption A17 ("720 px frames are enough") was wrong: at the fly-in zoom each frame pixel is a visible 0.5 degree block (the user's screenshot: "it does not look good at all"); I had already noticed the blockiness in step 9.1 and treated it as a design-pass item | 1 | 1/1 (PLAN-008 step 9.3b built and measured; the user's verdict is the final check) |
 | E028 | Two CSS bugs found only by looking at the screenshot of the new layout: MapLibre's own stylesheet overrides `position: absolute` on the map element (map had zero height), and `display: grid` on the message overrode the `hidden` attribute ("Loading the map" stayed up) | 1 | 3/3 (more specific selector; `[hidden] {display:none !important}`; legend bar: `.legend .legend-gradient`) |
 | E029 | The preview container kept serving a deleted `data/site` folder after a re-export recreated it: manifest 404 and an empty map in the screenshot run (found because the run reported ok:false) | 1 | 1/1 (restart the preview after every export) |
+| E030 | The real BigDataCloud endpoint answers 307 to a different host (`api-bdc.io`), which my security policy blocks, so "Your location" never became a place name; my tests used a mock and could not see it | 1 | 0/0 (fix planned in PLAN-009 step 0) |
+| E031 | The sharper pictures (1440 px, gradient) are still blocky when the user zooms to city level; the agreement picture is hard-edged classes; the fly-in stops at a regional zoom so the user has to zoom by hand (user: "when i zoom in it still is showing in blocks ... people will not like it") | 1 | 0/0 (revised plan PLAN-009) |
 
 ---
 
@@ -274,3 +276,16 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 
 - **E027 update (2026-11-07 12:39 UTC):** fix built under PLAN-008 (1440 px, smooth interpolation, gradient palette PNG, 50 m outlines); on the real export in Edge and Chromium the Chennai view no longer shows blocks (`docs/evidence/edge/step9-home-chennai.png`). Fix tried 1, worked 1 on my look; **the user's own verdict is still pending**.
 - **E028 update (2026-11-07 12:39 UTC), third CSS slip of the same kind:** the new gradient legend bar was collapsed to zero width because `.legend li { display: flex }` is more specific than my `.legend-gradient` class; found by looking at the Edge screenshot; fixed with `.legend .legend-gradient`. The unit tests cannot see this class of bug; only a picture does.
+
+## E030 — The reverse geocoder redirects to another host; the mock hid it
+- 2026-11-07 13:08 UTC. seen: 1. fix worked / fix tried: 0/0.
+- What happened: the user's Firefox showed "Your location" and never the place name. A real request (2026-11-07, one public test coordinate) to `https://api.bigdatacloud.net/data/reverse-geocode-client?...` returned `307` with `location: https://api-bdc.io/data/reverse-geocode-client?...`; the browser follows the redirect, and `connect-src` only allows `api.bigdatacloud.net`, so the request is blocked. The redirect target answers 200 with `access-control-allow-origin: *`. The name it returns for London is "City of Westminster, London, England, United Kingdom of Great Britain and Northern Ireland", too long for the box.
+- Root cause: I wrote in D32 and the step 9.3 notes that the real call had not been made, then shipped it with a mock-only test. The real call takes one second and should have been made before I called the feature done.
+- Fix (PLAN-009 step 0): use the final host in config and in the policy, shorten the name (local name, city, region, country code), and check once against the real service in a real browser.
+
+## E031 — Pictures are still blocky at city zoom (planning mistake, second time)
+- 2026-11-07 13:08 UTC. seen: 1. fix worked / fix tried: 0/0.
+- What happened: after PLAN-008 the user zoomed in (screenshot, their Firefox) and saw blocks again: "people will not like it". Checked in Edge at zoom 7: the rain picture is smooth but blurry with stair-stepped dry edges, the agreement picture has hard stair-stepped edges (a 3-class picture), and at that zoom one 0.25 degree cell is about 45 screen pixels. Also the fly-in ends at zoom 4.5 (regional), not at the user's place, so the user had to zoom by hand (which zooms around the mouse, moving the marker off-centre).
+- Root cause: PLAN-008 assumed (A19) that smooth up-sampling of a pre-made 1440 px picture is enough at every zoom. A pre-made picture cannot be sharp when magnified 40 times; I only looked at zoom 4.5 and 3.5 and never at the zoom a person uses to see their own street.
+- Fix: PLAN-009: draw the rain in the browser at screen resolution from the exact cell values (the point tiles), smooth interpolation, continuous colour ramp, soft agreement edges; the pre-made pictures stay for the globe and the wide view; the fly-in goes to a close zoom for an accurate place.
+- Not reproduced: the time bar at the first block in the user's screenshot (in Edge the bar starts on the block under way, `ifs_30`, checked today); the user probably moved the slider; to be confirmed.
