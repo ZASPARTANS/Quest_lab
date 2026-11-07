@@ -10,6 +10,11 @@ TOP_KEYS = {"format_version", "run", "retrieved_at", "processed_at", "exported_a
             "tiles", "models", "agreement", "frames", "source"}
 
 
+def status(doc):
+    """The public status file (decision D26): whether the build worked, the forecast run and the build time. Nothing else is ever written to it."""
+    return {"ok": True, "run": doc["run"], "built_at": doc["exported_at"]}
+
+
 def _iso(moment):
     return moment.astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 

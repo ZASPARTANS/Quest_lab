@@ -34,12 +34,17 @@ disagree = "#2b5fa6"
 file = "manifest.json"
 format_version = 1
 
+[status]
+# status.json next to the manifest (decision D26): only whether the build worked, the forecast run and the build time. No log text, no paths, no environment.
+file = "status.json"
+
 [source]
-# Provenance written into the manifest. Licence and terms page: docs/SOURCES.md. The attribution WORDING is verified on the official
-# terms page in plan step 10; until then it stays empty on purpose (nothing is invented).
+# Provenance written into the manifest. Licence and terms page: docs/SOURCES.md. The attribution sentence is the one ECMWF's Terms of Use give for a
+# SERVICE created with its data ("This service is based on data and products of the European Centre for Medium-Range Weather Forecasts (ECMWF)"),
+# read on https://apps.ecmwf.int/datasets/licences/general/ on 2026-11-07 (step 13.1); a test keeps it word for word.
 name = "ECMWF Open Data"
 data_url = "https://data.ecmwf.int/forecasts"
 licence = "CC BY 4.0"
 terms_url = "https://www.ecmwf.int/en/forecasts/datasets/open-data"
-attribution = ""
+attribution = "This service is based on data and products of the European Centre for Medium-Range Weather Forecasts (ECMWF)."
 models = { ifs = "IFS HRES 0.25 degree, total precipitation", aifs-single = "AIFS Single 0.25 degree, total precipitation" }

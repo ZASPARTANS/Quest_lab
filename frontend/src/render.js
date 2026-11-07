@@ -2,6 +2,7 @@
 import { el, fill } from './dom.js';
 import { clock, dayKey, dayLabel } from './time.js';
 import { dropsSvg } from './drops.js';
+import { freshness, runText } from './provenance.js';
 import { acceptText, atMost, blockText, blockWord, CONFIDENCE_WORD, modelsText, totalsLines, windowText } from './wording.js';
 
 const BADGE = { sure: 'Both models agree', uncertain: 'Models disagree in part', 'one-model': 'One model only' };
@@ -120,16 +121,37 @@ export function renderResults(node, places, onPick) {
 }
 
 /** Footer facts from the manifest: which run, when retrieved, which zone the times are in. */
-export function renderAbout(node, manifest, zone, zoneIsDevice) {
-  const at = (iso) => `${dayLabel(dayKey(Date.parse(iso), 'UTC'))} ${clock(Date.parse(iso), 'UTC')} UTC`;
-  const s = manifest.source ?? {};
+/** One credit line: strings are text, [label, url] pairs are links (https only, opened in a new tab without giving the new page our window). */
+function creditLine(parts) {
+  const nodes = parts.map((part) => {
+    if (typeof part === 'string') return document.createTextNode(part);
+    const [label, url] = part;
+    if (!/^https:\/\//.test(url)) return document.createTextNode(label); // never a link to anything but https
+    return el('a', { text: label, attrs: { href: url, target: '_blank', rel: 'noopener noreferrer' } });
+  });
+  return el('p', {}, nodes);
+}
+
+/** The footer: how the forecast is read, then the credits (`credits` = config credit_lines). */
+export function renderAbout(node, manifest, zone, zoneIsDevice, credits = []) {
+  const at = (iso) => runText(iso) ?? 'unknown';
   const lines = [
     `Forecast run: ${at(manifest.run)}. Retrieved: ${at(manifest.retrieved_at)}.`,
     `Times are local to the place (${zone}${zoneIsDevice ? ", this device's time zone" : ''}). Blocks are 6 hours long on the UTC clock, so in many places they start at odd times such as 05:30.`,
     'Two models are compared: IFS (ECMWF’s physics-based forecast) and AIFS (its machine-learning forecast). Agreement between them is not a probability of rain.',
     'The map is smoothed between forecast grid points, so a single small spot can look lighter on it; the plan uses the exact value at the grid point nearest your place.',
-    'This is not an official weather warning.',
   ];
-  if (typeof s.name === 'string' && typeof s.licence === 'string') lines.push(`Data: ${s.name}, licence ${s.licence}.`);
-  fill(node, lines.map((t) => el('p', { text: t })));
+  const attribution = typeof manifest.source?.attribution === 'string' && manifest.source.attribution ? [el('p', { class: 'attribution', text: manifest.source.attribution })] : [];
+  fill(node, [...attribution, ...credits.map(creditLine), ...lines.map((t) => el('p', { text: t }))]);
+}
+
+/** The honesty strip under the page title: the run and its age, the ECMWF attribution, and a plain warning when the run is too old (technical detail only in the console). */
+export function renderFreshness(ui, manifest, nowMs, cfg) {
+  const f = freshness(manifest, nowMs, cfg.max_age_hours, cfg.models);
+  ui.freshness.textContent = f.line;
+  const attribution = manifest.source?.attribution;
+  ui.attribution.textContent = typeof attribution === 'string' ? attribution : '';
+  ui.freshnessWarning.textContent = f.warning;
+  ui.freshnessWarning.hidden = f.warning === '';
+  if (f.warning) console.warn('the forecast is older than', cfg.max_age_hours, 'hours; run', manifest.run); // developers only (decision D9)
 }

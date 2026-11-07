@@ -76,6 +76,7 @@ def export(cfg, backend, run):
     if problems:
         raise ValueError("manifest check failed: " + "; ".join(problems))
     (part / backend["manifest"]["file"]).write_text(json.dumps(doc, indent=1), encoding="utf-8")
+    (part / backend["status"]["file"]).write_text(json.dumps(manifest.status(doc), indent=1), encoding="utf-8")
     remove_folder(out)
     os.replace(part, out)
     sizes = [p.stat().st_size for p in (out / backend["frames"]["folder"]).glob("*")] if listed else []
