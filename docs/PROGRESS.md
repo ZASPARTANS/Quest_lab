@@ -71,6 +71,10 @@
 | 2026-11-07 14:25 | Commit `df04244`: Record D40: step 9.3d-3 dropped (scope cut); E024 seen again | 20.10 h | 51.90 h |
 | 2026-11-07 14:32 | Commit `232f75b`: Step 9.3d-4: browser scenarios for the stored base map, records, hosting requirement | 20.22 h | 51.78 h |
 | 2026-11-07 15:48 | Commit `759e186`: Step 9.3c-4: live-layer, north-up and early-choice scenarios; Devanagari font, start-up race and WebKit noise fixed (E032-E034) | 21.48 h | 50.52 h |
+| 2026-11-07 16:26 | Commit `807224a`: Record frontend-check re-run: all 8 places x 8 activities match | 22.12 h | 49.88 h |
+| 2026-11-07 16:31 | Commit `0669af8`: Record user feedback: the Save this place button is hard to find | 22.20 h | 49.80 h |
+| 2026-11-07 16:40 | Commit `2ff400b`: Make saved places findable (star button, saved above the search, short privacy text) | 22.35 h | 49.65 h |
+| 2026-11-07 16:58 | Commit `736f90e`: Step 9.4: seven map-page browser scenarios; 22 of 22 in four engines | 22.65 h | 49.35 h |
 
 ## Current plan
 **`docs/plans/PLAN-010.md`** (approved by the user 2026-11-07 13:41 UTC) is the plan in progress: a stored vector base map (OpenStreetMap through Protomaps, dark style, self-hosted fonts and sprites, English labels) under the rain; nothing paid (D37). Steps 9.3d-1, 9.3d-2 and 9.3d-4 are done; 9.3d-3 was dropped by the user (D40); **PLAN-010 is complete.** PLAN-009 is complete (step 9.3c-4 done). PLAN-007 step 9.4 is done. Next: the user chooses the order (A: step 10, 11, then the design pass 9.5; B: 9.5 first). After it: PLAN-009 step 9.3c-4, PLAN-007 steps 9.4 and 9.5 and PLAN-006 steps 10-12 (all still in force).
@@ -123,7 +127,7 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 | 9.3d-2 | Serve and style: nginx, the two packages, the dark style, rain below labels, outlines removed (PLAN-010) | **done** 2026-11-07 14:02 UTC (commit "Step 9.3d-2: ..."); D38 results, D39, E032 |
 | 9.3d-3 | Fit the rain to the map: opacity, legibility, looks at several zooms (PLAN-010) | **dropped** 2026-11-07 14:24 UTC by the user (scope cut, D40); a look at the rain over the map at zoom 3, 5, 7 moves into step 9.5 |
 | 9.3d-4 | Browser-check scenarios, records, hosting requirement for step 11 (PLAN-010) | **done** 2026-11-07 14:32 UTC (commit "Step 9.3d-4: ..."); results section below |
-| 9.4 | Browser checks in three engines, real GPU in Edge, records (PLAN-007) | **done** 2026-11-07 16:59 UTC (commit "Step 9.4: ..."); results section below; the user's look at the finished page is still to come |
+| 9.4 | Browser checks in three engines, real GPU in Edge, records (PLAN-007) | **done** 2026-11-07 16:58 UTC (commit "Step 9.4: ..."); results section below; the user's look at the finished page is still to come |
 | 9.5 | Design pass with the frontend-design skill, user review (PLAN-007) | not started |
 | 10 | Provenance + honesty strip, final policy (PLAN-006) | not started |
 | 11 | Hosting gate + deploy (free host only, D37; the 190 MB base-map file leaves only GitHub Pages) | not started |
