@@ -39,6 +39,17 @@
     "max_zoom": 10,
     "fly": { "zoom": 4.5, "duration_ms": 2500, "morph_from_zoom": 2.5, "zoom_by_source": { "location": 8, "search": 7, "saved": 7, "address": 7 } },
     "start_model": "ifs",
+    "key": {
+      "_comment": "The titled colour key under the map (PLAN-012): plain words for every colour. {mm} is filled from the manifest (the rain threshold of the agreement view). Words only; the colours come from the manifest and the colour scale.",
+      "title": "What the colours mean",
+      "agreement": {
+        "both_wet": "Bright blue: both models say rain",
+        "disagree": "Dim blue: only one model says rain",
+        "none": "No colour: neither model says rain",
+        "footnote": "Rain here means {mm} mm or more in a 6-hour block."
+      },
+      "model": "Blue is a little rain, green and yellow more, orange and red a lot. The colours show rain only, not temperature."
+    },
     "basemap": {
       "_comment": "The stored base map (PLAN-010, D38): an OpenStreetMap extract served from our own site, below data_url_path + url_prefix. file, assets_dir, sprite_set and flavor must equal config/pipeline.toml (basemap_file, basemap_assets_dir) and config/basemap.toml (style_assets.sprite_dir, sprite_flavor); a test checks. attribution_html is shown on the map (the OpenStreetMap licence asks for it); only https links are allowed there (a test checks).",
       "url_prefix": "basemap/",

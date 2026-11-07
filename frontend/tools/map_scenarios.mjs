@@ -89,6 +89,28 @@ export function mapScenarios(h) {
       assert.ok(Math.abs(Number(query.get('lon')) - 80.27) > 0.001 && Math.abs(Number(query.get('lon')) - 80.27) < 3, `the address has the clicked longitude: ${query.get('lon')}`);
       return log;
     },
+    async 'the colour key explains every colour (PLAN-012)'(browser) {
+      const { page, log, ready } = await onMap(browser);
+      if (!ready) return log;
+      await assertLanded(page, 13.08, 80.27, frontend.map.fly.zoom_by_source.address);
+      const manifest = await page.evaluate(async () => (await fetch('/data/manifest.json')).json());
+      const key = frontend.map.key;
+      await page.locator('label', { hasText: 'Both models' }).click();
+      await page.waitForFunction((t) => document.querySelector('.legend .key-title')?.textContent === t && document.querySelectorAll('.legend .swatch').length === 3, key.title, { timeout });
+      const lines = await page.locator('.legend li').allInnerTexts();
+      assert.match(lines.join(' | '), /both models say rain.*only one model says rain.*neither model says rain.*0\.5 mm or more in a 6-hour block/i);
+      assert.doesNotMatch(lines.join(' '), /\b(wet|dry|heat|orange)\b/i);
+      const shown = await page.locator('.legend .swatch:not(.empty)').evaluateAll((nodes) => nodes.map((n) => getComputedStyle(n).backgroundColor));
+      const hex = (c) => `#${c.match(/\d+/g).slice(0, 3).map((n) => Number(n).toString(16).padStart(2, '0')).join('')}`;
+      assert.deepEqual(shown.map(hex), [manifest.frames.agreement_colours.both_wet, manifest.frames.agreement_colours.disagree], 'the swatches have the colours of the pictures');
+      await shot(page, 'key-agreement');
+      await page.locator('label', { hasText: /^IFS$/ }).click();
+      await page.waitForFunction(() => document.querySelector('.legend .key-sentence') !== null, null, { timeout });
+      assert.match(await page.locator('.legend .key-sentence').innerText(), /rain only, not temperature/);
+      assert.equal(await page.locator('.legend .legend-bar').count(), 1, 'the numbers bar is still there');
+      await shot(page, 'key-ifs');
+      return log;
+    },
     async 'no WebGL2 shows the plain message'(browser) {
       const { page, log } = await open(browser);
       await page.addInitScript(() => { HTMLCanvasElement.prototype.getContext = () => null; });
