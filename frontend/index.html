@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark">
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="/src/style.css">
-  <title>Rain plan: when is it dry for what you want to do?</title>
+  <title>Rain plan: when is it good for what you want to do?</title>
 </head>
 <body>
   <div id="env-badge" hidden></div>
@@ -14,7 +14,7 @@
     <div class="side">
       <header class="top">
         <h1>Rain plan</h1>
-        <p class="lead">Choose a place and what you want to do. You get the dry windows of the next days, and how sure two forecast models are.</p>
+        <p class="lead">Choose a place and what you want to do. You get the best times in the next days, and how sure two forecast models are.</p>
       </header>
 
       <main>
@@ -62,13 +62,14 @@
           </fieldset>
 
           <section class="panel" aria-labelledby="win-h">
-            <h2 id="win-h">3. Best dry windows</h2>
+            <h2 id="win-h">3. Best times</h2>
             <ol id="windows" class="windows"></ol>
           </section>
 
           <section class="panel" aria-labelledby="days-h">
             <h2 id="days-h">Day by day</h2>
-            <p class="note">Each block is 6 hours. Dry and wet are what <em>both</em> models say; a hatched block means one says wet and the other dry. Press a block to see it on the map.</p>
+            <p class="note">Each block is 6 hours. The word is the rain level of the <em>wetter</em> of the two models; "models differ" means they are in different levels. Faded blocks are over or outside your hours. Press a block to see it on the map.</p>
+            <p id="level-legend" class="note"></p>
             <div id="days" class="days"></div>
           </section>
 
