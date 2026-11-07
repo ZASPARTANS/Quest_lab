@@ -1,0 +1,941 @@
+{
+ "recorded_from": "the local Pages-like test site (a real browser with an empty cache)",
+ "recorded_at": "2026-11-07T23:12:42Z",
+ "visitors": [
+  {
+   "name": "Chennai from a link",
+   "requests": [
+    {
+     "path": "/?lat=13.08&lon=80.27&name=Chennai&tz=Asia/Kolkata&activity=outdoor",
+     "range": null,
+     "status": 200,
+     "bytes": 5333,
+     "kind": "page",
+     "atMs": 0
+    },
+    {
+     "path": "/assets/index-DvSzrlpJ.js",
+     "range": null,
+     "status": 200,
+     "bytes": 49018,
+     "kind": "asset",
+     "atMs": 35
+    },
+    {
+     "path": "/assets/index-CwaR3ocf.css",
+     "range": null,
+     "status": 200,
+     "bytes": 10181,
+     "kind": "asset",
+     "atMs": 121
+    },
+    {
+     "path": "/assets/mapapp-qvkd0SPb.css",
+     "range": null,
+     "status": 200,
+     "bytes": 71339,
+     "kind": "asset",
+     "atMs": 256
+    },
+    {
+     "path": "/assets/mapapp-L7rY5QiY.js",
+     "range": null,
+     "status": 200,
+     "bytes": 1141331,
+     "kind": "asset",
+     "atMs": 317
+    },
+    {
+     "path": "/data/manifest.json",
+     "range": null,
+     "status": 200,
+     "bytes": 10854,
+     "kind": "manifest",
+     "atMs": 546
+    },
+    {
+     "path": "/assets/maplibre-gl-worker-CMkqA50c.js",
+     "range": null,
+     "status": 200,
+     "bytes": 519372,
+     "kind": "asset",
+     "atMs": 726
+    },
+    {
+     "path": "/data/tiles/19_65.bin.gz?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 16578,
+     "kind": "tile",
+     "atMs": 822
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=0-16383",
+     "status": 206,
+     "bytes": 16384,
+     "kind": "basemap",
+     "atMs": 823
+    },
+    {
+     "path": "/data/basemap/assets/sprites/v4/dark.json",
+     "range": null,
+     "status": 200,
+     "bytes": 3549,
+     "kind": "sprite",
+     "atMs": 845
+    },
+    {
+     "path": "/data/basemap/assets/sprites/v4/dark.png",
+     "range": null,
+     "status": 200,
+     "bytes": 16054,
+     "kind": "sprite",
+     "atMs": 846
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=1350-12506",
+     "status": 206,
+     "bytes": 11157,
+     "kind": "basemap",
+     "atMs": 1581
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=228602-305973",
+     "status": 206,
+     "bytes": 77372,
+     "kind": "basemap",
+     "atMs": 1667
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=96970-170255",
+     "status": 206,
+     "bytes": 73286,
+     "kind": "basemap",
+     "atMs": 1721
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=198307-228601",
+     "status": 206,
+     "bytes": 30295,
+     "kind": "basemap",
+     "atMs": 1742
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=170256-198306",
+     "status": 206,
+     "bytes": 28051,
+     "kind": "basemap",
+     "atMs": 1786
+    },
+    {
+     "path": "/data/basemap/assets/fonts/Noto%20Sans%20Italic/0-255.pbf",
+     "range": null,
+     "status": 200,
+     "bytes": 79344,
+     "kind": "font",
+     "atMs": 1905
+    },
+    {
+     "path": "/data/basemap/assets/fonts/Noto%20Sans%20Medium/0-255.pbf",
+     "range": null,
+     "status": 200,
+     "bytes": 77628,
+     "kind": "font",
+     "atMs": 1925
+    },
+    {
+     "path": "/data/basemap/assets/fonts/Noto%20Sans%20Regular/1024-1279.pbf",
+     "range": null,
+     "status": 200,
+     "bytes": 125320,
+     "kind": "font",
+     "atMs": 1949
+    },
+    {
+     "path": "/data/frames/ifs_12.png?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 374179,
+     "kind": "picture",
+     "atMs": 4413
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=34567461-34597603",
+     "status": 206,
+     "bytes": 30143,
+     "kind": "basemap",
+     "atMs": 6044
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=34355639-34416048",
+     "status": 206,
+     "bytes": 60410,
+     "kind": "basemap",
+     "atMs": 6226
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=34292427-34322097",
+     "status": 206,
+     "bytes": 29671,
+     "kind": "basemap",
+     "atMs": 6413
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=34331474-34355638",
+     "status": 206,
+     "bytes": 24165,
+     "kind": "basemap",
+     "atMs": 6559
+    },
+    {
+     "path": "/data/basemap/assets/fonts/Noto%20Sans%20Regular/0-255.pbf",
+     "range": null,
+     "status": 200,
+     "bytes": 76044,
+     "kind": "font",
+     "atMs": 6690
+    },
+    {
+     "path": "/data/tiles/18_64.bin.gz?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 3059,
+     "kind": "tile",
+     "atMs": 6754
+    },
+    {
+     "path": "/data/tiles/18_65.bin.gz?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 8187,
+     "kind": "tile",
+     "atMs": 6806
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=23759-30174",
+     "status": 206,
+     "bytes": 6416,
+     "kind": "basemap",
+     "atMs": 6881
+    },
+    {
+     "path": "/data/tiles/18_66.bin.gz?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 10827,
+     "kind": "tile",
+     "atMs": 6943
+    },
+    {
+     "path": "/data/tiles/19_64.bin.gz?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 8904,
+     "kind": "tile",
+     "atMs": 7006
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=126815907-126862249",
+     "status": 206,
+     "bytes": 46343,
+     "kind": "basemap",
+     "atMs": 7060
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=126767983-126815906",
+     "status": 206,
+     "bytes": 47924,
+     "kind": "basemap",
+     "atMs": 7154
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=15082185-15082277",
+     "status": 206,
+     "bytes": 93,
+     "kind": "basemap",
+     "atMs": 7276
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=125835912-125923860",
+     "status": 206,
+     "bytes": 87949,
+     "kind": "basemap",
+     "atMs": 7416
+    },
+    {
+     "path": "/data/tiles/19_66.bin.gz?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 14592,
+     "kind": "tile",
+     "atMs": 7660
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=125605626-125645247",
+     "status": 206,
+     "bytes": 39622,
+     "kind": "basemap",
+     "atMs": 7845
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=126862250-126868487",
+     "status": 206,
+     "bytes": 6238,
+     "kind": "basemap",
+     "atMs": 8027
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=125923861-125985897",
+     "status": 206,
+     "bytes": 62037,
+     "kind": "basemap",
+     "atMs": 8347
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=125604529-125605625",
+     "status": 206,
+     "bytes": 1097,
+     "kind": "basemap",
+     "atMs": 8720
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=125748910-125835911",
+     "status": 206,
+     "bytes": 87002,
+     "kind": "basemap",
+     "atMs": 8947
+    },
+    {
+     "path": "/data/tiles/20_64.bin.gz?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 16311,
+     "kind": "tile",
+     "atMs": 9104
+    },
+    {
+     "path": "/data/tiles/20_66.bin.gz?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 14649,
+     "kind": "tile",
+     "atMs": 9213
+    },
+    {
+     "path": "/data/tiles/20_65.bin.gz?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 18140,
+     "kind": "tile",
+     "atMs": 9573
+    },
+    {
+     "path": "alhost:8081/a03cf722-a8cc-4ec6-a923-d05f5467f9e5",
+     "range": null,
+     "status": 200,
+     "bytes": 370174,
+     "kind": "page",
+     "atMs": 9681
+    }
+   ]
+  },
+  {
+   "name": "London from a link",
+   "requests": [
+    {
+     "path": "/?lat=51.5&lon=-0.12&name=London&tz=Europe/London&activity=commute",
+     "range": null,
+     "status": 200,
+     "bytes": 5333,
+     "kind": "page",
+     "atMs": 0
+    },
+    {
+     "path": "/assets/index-DvSzrlpJ.js",
+     "range": null,
+     "status": 200,
+     "bytes": 49018,
+     "kind": "asset",
+     "atMs": 108
+    },
+    {
+     "path": "/assets/index-CwaR3ocf.css",
+     "range": null,
+     "status": 200,
+     "bytes": 10181,
+     "kind": "asset",
+     "atMs": 189
+    },
+    {
+     "path": "/assets/mapapp-L7rY5QiY.js",
+     "range": null,
+     "status": 200,
+     "bytes": 1141331,
+     "kind": "asset",
+     "atMs": 451
+    },
+    {
+     "path": "/assets/mapapp-qvkd0SPb.css",
+     "range": null,
+     "status": 200,
+     "bytes": 71339,
+     "kind": "asset",
+     "atMs": 483
+    },
+    {
+     "path": "/data/manifest.json",
+     "range": null,
+     "status": 200,
+     "bytes": 10854,
+     "kind": "manifest",
+     "atMs": 595
+    },
+    {
+     "path": "/data/tiles/9_45.bin.gz?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 9141,
+     "kind": "tile",
+     "atMs": 757
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=0-16383",
+     "status": 206,
+     "bytes": 16384,
+     "kind": "basemap",
+     "atMs": 861
+    },
+    {
+     "path": "/data/basemap/assets/sprites/v4/dark.json",
+     "range": null,
+     "status": 200,
+     "bytes": 3549,
+     "kind": "sprite",
+     "atMs": 1680
+    },
+    {
+     "path": "/assets/maplibre-gl-worker-CMkqA50c.js",
+     "range": null,
+     "status": 200,
+     "bytes": 519372,
+     "kind": "asset",
+     "atMs": 1710
+    },
+    {
+     "path": "/data/basemap/assets/sprites/v4/dark.png",
+     "range": null,
+     "status": 200,
+     "bytes": 16054,
+     "kind": "sprite",
+     "atMs": 1713
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=1350-12506",
+     "status": 206,
+     "bytes": 11157,
+     "kind": "basemap",
+     "atMs": 1713
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=228602-305973",
+     "status": 206,
+     "bytes": 77372,
+     "kind": "basemap",
+     "atMs": 1720
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=96970-170255",
+     "status": 206,
+     "bytes": 73286,
+     "kind": "basemap",
+     "atMs": 1732
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=198307-228601",
+     "status": 206,
+     "bytes": 30295,
+     "kind": "basemap",
+     "atMs": 1743
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=170256-198306",
+     "status": 206,
+     "bytes": 28051,
+     "kind": "basemap",
+     "atMs": 1765
+    },
+    {
+     "path": "/data/basemap/assets/fonts/Noto%20Sans%20Italic/0-255.pbf",
+     "range": null,
+     "status": 200,
+     "bytes": 79344,
+     "kind": "font",
+     "atMs": 1932
+    },
+    {
+     "path": "/data/basemap/assets/fonts/Noto%20Sans%20Medium/0-255.pbf",
+     "range": null,
+     "status": 200,
+     "bytes": 77628,
+     "kind": "font",
+     "atMs": 1967
+    },
+    {
+     "path": "/data/basemap/assets/fonts/Noto%20Sans%20Regular/1024-1279.pbf",
+     "range": null,
+     "status": 200,
+     "bytes": 125320,
+     "kind": "font",
+     "atMs": 1996
+    },
+    {
+     "path": "/data/frames/ifs_12.png?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 374179,
+     "kind": "picture",
+     "atMs": 2517
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=722674-849236",
+     "status": 206,
+     "bytes": 126563,
+     "kind": "basemap",
+     "atMs": 2932
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=378910-442799",
+     "status": 206,
+     "bytes": 63890,
+     "kind": "basemap",
+     "atMs": 2962
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=849237-872978",
+     "status": 206,
+     "bytes": 23742,
+     "kind": "basemap",
+     "atMs": 3078
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=331087-378909",
+     "status": 206,
+     "bytes": 47823,
+     "kind": "basemap",
+     "atMs": 3201
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=577142-613517",
+     "status": 206,
+     "bytes": 36376,
+     "kind": "basemap",
+     "atMs": 3303
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=533820-577141",
+     "status": 206,
+     "bytes": 43322,
+     "kind": "basemap",
+     "atMs": 3436
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=661050-722673",
+     "status": 206,
+     "bytes": 61624,
+     "kind": "basemap",
+     "atMs": 3475
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=442800-508645",
+     "status": 206,
+     "bytes": 65846,
+     "kind": "basemap",
+     "atMs": 3513
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=872979-893021",
+     "status": 206,
+     "bytes": 20043,
+     "kind": "basemap",
+     "atMs": 3544
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=305974-331086",
+     "status": 206,
+     "bytes": 25113,
+     "kind": "basemap",
+     "atMs": 3576
+    },
+    {
+     "path": "/data/basemap/assets/fonts/Noto%20Sans%20Regular/65024-65279.pbf",
+     "range": null,
+     "status": 200,
+     "bytes": 68701,
+     "kind": "font",
+     "atMs": 3666
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=7142326-7177568",
+     "status": 206,
+     "bytes": 35243,
+     "kind": "basemap",
+     "atMs": 3887
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=20150437-20194461",
+     "status": 206,
+     "bytes": 44025,
+     "kind": "basemap",
+     "atMs": 4095
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=39294493-39394813",
+     "status": 206,
+     "bytes": 100321,
+     "kind": "basemap",
+     "atMs": 4267
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=20100195-20150436",
+     "status": 206,
+     "bytes": 50242,
+     "kind": "basemap",
+     "atMs": 4368
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=39394814-39410342",
+     "status": 206,
+     "bytes": 15529,
+     "kind": "basemap",
+     "atMs": 4421
+    },
+    {
+     "path": "/data/basemap/assets/fonts/Noto%20Sans%20Regular/0-255.pbf",
+     "range": null,
+     "status": 200,
+     "bytes": 76044,
+     "kind": "font",
+     "atMs": 4502
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=12507-23758",
+     "status": 206,
+     "bytes": 11252,
+     "kind": "basemap",
+     "atMs": 4986
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=23759-30174",
+     "status": 206,
+     "bytes": 6416,
+     "kind": "basemap",
+     "atMs": 5007
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=64521028-64659503",
+     "status": 206,
+     "bytes": 138476,
+     "kind": "basemap",
+     "atMs": 5030
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=64659504-64713958",
+     "status": 206,
+     "bytes": 54455,
+     "kind": "basemap",
+     "atMs": 5036
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=64312925-64415847",
+     "status": 206,
+     "bytes": 102923,
+     "kind": "basemap",
+     "atMs": 5060
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=156511042-156601402",
+     "status": 206,
+     "bytes": 90361,
+     "kind": "basemap",
+     "atMs": 5081
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=156258669-156511041",
+     "status": 206,
+     "bytes": 252373,
+     "kind": "basemap",
+     "atMs": 5124
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=156753604-156782866",
+     "status": 206,
+     "bytes": 29263,
+     "kind": "basemap",
+     "atMs": 5131
+    },
+    {
+     "path": "/data/tiles/8_44.bin.gz?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 8953,
+     "kind": "tile",
+     "atMs": 5145
+    },
+    {
+     "path": "/data/tiles/8_45.bin.gz?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 8627,
+     "kind": "tile",
+     "atMs": 5172
+    },
+    {
+     "path": "/data/tiles/9_44.bin.gz?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 9046,
+     "kind": "tile",
+     "atMs": 5192
+    },
+    {
+     "path": "/data/tiles/10_44.bin.gz?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 9297,
+     "kind": "tile",
+     "atMs": 5213
+    },
+    {
+     "path": "/data/tiles/10_45.bin.gz?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 7724,
+     "kind": "tile",
+     "atMs": 5290
+    },
+    {
+     "path": "alhost:8081/ecce5ade-26a5-4a7d-ba8d-6571a1a899ad",
+     "range": null,
+     "status": 200,
+     "bytes": 254677,
+     "kind": "page",
+     "atMs": 5381
+    }
+   ]
+  },
+  {
+   "name": "Globe, then a click on the map",
+   "requests": [
+    {
+     "path": "/",
+     "range": null,
+     "status": 200,
+     "bytes": 5333,
+     "kind": "page",
+     "atMs": 0
+    },
+    {
+     "path": "/assets/index-DvSzrlpJ.js",
+     "range": null,
+     "status": 200,
+     "bytes": 49018,
+     "kind": "asset",
+     "atMs": 24
+    },
+    {
+     "path": "/assets/index-CwaR3ocf.css",
+     "range": null,
+     "status": 200,
+     "bytes": 10181,
+     "kind": "asset",
+     "atMs": 107
+    },
+    {
+     "path": "/assets/mapapp-qvkd0SPb.css",
+     "range": null,
+     "status": 200,
+     "bytes": 71339,
+     "kind": "asset",
+     "atMs": 172
+    },
+    {
+     "path": "/assets/mapapp-L7rY5QiY.js",
+     "range": null,
+     "status": 200,
+     "bytes": 1141331,
+     "kind": "asset",
+     "atMs": 270
+    },
+    {
+     "path": "/data/manifest.json",
+     "range": null,
+     "status": 200,
+     "bytes": 10854,
+     "kind": "manifest",
+     "atMs": 557
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=0-16383",
+     "status": 206,
+     "bytes": 16384,
+     "kind": "basemap",
+     "atMs": 599
+    },
+    {
+     "path": "/data/basemap/assets/sprites/v4/dark.json",
+     "range": null,
+     "status": 200,
+     "bytes": 3549,
+     "kind": "sprite",
+     "atMs": 607
+    },
+    {
+     "path": "/data/basemap/assets/sprites/v4/dark.png",
+     "range": null,
+     "status": 200,
+     "bytes": 16054,
+     "kind": "sprite",
+     "atMs": 607
+    },
+    {
+     "path": "/assets/maplibre-gl-worker-CMkqA50c.js",
+     "range": null,
+     "status": 200,
+     "bytes": 519372,
+     "kind": "asset",
+     "atMs": 641
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=1350-12506",
+     "status": 206,
+     "bytes": 11157,
+     "kind": "basemap",
+     "atMs": 705
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=228602-305973",
+     "status": 206,
+     "bytes": 77372,
+     "kind": "basemap",
+     "atMs": 730
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=96970-170255",
+     "status": 206,
+     "bytes": 73286,
+     "kind": "basemap",
+     "atMs": 748
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=198307-228601",
+     "status": 206,
+     "bytes": 30295,
+     "kind": "basemap",
+     "atMs": 777
+    },
+    {
+     "path": "/data/basemap/world.pmtiles",
+     "range": "bytes=170256-198306",
+     "status": 206,
+     "bytes": 28051,
+     "kind": "basemap",
+     "atMs": 842
+    },
+    {
+     "path": "/data/basemap/assets/fonts/Noto%20Sans%20Italic/0-255.pbf",
+     "range": null,
+     "status": 200,
+     "bytes": 79344,
+     "kind": "font",
+     "atMs": 1012
+    },
+    {
+     "path": "/data/basemap/assets/fonts/Noto%20Sans%20Medium/0-255.pbf",
+     "range": null,
+     "status": 200,
+     "bytes": 77628,
+     "kind": "font",
+     "atMs": 1043
+    },
+    {
+     "path": "/data/basemap/assets/fonts/Noto%20Sans%20Regular/1024-1279.pbf",
+     "range": null,
+     "status": 200,
+     "bytes": 125320,
+     "kind": "font",
+     "atMs": 1079
+    },
+    {
+     "path": "/data/frames/ifs_12.png?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 374179,
+     "kind": "picture",
+     "atMs": 1497
+    },
+    {
+     "path": "/data/tiles/18_56.bin.gz?v=2026-11-07T21%3A25%3A24Z",
+     "range": null,
+     "status": 200,
+     "bytes": 1206,
+     "kind": "tile",
+     "atMs": 1775
+    }
+   ]
+  }
+ ]
+}
