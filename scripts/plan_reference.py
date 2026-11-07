@@ -25,6 +25,16 @@ def wet_limit(threshold, quantum):
     return int(np.ceil(threshold / quantum - 1e-9))
 
 
+def level_limits(levels, quantum):
+    """Stored-value lower bound of every rain level (config `levels`, the first is 0): the same ceiling rule as wet_limit (D28, D41)."""
+    return [0] + [wet_limit(level["from_mm"], quantum) for level in levels[1:]]
+
+
+def level_of(value, limits):
+    """Index of the highest level whose lower bound the stored value reaches."""
+    return max([0] + [i for i, limit in enumerate(limits) if i > 0 and value >= limit])
+
+
 def place_blocks(cfg, run, point, meta, quantum):
     """{end time: {model: stored integer}} for one place, from the raw files."""
     out = {}
@@ -36,25 +46,27 @@ def place_blocks(cfg, run, point, meta, quantum):
     return dict(sorted(out.items()))
 
 
-def classify(blocks, activity, now, offset, quantum, interval):
-    """Rows with the state of every block that is not over, for one activity (offset in minutes east of UTC)."""
-    limit = wet_limit(activity["wet_mm"], quantum)
+def classify(blocks, activity, now, offset, quantum, interval, levels):
+    """Rows with the level and the fit of every block, for one activity (offset in minutes east of UTC)."""
+    limits = level_limits(levels, quantum)
+    limit = limits[[level["id"] for level in levels].index(activity["max_level"]) + 1]
     lo, hi = activity["hours"]
     rows = []
     for end_text, values in blocks.items():
         end = dt.datetime.strptime(end_text, ISO)
         start = end - dt.timedelta(hours=interval)
         mid = start + dt.timedelta(hours=interval / 2) + dt.timedelta(minutes=offset)
-        wet = [v >= limit for v in values.values()]
-        state = "wet" if all(wet) else "disagree" if any(wet) else "dry"
+        over = [v >= limit for v in values.values()]
+        fit = "over" if all(over) else "maybe" if any(over) else "ok"
+        level = max(level_of(v, limits) for v in values.values())
         remaining = (end - now) / (end - start)
-        rows.append({"start": start, "end": end, "state": state, "single": len(wet) < 2, "day": mid.date().isoformat(),
+        rows.append({"start": start, "end": end, "fit": fit, "level": level, "single": len(over) < 2, "day": mid.date().isoformat(),
                      "in_hours": lo <= mid.hour + mid.minute / 60 < hi, "past": end <= now, "current": start < now < end, "remaining": remaining})
     return rows
 
 
 def windows_of(rows, activity, now, min_remaining):
-    usable = [r["in_hours"] and not r["past"] and r["state"] != "wet" and r["remaining"] >= min_remaining for r in rows]
+    usable = [r["in_hours"] and not r["past"] and r["fit"] != "over" and r["remaining"] >= min_remaining for r in rows]
     runs, run = [], []
     for row, ok in zip(rows, usable):
         if ok and (not run or run[-1]["end"] == row["start"]):
@@ -67,16 +79,16 @@ def windows_of(rows, activity, now, min_remaining):
     for r in runs:
         if len(r) < activity["min_blocks"]:
             continue
-        kind = "one-model" if any(b["single"] for b in r) else "uncertain" if any(b["state"] == "disagree" for b in r) else "sure"
+        kind = "one-model" if any(b["single"] for b in r) else "uncertain" if any(b["fit"] == "maybe" for b in r) else "sure"
         starts_now = bool(r[0]["current"])
-        found.append({"start": now if starts_now else r[0]["start"], "end": r[-1]["end"], "blocks": len(r), "confidence": kind, "starts_now": starts_now})
+        found.append({"start": now if starts_now else r[0]["start"], "end": r[-1]["end"], "blocks": len(r), "confidence": kind, "starts_now": starts_now, "level": max(b["level"] for b in r)})
     return sorted(found, key=lambda w: (RANK[w["confidence"]], -w["blocks"], w["start"]))
 
 
 def days_of(rows, shown):
-    """{local day: [state of every block of that day]} for the first `shown` days that still have a block not over (past blocks of those days are kept)."""
+    """{local day: [[level, fit] of every block of that day]} for the first `shown` days that still have a block not over (past blocks of those days are kept)."""
     keys = list(dict.fromkeys(r["day"] for r in rows if not r["past"]))[:shown]
-    return {k: [r["state"] for r in rows if r["day"] == k] for k in keys}
+    return {k: [[r["level"], r["fit"]] for r in rows if r["day"] == k] for k in keys}
 
 
 def totals_of(blocks, now, days_list, quantum, interval, models):
@@ -104,7 +116,7 @@ def main(argv):
     meta = json.loads((run_folder(cfg, "processed", run) / cfg["paths"]["meta_file"]).read_text(encoding="utf-8"))
     quantum, interval, models = cfg["process"]["quantise_mm"], cfg["process"]["interval_hours"], cfg["process"]["agreement_models"]
     now = run + dt.timedelta(hours=frontend["check"]["now_hours_after_run"])
-    plans = [a for a in activities["activities"]] + [activities["custom"] | {"wet_mm": activities["custom"]["default_wet_mm"]}]
+    plans = [a for a in activities["activities"]] + [activities["custom"] | {"max_level": activities["custom"]["default_level"]}]
     result = {"run": run.strftime(ISO), "now": now.strftime(ISO), "quantum_mm": quantum, "places": []}
     for point in settings["points"]:
         blocks = place_blocks(cfg, run, point, meta, quantum)
@@ -112,10 +124,10 @@ def main(argv):
                  "stored": {m: [v[m] for v in blocks.values() if m in v] for m in meta["models"]},
                  "totals": totals_of(blocks, now, activities["totals_days"], quantum, interval, models), "plans": {}}
         for activity in plans:
-            rows = classify(blocks, activity, now, point["utc_offset_minutes"], quantum, interval)
+            rows = classify(blocks, activity, now, point["utc_offset_minutes"], quantum, interval, activities["levels"])
             wins = windows_of(rows, activity, now, activities["current_block_min_remaining_fraction"])
             entry["plans"][activity["id"]] = {
-                "windows": [[w["start"].strftime(ISO), w["end"].strftime(ISO), w["blocks"], w["confidence"], w["starts_now"]] for w in wins],
+                "windows": [[w["start"].strftime(ISO), w["end"].strftime(ISO), w["blocks"], w["confidence"], w["starts_now"], w["level"]] for w in wins],
                 "days": days_of(rows, activities["days_shown"])}
         result["places"].append(entry)
     target = ROOT / cfg["paths"]["plan_reference_file"]

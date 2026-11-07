@@ -1,7 +1,7 @@
 // Draws the plan into the page. Input is the plain data from view.js; every text goes in with textContent (see dom.js).
 import { el, fill } from './dom.js';
 import { clock, dayKey, dayLabel } from './time.js';
-import { blockText, CONFIDENCE_WORD, STATE_WORD, totalsLines, windowText } from './wording.js';
+import { acceptText, atMost, blockText, blockWord, CONFIDENCE_WORD, totalsLines, windowText } from './wording.js';
 
 const BADGE = { sure: 'Both models agree', uncertain: 'Models disagree in part', 'one-model': 'One model only' };
 
@@ -15,33 +15,34 @@ export function renderActivities(container, list, selected, onChange) {
   }));
 }
 
-export function activityNote(activity, wetMm) {
+export function activityNote(activity, levels) {
   const [from, to] = activity.hours;
   const hours = from === 0 && to === 24 ? 'any time of day' : `${String(from).padStart(2, '0')}:00–${String(to).padStart(2, '0')}:00`;
-  return `${activity.blurb} Wet means ${wetMm} mm or more in a 6-hour block (rain is rounded to 0.1 mm). Hours used: ${hours}. Shortest window shown: ${activity.min_blocks * 6} hours.`;
+  const max = levels.findIndex((level) => level.id === activity.max_level);
+  return `${activity.blurb} A good time has ${acceptText(levels, max)} in a 6-hour block. Hours used: ${hours}. Shortest window shown: ${activity.min_blocks * 6} hours.`;
 }
 
 export function renderWindows(node, view, activity) {
   if (!view.windows.length) {
-    fill(node, el('li', { class: 'empty', text: `No dry stretch of at least ${activity.min_blocks * 6} hours in your hours in the forecast.` }));
+    fill(node, el('li', { class: 'empty', text: `No time of at least ${activity.min_blocks * 6} hours fits in your hours in the forecast.` }));
     return;
   }
   fill(node, view.windows.map((w, i) => {
     const hours = w.blocks * 6;
     return el('li', { class: `window conf-${w.confidence}` }, [
       el('p', { class: 'when', text: `${i + 1}. ${windowText(w, view.zone)}` }),
-      el('p', { class: 'how' }, [el('span', { class: 'badge', text: BADGE[w.confidence] }), el('span', { text: ` ${hours} hours` })]),
+      el('p', { class: 'how' }, [el('span', { class: 'badge', text: BADGE[w.confidence] }), el('span', { text: ` ${atMost(view.levels, w.level)} · ${hours} hours` })]),
       el('p', { class: 'why', text: CONFIDENCE_WORD[w.confidence] }),
     ]);
   }));
 }
 
 /** One 6-hour block. With a map (`pick`), the block is a button that shows this block on the map; `step` is its forecast step. */
-function blockCell(block, zone, pick, selected) {
-  const flags = [block.past ? 'over' : null, block.inHours ? null : 'outside your hours', block.single && !block.past ? 'one model only' : null].filter(Boolean);
+function blockCell(block, zone, levels, pick, selected) {
+  const flags = [block.past ? 'over' : null, block.inHours ? null : 'outside your hours', block.single && !block.past ? 'one model only' : null, block.differ && !block.single && !block.past ? 'models differ' : null].filter(Boolean);
   const inner = [
     el('span', { class: 'time', text: blockText(block, zone) }),
-    el('span', { class: 'word', text: STATE_WORD[block.state] }),
+    el('span', { class: 'word', text: blockWord(levels, block) }),
     flags.length ? el('span', { class: 'flag', text: flags.join(', ') }) : null,
   ];
   const step = pick ? pick.stepOf(block) : null;
@@ -52,7 +53,7 @@ function blockCell(block, zone, pick, selected) {
     button.addEventListener('click', () => pick.onPick(step));
     content = button;
   }
-  return el('li', { class: `block state-${block.state}${block.past ? ' past' : ''}${block.inHours ? '' : ' off'}${chosen ? ' chosen' : ''}` }, content);
+  return el('li', { class: `block state-${block.fit}${block.past ? ' past' : ''}${block.inHours ? '' : ' off'}${chosen ? ' chosen' : ''}` }, content);
 }
 
 /** `pick` = { stepOf(block) -> step or null, onPick(step) } or null when there is no map; `selected` = the step shown on the map. */
@@ -60,7 +61,7 @@ export function renderDays(node, view, pick = null, selected = null) {
   fill(node, view.days.map((d, i) => el('article', { class: 'day' }, [
     el('h4', { text: i === 0 ? `${d.label} (today)` : d.label }),
     el('p', { class: 'verdict', text: d.verdict }),
-    el('ol', { class: 'blocks', attrs: { 'aria-label': `Blocks of ${d.label}` } }, d.blocks.map((b) => blockCell(b, view.zone, pick, selected))),
+    el('ol', { class: 'blocks', attrs: { 'aria-label': `Blocks of ${d.label}` } }, d.blocks.map((b) => blockCell(b, view.zone, view.levels, pick, selected))),
   ])));
 }
 

@@ -462,3 +462,6 @@ Gone since the earlier register: `scripts/spike_frame.py` (deleted at step 7), t
 
 ### D41 / PLAN-012 bet result (2026-11-07 18:59 UTC)
 - The user looked at the new map colours and the key and said: "ok ;i like it." The bet "the user no longer reads the colours as heat and finds the key" held for the user (one person, at 1100 px; phones not looked at). The 390 px problem (key covers the map) remains for the design pass.
+
+### D41 result of step 11.1 (2026-11-07 19:15 UTC)
+- The engine speaks in levels: block level = the wetter model's, fit (ok / maybe / over) from the activity's maximum level, D28 window logic unchanged. The independent Python calculation and the browser code agree on 8 places x 8 activities (levels, fits, windows, totals). The shares of the levels on the real run were reproduced by `scripts/level_shares.py` (D41's numbers). The wet limit of the activities is now only derived from the levels: laundry, picnic and cricket accept up to 0.5 mm per 6 h as "no rain" (stated in D41).

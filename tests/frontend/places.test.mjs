@@ -54,19 +54,22 @@ test('adding and removing saved places: newest first, no duplicates, a full list
   assert.equal(addPlace(places, { name: '', lat: 1, lon: 1 }, 5).added, false);
 });
 
-test('the page address: place, activity and wet level are checked; anything unknown is ignored', () => {
+test('the page address: place, activity and the accepted rain level are checked; anything unknown (also the old wet=) is ignored', () => {
   const ids = ACTIVITIES.activities.map((a) => a.id).concat('custom');
-  const got = readAddress('?lat=13.09&lon=80.28&name=Chennai&tz=Asia/Kolkata&activity=laundry&wet=2', ids, ACTIVITIES.custom.wet_choices_mm);
+  const choices = ACTIVITIES.custom.level_choices;
+  const got = readAddress('?lat=13.09&lon=80.28&name=Chennai&tz=Asia/Kolkata&activity=custom&accept=light', ids, choices);
   assert.deepEqual(got.place, { name: 'Chennai', lat: 13.09, lon: 80.28, zone: 'Asia/Kolkata' });
-  assert.equal(got.activity, 'laundry');
-  assert.equal(got.wet, 2);
-  const bad = readAddress('?lat=999&lon=abc&activity=<script>&wet=77&tz=../x', ids, ACTIVITIES.custom.wet_choices_mm);
-  assert.deepEqual([bad.place, bad.activity, bad.wet], [null, null, null]);
+  assert.equal(got.activity, 'custom');
+  assert.equal(got.accept, 'light');
+  const bad = readAddress('?lat=999&lon=abc&activity=<script>&accept=heavy&tz=../x', ids, choices); // 'heavy' is not a choice: nothing is accepted beyond moderate
+  assert.deepEqual([bad.place, bad.activity, bad.accept], [null, null, null]);
+  assert.equal(readAddress('?lat=10&lon=20&activity=custom&wet=2', ids, choices).accept, null); // the old parameter is not read
   assert.equal(readAddress('?lat=10&lon=20', ids, []).place.name, 'Shared place');
   assert.equal(readAddress('?lat=10', ids, []).place, null);
-  const link = writeAddress(CHENNAI, 'custom', 1);
-  assert.deepEqual(readAddress(link, ids, ACTIVITIES.custom.wet_choices_mm).place, CHENNAI);
-  assert.match(link, /wet=1/);
+  const link = writeAddress(CHENNAI, 'custom', 'moderate');
+  assert.deepEqual(readAddress(link, ids, choices).place, CHENNAI);
+  assert.match(link, /accept=moderate/);
+  assert.doesNotMatch(writeAddress(CHENNAI, 'outdoor', 'moderate'), /accept=/); // only the Custom activity carries it
 });
 
 test('the geocoder: text limits, the request address, and a reply is parsed field by field', () => {
@@ -104,7 +107,24 @@ test('searching never sends cookies or a referrer, and failures throw', async ()
   await assert.rejects(searchPlaces(cfg, 'Chennai', async () => ({ ok: true, text: async () => '<html>' })));
 });
 
-test('the activity presets are consistent: unique ids, thresholds in storage steps, and enough allowed hours for the minimum window', () => {
+test('the rain levels are consistent: lowest first from 0, multiples of the storage step, distinct words, and every activity accepts a real level that has one above it', () => {
+  const levels = ACTIVITIES.levels;
+  assert.deepEqual(levels.map((l) => l.id), ['none', 'light', 'moderate', 'heavy']);
+  assert.equal(levels[0].from_mm, 0);
+  levels.forEach((l, i) => {
+    assert.ok(i === 0 || l.from_mm > levels[i - 1].from_mm, `${l.id}: levels must rise`);
+    assert.ok(Math.abs(l.from_mm * 10 - Math.round(l.from_mm * 10)) < 1e-9, `${l.id}: from_mm is not a multiple of 0.1`);
+  });
+  assert.equal(new Set(levels.flatMap((l) => [l.label, l.short])).size, levels.length * 2 - 1); // "No rain" is both label and short word of the first level
+  const ids = levels.map((l) => l.id);
+  for (const a of [...ACTIVITIES.activities, { ...ACTIVITIES.custom, max_level: ACTIVITIES.custom.default_level }]) {
+    assert.ok(ids.includes(a.max_level) && a.max_level !== ids[ids.length - 1], `${a.id}: max_level ${a.max_level} must be a level that has a higher one`);
+  }
+  assert.ok(ACTIVITIES.custom.level_choices.every((id) => ids.includes(id) && id !== ids[ids.length - 1]));
+  assert.ok(ACTIVITIES.custom.level_choices.includes(ACTIVITIES.custom.default_level));
+});
+
+test('the activity presets are consistent: unique ids and enough allowed hours for the minimum window', () => {
   const ids = ACTIVITIES.activities.map((a) => a.id);
   assert.equal(new Set(ids).size, ids.length);
   assert.ok(ids.includes(ACTIVITIES.default_activity));
@@ -113,10 +133,7 @@ test('the activity presets are consistent: unique ids, thresholds in storage ste
     const [from, to] = a.hours;
     assert.ok(from >= 0 && to <= 24 && from < to, a.id);
     assert.ok(Math.floor((to - from) / 6) >= a.min_blocks, `${a.id}: the hours are too short for min_blocks`); // a 6 h block fits at least floor(L/6) times
-    const wet = a.wet_mm ?? ACTIVITIES.custom.default_wet_mm;
-    assert.ok(Math.abs(wet * 10 - Math.round(wet * 10)) < 1e-9, `${a.id}: wet_mm is not a multiple of 0.1`);
   }
-  assert.ok(ACTIVITIES.custom.wet_choices_mm.includes(ACTIVITIES.custom.default_wet_mm));
 });
 
 test('wording: ranges, windows across midnight, day verdicts and the one-line summary of a saved place', () => {
@@ -128,18 +145,38 @@ test('wording: ranges, windows across midnight, day verdicts and the one-line su
   assert.equal(windowText(w(6, 12), 'Asia/Kolkata'), 'Sat 7 Nov 11:30–17:30');
   assert.equal(windowText(w(12, 24), 'Asia/Kolkata'), 'Sat 7 Nov 17:30 – Sun 8 Nov 05:30');
   assert.equal(windowText(w(0, 6, { startsNow: true }), 'Asia/Kolkata'), 'Now–11:30');
-  const b = (state, over = {}) => ({ state, inHours: true, past: false, single: false, day: '2026-11-07', ...over });
-  assert.equal(dayVerdict([b('dry'), b('dry')], undefined, 'UTC'), 'Dry. Both models agree.');
-  assert.equal(dayVerdict([b('wet'), b('wet')], undefined, 'UTC'), 'Wet all day.');
-  assert.match(dayVerdict([b('dry'), b('disagree')], undefined, 'UTC'), /No block is wet in both models; they disagree about 1 block\./);
-  assert.match(dayVerdict([b('wet'), b('dry')], w(6, 12), 'Asia/Kolkata'), /Rain in 1 of 2 blocks\. Best window Sat 7 Nov 11:30–17:30\./);
-  assert.match(dayVerdict([b('wet'), b('disagree')], undefined, 'UTC'), /No dry window/);
-  assert.equal(dayVerdict([b('dry', { past: true })], undefined, 'UTC'), 'Over.');
-  assert.equal(dayVerdict([b('dry', { inHours: false })], undefined, 'UTC'), 'Outside the hours for this activity.');
-  const planned = [b('dry', { startMs: t0, endMs: t0 + 6 * HOUR }), b('disagree', { startMs: t0 + 6 * HOUR, endMs: t0 + 12 * HOUR })];
-  assert.equal(placeSummary(planned, 'Asia/Kolkata'), 'Rain possible Sat 7 Nov 11:30–17:30 (models disagree).');
-  assert.equal(placeSummary([planned[0]], 'UTC'), 'Dry through Sat 7 Nov.');
-  assert.equal(placeSummary([], 'UTC'), 'No forecast left in your hours.');
+  const L = ACTIVITIES.levels;
+  // a planned block: its fit for the activity ('ok' | 'maybe' | 'over') and the level index of the wetter model (0 none, 1 light, 2 moderate, 3 heavy)
+  const b = (fit, level, over = {}) => ({ fit, level, inHours: true, past: false, single: false, day: '2026-11-07', ...over });
+  assert.equal(dayVerdict([b('ok', 0), b('ok', 0)], undefined, 'UTC', L, 0), 'No rain (both models agree).');
+  assert.equal(dayVerdict([b('ok', 0, { single: true })], undefined, 'UTC', L, 0), 'No rain (one model only).');
+  assert.equal(dayVerdict([b('ok', 1), b('ok', 0)], undefined, 'UTC', L, 1), 'Light rain at most (both models agree).'); // an activity that accepts light rain
+  assert.equal(dayVerdict([b('over', 1), b('over', 2)], undefined, 'UTC', L, 0), 'Moderate rain all day.'); // the wettest level of the day
+  assert.match(dayVerdict([b('ok', 0), b('maybe', 1)], undefined, 'UTC', L, 0), /^The models differ about 1 block\.$/);
+  assert.match(dayVerdict([b('over', 1), b('ok', 0)], w(6, 12), 'Asia/Kolkata', L, 0), /^Rain in 1 of 2 blocks\. Best window Sat 7 Nov 11:30–17:30\.$/);
+  assert.match(dayVerdict([b('over', 2), b('ok', 1)], undefined, 'UTC', L, 1), /^Moderate rain or more in 1 of 2 blocks\. No window long enough\.$/);
+  assert.equal(dayVerdict([b('ok', 0, { past: true })], undefined, 'UTC', L, 0), 'Over.');
+  assert.equal(dayVerdict([b('ok', 0, { inHours: false })], undefined, 'UTC', L, 0), 'Outside the hours for this activity.');
+  const planned = [b('ok', 0, { startMs: t0, endMs: t0 + 6 * HOUR }), b('maybe', 1, { startMs: t0 + 6 * HOUR, endMs: t0 + 12 * HOUR })];
+  assert.equal(placeSummary(planned, 'Asia/Kolkata', L, 0), 'Light rain possible Sat 7 Nov 11:30–17:30 (models differ).');
+  planned[1] = b('over', 2, { startMs: t0 + 6 * HOUR, endMs: t0 + 12 * HOUR });
+  assert.equal(placeSummary(planned, 'Asia/Kolkata', L, 0), 'Moderate rain Sat 7 Nov 11:30–17:30.');
+  assert.equal(placeSummary([planned[0]], 'UTC', L, 0), 'No rain through Sat 7 Nov.');
+  assert.equal(placeSummary([planned[0]], 'UTC', L, 1), 'Light rain at most through Sat 7 Nov.');
+  assert.equal(placeSummary([], 'UTC', L, 0), 'No forecast left in your hours.');
+});
+
+test('no sentence of the plan uses "wet" or "dry" any more (the user found them confusing, D41)', () => {
+  const L = ACTIVITIES.levels;
+  const b = (fit, level) => ({ fit, level, inHours: true, past: false, single: false, day: '2026-11-07', startMs: 0, endMs: 6 * 3600e3 });
+  const texts = [];
+  for (const max of [0, 1, 2]) {
+    for (const blocks of [[b('ok', 0)], [b('over', 3)], [b('maybe', 1)], [b('over', 1), b('ok', 0)], [b('ok', 1)]]) {
+      texts.push(dayVerdict(blocks, undefined, 'UTC', L, max), placeSummary(blocks, 'UTC', L, max));
+    }
+  }
+  assert.ok(texts.length > 20);
+  assert.doesNotMatch(texts.join(' '), /\b(wet|dry)\b/i);
 });
 
 test('the reverse lookup names a device position: most local name, region, country; repeats and junk are dropped', () => {

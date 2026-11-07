@@ -78,20 +78,20 @@ export function storeSaved(storage, key, places) {
   }
 }
 
-/** Page address (?lat=&lon=&name=&tz=&activity=&wet=) -> { place, activity, wet } with everything checked; missing parts are null. */
-export function readAddress(search, activityIds, wetChoices) {
+/** Page address (?lat=&lon=&name=&tz=&activity=&accept=) -> { place, activity, accept } with everything checked; missing parts are null. */
+export function readAddress(search, activityIds, acceptChoices) {
   const q = new URLSearchParams(search);
   const place = cleanPlace({ name: q.get('name') ?? 'Shared place', lat: q.get('lat'), lon: q.get('lon'), zone: q.get('tz') });
   const hasWhere = q.has('lat') && q.has('lon');
   const activity = activityIds.includes(q.get('activity')) ? q.get('activity') : null;
-  const wet = wetChoices.find((w) => String(w) === q.get('wet')) ?? null;
-  return { place: hasWhere ? place : null, activity, wet };
+  const accept = acceptChoices.find((id) => id === q.get('accept')) ?? null;
+  return { place: hasWhere ? place : null, activity, accept };
 }
 
 /** The address query for a place and choices (used to keep the page link in step with what is shown). */
-export function writeAddress(place, activity, wet) {
+export function writeAddress(place, activity, accept) {
   const q = new URLSearchParams({ lat: String(place.lat), lon: String(place.lon), name: place.name, activity });
   if (place.zone) q.set('tz', place.zone);
-  if (activity === 'custom' && wet !== null) q.set('wet', String(wet));
+  if (activity === 'custom' && accept !== null) q.set('accept', accept);
   return `?${q.toString()}`;
 }
