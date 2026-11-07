@@ -57,7 +57,7 @@ docker compose -f docker/compose.yaml run --rm tests            # Python: 117 pa
 docker compose -f docker/compose.yaml run --rm frontend-tests   # Node: 70 passed
 docker compose -f docker/compose.yaml run --rm process python -m scripts.plan_reference   # independent Python plan from the raw GRIB
 docker compose -f docker/compose.yaml run --rm frontend-check   # the browser code on the real tiles equals it: 8 places x 8 activities
-BROWSER_NAME=chromium docker compose -f docker/compose.yaml run --rm browser-checks   # 11 scenarios in a real engine (chromium | firefox | webkit)
+BROWSER_NAME=chromium docker compose -f docker/compose.yaml run --rm browser-checks   # 15 scenarios in a real engine (chromium | firefox | webkit)
 docker compose -f docker/compose.yaml run --rm screenshots      # real browser: screenshots, console and policy errors, hosts contacted
 ```
 Measurements in a real browser with the computer's own GPU (Edge): `frontend/tools/load_timing.mjs` and `frontend/tools/live_look.mjs` (usage in each file). The Windows `.venv` (`py -3.11`) is for quick trying only; its result is not the proof.
@@ -71,9 +71,10 @@ There is **no GPU on the server side** (free static hosting serves files only); 
 | Browser | Where | Result |
 |---|---|---|
 | Firefox | the user's own PC | the base map, the rain (live layer too), the credit line and the device place name draw (user's screenshots, 2026-11-07); speed not measured |
-| Microsoft Edge | the developer's Windows PC, real GPU | all checks and measurements run here (browser checks 11 of 11 at 14:30 UTC, live layer 21-65 ms per drawing, load times, real Open-Meteo and BigDataCloud calls) |
-| Chromium 158 | Docker, software WebGL | browser checks 11 of 11 (14:27 UTC), including the base map from our own site and the map still working when its file is missing |
-| Firefox 159, WebKit 27 | Docker | the PLAN page: Firefox 11 of 11 at 14:30 UTC, WebKit 8 of 8 at step 8; no WebGL in the container (environment limit), so the map scenarios return early there and the map can only show its plain message |
+| Microsoft Edge | the developer's Windows PC, real GPU | all checks and measurements run here (browser checks 15 of 15 at 15:46 UTC, live layer 21-65 ms per drawing, load times, real Open-Meteo and BigDataCloud calls) |
+| Chromium 158 | Docker, software WebGL | browser checks 15 of 15 (15:42 UTC): the plan page, the base map from our own site (range requests), the map still working when its file is missing, the live rain layer (on at close zoom, off on the globe and zoomed out, falls back when a tile fails), north-up map, a place chosen before the forecast list has loaded |
+| WebKit 27 (the engine of Safari, not Safari) | Docker | 15 of 15 (4 runs in a row at 15:38 UTC); WebGL2 works there, and the map, the base map (206 range requests) and the live layer were measured on a page that stays put. Two scenarios ignore the errors WebKit reports for requests that a second page load cancels (limit written in the tool) |
+| Firefox 159 | Docker | 15 of 15 (15:42 UTC) but the container has no WebGL2 for Firefox (environment limit), so the map scenarios return early there and the map shows its plain message; the user's own Firefox draws the map (see above) |
 | Safari, phones | | **not tested yet** (user decision: later) |
 
 ## Known limits (full list: `docs/PROGRESS.md` and the shortcut register in `docs/DECISIONS.md`)

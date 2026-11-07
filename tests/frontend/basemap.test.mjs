@@ -77,3 +77,15 @@ test('names and borders are readable on the dark land: every text colour has a c
   assert.ok(contrast(DARK.city_label, land) < 7, 'the old default would have failed this test: the user could not read it'); // the test can fail
   assert.ok(contrast(DARK.state_label, land) < 3);
 });
+
+// Found in step 9.3c-4 (E032 again): the style names a fourth font, the Devanagari one, that was not stored, so the page asked for files that answered 404.
+test('every font the style names is stored with every glyph range (and so is in the assets lock)', () => {
+  const { layers } = buildBasemap(FRONTEND.map, FRONTEND.data_url_path, ORIGIN);
+  const names = new Set(JSON.stringify(layers).match(/"Noto Sans[^"]*"/g).map((quoted) => JSON.parse(quoted))); // anywhere in the style: some names sit inside the label text expressions
+  assert.ok(names.size >= 4, `the style names ${[...names]}`);
+  const lock = JSON.parse(readFileSync(new URL('../../config/basemap_assets.lock.json', import.meta.url), 'utf8')).files;
+  for (const name of names) {
+    assert.ok(`fonts/${name}/0-255.pbf` in lock && `fonts/${name}/65280-65535.pbf` in lock, `${name} is not stored from its first to its last glyph range`);
+    assert.ok(BASEMAP_TOML.includes(`"${name}"`), `${name} is not in config/basemap.toml fonts`);
+  }
+});
