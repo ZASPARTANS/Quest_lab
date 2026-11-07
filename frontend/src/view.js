@@ -6,7 +6,7 @@ import { dayVerdict, placeSummary } from './wording.js';
 
 /**
  * `blocks` from buildBlocks, `activity` = { max_level, min_blocks, hours }, `o` = { zone, nowMs, quantumMm, intervalHours, models,
- * minRemaining, daysShown, windowsShown, totalsDays, levels }.
+ * minRemaining, daysShown, windowsShown, totalsDays, levels, labels }.
  */
 export function buildView(blocks, activity, o) {
   const max = maxLevelIndex(activity, o.levels);
@@ -21,6 +21,6 @@ export function buildView(blocks, activity, o) {
   return {
     zone: o.zone, planned, days, windows: windows.slice(0, o.windowsShown), windowCount: windows.length,
     totals: rainTotals(blocks, o.nowMs, o.totalsDays, o.quantumMm, o.intervalHours, o.models),
-    summary: placeSummary(planned, o.zone, o.levels, max), levels: o.levels, max,
+    summary: placeSummary(planned, o.zone, o.levels, max), levels: o.levels, labels: o.labels, max,
   };
 }

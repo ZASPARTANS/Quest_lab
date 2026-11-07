@@ -1,5 +1,5 @@
 /* Rain plan. A left panel (about 1/4 of the width) holds the plan; the globe/map fills the rest. On a narrow screen the map is on top.
-   Colour is never the only signal: every block also has a word, and "models disagree" is hatched. */
+   Colour is never the only signal: every day tile also has a word, drops and a tick (see the day view below). */
 :root {
   --bg: #0b1d33; --panel: #11284a; --panel-2: #173459; --line: #2a4670; --text: #e8f0fa; --muted: #a3b8d3; --accent: #8cc4ff;
   --dry: #2fbf9b; --dry-bg: #0f3d39; --wet: #5b9bff; --wet-bg: #142f66; --mixed: #f2a33a; --mixed-bg: #4a3410; --off: #6b7d96;
@@ -84,16 +84,25 @@ input[type="search"], select { background: #0b1d33; border: 1px solid var(--line
 .days { display: grid; gap: .7rem; }
 .day { background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: .65rem; }
 .verdict { margin: 0 0 .5rem; font-size: .92rem; }
-.blocks { display: grid; grid-template-columns: repeat(2, 1fr); gap: .4rem; }
-.block { border: 2px solid; border-radius: 10px; padding: .35rem .5rem; display: flex; flex-direction: column; font-size: .88rem; }
-.block-hit { background: none; border: 0; padding: 0; margin: 0; text-align: left; width: 100%; display: flex; flex-direction: column; color: inherit; border-radius: 6px; }
-.block .time { font-weight: 700; }
-.block .flag { font-size: .76rem; color: var(--muted); }
-.state-ok { background: var(--dry-bg); border-color: var(--dry); }
-.state-over { background: var(--wet-bg) radial-gradient(#5b9bff66 1.6px, transparent 1.7px) 0 0 / 9px 9px; border-color: var(--wet); }
-.state-maybe { background: repeating-linear-gradient(135deg, var(--mixed-bg) 0 7px, #2d200a 7px 14px); border-color: var(--mixed); border-style: dashed; }
-.block.past { opacity: .4; }
-.block.off { opacity: .55; border-style: dotted; }
+/* Day view (PLAN-011 step 11.3): four tiles per day, one per 6 hours. Level colours come from config/frontend.json plan_levels (set as --lv-N-bar/bg/text by levelcolours.js);
+   the fallbacks here are only for a missing config. Colour is never the only signal: the drops, the word and the tick say the same. */
+.blocks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .35rem; } /* minmax(0, ...): a long word wraps inside its tile, it never widens the page */
+.block { --bar: var(--lv-0-bar, #8a96a6); --tile: var(--lv-0-bg, #16294a); --ink: var(--lv-0-text, #dbe6f5); position: relative; min-width: 0; background: var(--tile); color: var(--ink); border-top: 5px solid var(--bar); border-radius: 8px; text-align: center; overflow-wrap: anywhere; }
+.block.level-1 { --bar: var(--lv-1-bar, #5aaaf0); --tile: var(--lv-1-bg, #123a66); --ink: var(--lv-1-text, #eaf4ff); }
+.block.level-2 { --bar: var(--lv-2-bar, #f2d517); --tile: var(--lv-2-bg, #3b3510); --ink: var(--lv-2-text, #fff7c9); }
+.block.level-3 { --bar: var(--lv-3-bar, #f0564b); --tile: var(--lv-3-bg, #4a1a24); --ink: var(--lv-3-text, #ffe6e3); }
+.block-hit { display: flex; flex-direction: column; align-items: center; gap: .12rem; width: 100%; min-height: 4.7rem; padding: .4rem .15rem .4rem; margin: 0; background: none; border: 0; border-radius: 0 0 8px 8px; color: inherit; font: inherit; cursor: inherit; }
+button.block-hit { cursor: pointer; }
+.block-hit:focus-visible { outline: 3px solid #ffd48a; outline-offset: -3px; }
+.block .word { font-weight: 700; font-size: .84rem; line-height: 1.15; }
+.block .time { font-size: .74rem; font-variant-numeric: tabular-nums; }
+.block .flag { font-size: .66rem; line-height: 1.1; }
+.block .tick { position: absolute; top: 7px; right: 6px; font-size: .8rem; font-weight: 700; line-height: 1; color: var(--bar); }
+.drops { width: 1.9rem; height: .64rem; }
+.drop { fill: none; stroke: var(--bar); stroke-width: 1; opacity: .55; }
+.drop.on { fill: var(--bar); opacity: 1; }
+.block.past { opacity: .38; }
+.block.off { opacity: .55; filter: saturate(.5); }
 .block.chosen { outline: 3px solid #ffd48a; outline-offset: 2px; }
 
 .totals { display: grid; gap: .6rem; }
@@ -133,8 +142,6 @@ footer { padding-top: .5rem; }
   .layout { grid-template-columns: 1fr; height: auto; }
   .stage { order: -1; height: 62vh; height: 62dvh; }
   .side { overflow: visible; border-right: 0; }
-  .blocks { grid-template-columns: repeat(4, minmax(0, 1fr)); } /* minmax(0, ...): a long word must wrap inside its cell, not widen the page */
-  .block { padding: .3rem .35rem; font-size: .8rem; overflow-wrap: anywhere; }
   .map-bottom { bottom: 1.8rem; }
 }
 @media (prefers-reduced-motion: no-preference) { button { transition: border-color .15s; } }

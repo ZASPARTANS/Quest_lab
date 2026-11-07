@@ -114,6 +114,13 @@
   },
   "saved_places": { "storage_key": "rain-plan.saved-places.v1", "settings_key": "rain-plan.settings.v1", "max": 5 },
   "geolocation": { "timeout_ms": 10000, "max_age_ms": 600000 },
+  "plan_levels": {
+    "_comment": "Colours of the four rain levels in the day view (PLAN-011 step 11.3), one entry per level id of config/activities.json. bar = the top bar and the drops (the colours follow the map's rain ramp: blue, yellow, red); bg = the dark tile; text = the words. A test checks every text/background pair (WCAG AA 4.5 : 1), the bar against the tile (3 : 1) and that the four are distinct. Colour is never the only signal: the word, the drops and the tick say the same.",
+    "none": { "bar": "#8a96a6", "bg": "#16294a", "text": "#dbe6f5" },
+    "light": { "bar": "#5aaaf0", "bg": "#123a66", "text": "#eaf4ff" },
+    "moderate": { "bar": "#f2d517", "bg": "#3b3510", "text": "#fff7c9" },
+    "heavy": { "bar": "#f0564b", "bg": "#4a1a24", "text": "#ffe6e3" }
+  },
   "check": {
     "_comment": "Read by frontend/tools/plan_check.mjs (checks the browser code on the real exported tiles against the reference made by scripts/plan_reference.py) and by scripts/level_shares.py (level_share_days = how many days of the newest run it counts). Same files as config/pipeline.toml [paths] site_dir and plan_reference_file.",
     "site_dir": "data/site",

@@ -1,7 +1,8 @@
 // Draws the plan into the page. Input is the plain data from view.js; every text goes in with textContent (see dom.js).
 import { el, fill } from './dom.js';
 import { clock, dayKey, dayLabel } from './time.js';
-import { acceptText, atMost, blockText, blockWord, CONFIDENCE_WORD, totalsLines, windowText } from './wording.js';
+import { dropsSvg } from './drops.js';
+import { acceptText, atMost, blockText, blockWord, CONFIDENCE_WORD, modelsText, totalsLines, windowText } from './wording.js';
 
 const BADGE = { sure: 'Both models agree', uncertain: 'Models disagree in part', 'one-model': 'One model only' };
 
@@ -37,23 +38,42 @@ export function renderWindows(node, view, activity) {
   }));
 }
 
-/** One 6-hour block. With a map (`pick`), the block is a button that shows this block on the map; `step` is its forecast step. */
-function blockCell(block, zone, levels, pick, selected) {
-  const flags = [block.past ? 'over' : null, block.inHours ? null : 'outside your hours', block.single && !block.past ? 'one model only' : null, block.differ && !block.single && !block.past ? 'models differ' : null].filter(Boolean);
+/** What a screen reader hears for one tile: the time, the level, where the models differ, whether it fits, and what pressing it does. */
+function blockLabel(block, zone, view, pressable) {
+  const parts = [`${blockText(block, zone)}: ${view.levels[block.level].label}`];
+  if (block.differ && !block.single) parts.push(`the models differ (${modelsText(view.levels, block, view.labels)})`);
+  if (block.single && !block.past) parts.push('one model only');
+  if (block.past) parts.push('already over');
+  else if (!block.inHours) parts.push('outside your hours');
+  else if (block.usable) parts.push('fits what you want to do');
+  return pressable ? `${parts.join(', ')}. Show on the map` : parts.join(', ');
+}
+
+/**
+ * One 6-hour tile of a day: three drops (as many filled as the level), the word of the wetter model's level, the start time, and small marks (a tick when the block
+ * fits what you want to do, "models differ" or "one model" in words). With a map (`pick`) the tile is a button that shows this block on the map.
+ */
+function blockCell(block, zone, view, pick, selected) {
+  const note = block.past ? null : block.single ? 'one model' : block.differ ? 'models differ' : null;
+  const fits = block.usable && !block.past;
   const inner = [
-    el('span', { class: 'time', text: blockText(block, zone) }),
-    el('span', { class: 'word', text: blockWord(levels, block) }),
-    flags.length ? el('span', { class: 'flag', text: flags.join(', ') }) : null,
+    dropsSvg(block.level),
+    el('span', { class: 'word', text: blockWord(view.levels, block) }),
+    el('span', { class: 'time', text: clock(block.startMs, zone) }),
+    note ? el('span', { class: 'flag', text: note }) : null,
+    fits ? el('span', { class: 'tick', text: '✓', attrs: { 'aria-hidden': 'true' } }) : null,
   ];
   const step = pick ? pick.stepOf(block) : null;
   const chosen = step !== null && step === selected;
-  let content = inner;
+  let content;
   if (step !== null) {
-    const button = el('button', { class: 'block-hit', attrs: { type: 'button', 'aria-pressed': String(chosen), 'aria-label': `Show ${blockText(block, zone)} on the map` } }, inner);
-    button.addEventListener('click', () => pick.onPick(step));
-    content = button;
+    content = el('button', { class: 'block-hit', attrs: { type: 'button', 'aria-pressed': String(chosen), 'aria-label': blockLabel(block, zone, view, true) } }, inner);
+    content.addEventListener('click', () => pick.onPick(step));
+  } else {
+    content = el('span', { class: 'block-hit' }, inner);
   }
-  return el('li', { class: `block state-${block.fit}${block.past ? ' past' : ''}${block.inHours ? '' : ' off'}${chosen ? ' chosen' : ''}` }, content);
+  const cls = `block level-${block.level}${fits ? ' fits' : ''}${block.past ? ' past' : ''}${block.inHours ? '' : ' off'}${chosen ? ' chosen' : ''}`;
+  return el('li', { class: cls, attrs: step === null ? { role: 'group', 'aria-label': blockLabel(block, zone, view, false) } : {} }, content);
 }
 
 /** `pick` = { stepOf(block) -> step or null, onPick(step) } or null when there is no map; `selected` = the step shown on the map. */
@@ -61,7 +81,7 @@ export function renderDays(node, view, pick = null, selected = null) {
   fill(node, view.days.map((d, i) => el('article', { class: 'day' }, [
     el('h4', { text: i === 0 ? `${d.label} (today)` : d.label }),
     el('p', { class: 'verdict', text: d.verdict }),
-    el('ol', { class: 'blocks', attrs: { 'aria-label': `Blocks of ${d.label}` } }, d.blocks.map((b) => blockCell(b, view.zone, view.levels, pick, selected))),
+    el('ol', { class: 'blocks', attrs: { 'aria-label': `Blocks of ${d.label}` } }, d.blocks.map((b) => blockCell(b, view.zone, view, pick, selected))),
   ])));
 }
 
