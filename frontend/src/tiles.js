@@ -115,15 +115,30 @@ export function seriesByModel(manifest, series) {
   return Object.fromEntries(Object.entries(manifest.models).map(([name, info]) => [name, series.subarray(info.layer_offset, info.layer_offset + info.layers)]));
 }
 
-/** Fetch + decode + read for a place. `get(url)` returns an ArrayBuffer (injected so tests need no network). Tiles are kept in `cache`. */
+/** Rows and columns of one tile (tiles at the south and east edge may be smaller than the tile size). */
+export function tileShape(manifest, tileRow, tileCol) {
+  const size = manifest.tiles.size;
+  return { rows: Math.min(size, manifest.grid.nj - tileRow * size), cols: Math.min(size, manifest.grid.ni - tileCol * size) };
+}
+
+/**
+ * One tile, fetched, checked and decoded: Uint16Array (layers, rows, cols). `get(url)` returns an ArrayBuffer (injected so tests need no network).
+ * Tiles are kept in `cache` (a Map shared by the plan and the map); a failed tile is forgotten so that it may be tried again.
+ */
+export function loadTile(base, manifest, tileRow, tileCol, get, cache) {
+  const url = tileUrl(base, manifest, tileRow, tileCol);
+  if (!cache.has(url)) {
+    const { rows, cols } = tileShape(manifest, tileRow, tileCol);
+    cache.set(url, get(url).then((buffer) => decodeTile(buffer, { rows, cols, layers: manifest.tiles.layers })));
+    cache.get(url).catch(() => cache.delete(url));
+  }
+  return cache.get(url);
+}
+
+/** Fetch + decode + read for a place. */
 export async function loadSeries(base, manifest, lat, lon, get, cache = new Map()) {
   const where = locate(manifest, lat, lon);
   if (!where) throw new Error('place is not a valid coordinate');
-  const url = tileUrl(base, manifest, where.tileRow, where.tileCol);
-  if (!cache.has(url)) {
-    cache.set(url, get(url).then((buffer) => decodeTile(buffer, { rows: where.rows, cols: where.cols, layers: manifest.tiles.layers })));
-    cache.get(url).catch(() => cache.delete(url)); // a failed tile may be tried again
-  }
-  const values = await cache.get(url);
+  const values = await loadTile(base, manifest, where.tileRow, where.tileCol, get, cache);
   return seriesByModel(manifest, cellSeries(values, where));
 }
