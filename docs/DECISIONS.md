@@ -291,3 +291,14 @@ The README's "known limitations" (step 12) must list every item above and every 
 - Proposal: (1) step 9 brings the map and globe onto the home page (flat/globe toggle that keeps place and block, model switch IFS / AIFS / both with agreement, click to set the place, plain message without WebGL2, plan text still above so it works without the map); (2) a design pass with the frontend-design skill (layout, type, colour, a more visual day timeline) with screenshots shown to the user before moving on. Order is the user's choice: map first (AI's recommendation) or design first.
 - Alternatives: keep the plan page as it is and do the map only; design pass only. Cost: both are front-end only; fits the time budget (about 6.4 h used of 72).
 - Checkable bet: the user finds the result both useful and good-looking. Result: pending.
+
+### D29 decided (2026-11-07 ~10:41 UTC)
+- Decided by: **user** ("go, map first then the design pass. so what we will do is we have 3d map once the user uses the location it will model to that location and then show it in 2d ... all the options that we have now will also be there"; then the layout: "the current design that we have will be in the same page so 1/4th of the page uses the current design and the remaining 3/4th will have this globe [which includes 3d to 2d switching after location use]"). Approved through plan mode as `docs/plans/PLAN-007.md`.
+- Chosen: one page, the plan panel (the step 8 design) about 1/4 of the width on the left, the globe/map about 3/4 on the right; the globe opens first; a place chosen from outside the map (location, search, saved place, address) makes the globe fly there and settle into the flat 2D map; map tools: Flat/Globe, model switch IFS / AIFS / Both (agreement), time control, click to choose a place; everything from step 8 stays; the design pass follows the map. Alternative not chosen: design first.
+- Status of the earlier proposal: accepted as stated, with the layout above.
+
+## D30 — A map click gives a place in the device's time zone (labelled)
+- 2026-11-07 ~10:41 UTC. Decided by: **AI** inside the approved PLAN-007 (assumption A16; follows the user's earlier approval of the device-zone shortcut in D24).
+- Chosen: a place picked by clicking the map is named "Map point (lat, lon)" and shows times in the device's own time zone, labelled; no reverse lookup (the geocoder has none, and sending coordinates to a third party was not approved). Searching the place gives its exact zone.
+- Known weakness: for a place far from the device the local day boundaries can be off by hours. Alternative not chosen: estimate the zone from the longitude (wrong for countries such as India).
+- Checkable bet: users understand the label. Result: pending.
