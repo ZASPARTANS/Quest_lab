@@ -47,17 +47,20 @@ def _stored(r, c, grid):
     return (r * 7 + c * 13) % 50 + ((r * c) % 5) * 3
 
 
-def _catmull(t):
-    return [-0.5 * t ** 3 + t ** 2 - 0.5 * t, 1.5 * t ** 3 - 2.5 * t ** 2 + 1, -1.5 * t ** 3 + 2 * t ** 2 + 0.5 * t, 0.5 * t ** 3 - 0.5 * t ** 2]
+def _pchip(y0, y1, y2, y3, t):
+    """Monotone cubic (Fritsch-Butland PCHIP, equal spacing) between y1 and y2: the slope at a node is the harmonic mean of the two neighbouring
+    slopes, and zero where they change sign or one is zero, so the curve never goes beyond y1 and y2."""
+    d0, d1, d2 = y1 - y0, y2 - y1, y3 - y2
+    m1 = 2 * d0 * d1 / (d0 + d1) if d0 * d1 > 0 else 0.0
+    m2 = 2 * d1 * d2 / (d1 + d2) if d1 * d2 > 0 else 0.0
+    return (2 * t ** 3 - 3 * t ** 2 + 1) * y1 + (t ** 3 - 2 * t ** 2 + t) * m1 + (-2 * t ** 3 + 3 * t ** 2) * y2 + (t ** 3 - t ** 2) * m2
 
 
 def _sample(rowf, colf, grid):
-    """Catmull-Rom between the four nearest cells in each direction, clamped to the range of the four cells around the point."""
+    """PCHIP along the columns for each of the four rows around the point, then PCHIP along the rows between those four values."""
     r, c = math.floor(rowf), math.floor(colf)
-    wr, wc = _catmull(rowf - r), _catmull(colf - c)
-    total = sum(wr[i] * wc[j] * _stored(r - 1 + i, c - 1 + j, grid) for i in range(4) for j in range(4))
-    centre = [_stored(r + i, c + j, grid) for i in (0, 1) for j in (0, 1)]
-    return min(max(total, min(centre)), max(centre))
+    along = [_pchip(*[_stored(r - 1 + i, c - 1 + j, grid) for j in range(4)], colf - c) for i in range(4)]
+    return _pchip(*along, rowf - r)
 
 
 def _live_cases():

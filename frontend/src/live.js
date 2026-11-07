@@ -21,11 +21,20 @@ export function viewCols(grid, bounds, width) {
   return Float64Array.from({ length: width }, (_, j) => base + (span * (j + 0.5)) / width);
 }
 
-/** Catmull-Rom weights of the four cells around a fractional position t in [0, 1): they sum to 1, and are exactly [0, 1, 0, 0] at t = 0. */
-export function catmullRom(t) {
+/**
+ * Monotone cubic (PCHIP, equal spacing) between y1 and y2 at t in [0, 1]; y0 and y3 only set the slopes. The slope at a node is the harmonic mean of the
+ * two neighbouring slopes, and 0 where they change sign (or one is 0), so the curve is smooth (no kinks at cell edges), equals y1 and y2 at the ends,
+ * and never goes beyond them: no negative rain next to a dry cell, no peak higher than the cells.
+ */
+export function pchip(y0, y1, y2, y3, t) {
+  const d0 = y1 - y0;
+  const d1 = y2 - y1;
+  const d2 = y3 - y2;
+  const m1 = d0 * d1 > 0 ? (2 * d0 * d1) / (d0 + d1) : 0;
+  const m2 = d1 * d2 > 0 ? (2 * d1 * d2) / (d1 + d2) : 0;
   const t2 = t * t;
   const t3 = t2 * t;
-  return [-0.5 * t3 + t2 - 0.5 * t, 1.5 * t3 - 2.5 * t2 + 1, -1.5 * t3 + 2 * t2 + 0.5 * t, 0.5 * t3 - 0.5 * t2];
+  return (2 * t3 - 3 * t2 + 1) * y1 + (t3 - 2 * t2 + t) * m1 + (-2 * t3 + 3 * t2) * y2 + (t3 - t2) * m2;
 }
 
 /**
@@ -48,40 +57,29 @@ export function buildWindow(grid, rowf, colf, valueAt) {
 }
 
 /**
- * The smooth field for every pixel: Float32Array(width * height) in stored units. Catmull-Rom between the four nearest cells in each direction,
- * limited to the range of the four cells around the point (so a dry edge stays dry and a peak stays a peak).
+ * The smooth field for every pixel: Float32Array(width * height) in stored units. First PCHIP along the columns for every row of the window, then
+ * PCHIP along the rows between the four rows around each pixel. At a cell centre the value is the stored value exactly.
  */
 export function sampleView(window, rowf, colf) {
   const height = rowf.length;
   const width = colf.length;
-  const out = new Float32Array(width * height);
-  const colBase = new Int32Array(width);
-  const colWeights = new Float64Array(width * 4);
+  const v = window.values;
+  const stage = new Float64Array(window.rows * width);
   for (let j = 0; j < width; j += 1) {
     const c = Math.floor(colf[j]);
-    colBase[j] = c - window.c0;
-    colWeights.set(catmullRom(colf[j] - c), j * 4);
+    const t = colf[j] - c;
+    const k = c - 1 - window.c0;
+    for (let r = 0; r < window.rows; r += 1) {
+      const at = r * window.cols + k;
+      stage[r * width + j] = pchip(v[at], v[at + 1], v[at + 2], v[at + 3], t);
+    }
   }
+  const out = new Float32Array(width * height);
   for (let i = 0; i < height; i += 1) {
     const r = Math.floor(rowf[i]);
-    const wr = catmullRom(rowf[i] - r);
-    const top = r - 1 - window.r0;
-    for (let j = 0; j < width; j += 1) {
-      const base = top * window.cols + colBase[j] - 1;
-      let total = 0;
-      for (let a = 0; a < 4; a += 1) {
-        const at = base + a * window.cols;
-        const k = j * 4;
-        total += wr[a] * (colWeights[k] * window.values[at] + colWeights[k + 1] * window.values[at + 1] + colWeights[k + 2] * window.values[at + 2] + colWeights[k + 3] * window.values[at + 3]);
-      }
-      const n = base + window.cols + 1;
-      const m = n + window.cols;
-      const a1 = window.values[n];
-      const a2 = window.values[n + 1];
-      const b1 = window.values[m];
-      const b2 = window.values[m + 1];
-      out[i * width + j] = Math.min(Math.max(total, Math.min(a1, a2, b1, b2)), Math.max(a1, a2, b1, b2));
-    }
+    const t = rowf[i] - r;
+    const top = (r - 1 - window.r0) * width;
+    for (let j = 0; j < width; j += 1) out[i * width + j] = pchip(stage[top + j], stage[top + width + j], stage[top + 2 * width + j], stage[top + 3 * width + j], t);
   }
   return out;
 }

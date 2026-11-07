@@ -1,5 +1,6 @@
 // The map side of the page: joins the MapLibre view, its tools and the choices of the plan (place, block, model). Loaded on demand by app.js.
 import { createControls } from './mapcontrols.js';
+import { createLive } from './maplive.js';
 import { createMapView } from './mapview.js';
 import { allSteps, chooseFrame, firstUpcomingStep, flightPlan, frameUrl, modelOptions, prefersReducedMotion, shouldFly } from './mapstate.js';
 import { clock, dayKey, dayLabel } from './time.js';
@@ -7,7 +8,7 @@ import { clock, dayKey, dayLabel } from './time.js';
 const HOUR_MS = 3600 * 1000;
 
 /**
- * `o` = { cfg, manifest, base, labels, container, toolsRoot, onPickPlace(lat, lon), onStep(step), onProblem(error) }.
+ * `o` = { cfg, manifest, base, labels, container, toolsRoot, getTile, tileCache, onPickPlace(lat, lon), onStep(step), onProblem(error) }.
  * Returns { setPlace(place, source), setStep(step), setZone(zone, isPlace), step() }.
  */
 export async function createMapApp(o) {
@@ -17,6 +18,9 @@ export async function createMapApp(o) {
   const wanted = cfg.map.start_model;
   const state = { model: options.some((x) => x.id === wanted) ? wanted : options[0]?.id, mode: 'auto', step: firstUpcomingStep(manifest, Date.now()), zone: 'UTC', hasPlace: false, url: undefined };
   const view = createMapView({ container, cfg, manifest, onClick: o.onPickPlace, onProblem: o.onProblem });
+  const live = createLive({ cfg, manifest, base, labels, getTile: o.getTile, tileCache: o.tileCache, view, container, onProblem: o.onProblem,
+    current: () => ({ model: state.model, step: state.step, mode: state.mode }) });
+  view.onMoveEnd(() => live.soon());
 
   const whenText = () => {
     const end = Date.parse(manifest.run) + state.step * HOUR_MS;
@@ -26,8 +30,8 @@ export async function createMapApp(o) {
   };
 
   const controls = createControls({ root: o.toolsRoot, cfg, manifest, options, selectedModel: state.model, handlers: {
-    onMode: (mode) => { state.mode = mode; view.setMode(mode); refresh(); },
-    onModel: (model) => { state.model = model; refresh(); },
+    onMode: (mode) => { state.mode = mode; view.setMode(mode); refresh(); live.update(); },
+    onModel: (model) => { state.model = model; refresh(); live.update(); },
     onStep: (step) => setStep(step),
     onMyPlace: () => {
       if (!state.place) return;
@@ -52,6 +56,7 @@ export async function createMapApp(o) {
     state.step = step;
     o.onStep(step);
     refresh();
+    live.update();
   }
 
   function setPlace(place, source) {

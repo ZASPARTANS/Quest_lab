@@ -35,7 +35,7 @@ export function startMap({ state, ui, cfg, onPick, onStep, redrawBlocks }) {
   ui.mapMessage.textContent = 'Loading the map\u2026';
   return (preloadMap() ?? import('./mapapp.js'))
     .then(({ createMapApp }) => createMapApp({ cfg, manifest: state.manifest, base: cfg.data_url_path, labels: cfg.model_labels, container: ui.map,
-      toolsRoot: ui.mapTools, onPickPlace: onPick, onStep, onProblem: (error) => console.error('map problem:', error) }))
+      toolsRoot: ui.mapTools, getTile: state.getter, tileCache: state.tiles, onPickPlace: onPick, onStep, onProblem: (error) => console.error('map problem:', error) }))
     .then((app) => {
       ui.mapMessage.hidden = true;
       ui.mapTools.hidden = false;

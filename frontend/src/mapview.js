@@ -13,7 +13,7 @@ export function createMapView({ container, cfg, manifest, onClick, onProblem }) 
   setWorkerUrl(workerUrl);
   const mapCfg = cfg.map;
   const source = manifest.source ?? {};
-  const state = { mode: 'auto', marker: null };
+  const state = { mode: 'auto', marker: null, liveUrl: null, liveVisible: false };
   const map = new MapLibreMap({
     container, center: mapCfg.start.center, zoom: mapCfg.start.zoom, minZoom: mapCfg.min_zoom, maxZoom: mapCfg.max_zoom, renderWorldCopies: false,
     dragRotate: false, pitchWithRotate: false, maxPitch: 0, touchPitch: false, // a weather map stays north-up and flat on the screen
@@ -53,7 +53,7 @@ export function createMapView({ container, cfg, manifest, onClick, onProblem }) 
     }
     if (map.getSource('rain')) {
       map.getSource('rain').updateImage({ url });
-      map.setLayoutProperty('rain', 'visibility', 'visible');
+      map.setLayoutProperty('rain', 'visibility', state.liveVisible ? 'none' : 'visible'); // the live picture, when shown, replaces it
       return;
     }
     const lat = manifest.frames.max_latitude;
@@ -90,11 +90,48 @@ export function createMapView({ container, cfg, manifest, onClick, onProblem }) 
     else map.jumpTo(target);
   }
 
+  /** Where the map is looking: bounds, zoom and the size of the map in screen pixels (the map is never rotated or tilted). */
+  function getView() {
+    const b = map.getBounds();
+    return { bounds: { west: b.getWest(), east: b.getEast(), south: b.getSouth(), north: b.getNorth() }, zoom: map.getZoom(), width: container.clientWidth, height: container.clientHeight };
+  }
+
+  /** Show a live picture (a PNG blob made in the browser) over `bounds`; the pre-made picture is hidden once the new one has loaded (no flicker). */
+  function setLive(blob, bounds) {
+    const url = URL.createObjectURL(blob);
+    const coordinates = [[bounds.west, bounds.north], [bounds.east, bounds.north], [bounds.east, bounds.south], [bounds.west, bounds.south]];
+    if (map.getSource('live')) {
+      map.getSource('live').updateImage({ url, coordinates });
+    } else {
+      map.addSource('live', { type: 'image', url, coordinates });
+      map.addLayer({ id: 'live', type: 'raster', source: 'live', layout: { visibility: 'none' }, paint: { 'raster-fade-duration': 0, 'raster-resampling': mapCfg.resampling } }, 'borders');
+    }
+    const old = state.liveUrl;
+    state.liveUrl = url;
+    map.once('idle', () => {
+      if (state.liveUrl !== url) return; // a newer picture has been asked for meanwhile
+      map.setLayoutProperty('live', 'visibility', 'visible');
+      if (map.getLayer('rain')) map.setLayoutProperty('rain', 'visibility', 'none');
+      state.liveVisible = true;
+      if (old) URL.revokeObjectURL(old);
+    });
+    map.triggerRepaint();
+  }
+
+  /** Go back to the pre-made picture. */
+  function clearLive() {
+    state.liveVisible = false;
+    if (map.getLayer('live')) map.setLayoutProperty('live', 'visibility', 'none');
+    if (map.getLayer('rain') && container.dataset.frame !== 'none') map.setLayoutProperty('rain', 'visibility', 'visible');
+    if (state.liveUrl) URL.revokeObjectURL(state.liveUrl);
+    state.liveUrl = null;
+  }
+
   /** Move the view to a place picked on the map itself: keep the zoom, no flight. */
   function recentre(lat, lon, animate) {
     if (animate) map.easeTo({ center: [lon, lat], duration: 600 });
     else map.jumpTo({ center: [lon, lat] });
   }
 
-  return { ready, setFrame, setMode, showPlace, fly, recentre, onceIdle: (fn) => map.once('idle', fn) };
+  return { ready, setFrame, setMode, showPlace, fly, recentre, getView, setLive, clearLive, onMoveEnd: (fn) => map.on('moveend', fn), onceIdle: (fn) => map.once('idle', fn) };
 }
