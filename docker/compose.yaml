@@ -160,12 +160,37 @@ services:
     entrypoint: ["nginx", "-c", "/etc/nginx/nginx.conf", "-g", "daemon off;"]
     ports:
       - "127.0.0.1:8080:8080"
+      - "127.0.0.1:8081:8081"   # the sub-folder test site below (preview-subpath) shares this container's network
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ../config/headers.conf:/etc/nginx/headers.conf:ro
       - ${FRONTEND_DIST_DIR:-../frontend/dist}:/srv/site:ro
       - ${DATA_DIR:-../data}/site:/srv/data:ro
       - ${DATA_DIR:-../data}/basemap:/srv/basemap:ro  # the stored base map; the world extract is made by the `basemap` service (data/basemap/world.pmtiles)
+
+  preview-subpath:
+    # The "GitHub Pages-like" test site (PLAN-013 step 13.2): the assembled public folder served from /Quest_lab/ with NO security headers, on port 8081 of the
+    # preview's network (so http://localhost:8081/Quest_lab/ from this computer and from the browser-check container). Build it first:
+    #   (Windows Git Bash: first `export MSYS_NO_PATHCONV=1`, or it rewrites the paths that start with a slash)
+    #   FRONTEND_DIST_DIR=../data/pages/dist docker compose -f docker/compose.yaml run --rm frontend-build /node_modules/.bin/vite build --base=/Quest_lab/
+    #   docker compose -f docker/compose.yaml run --rm export python -m scripts.assemble_site
+    #   docker compose -f docker/compose.yaml up -d --force-recreate preview preview-subpath
+    image: nginx:stable-alpine@sha256:583b7f2fce1cdb8da5ad5c39ebd3c33b98b87d493190e548bdee1fa8c619c311
+    user: "101:101"
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    entrypoint: ["nginx", "-c", "/etc/nginx/nginx.conf", "-g", "daemon off;"]
+    network_mode: "service:preview"
+    depends_on:
+      - preview
+    volumes:
+      - ./nginx-subpath.conf:/etc/nginx/nginx.conf:ro
+      - ${DATA_DIR:-../data}/pages/_site:/srv/pages:ro
 
   screenshots:
     # A real browser (Playwright image) opens the preview and saves screenshots plus a report of what the page loaded.

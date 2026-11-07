@@ -47,7 +47,7 @@ docker compose -f docker/compose.yaml run --rm frontend-build                 # 
 docker compose -f docker/compose.yaml up -d --force-recreate preview          # public-like site http://localhost:8080 (stop: ... down)
 cd frontend && npm ci --ignore-scripts && npm run dev                          # testing site http://localhost:5173 with a DEV badge
 ```
-Restart the preview after every export and after any change of `config/headers.conf` (the container reads them at start). Both sites listen on this computer only. Settings are in `config/` (`pipeline.toml`, `backend.toml`, `basemap.toml`, `frontend.json`, `activities.json`, `headers.conf`).
+Restart the preview after every export and after any change of `config/headers.conf` (the container reads them at start). A second local site, `preview-subpath` (http://localhost:8081/Quest_lab/), serves the assembled public folder the way GitHub Pages will: from a sub-folder, with no security headers (the policy comes from `<meta>` tags); how to build it is in the comment of that service in `docker/compose.yaml`. Both sites listen on this computer only. Settings are in `config/` (`pipeline.toml`, `backend.toml`, `basemap.toml`, `frontend.json`, `activities.json`, `headers.conf`).
 
 **Every service runs as a normal user** with all Linux capabilities dropped and a read-only file system; only `data/` is writable (finding S03). On Linux set `APP_UID`/`APP_GID` and create `data/` first (not tested: no Linux host here). The base images are pinned by digest, so re-check them before relying on the project for long.
 

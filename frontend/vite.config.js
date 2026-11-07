@@ -88,6 +88,10 @@ export default defineConfig({
   build: {
     outDir: process.env[cfg.build_dir_env] ?? join(frontendDir, 'dist'),
     emptyOutDir: true,
-    rollupOptions: { input: Object.fromEntries(cfg.build_pages.map((p) => [p.replace(/\.html$/, '').replaceAll('/', '_'), join(frontendDir, p)])) },
+    rollupOptions: {
+      input: Object.fromEntries(cfg.build_pages.map((p) => [p.replace(/\.html$/, '').replaceAll('/', '_'), join(frontendDir, p)])),
+      // MapLibre's worker is a .mjs file. A host that serves .mjs with another content type would break the map (E018), so it is emitted as .js, which every host serves as JavaScript.
+      output: { assetFileNames: (asset) => ((asset.names?.[0] ?? asset.name ?? '').endsWith('.mjs') ? 'assets/[name]-[hash].js' : 'assets/[name]-[hash][extname]') },
+    },
   },
 });

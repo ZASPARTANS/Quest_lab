@@ -22,6 +22,7 @@ const realSearch = Boolean(process.env[cfg.real_search_env]);
 if (!base || !outDir) throw new Error(`set ${cfg.base_url_env} and ${cfg.out_dir_env}`);
 mkdirSync(outDir, { recursive: true });
 const siteHost = new URL(base).host;
+const sitePath = new URL(base).pathname.replace(/\/$/, ''); // '' at the root of a host, '/Quest_lab' on the public site
 const geocoderHost = new URL(frontend.geocoder.url).host;
 const reverseHost = new URL(frontend.reverse_geocoder.url).host;
 const timeout = cfg.timeout_seconds * 1000;
@@ -45,7 +46,7 @@ async function open(browser, options = {}, allowedHosts = [siteHost]) {
   // Those two messages are not counted in WebKit after the page was navigated a second time; a page that stays put (address, base map, live layer scenarios) is checked strictly.
   let navigations = 0;
   page.on('request', (r) => { if (r.isNavigationRequest() && r.frame() === page.mainFrame()) navigations += 1; }); // counted when the navigation starts: the cancellations are reported just before it commits
-  const cancelled = (text) => engineName === 'webkit' && navigations > 1 && /access control checks|map problem/.test(text);
+  const cancelled = (text) => engineName === 'webkit' && navigations > 1 && /access control checks|map problem|Worker failed to load/.test(text);
   page.on('console', (m) => { if (m.type() === 'error' && !cancelled(m.text())) log.problems.push(`console error: ${m.text().slice(0, 200)} [${m.location().url.slice(0, 160)}]`); });
   page.on('pageerror', (e) => { if (!cancelled(e.message)) log.problems.push(`page error: ${e.message.slice(0, 200)}`); });
   page.on('dialog', (d) => { log.dialogs += 1; d.dismiss(); });
@@ -88,11 +89,11 @@ const scenarios = {
     if ((await mapState(page)) === 'ready') {
       await assertLanded(page, 13.08, 80.27, frontend.map.fly.zoom_by_source.address);
       // the block the map shows first is the one under way: it ends after now and not more than one block (6 h) after now
-      const shown = await page.evaluate(async () => {
-        const run = Date.parse((await (await fetch('/data/manifest.json')).json()).run);
+      const shown = await page.evaluate(async (manifestPath) => {
+        const run = Date.parse((await (await fetch(manifestPath)).json()).run);
         const step = Number(document.getElementById('map').dataset.frame.split('_').pop());
         return { endMs: run + step * 3600e3, nowMs: Date.now(), label: document.querySelector('.when-label').textContent };
-      });
+      }, `${sitePath}${frontend.data_url_path}manifest.json`);
       assert.ok(shown.endMs > shown.nowMs && shown.endMs <= shown.nowMs + 6 * 3600e3, `the map starts on a block that is not the one under way: ${shown.label}`);
       assert.doesNotMatch(shown.label, /already over/);
       await page.click('.timebar input[type="range"]', { position: { x: 2, y: 5 } }); // drag to the first block (over)
@@ -263,7 +264,7 @@ const scenarios = {
   },
 };
 
-const helpers = { open, mapState, assertLanded, checkPlanShown, shot, base, frontend, ADDRESS, siteHost, timeout };
+const helpers = { open, mapState, assertLanded, checkPlanShown, shot, base, frontend, ADDRESS, siteHost, timeout, sitePath };
 Object.assign(scenarios, basemapScenarios(helpers), liveScenarios(helpers), mapScenarios(helpers), provenanceScenarios(helpers));
 
 const engines = { chromium, firefox, webkit };

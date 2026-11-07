@@ -9,7 +9,7 @@ import assert from 'node:assert/strict';
 export function basemapScenarios(h) {
   const { open, mapState, assertLanded, checkPlanShown, shot, base, frontend, ADDRESS, timeout } = h;
   const cfg = frontend.map.basemap;
-  const root = `${frontend.data_url_path}${cfg.url_prefix}`;
+  const root = `${h.sitePath}${frontend.data_url_path}${cfg.url_prefix}`; // the site may live in a sub-folder (the public host)
 
   return {
     async 'base map from our own site'(browser) {

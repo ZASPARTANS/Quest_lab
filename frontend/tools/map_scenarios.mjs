@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 
 /** `h` = { open, mapState, assertLanded, shot, base, frontend, ADDRESS, timeout }. */
 export function mapScenarios(h) {
-  const { open, mapState, assertLanded, shot, base, frontend, ADDRESS, timeout } = h;
+  const { open, mapState, assertLanded, shot, base, frontend, ADDRESS, timeout, sitePath } = h;
   const data = (page, key) => page.evaluate((k) => document.getElementById('map').dataset[k], key);
   const frame = async (page) => { const [kind, step] = (await data(page, 'frame')).split('_'); return { kind, step: Number(step) }; };
   const title = (page) => page.locator('#title').first().innerText();
@@ -93,7 +93,7 @@ export function mapScenarios(h) {
       const { page, log, ready } = await onMap(browser);
       if (!ready) return log;
       await assertLanded(page, 13.08, 80.27, frontend.map.fly.zoom_by_source.address);
-      const manifest = await page.evaluate(async () => (await fetch('/data/manifest.json')).json());
+      const manifest = await page.evaluate(async (path) => (await fetch(path)).json(), `${sitePath}${frontend.data_url_path}manifest.json`);
       const key = frontend.map.key;
       await page.locator('label', { hasText: 'Both models' }).click();
       await page.waitForFunction((t) => document.querySelector('.legend .key-title')?.textContent === t && document.querySelectorAll('.legend .swatch').length === 3, key.title, { timeout });
