@@ -81,7 +81,7 @@
 | 2026-11-07 18:59 | **24 h warning given to the user** (clock read with `date -u`; the user's verdict on the map colours and key: "ok ;i like it."); next: PLAN-011 step 11.1 | 24.67 h | 47.33 h |
 
 ## Current plan
-**`docs/plans/PLAN-012.md`** (approved by the user 2026-11-07 17:42 UTC; it amends PLAN-011: one blue colour for the map's "Both models" view and a clear colour key, steps 12.1-12.2; order: 11.0, 12.1, 12.2, then 11.1-11.4) and **`docs/plans/PLAN-011.md`** (approved by the user 2026-11-07 17:37 UTC) are the plans in progress. Note: "11.x" = PLAN-011's own steps; "step 11" (without a dot) = hosting. PLAN-011: rain levels (no rain / light / moderate / heavy) instead of wet and dry, and a clearer day view; steps 11.0-11.4 (table below); the user asked for it before anything else (hosting order A/B is still open). Earlier plan in progress, now complete: **`docs/plans/PLAN-010.md`** (approved by the user 2026-11-07 13:41 UTC): a stored vector base map (OpenStreetMap through Protomaps, dark style, self-hosted fonts and sprites, English labels) under the rain; nothing paid (D37). Steps 9.3d-1, 9.3d-2 and 9.3d-4 are done; 9.3d-3 was dropped by the user (D40); **PLAN-010 is complete.** PLAN-009 is complete (step 9.3c-4 done). PLAN-007 step 9.4 is done. Next: the user chooses the order (A: step 10, 11, then the design pass 9.5; B: 9.5 first). After it: PLAN-009 step 9.3c-4, PLAN-007 steps 9.4 and 9.5 and PLAN-006 steps 10-12 (all still in force).
+**`docs/plans/PLAN-013.md`** (approved by the user 2026-11-07 19:37 UTC: public hosting on GitHub Pages at `https://zaspartans.github.io/Quest_lab/`, 6-hourly refresh, the honesty strip first, mobile checks; steps 13.0-13.7 in the table below; it replaces PLAN-006 steps 10 and 11 as the way to do them) is the plan in progress. Earlier plans, built: **`docs/plans/PLAN-012.md`** (approved by the user 2026-11-07 17:42 UTC; it amends PLAN-011: one blue colour for the map's "Both models" view and a clear colour key, steps 12.1-12.2; order: 11.0, 12.1, 12.2, then 11.1-11.4) and **`docs/plans/PLAN-011.md`** (approved by the user 2026-11-07 17:37 UTC) are the plans in progress. Note: "11.x" = PLAN-011's own steps; "step 11" (without a dot) = hosting. PLAN-011: rain levels (no rain / light / moderate / heavy) instead of wet and dry, and a clearer day view; steps 11.0-11.4 (table below); the user asked for it before anything else (hosting order A/B is still open). Earlier plan in progress, now complete: **`docs/plans/PLAN-010.md`** (approved by the user 2026-11-07 13:41 UTC): a stored vector base map (OpenStreetMap through Protomaps, dark style, self-hosted fonts and sprites, English labels) under the rain; nothing paid (D37). Steps 9.3d-1, 9.3d-2 and 9.3d-4 are done; 9.3d-3 was dropped by the user (D40); **PLAN-010 is complete.** PLAN-009 is complete (step 9.3c-4 done). PLAN-007 step 9.4 is done. Next: the user chooses the order (A: step 10, 11, then the design pass 9.5; B: 9.5 first). After it: PLAN-009 step 9.3c-4, PLAN-007 steps 9.4 and 9.5 and PLAN-006 steps 10-12 (all still in force).
 
 Plan files, oldest first (approved plan files are never edited, so their status is kept only here):
 
@@ -98,7 +98,8 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 | PLAN-009 | 13:12 | browser-side drawing, close fly-in, name fix: 9.3c-0 to 9.3c-4 done; **complete** |
 | PLAN-010 | 13:41 | stored base map; supersedes D22's outlines-only base map: 9.3d-1, 9.3d-2 and 9.3d-4 done; 9.3d-3 dropped (D40); **complete** |
 | PLAN-011 | 2026-11-07 17:37 | rain levels and the day view (user request after step 9.4): thresholds 0.5 / 3 / 10 mm per 6 h, the wetter model + "models differ"; its decision 3 (map: legend words only) and the map-legend part of 11.2 superseded by PLAN-012; **11.0-11.4 in progress** |
-| PLAN-012 | 2026-11-07 17:42 | amends PLAN-011: one blue colour for the map's agreement view (re-export) and a titled colour key; **12.1-12.2 in progress after 11.0** |
+| PLAN-012 | 2026-11-07 17:42 | amends PLAN-011: one blue colour for the map's agreement view (re-export) and a titled colour key; **12.1-12.2 done** (the user: "ok ;i like it.") |
+| PLAN-013 | 2026-11-07 19:37 | public hosting on GitHub Pages (public repo ZASPARTANS/Quest_lab, 6-hourly refresh), honesty strip first, mobile checks; supersedes PLAN-006 steps 10 and 11; **13.0-13.7 in progress** |
 
 | Step | What | Status |
 |---|---|---|
@@ -142,8 +143,16 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 | 11.2 | Words everywhere: blocks, windows, activity note, legend line, saved line, Custom, map legend (PLAN-011) | **done** (commit "Step 11.2: ..."; time in `git log`); the map legend part was done in PLAN-012 |
 | 11.3 | The day view: one row of four coloured cells per day, level colours, contrast test, user's look (PLAN-011) | **built and checked** (commit "Step 11.3: ..."; time in `git log`); the user's look is still to come |
 | 11.4 | Browser checks in four engines and records (PLAN-011) | not started |
-| 10 | Provenance + honesty strip, final policy (PLAN-006) | not started |
-| 11 | Hosting gate + deploy (free host only, D37; the 190 MB base-map file leaves only GitHub Pages) | not started |
+| 10 | Provenance + honesty strip, final policy (PLAN-006) | **superseded by PLAN-013 step 13.1** |
+| 11 | Hosting gate + deploy (free host only, D37; the 190 MB base-map file leaves only GitHub Pages) | **superseded by PLAN-013 steps 13.2-13.7** |
+| 13.0 | Records: PLAN-013, PROGRESS, D42, SOURCES (PLAN-013) | in progress |
+| 13.1 | The honesty strip: run time and age, verified credits, age warning, status file (PLAN-013) | not started |
+| 13.2 | Base path for the sub-folder site, the security policy as a meta tag, a sub-folder test site (PLAN-013) | not started |
+| 13.3 | The workflow: build, deploy, smoke test; pinned actions; local dry run (PLAN-013) | not started |
+| 13.4 | GitHub setup (the user logs in), push, release with the base map, Pages, first deploy (PLAN-013) | not started |
+| 13.5 | Check the public site and phones: curl, four engines, phone emulation, the user's real phone (PLAN-013) | not started |
+| 13.6 | Phone fixes from the evidence (PLAN-013) | not started |
+| 13.7 | Records for hosting; README; push (PLAN-013) | not started |
 | 12 | README + submission | not started |
 
 Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
