@@ -3,7 +3,7 @@
   "data_url_path": "/data/",
   "dev_data_dir": "data/site",
   "dev_server": { "host": "localhost", "port": 5173 },
-  "build_pages": ["index.html", "spikes/quality.html"],
+  "build_pages": ["index.html"],
   "screenshots": {
     "_comment": "Read by frontend/tools/screenshots.mjs (a real browser in Docker). The base URL and the output folder come from the environment variables named here.",
     "base_url_env": "SCREENSHOT_BASE_URL",
@@ -38,7 +38,8 @@
     "max_zoom": 7,
     "fly": { "zoom": 4.5, "duration_ms": 2500, "morph_from_zoom": 2.5 },
     "start_model": "ifs",
-    "sea_colour": "#12304f"
+    "sea_colour": "#12304f",
+    "resampling": "linear"
   },
   "manifest_file": "manifest.json",
   "max_manifest_bytes": 200000,

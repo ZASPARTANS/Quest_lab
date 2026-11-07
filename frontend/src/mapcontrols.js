@@ -2,6 +2,7 @@
 import { el, fill } from './dom.js';
 
 const MODES = [{ id: 'auto', label: 'Auto' }, { id: 'flat', label: 'Flat' }, { id: 'globe', label: 'Globe' }];
+const HEX = /^#[0-9a-fA-F]{6}$/;
 const AGREEMENT_WORDS = { both_wet: 'Both models wet', disagree: 'Models disagree' };
 
 /** A group of radio buttons that looks like a segmented control. `onChange(id)` is called when another one is chosen. */
@@ -16,17 +17,32 @@ function segmented(name, legend, items, selected, onChange) {
   return { node: el('fieldset', { class: 'seg' }, [el('legend', { class: 'sr-only', text: legend }), ...parts]), inputs };
 }
 
+/** The rain legend: one bar that fades through the colour stops, with the stop values under it (positions by log10(mm), as the pictures are made). */
+function rainLegend(scale) {
+  const logs = scale.stops.map(([mm]) => Math.log10(mm));
+  const at = (mm) => (100 * (Math.log10(mm) - logs[0])) / (logs[logs.length - 1] - logs[0]);
+  const bar = el('span', { class: 'legend-bar' });
+  const ok = scale.stops.every(([, colour]) => HEX.test(colour));
+  if (ok) bar.style.background = `linear-gradient(to right, ${scale.stops.map(([mm, colour]) => `${colour} ${at(mm).toFixed(1)}%`).join(', ')})`;
+  const ticks = el('span', { class: 'legend-ticks' }, scale.stops.map(([mm]) => {
+    const tick = el('span', { class: 'tick', text: String(mm) });
+    tick.style.left = `${at(mm).toFixed(1)}%`;
+    return tick;
+  }));
+  return [el('li', { class: 'caption', text: scale.unit }), el('li', { class: 'legend-gradient' }, [bar, ticks])];
+}
+
 function legendNodes(kind, scale, colours) {
   if (kind === 'agreement') {
     const items = Object.entries(colours).map(([name, colour]) => el('li', {}, [swatch(colour), el('span', { text: AGREEMENT_WORDS[name] ?? name })]));
     return [...items, el('li', {}, [el('span', { class: 'swatch empty' }), el('span', { text: 'Both dry: no colour' })])];
   }
-  return [el('li', { class: 'caption', text: scale.unit }), ...scale.stops.map(([mm, colour]) => el('li', {}, [swatch(colour), el('span', { text: `${mm}` })]))];
+  return rainLegend(scale);
 }
 
 function swatch(colour) {
   const node = el('span', { class: 'swatch' });
-  node.style.background = colour; // the colours come from our own config / manifest and were checked as #rrggbb
+  if (HEX.test(colour)) node.style.background = colour; // from our own config / manifest, checked as #rrggbb
   return node;
 }
 

@@ -55,7 +55,7 @@ export function createMapView({ container, cfg, manifest, onClick, onProblem }) 
     }
     const lat = manifest.frames.max_latitude;
     map.addSource('rain', { type: 'image', url, coordinates: [[-180, lat], [180, lat], [180, -lat], [-180, -lat]] });
-    map.addLayer({ id: 'rain', type: 'raster', source: 'rain', paint: { 'raster-fade-duration': 0, 'raster-resampling': 'nearest' } }, 'borders');
+    map.addLayer({ id: 'rain', type: 'raster', source: 'rain', paint: { 'raster-fade-duration': 0, 'raster-resampling': mapCfg.resampling } }, 'borders');
   }
 
   function setMode(mode) {

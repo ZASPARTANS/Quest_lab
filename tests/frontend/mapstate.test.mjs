@@ -109,6 +109,7 @@ test('the projection: the automatic mode morphs from a globe to a flat map by zo
   assert.deepEqual(auto, ['interpolate', ['linear'], ['zoom'], cfg.fly.morph_from_zoom, 'vertical-perspective', cfg.fly.zoom, 'mercator']);
   assert.ok(cfg.fly.morph_from_zoom < cfg.fly.zoom && cfg.min_zoom < cfg.start.zoom && cfg.start.zoom < cfg.fly.morph_from_zoom && cfg.fly.zoom <= cfg.max_zoom);
   assert.ok(['ifs', 'aifs-single', 'both'].includes(cfg.start_model));
+  assert.ok(['linear', 'nearest'].includes(cfg.resampling)); // the smooth look of the pictures depends on this (D34)
 });
 
 test('WebGL2 detection and the name of a map point', () => {

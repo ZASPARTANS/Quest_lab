@@ -106,6 +106,7 @@ export function renderAbout(node, manifest, zone, zoneIsDevice) {
     `Forecast run: ${at(manifest.run)}. Retrieved: ${at(manifest.retrieved_at)}.`,
     `Times are local to the place (${zone}${zoneIsDevice ? ", this device's time zone" : ''}). Blocks are 6 hours long on the UTC clock, so in many places they start at odd times such as 05:30.`,
     'Two models are compared: IFS (ECMWF’s physics-based forecast) and AIFS (its machine-learning forecast). Agreement between them is not a probability of rain.',
+    'The map is smoothed between forecast grid points, so a single small spot can look lighter on it; the plan uses the exact value at the grid point nearest your place.',
     'This is not an official weather warning.',
   ];
   if (typeof s.name === 'string' && typeof s.licence === 'string') lines.push(`Data: ${s.name}, licence ${s.licence}.`);

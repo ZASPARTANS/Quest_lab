@@ -87,8 +87,8 @@
 | 9.2 | Data contract (frames in the manifest, agreement colours) and pure map helpers (PLAN-007) | **done** 2026-11-07 ~10:53 UTC (commit "Step 9.2: ...") |
 | 9.3 | Map module, controls, 1/4 + 3/4 layout, spike removed (PLAN-007) | **in progress** (11:07 UTC): built and working in Chromium; open: frame quality (E027), real-service check of D32 |
 | 9.3b-1 | Gate Q1: measure and look at four ways to make the rain pictures sharper (PLAN-008) | **done** 2026-11-07 12:27 UTC (commit "Step 9.3b-1: ..."); D34 |
-| 9.3b-2 | Build the sharper frames: smooth up-sampling, agreement per pixel, config, tests, re-export (PLAN-008) | not started |
-| 9.3b-3 | Look and confirm (Chromium, Edge, the user), records (PLAN-008) | not started |
+| 9.3b-2 | Build the sharper frames: smooth up-sampling, agreement per pixel, config, tests, re-export (PLAN-008) | **done** 2026-11-07 12:39 UTC (commit "Step 9.3b-2: ..."); D34 results |
+| 9.3b-3 | Look and confirm (Chromium, Edge, the user), records (PLAN-008) | **waiting for the user's look** at http://localhost:8080 (Edge and Chromium pictures done) |
 | 9.4 | Browser checks in three engines, real GPU in Edge, records (PLAN-007) | not started |
 | 9.5 | Design pass with the frontend-design skill, user review (PLAN-007) | not started |
 | 10 | Provenance + honesty strip, final policy (PLAN-006) | not started |
@@ -98,8 +98,8 @@
 Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
 
 ## Status (live, rewritten in the housekeeping at ~23:03 UTC)
-- **Done:** steps 1-8, 9.1, 9.2 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is step 9.3b-2** (PLAN-008: build the sharper frames).
-- **Tests:** official command `docker compose -f docker/compose.yaml run --rm tests` = 99 passed; `... run --rm frontend-tests` = 41 passed (at step 8); `... run --rm frontend-check` = 8 places x 8 activities match; `BROWSER_NAME=<engine> ... run --rm browser-checks` = 8 of 8 scenarios in chromium, firefox and webkit.
+- **Done:** steps 1-8, 9.1, 9.2 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is the user's verdict on the pictures (9.3b-3), then step 9.4** (browser checks in three engines incl. the map scenarios).
+- **Tests (step 9.3b-2):** Python 105 passed, Node 53 passed. Earlier: official command `docker compose -f docker/compose.yaml run --rm tests` = 99 passed; `... run --rm frontend-tests` = 41 passed (at step 8); `... run --rm frontend-check` = 8 places x 8 activities match; `BROWSER_NAME=<engine> ... run --rm browser-checks` = 8 of 8 scenarios in chromium, firefox and webkit.
 - **Git:** branch `main`, 25 commits, no remote (GitHub login and repo creation are plan step 11 and need the user's approval and link).
 - **Records:** this housekeeping checked every markdown file against the others; its findings and fixes are listed in the last section of this file.
 
@@ -365,3 +365,11 @@ Files: `scripts/proto_frames.py` (prototype, removed in 9.3b-2), `frontend/spike
 - Looked at in Chromium (Docker): today's picture is blocky; 2048 px with hard bands still stair-steps at zoom 4.5; the gradient looks like a normal weather map at zoom 4.5 and zoom 3.5; 50 m coastlines show the real coast shape. The user chose the 50 m outlines (+197 kB gzipped, first visit only).
 - Measured on one block (IFS +24 h of the 12z run); the real export prints the largest frame so the limit is checked on all 140.
 - Not done in the gate: Edge with the real GPU (9.3b-3), the load-time effect of larger pictures (9.3b-3), the user's own look (9.3b-3).
+
+## Step 9.3b-2 done-check results (run 2026-11-07 12:39 UTC; 18.34 h used)
+Files: `backend/frames.py` (rewritten: palette PNG writer with per-row filters, bilinear up-sampling, rain gradient, per-pixel agreement; the old block-based functions are gone), `backend/export.py`, `config/backend.toml` (`size` 1440, `gradient_levels`, `fade_levels`, `fade_from_mm`), `config/frontend.json` (`map.resampling`), `frontend/src/{mapview,mapcontrols,outlines,render,style}`, `tests/backend/test_frames.py` (10 tests), `tests/frontend/mapstate.test.mjs`; removed: `scripts/proto_frames.py`, `frontend/spikes/`, `frontend/tools/spike_quality.mjs`, the temporary compose mount.
+- **Tests:** Python 105 passed (new: palette PNG round trip decoded by an independent reader incl. both row filters, refusal of bad palettes, linear ramp reproduced exactly and north at the top, values within neighbour range and a smooth date-line seam, longitude of a column for both grid conventions, a lone cell stays visible and in place (with its stated limit), rain palette and index edges, per-pixel agreement with the plan's rule, empty classes transparent); Node 53 passed.
+- **Real export (Docker, no network, about 8 minutes):** 4281 files, 64.3 MB (tiles 27.9 MB unchanged, frames 36.4 MB, manifest 10.7 kB); largest frame 495 kB (D34 results). `scripts.validate_site`: 16 of 16 rows identical to the processed arrays and within 0.05 mm of the raw GRIB, manifest problems none. `frontend-check`: 8 places x 8 activities match. The preview was restarted after the export (E029) and serves manifest and a frame (200).
+- **Looked at:** Edge with the real GPU (`docs/evidence/edge/step9-home*.png`): the globe-first start with the gradient legend, and the Chennai view as a smooth weather map with real coastlines; no console or policy error, no outside host. Chromium browser checks: 8 of 8 scenarios.
+- **Load time (Edge, D34 results):** first visit 1.29 MB and map drawn at about 1.5 s; repeat visit 1 request, 0.45 s.
+- **Not verified:** the user's verdict; Firefox and WebKit with the new pictures (9.4); the real BigDataCloud call; the globe-scale look of the 50 m outlines is busy (white specks at the coast), a design-pass item; the first-visit weight on a slow connection (not measured).
