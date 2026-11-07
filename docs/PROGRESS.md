@@ -94,7 +94,7 @@
 | 9.3b-2 | Build the sharper frames: smooth up-sampling, agreement per pixel, config, tests, re-export (PLAN-008) | **done** 2026-11-07 12:39 UTC (commit "Step 9.3b-2: ..."); D34 results |
 | 9.3b-3 | Look and confirm (Chromium, Edge, the user), records (PLAN-008) | **failed the user's look** (blocky when zoomed in, E031); superseded by PLAN-009 |
 | 9.3c-0 | Quick fixes: reverse-geocoder host and name, fly-in zoom by source, rotation off, "My place" button (PLAN-009) | **done** 2026-11-07 13:18 UTC (commit "Step 9.3c-0: ..."); D32 corrected, D35, E030 closed |
-| 9.3c-1 | Drawing core: smooth sampling, continuous colours, soft agreement (pure, tested) (PLAN-009) | not started |
+| 9.3c-1 | Drawing core: smooth sampling, continuous colours, soft agreement (pure, tested) (PLAN-009) | **done** 2026-11-07 13:21 UTC (commit "Step 9.3c-1: ...") |
 | 9.3c-2 | Data window: tiles for the view and a layer accessor (PLAN-009) | not started |
 | 9.3c-3 | Map integration: live layer above zoom 4.5, fallback picture (PLAN-009) | not started |
 | 9.3c-4 | Browser checks in the engines, Edge look, records (PLAN-009) | not started |
@@ -107,7 +107,7 @@
 Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
 
 ## Status (live, rewritten in the housekeeping at ~23:03 UTC)
-- **Done:** steps 1-8, 9.1, 9.2 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is step 9.3c-1** (PLAN-009: the drawing core), then 9.3c-2..4, then PLAN-007 steps 9.4 and 9.5.
+- **Done:** steps 1-8, 9.1, 9.2 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is step 9.3c-2** (PLAN-009: the data window), then 9.3c-3..4, then PLAN-007 steps 9.4 and 9.5.
 - **Tests (step 9.3b-2):** Python 105 passed, Node 53 passed. Earlier: official command `docker compose -f docker/compose.yaml run --rm tests` = 99 passed; `... run --rm frontend-tests` = 41 passed (at step 8); `... run --rm frontend-check` = 8 places x 8 activities match; `BROWSER_NAME=<engine> ... run --rm browser-checks` = 8 of 8 scenarios in chromium, firefox and webkit.
 - **Git:** branch `main`, 25 commits, no remote (GitHub login and repo creation are plan step 11 and need the user's approval and link).
 - **Records:** this housekeeping checked every markdown file against the others; its findings and fixes are listed in the last section of this file.
@@ -394,3 +394,9 @@ Files: `config/frontend.json` (reverse host, `map.fly.zoom_by_source`, `max_zoom
 - **Real browsers:** Chromium in Docker (MOCK geocoders): 9 of 9 scenarios, including "location allowed" (name, search box, the map landing at zoom 8 on 11.46 N 78.19 E within 0.01 degrees, flat view) and the new "my place button" (drag away, press the button, back within 0.01 degrees). Edge with the real GPU and the REAL Open-Meteo and BigDataCloud services: 9 of 9, the device position was named "Rasipuram, Tamil Nadu, India".
 - **Found on the way:** the preview must be restarted after a policy change (ENVIRONMENT); a stale `moveend` after drag inertia (fixed with `map.stop()`).
 - **Not verified:** the user's Firefox with these changes; the visual sharpness at zoom 7-8 (still the pre-made picture: that is steps 9.3c-1 to 9.3c-3).
+
+## Step 9.3c-1 done-check results (run 2026-11-07 13:21 UTC; 19.04 h used)
+Files: `frontend/src/live.js` (new, 153 lines: view rows and columns in Web Mercator, Catmull-Rom sampling limited to the range of the four cells around the point, window of cell values with the date-line wrap, continuous rain colour ramp with a soft edge, soft agreement), `config/frontend.json` (`map.live`), `scripts/make_js_fixtures.py` (+ Python's independent versions of the view maths and the sampling), `tests/frontend/fixtures/python_reference.json` (regenerated), `tests/frontend/live.test.mjs` (10 tests). Code ladder: standard JavaScript only, no package.
+- **Tests:** Node 63 passed (53 + 10): the view rows and columns equal the independent Python numbers for three views (one across the date line, one with high latitudes); the smooth field equals Python at ten places incl. the edge rows and the wrap; exact at cell centres; a linear ramp reproduced; 300 random places with sharp dry/wet contrasts never leave the range of their four cells and never go negative; continuity across the date line; colour ramp edges (soft edge, first and last stop, no bands); agreement: dry-dry clear, wet-wet and one-wet colours, symmetric, half strength exactly at the threshold; config consistency (`fade_from_mm` equals the Python frames setting). Mutation check: 4 deliberate breaks (no clamp, threshold off by half a step, rows linear in latitude, a wrong sign in the weights) each made at least one test fail; restored.
+- **Found by my own test:** Catmull-Rom is not monotone between two cells (it can overshoot the two endpoint values); the promise is the 2 x 2 range of the four cells around the point, and that is what the code and the tests now say.
+- **Not verified:** speed in a browser (9.3c-3), the picture itself (9.3c-3), the tile data window (9.3c-2).
