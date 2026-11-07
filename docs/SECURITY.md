@@ -92,3 +92,7 @@ Could not check in step 6: how the policy behaves with an online geocoder (not a
 - **Map:** no third-party tiles or styles; frames are same-origin images whose paths the browser checks (safe pattern, no `..`, steps must match the model's steps); the attribution text MapLibre writes as HTML is built from the manifest after escaping `& < > \" '`; no global objects remain (the spike's `window.__map` is gone with the spike).
 - **Caching:** `immutable` only for names that change with the content (hashed assets and `?v=` data files); the page and manifest are revalidated. A stale cache cannot mix an old tile with a new manifest because the version is part of the tile address.
 - **Not checked:** the real BigDataCloud service (only a mock in tests so far); behaviour under the public host's header rules (step 11).
+
+### Step 9.3c-0 (2026-11-07 13:18 UTC)
+- The second outside host is now `api-bdc.io` (the final host of the BigDataCloud reverse geocoder; the documented host redirects to it, and a redirect to a host the policy does not allow is blocked by the browser). A redirect that is blocked is a safe failure: the page keeps "Your location". The consistency test fails if the policy and `reverse_geocoder.url` differ. Verified with the real service in Edge.
+- Rotation and tilt are off on the map; nothing else changed in the policy.

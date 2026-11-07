@@ -29,13 +29,18 @@ export async function createMapApp(o) {
     onMode: (mode) => { state.mode = mode; view.setMode(mode); refresh(); },
     onModel: (model) => { state.model = model; refresh(); },
     onStep: (step) => setStep(step),
+    onMyPlace: () => {
+      if (!state.place) return;
+      const reduced = prefersReducedMotion((q) => window.matchMedia(q));
+      view.fly(state.place.lat, state.place.lon, flightPlan(reduced, cfg.map, state.place.source));
+    },
   } });
 
   async function refresh() {
     const choice = chooseFrame(manifest, state.model, state.step, labels);
     container.dataset.model = state.model ?? '';
     container.dataset.frame = choice.kind ? `${choice.kind}_${state.step}` : 'none';
-    controls.update({ steps, step: state.step, model: state.model, mode: state.mode, when: whenText(), note: choice.note, legendKind: choice.kind === 'agreement' ? 'agreement' : choice.kind ? 'rain' : null });
+    controls.update({ steps, step: state.step, model: state.model, mode: state.mode, when: whenText(), note: choice.note, legendKind: choice.kind === 'agreement' ? 'agreement' : choice.kind ? 'rain' : null, hasPlace: state.hasPlace });
     const url = choice.kind ? frameUrl(base, manifest, choice.kind, state.step) : null;
     if (url === state.url) return; // the picture is already there: do not load it again
     state.url = url;
@@ -53,8 +58,13 @@ export async function createMapApp(o) {
     state.hasPlace = true;
     view.showPlace(place.lat, place.lon);
     const reduced = prefersReducedMotion((q) => window.matchMedia(q));
-    if (shouldFly(source)) view.fly(place.lat, place.lon, flightPlan(reduced, cfg.map));
-    else view.recentre(place.lat, place.lon, !reduced);
+    if (shouldFly(source)) {
+      state.place = { ...place, source };
+      view.fly(place.lat, place.lon, flightPlan(reduced, cfg.map, source));
+    } else {
+      state.place = { ...place, source: state.place?.source ?? 'search' };
+      view.recentre(place.lat, place.lon, !reduced);
+    }
     refresh();
   }
 

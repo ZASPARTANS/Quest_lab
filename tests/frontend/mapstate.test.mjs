@@ -94,8 +94,11 @@ test('a place chosen outside the map flies there; a click on the map does not; r
   for (const s of ['location', 'search', 'saved', 'address']) assert.equal(shouldFly(s), true, s);
   for (const s of ['map', 'other', undefined]) assert.equal(shouldFly(s), false, String(s));
   const cfg = FRONTEND.map;
-  assert.deepEqual(flightPlan(false, cfg), { zoom: cfg.fly.zoom, duration: cfg.fly.duration_ms, animate: true });
-  assert.deepEqual(flightPlan(true, cfg), { zoom: cfg.fly.zoom, duration: 0, animate: false });
+  assert.deepEqual(flightPlan(false, cfg, 'location'), { zoom: cfg.fly.zoom_by_source.location, duration: cfg.fly.duration_ms, animate: true });
+  assert.deepEqual(flightPlan(true, cfg, 'search'), { zoom: cfg.fly.zoom_by_source.search, duration: 0, animate: false });
+  assert.equal(flightPlan(false, cfg, 'something-else').zoom, cfg.fly.zoom); // an unknown source gets the default zoom
+  assert.ok(cfg.fly.zoom_by_source.location > cfg.fly.zoom_by_source.search); // the device position lands closest
+  for (const zoom of Object.values(cfg.fly.zoom_by_source)) assert.ok(zoom >= cfg.fly.zoom && zoom <= cfg.max_zoom);
   assert.equal(prefersReducedMotion(() => ({ matches: true })), true);
   assert.equal(prefersReducedMotion(() => ({ matches: false })), false);
   assert.equal(prefersReducedMotion(() => { throw new Error('no matchMedia'); }), false);

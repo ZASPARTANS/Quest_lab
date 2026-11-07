@@ -100,6 +100,7 @@ footer { padding-top: .5rem; }
 /* map tools (floating on the map) */
 .map-tools { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
 .map-top { position: absolute; top: .75rem; left: .75rem; right: 4rem; display: flex; gap: .5rem; flex-wrap: wrap; pointer-events: auto; }
+.my-place { background: var(--glass); border-radius: 999px; padding: .4rem .9rem; }
 .map-top .seg { background: var(--glass); padding: .3rem; border-radius: 999px; border: 1px solid var(--line); margin: 0; min-width: 0; }
 .map-bottom { position: absolute; left: .75rem; bottom: 1.6rem; width: min(38rem, calc(100% - 1.5rem)); display: flex; flex-direction: column; gap: .4rem; pointer-events: auto; background: var(--glass); border: 1px solid var(--line); border-radius: 14px; padding: .6rem .75rem; }
 .map-note { margin: 0; color: #ffd48a; font-size: .88rem; }
