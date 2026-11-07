@@ -373,3 +373,8 @@ Files: `backend/frames.py` (rewritten: palette PNG writer with per-row filters, 
 - **Looked at:** Edge with the real GPU (`docs/evidence/edge/step9-home*.png`): the globe-first start with the gradient legend, and the Chennai view as a smooth weather map with real coastlines; no console or policy error, no outside host. Chromium browser checks: 8 of 8 scenarios.
 - **Load time (Edge, D34 results):** first visit 1.29 MB and map drawn at about 1.5 s; repeat visit 1 request, 0.45 s.
 - **Not verified:** the user's verdict; Firefox and WebKit with the new pictures (9.4); the real BigDataCloud call; the globe-scale look of the 50 m outlines is busy (white specks at the coast), a design-pass item; the first-visit weight on a slow connection (not measured).
+
+## User feedback after the sharper pictures (2026-11-07 13:08 UTC; the user's own Firefox, with a screenshot)
+- "when i zoom in it still is showing in blocks not smooth"; "the 2d (flat) is not working, because when i use the location it has to be accurate and zoom to that location"; "do u think people will like it? NOPE". The screenshot (Flat + both models + the UK) also shows: **the map draws in the user's Firefox** (D23 bet held: WebGL works there; the user runs an ad blocker, extensions icons visible), the name box still says "Your location" (E030), the time bar at Fri 6 Nov 12:00-18:00 (not reproduced, see E031), the marker off-centre (caused by scroll-zooming around the mouse).
+- Checked before answering (Edge, real GPU): zoom 7 pictures `docs/evidence/edge/step9-3b-zoom-{ifs,both}.png`; real BigDataCloud call (E030); default block (`ifs_30`, correct).
+- Consequence: PLAN-008's step 9.3b-3 did not pass the user's look. A revised plan (PLAN-009) is needed; E027 stays open and E031 is added.
