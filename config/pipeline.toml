@@ -77,3 +77,13 @@ interval_hours = 6                 # common time axis: IFS 3 h data is used at i
 wet_threshold_mm = 0.5             # a 6 h interval is "wet" at or above this (decision D13)
 quantise_mm = 0.1                  # stored as whole multiples of this in uint16 (max 6553.5 mm per interval)
 agreement_models = ["ifs", "aifs-single"]   # compared where both have data (6-240 h)
+
+[pages]
+# The public site folder (plan PLAN-013 step 13.2), made by scripts/assemble_site.py from the page build, the forecast data (site_dir) and the stored base map.
+build_dir = "data/pages"        # ignored by git
+dist_subdir = "dist"            # the page build (vite build --base=<base_path>), inside build_dir
+site_subdir = "_site"           # the assembled public folder, inside build_dir
+base_path = "/Quest_lab/"       # where the site lives on the public host (a GitHub Pages project site); the workflow takes the repository name instead
+headers_file = "config/headers.conf"   # the one place the security headers are defined; the policy goes into <meta> tags for a host that sends none
+max_site_bytes = 1000000000     # GitHub Pages: "Published GitHub Pages sites may be no larger than 1 GB" (docs, read 2026-11-07)
+meta_ignored_directives = ["frame-ancestors", "report-uri", "sandbox"]   # a Content-Security-Policy in a <meta> tag cannot carry these

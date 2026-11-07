@@ -1,7 +1,7 @@
 // The page: wires the place choice, the activity choice and the plan together. All forecast maths is in plan.js / windows.js / view.js.
 // Privacy: the position, the saved places and the settings stay in this browser; only a typed search text goes out (geocode.js, D27).
 import activities from '../../config/activities.json';
-import cfg from '../../config/frontend.json';
+import config from '../../config/frontend.json';
 import './badge.js';
 import { bufferGetter, devicePosition, loadManifest, locationAlreadyAllowed, maxTileBytes } from './data.js';
 import { byId, el, fill } from './dom.js';
@@ -17,6 +17,9 @@ import * as pageMap from './pagemap.js';
 import { nameOfPosition } from './reverse.js';
 import { loadSeries } from './tiles.js';
 import { buildView } from './view.js';
+import { dataPath } from './sitepath.js';
+
+const cfg = { ...config, data_url_path: dataPath(import.meta.env.BASE_URL, config.data_url_path) }; // the site may live in a sub-folder (GitHub Pages project site)
 
 const LIST = [...activities.activities, activities.custom];
 const IDS = LIST.map((a) => a.id);

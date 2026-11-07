@@ -94,3 +94,15 @@ export function webgl2Available(makeCanvas) {
 export function mapPointName(lat, lon) {
   return `Map point (${lat.toFixed(2)}, ${lon.toFixed(2)})`;
 }
+
+/**
+ * The developer line for a map error, or null when it must not be reported. A cancelled request (AbortError) is normal when the map moves faster than its
+ * tiles arrive, so it is silent. Anything else gets its name, message and address, so a rare error says what it is (E034: "map problem: Error" said nothing).
+ */
+export function mapProblemText(error) {
+  const e = error?.error ?? error; // a MapLibre error event carries the real error in .error
+  if (e?.name === 'AbortError' || /\babort(ed)?\b/i.test(String(e?.message ?? ''))) return null;
+  const url = typeof e?.url === 'string' ? ` ${e.url.slice(-100)}` : '';
+  const status = Number.isFinite(e?.status) ? ` (HTTP ${e.status})` : '';
+  return `${e?.name ?? 'error'}: ${String(e?.message ?? e).slice(0, 200)}${url}${status}`;
+}

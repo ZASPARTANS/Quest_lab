@@ -1,5 +1,5 @@
 // Starts the map for the page and keeps its state apart from the plan code (app.js). The plan never waits for the map.
-import { frameStep, webgl2Available } from './mapstate.js';
+import { frameStep, mapProblemText, webgl2Available } from './mapstate.js';
 
 let mapCode = null;
 
@@ -35,7 +35,7 @@ export function startMap({ state, ui, cfg, onPick, onStep, redrawBlocks }) {
   ui.mapMessage.textContent = 'Loading the map\u2026';
   return (preloadMap() ?? import('./mapapp.js'))
     .then(({ createMapApp }) => createMapApp({ cfg, manifest: state.manifest, base: cfg.data_url_path, labels: cfg.model_labels, container: ui.map,
-      toolsRoot: ui.mapTools, getTile: state.getter, tileCache: state.tiles, onPickPlace: onPick, onStep, onProblem: (error) => console.error('map problem:', error) }))
+      toolsRoot: ui.mapTools, getTile: state.getter, tileCache: state.tiles, onPickPlace: onPick, onStep, onProblem: (error) => { const text = mapProblemText(error); if (text) console.error('map problem:', text); } }))
     .then((app) => {
       ui.mapMessage.hidden = true;
       ui.mapTools.hidden = false;
