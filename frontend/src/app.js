@@ -114,6 +114,7 @@ async function render() {
     ui.welcome.hidden = false;
     return renderSavedList();
   }
+  if (!state.manifest) return undefined; // the forecast list is still loading; chooseStart() draws the plan once it is there (E033)
   ui.welcome.hidden = true;
   const place = state.place;
   try {
@@ -243,6 +244,7 @@ async function chooseStart() {
   if (fromAddress.activity) state.activityId = fromAddress.activity;
   if (fromAddress.wet !== null) state.customWet = fromAddress.wet;
   renderActivities(ui.activities, LIST, state.activityId, chooseActivity);
+  if (state.place) return render(); // the visitor chose a place while the forecast was loading: keep it (E033)
   if (fromAddress.place) return showPlace(fromAddress.place, false, 'address');
   if (await locationAlreadyAllowed()) return useLocation();
   if (state.saved.length) return showPlace(state.saved[0], false, 'saved');

@@ -31,7 +31,7 @@ repo = "protomaps/basemaps-assets"
 commit = "028c18f713baecad011301ff7a69acc39bcc2ae7"
 raw_url = "https://raw.githubusercontent.com/{repo}/{commit}/{path}"
 tree_url = "https://api.github.com/repos/{repo}/git/trees/{commit}?recursive=1"
-fonts = ["Noto Sans Regular", "Noto Sans Medium", "Noto Sans Italic"]   # the fonts the basemap styles use
+fonts = ["Noto Sans Regular", "Noto Sans Medium", "Noto Sans Italic", "Noto Sans Devanagari Regular v1"]   # every font the basemap style names (a test compares this with the style); the Devanagari one is the style's fallback for Indian place names written in that script
 font_range_size = 256
 font_range_max = 65535             # every glyph range of the three fonts (about 11 MB): English labels need only 0-1535, but place names without an English name show their own script (Arabic and others) and would otherwise ask for a range that is not stored
 sprite_dir = "sprites/v4"

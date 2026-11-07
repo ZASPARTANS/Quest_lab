@@ -2,12 +2,13 @@
 // (allowed and refused), from a place search, saved places, hostile input and no WebGL. The site is reached as http://localhost:8080
 // (the browser container shares the preview's network), so the browser treats it as a secure context like the HTTPS public site.
 // The place search is answered by a MOCK geocoder unless the real-search switch is set (then one real request goes to Open-Meteo).
-// Base-map scenarios are in basemap_scenarios.mjs. Exit code 1 if any scenario fails. Engines: chromium | firefox | webkit (BROWSER_NAME). WebKit is the engine of Safari, not Safari itself.
+// Base-map scenarios are in basemap_scenarios.mjs, live-layer scenarios in live_scenarios.mjs. Exit code 1 if any scenario fails. Engines: chromium | firefox | webkit (BROWSER_NAME). WebKit is the engine of Safari, not Safari itself.
 import assert from 'node:assert/strict';
 import { mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { chromium, firefox, webkit } from 'playwright';
 import { basemapScenarios } from './basemap_scenarios.mjs';
+import { liveScenarios } from './live_scenarios.mjs';
 
 const frontend = JSON.parse(readFileSync(new URL('../../config/frontend.json', import.meta.url), 'utf8'));
 const cfg = frontend.browser_checks;
@@ -38,8 +39,13 @@ async function open(browser, options = {}, allowedHosts = [siteHost]) {
     if (r.url().includes('/tiles/')) log.tiles += 1;
     if (host === geocoderHost) log.geocoder.push(r);
   });
-  page.on('console', (m) => { if (m.type() === 'error') log.problems.push(`console error: ${m.text().slice(0, 200)}`); });
-  page.on('pageerror', (e) => log.problems.push(`page error: ${e.message.slice(0, 200)}`));
+  // LIMIT: WebKit reports the requests that a SECOND navigation cancels (the first page's map still loading) as errors ("access control checks", "map problem").
+  // Those two messages are not counted in WebKit after the page was navigated a second time; a page that stays put (address, base map, live layer scenarios) is checked strictly.
+  let navigations = 0;
+  page.on('request', (r) => { if (r.isNavigationRequest() && r.frame() === page.mainFrame()) navigations += 1; }); // counted when the navigation starts: the cancellations are reported just before it commits
+  const cancelled = (text) => engineName === 'webkit' && navigations > 1 && /access control checks|map problem/.test(text);
+  page.on('console', (m) => { if (m.type() === 'error' && !cancelled(m.text())) log.problems.push(`console error: ${m.text().slice(0, 200)} [${m.location().url.slice(0, 160)}]`); });
+  page.on('pageerror', (e) => { if (!cancelled(e.message)) log.problems.push(`page error: ${e.message.slice(0, 200)}`); });
   page.on('dialog', (d) => { log.dialogs += 1; d.dismiss(); });
   return { context, page, log };
 }
@@ -193,6 +199,20 @@ const scenarios = {
     }
     return log;
   },
+  async 'place chosen before the forecast list has loaded'(browser) { // E033: a slow connection; the choice must be kept and drawn once the list arrives
+    const { context, page, log } = await open(browser, { timezoneId: 'Europe/London' }, [siteHost, geocoderHost]);
+    await context.route(`https://${geocoderHost}/**`, (route) => route.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(MOCK) }));
+    await context.route('**/data/manifest.json', async (route) => { await new Promise((resolve) => setTimeout(resolve, 1500)); await route.continue(); });
+    await page.goto(base + '/');
+    await page.fill('#search-input', 'Chennai');
+    await page.press('#search-input', 'Enter');
+    await page.waitForSelector('.result', { timeout });
+    await page.locator('.result').first().click(); // the manifest is still being held back here
+    await waitPlan(page); // once the list is there the chosen place is drawn (not the start place), and no console error was raised meanwhile
+    assert.match(await text(page, '#title'), /^Chennai/);
+    assert.equal(await page.locator('.total .big').count(), 3, 'three rain totals');
+    return log;
+  },
   async saved(browser) {
     const { page, log } = await open(browser);
     await page.goto(base + ADDRESS);
@@ -237,7 +257,8 @@ const scenarios = {
   },
 };
 
-Object.assign(scenarios, basemapScenarios({ open, mapState, assertLanded, checkPlanShown, shot, base, frontend, ADDRESS, siteHost, timeout }));
+const helpers = { open, mapState, assertLanded, checkPlanShown, shot, base, frontend, ADDRESS, siteHost, timeout };
+Object.assign(scenarios, basemapScenarios(helpers), liveScenarios(helpers));
 
 const engines = { chromium, firefox, webkit };
 const launchOptions = engineName === 'chromium' ? (channel ? { channel } : { args: ['--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] }) : {};

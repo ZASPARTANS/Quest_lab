@@ -86,3 +86,5 @@ Everything below was found by running commands in this session. Times are UTC.
 - Docker images of this project: `precip-forecast:local` 688 MB, `precip-frontend:local` 585 MB, `precip-playwright:local` 3.9 GB (the machine also holds images from other projects). The preview container `docker-preview-1` is up on 127.0.0.1:8080 (answers 200); nothing listens on localhost:5173 (the testing site is stopped).
 - Largest source file: `frontend/src/app.js`, 284 lines (limit 300).
 - Surprise worth remembering: the project folder is read-only inside every Python service, so anything that must write into `config/` is done by hand from a draft under `data/` (seen at step 9.3d-1).
+
+- 2026-11-07 15:46 UTC (step 9.3c-4): the Docker WebKit 27.2 has WebGL2 (the map and the live layer work in it); the Docker Firefox 159 does not (`webgl2` false, map state `unavailable`). `data/basemap/assets`: 1029 files, 11.54 MB (13 MB on disk). Largest source file now `frontend/src/app.js`, 286 lines (limit 300); `frontend/tools/browser_checks.mjs` 282 lines.

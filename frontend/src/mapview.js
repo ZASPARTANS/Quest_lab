@@ -36,6 +36,8 @@ export function createMapView({ container, cfg, manifest, onClick, onProblem }) 
     data.zoom = map.getZoom().toFixed(3);
     data.center = `${c.lng.toFixed(4)},${c.lat.toFixed(4)}`;
     data.effective = effectiveView(state.mode, map.getZoom(), mapCfg);
+    data.bearing = map.getBearing().toFixed(2); // for the browser checks: the map must stay north-up and flat (rotation and tilt are off)
+    data.pitch = map.getPitch().toFixed(2);
   };
   map.touchZoomRotate.disableRotation();
   map.keyboard.disableRotation();

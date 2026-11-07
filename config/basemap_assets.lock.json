@@ -3073,6 +3073,1030 @@
    "sha256": "7d23ed8dd29eddca37ef7f78d2fce9af3181b1a421d8a93eac2534e112d7331d",
    "bytes": 1637
   },
+  "fonts/Noto Sans Devanagari Regular v1/0-255.pbf": {
+   "sha256": "dad5713ac55123d799bf83fbb603a8c79217efc5fc9d2958de6d343e239f86e9",
+   "bytes": 30
+  },
+  "fonts/Noto Sans Devanagari Regular v1/256-511.pbf": {
+   "sha256": "cdc60c4a5a720d957c45c10d34d21c4bbf31b4272861336144f795c07347bf46",
+   "bytes": 32
+  },
+  "fonts/Noto Sans Devanagari Regular v1/512-767.pbf": {
+   "sha256": "764221ca4a6d2fda6d5a5324ff81b649f858f919723d6cb8cb01e1b7200a3d93",
+   "bytes": 32
+  },
+  "fonts/Noto Sans Devanagari Regular v1/768-1023.pbf": {
+   "sha256": "bb8d1fe2d9fe2521b57bd455430e83632c4eba9f30153a1e5ed638986b175a07",
+   "bytes": 33
+  },
+  "fonts/Noto Sans Devanagari Regular v1/1024-1279.pbf": {
+   "sha256": "eaf8b3ec6c58e958ba624731f54a10797c5385664922dd3837ca56391d1f61bf",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/1280-1535.pbf": {
+   "sha256": "46a242e99d0708f708a0d4352ee60371dd94ce6c000f4903899415045e443540",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/1536-1791.pbf": {
+   "sha256": "8560894e39482292a9f56e388109fbc022c7cf6527a632a7365a22e0372933a6",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/1792-2047.pbf": {
+   "sha256": "0f19675b7ff6ffd8713325bd036d4b6a07b4445029651e3a3830ea45ed631473",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/2048-2303.pbf": {
+   "sha256": "b575d94297d201689023a643145fbf5eecb114d8d635002f62658aee1e4c492b",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/2304-2559.pbf": {
+   "sha256": "aa954457b8c6384c67349bcc58d1008f41ca59d0abb8158b525eb8dbfb2205ce",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/2560-2815.pbf": {
+   "sha256": "080ea2946c6d58ed09d60dfe93f07c06f44b60b8796e626cdc6052b152fd4848",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/2816-3071.pbf": {
+   "sha256": "bad97941d52f1e19b76f5acd91f097871a79d2047e8e17811ca3bf7433dac45d",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/3072-3327.pbf": {
+   "sha256": "9d8343ac9340b194510464fc197eafdaeda2cfbb930eae0ee2710c097c06afb7",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/3328-3583.pbf": {
+   "sha256": "7e81d0b9f37025cbc946204296d63f8789bd1f599caa9c3adf2f823e0983dcdf",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/3584-3839.pbf": {
+   "sha256": "a0d6b4ed024bf1f662ef24b12883dc33cf461d731fbfe047561b1aa5e2e37432",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/3840-4095.pbf": {
+   "sha256": "c5eae0d6402ad809bc26f0f0ef0c0c51b3a4a0230d90952ae6cb8fbd6763c31a",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/4096-4351.pbf": {
+   "sha256": "9a2158477004578c49fd50cb96c2360dd956091839fb42e2496eb3a501691752",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/4352-4607.pbf": {
+   "sha256": "2fa188d9366af4e31ad11ec77f351d0b81b580886f0390ea62f4fa053e915df6",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/4608-4863.pbf": {
+   "sha256": "11a67755d0eb7e18acb089879de5168547a3cfb1ccd670da5311aace31dab808",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/4864-5119.pbf": {
+   "sha256": "c717d85d57a78d8b7e71439db75e943978f21592fb7b4cfb121f749d6edeb01d",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/5120-5375.pbf": {
+   "sha256": "97e5a46765e7b994e503db097dbf7fa5a17f40dad6651c8c3f0c855d1642ac3d",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/5376-5631.pbf": {
+   "sha256": "120730398c1f5e3d2d9ad7ddd5ccc19de451609955b3bb71594948f7294edea4",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/5632-5887.pbf": {
+   "sha256": "9b4def5028a78b54910409190cfd65f9c84c79fed645a67be8011ef34d287573",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/5888-6143.pbf": {
+   "sha256": "783565e2159dede982902a1c84ea564ff1555df0274ecad3bd12dd9397705bb4",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/6144-6399.pbf": {
+   "sha256": "24ee6d8da3f5e21cd664f41ea46ab8ead8fe56b0d47da95029f320c58f33322c",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/6400-6655.pbf": {
+   "sha256": "20ac4a48ad55806772a8bc045c0c054c8e02d2196b20a1c49a529f5ad0a33b1b",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/6656-6911.pbf": {
+   "sha256": "ce19966a92c800dd00152af5192e61ed06dd2c84994530771d51fd757afe7f09",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/6912-7167.pbf": {
+   "sha256": "5a31ba6da3724363f0dfaafb53e568df1cd9783f90ca8124c1e51cee6e6b4dd4",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/7168-7423.pbf": {
+   "sha256": "fcf75c970790591436018384dafbb7f125683cfcba76cd90abe8cda5ca0f2509",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/7424-7679.pbf": {
+   "sha256": "e7adb77aaf507b3c3872e6e15f351fb02cc089347e176b35ef9739a9aa5aa3d2",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/7680-7935.pbf": {
+   "sha256": "f87fbb9567d426845ddee9175e21e62a414e5b2091b83509f0020618c2f51f55",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/7936-8191.pbf": {
+   "sha256": "4bdc68fde289a5160b17e0068ce594a78f834dd21ad53e23d03f7aad048b7f30",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/8192-8447.pbf": {
+   "sha256": "67acba72f5d38af27f64757f16dcb556be13716b74c1d52b509c45572a9bcdc1",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/8448-8703.pbf": {
+   "sha256": "ca9a6cc0136dd04e2fdf47f4421431b2aa629e0e1230d832a72b1b64c64fc2ec",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/8704-8959.pbf": {
+   "sha256": "466205638db1f6aa24fa7ced722b260b56fd0e6907b4c412c2312e98f892da97",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/8960-9215.pbf": {
+   "sha256": "35adba1b450619f5394644ae0a9961fef8a0311b78e911540a533e510c627f31",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/9216-9471.pbf": {
+   "sha256": "a95089b7f24e9d96d0bf007ffbf8d38535a09d171b68a11fe92339ed57cad968",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/9472-9727.pbf": {
+   "sha256": "1f580e61ece637c4f69358353aa870dd1f3fab952229cf9ab8873ef80bd632a5",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/9728-9983.pbf": {
+   "sha256": "3bd7825533d3589828b0d2a52f78cd90f240150997768c9aab11b45378d8e37b",
+   "bytes": 34
+  },
+  "fonts/Noto Sans Devanagari Regular v1/9984-10239.pbf": {
+   "sha256": "f8e7bf3d677026fbe2ce343c794d1a421d09326e8c5a59915ede33ec89e9bd7e",
+   "bytes": 35
+  },
+  "fonts/Noto Sans Devanagari Regular v1/10240-10495.pbf": {
+   "sha256": "61861ed110f3accefbad853b9e9c6f7a5f6f0bd4c5d43f752fc0c7867cef4e14",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/10496-10751.pbf": {
+   "sha256": "77574ec67be5b12b95622070e9b35d03d616fd767aac8fbe7a15092548ee45ad",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/10752-11007.pbf": {
+   "sha256": "52804fe101122eae9a4399d712222b67e8cab3bb65299268769b8940ed5d274c",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/11008-11263.pbf": {
+   "sha256": "1afa075c9238941315d42b793bb37ba54866aa8ca4fe11d017f426825b49ed48",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/11264-11519.pbf": {
+   "sha256": "56c45292e5ff8cc4a17c52cf33aaf44da0b896024c15bcd3ff6ac8519796254e",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/11520-11775.pbf": {
+   "sha256": "559d95b570e65427015b093106ea068c1fa956293f697e7715cf943705ac2f92",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/11776-12031.pbf": {
+   "sha256": "a1ec7c68d904489564560b9b3301fd204b49f9d1dc3af43909bb0db659a1052d",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/12032-12287.pbf": {
+   "sha256": "85b7b694eafa7b3f0c990ab4e9c5eba886ab74139b00275e8fa4064fde9a25c1",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/12288-12543.pbf": {
+   "sha256": "0268b0d55f7d9b225739eeb5d0d31ee03f24692fa445967dd881378b85bb080a",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/12544-12799.pbf": {
+   "sha256": "e11965ebf1d8d44baf7e8dd53a689e59d877ae5f3489252bf0f2a514d7e8ec6a",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/12800-13055.pbf": {
+   "sha256": "15a8b7fe54425efdb234b85eabd48eb762488bff1014b5a19d3e4a5ddfe570cc",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/13056-13311.pbf": {
+   "sha256": "9c8e6daec060fb9a41952e8d211f9348f15d8e775564cb9a7e4712eef23990e7",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/13312-13567.pbf": {
+   "sha256": "88a0bec8b99684305b12bea71f559238eb35b5e5bd98da0203a29e0cc96565de",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/13568-13823.pbf": {
+   "sha256": "34d8718eac24afaf9ace6ad1e0ef2eae613be409afefa489ba92b3e9e84144dc",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/13824-14079.pbf": {
+   "sha256": "d9548311bd917da7220c49ffad9c98fc71df4d3f15f267833f5975fa6af9a07a",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/14080-14335.pbf": {
+   "sha256": "5c158d2f990e1a71f05640fe41a8d94a1353095cef37d5ea5f53ae9d5d4e66ab",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/14336-14591.pbf": {
+   "sha256": "c5483c357693c5fb2e1a2dc322beee50a048fde311269607f579978305831163",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/14592-14847.pbf": {
+   "sha256": "84bf56373fa7ed308c8dcd3fc9311c1e03274d13682b20dc2a85365dfaa6a7ab",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/14848-15103.pbf": {
+   "sha256": "fc38679dda1ed083603949434568332dc5cb6dde95c77866cca12b8f8fb5da03",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/15104-15359.pbf": {
+   "sha256": "1e231a3c64b3c9ac193c1d6d55cac6c3fa189fe3a44e8a2c52e1b06e638d13bc",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/15360-15615.pbf": {
+   "sha256": "98eec943433e5c8a81ac29ee94f1bc6c5e6917e9b99dbb2c1342a3bc984be755",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/15616-15871.pbf": {
+   "sha256": "ce76956faf618c70a4a2195aec37cd3655cc4e302ff4e59666f039605e135856",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/15872-16127.pbf": {
+   "sha256": "8de2448727262609fe423d18df2a5f137f244972adc9b20b60e78ec83a405db9",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/16128-16383.pbf": {
+   "sha256": "4c3300b33aa2c055f24948afa692948349b41e6be2afb2f75034022b100df70f",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/16384-16639.pbf": {
+   "sha256": "76b18d2bd9a51167c664a19bb7f0c6857087dd0d7e15b71a2c67b28c43a3dd91",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/16640-16895.pbf": {
+   "sha256": "4d9c99c5fa085c070a7c42e92fa37328388834892e5445b18ad9e9ae80836264",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/16896-17151.pbf": {
+   "sha256": "9fc4173240a76acebb4f78ef7ffa36e161b198d20ef9fdc648be4e7601130243",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/17152-17407.pbf": {
+   "sha256": "7a5320f72941c8f36b05eefd509e9ede951575b8ee52b1a590e1fe2551458fbc",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/17408-17663.pbf": {
+   "sha256": "b80d1d2edce3facf6387d42d22a0dd49c2db4f28675dab4cdf67f7655da5923f",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/17664-17919.pbf": {
+   "sha256": "a75387fcd9f31b080793d11677f4bf192c488fec0ec86e511fe7f2303354ed01",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/17920-18175.pbf": {
+   "sha256": "954ae7b2e232509dda13cf1b5c585b5976f7a0c9628ad9a08fdb2d1bbbdee49b",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/18176-18431.pbf": {
+   "sha256": "a986a6de5539ad7f475df1496de18553d4ddb45c8ff876aac071340a74573528",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/18432-18687.pbf": {
+   "sha256": "b3be5ac338ce33b88d08b53535ab2abddbc24f2cce41e6467e44261e5c90c21f",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/18688-18943.pbf": {
+   "sha256": "5e3231ee175c49142fbfe774b69838dd37dcca1f77749c20ac7e92c6b9a867ce",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/18944-19199.pbf": {
+   "sha256": "07e3f5074cec08880fa96660254f4778d0881084b736a51f0fd3a3b913a3b8d0",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/19200-19455.pbf": {
+   "sha256": "b92f91ae8b45b82d9509ef77c48feed9ea8b6f07b1563bdfc5cafa9d77dc4491",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/19456-19711.pbf": {
+   "sha256": "0cc8ede79d11fe7bc8c94ede30a7477bb01fadf814ce5d9d1904dab77b6000ea",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/19712-19967.pbf": {
+   "sha256": "1cc30cff6f3ddf006b8bd858e5cf8de7d8ff7fafdefe8478993add29568ed0d8",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/19968-20223.pbf": {
+   "sha256": "1bbdb596edd086068f573f058b5d2d599478496b596ccf24144bcb02ae98b2f6",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/20224-20479.pbf": {
+   "sha256": "144eacf55f2661a1d1232ea5f6e23180487b3fa5cf085f450d693344a1387ecf",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/20480-20735.pbf": {
+   "sha256": "6d318c624607924ead1536d42378f06bee9458abb8fbf83752a997b0bc4fa22b",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/20736-20991.pbf": {
+   "sha256": "7f3159a6b6bfd82f41e76e350d14a26983aa13369b6281d9d6aa9291197baf1e",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/20992-21247.pbf": {
+   "sha256": "ee13e85fbfcb5ef44be08f0532aeb95ad2f2131cb721fb3af555a05b80e907bf",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/21248-21503.pbf": {
+   "sha256": "0ee24026d7cf57564634c22d073e72ec4d226f8e998fc8839c2cbd474ec5da9b",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/21504-21759.pbf": {
+   "sha256": "88b68a6c05e68a4c3133b8d6ad3788590bc28281c8ae98887eec18005d1bd01e",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/21760-22015.pbf": {
+   "sha256": "59dafe72891308ce6d87db6c6e03065eceacca943db030c918ecb79313bb7136",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/22016-22271.pbf": {
+   "sha256": "d6e7f74ca5fe9fa53585747812cc115493302302ff95b5e60037f85f86c046b4",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/22272-22527.pbf": {
+   "sha256": "5a783e17e1c84ca626a46621894c8f4afb6babe5c7c36f2f886196ee23ffb0ea",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/22528-22783.pbf": {
+   "sha256": "158c17854d218c68646ea215494e089439c0d7c042c0e3701bd9b22fb2b01602",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/22784-23039.pbf": {
+   "sha256": "a84810ffeb232a59455446056e76dc26a37dec8a857ebe6b0dd34780e533d055",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/23040-23295.pbf": {
+   "sha256": "660da4a74b1cffe20f80a9f75f0f404a1dabd7665909ca6ed251ecbfc99b8978",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/23296-23551.pbf": {
+   "sha256": "4a52616c9fa56a3939ba2eed2aa668664de187389a75444589c5018b79be7f24",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/23552-23807.pbf": {
+   "sha256": "9e327d18f3639d5c2fc95b8c1846bab15134bac6d7e80ca658e15f6782cd57ca",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/23808-24063.pbf": {
+   "sha256": "bda8616c06fab177338ac4ff6890c30a766f5ea05a9fd2242c8cf9f6a98041e7",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/24064-24319.pbf": {
+   "sha256": "d6ef47ee6e159d4f256873d3040b9cbc27a7e51ac482cf6018c7282a47094297",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/24320-24575.pbf": {
+   "sha256": "9def9a8f1cf52c7b427c8f9320db2052577f9f64328490538f9490fe7681aff9",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/24576-24831.pbf": {
+   "sha256": "a1c2614273ba079e1d821e9aa0a949f662e2ecd54787504859a16d2d4cb147b4",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/24832-25087.pbf": {
+   "sha256": "ca50c20df872c8e9b36fd55b1f161f1cb63568f67c6865f6d78f28289932663a",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/25088-25343.pbf": {
+   "sha256": "0a581920284c76381af0d056dacc9a750a9d099ab305294dec649fab8bb3f3f1",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/25344-25599.pbf": {
+   "sha256": "fe49888dc6b0656976354714d1090fdf4e01bea85af3432fb123eee83bb13ef6",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/25600-25855.pbf": {
+   "sha256": "8b0ab5d6124644fe466646c84d480f9648ab04654f6765285191c9e860558290",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/25856-26111.pbf": {
+   "sha256": "444742688e359b519d276210031d1551ecc3fb20f670eee39870a515a5b5bc4c",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/26112-26367.pbf": {
+   "sha256": "f8a45f0be7ac8354468349e569c1f05f8e9e7670d4ae350e7c2d48afa4a15579",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/26368-26623.pbf": {
+   "sha256": "36b6ca4888e1a9be572deb0cfe1932388b7e8040293a65eb5ff7e49fa0a67724",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/26624-26879.pbf": {
+   "sha256": "7280064aea6bb463cbc977be438a485b7da32d7b0c0a0acd5b4249926937fd03",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/26880-27135.pbf": {
+   "sha256": "35442becb28e7a25f401128eeb66d196b6b6aa6010fe890816b8f3da305fd80c",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/27136-27391.pbf": {
+   "sha256": "69a0fdd0cdb14da5824a05e7c8fdbb586885fc990cd516e3aeeec342c9d9a217",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/27392-27647.pbf": {
+   "sha256": "5ca0b2d67bbf3d04be387962e1f3e257fb1ca83579ebb6a784dea66dcc9a7efe",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/27648-27903.pbf": {
+   "sha256": "30eeb412e18430829c18d7374130efb9408084b6aedaad9c93b77f8430740c9f",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/27904-28159.pbf": {
+   "sha256": "ab642328e729844f3f60f3f38a95bffe9356658deeb0e55ba7231115a757d970",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/28160-28415.pbf": {
+   "sha256": "b245e653a77b530d418f6beb17fc8b8f68dff00379dd8a3574603d15724b67ea",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/28416-28671.pbf": {
+   "sha256": "bd41bf45e902815ec39cc584389d20ce4aa48fefc8e5aaf90fba60ac327cd4d7",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/28672-28927.pbf": {
+   "sha256": "0a74675494782a2db0e19d0a3a95fba7a79ce8b4ac181c6f2185282a3c46facb",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/28928-29183.pbf": {
+   "sha256": "6df5f56b69fa231304501480aa69a30fbe2852d4958f6dc6dbaf56b6b99e1b6f",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/29184-29439.pbf": {
+   "sha256": "542421a7bc622468fa77f95aba3893b72084b3c716da350b89ab07a83462c825",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/29440-29695.pbf": {
+   "sha256": "08fa771503d190472e8e69e3ed63cd88ba7f54a3fc583e6583d93c778f2b0ebd",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/29696-29951.pbf": {
+   "sha256": "42ff3bf4b408e5cc283cfd227da2ebd02c053537cdd510e9d95f52816b9eae3f",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/29952-30207.pbf": {
+   "sha256": "a8dfff848f419018737775679f46396ad5fc50fbc39869f7b2939406326cb5d7",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/30208-30463.pbf": {
+   "sha256": "344c14cf55d99b2b698f79f08ea7714a175af03863396d3c8a41ffbc871565de",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/30464-30719.pbf": {
+   "sha256": "f294c6176d74ee873df925b56fe80dc016697bdff1acd948feff221c64315267",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/30720-30975.pbf": {
+   "sha256": "695e4e44b3642c386402a899e119f3dcc428da34edc5267cfda9fce8e3dc7d1b",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/30976-31231.pbf": {
+   "sha256": "8f1209fecfe4c5fbda5c57e004e9851d60e179ce144adbc027cb7f4e0bd0acea",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/31232-31487.pbf": {
+   "sha256": "8c1ba3d67a7b5349497eb4765a7d81535eb4684b5aa1c3386f5390bb03bf523d",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/31488-31743.pbf": {
+   "sha256": "e3787299532e12c7ccee054c7503d777577339b19227f8b78b7a382def7f3ac0",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/31744-31999.pbf": {
+   "sha256": "f04158626f115f7205edf7e6cf60ba6eb485d96336b9c5176dc96a86b4e669b9",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/32000-32255.pbf": {
+   "sha256": "eceaedd92ac03ca4e15bf843c36fa1933e84262b005926da8dc84798b0a1bb1f",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/32256-32511.pbf": {
+   "sha256": "5d7b7bfca6b637bb28f14a88abbcacc70d35ad1183cc0f4112f1941f36e2807f",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/32512-32767.pbf": {
+   "sha256": "71d8c3682b72788e2d00620b87fe397efab4468ab1775a6166b4e1cd7d100515",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/32768-33023.pbf": {
+   "sha256": "73f2c6fe175d23a85da860d67430c7cac787a852a2ab7c10599f00aaeb21146e",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/33024-33279.pbf": {
+   "sha256": "944a64d963a18916f9b28b461edf9a1192f513b7d66db57a6831683afe5d536b",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/33280-33535.pbf": {
+   "sha256": "ee36bc14345c4d643e0a45400ab4e5b568ce42073404df1ae8c8ee38907a52e6",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/33536-33791.pbf": {
+   "sha256": "97cd9e8a0c1764f27fd2f994024b91d96dc270cab92cede10d9edc0059e23398",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/33792-34047.pbf": {
+   "sha256": "b2bde650685e0217fb4cf16be11b6ae1c641b60ea6bdbd06d3b2d935240444a0",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/34048-34303.pbf": {
+   "sha256": "38e74d8e71a7df2d730edf378d06f4ef01b20b470d52d99c1a05e31b685a5881",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/34304-34559.pbf": {
+   "sha256": "9cd6725655ae08fe1e4c2b9b0baa93863914461582b40a98154257b020a7a998",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/34560-34815.pbf": {
+   "sha256": "4354a2e810888f00c0d7479e0c09cad7c366b06d3c0ec6ffa6916a4d4121a78e",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/34816-35071.pbf": {
+   "sha256": "5f9ca2d2f593d8d712c8357e8922dd05a97d6fa463252d0fc3563e1a42ea4c6e",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/35072-35327.pbf": {
+   "sha256": "862322dd58d723c79f76ea0ff3bc3a34c82dd00f92c3e83c7bca6440782d23d7",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/35328-35583.pbf": {
+   "sha256": "435d1108cae5ffd83d7d22ca7f9ca92c04045121cbfecb198c1cb6094e754177",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/35584-35839.pbf": {
+   "sha256": "a92a4b91d79164bcf237f1d9bc3ce0720a07ade8a091f1b88a41f2713c2035ec",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/35840-36095.pbf": {
+   "sha256": "03eda1150f4fffe8ea4f83632411ff6ed57e477cda429d946d751ea583c1e037",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/36096-36351.pbf": {
+   "sha256": "5bd1e6246b6aeb0f6c60e3d04cc9f6dc2ef824f4ca42166fd281ce42a761d18c",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/36352-36607.pbf": {
+   "sha256": "48be90cad99772239974c5c876e15f3461e72d16e41e31b8e4f1e110bb46b71c",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/36608-36863.pbf": {
+   "sha256": "8b918544171f41edddaf8e91b3d4c2dc01c3955b2da083d119608cc82e8ea78a",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/36864-37119.pbf": {
+   "sha256": "c4ad8fca7dc6ad79d49104a225fc005c22c38709d5c1c4661e905096c8eb3096",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/37120-37375.pbf": {
+   "sha256": "ca2bf2b3728b2c30b43940d481ed425ad3a0cb416d32af363c4d4f8761d2c29e",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/37376-37631.pbf": {
+   "sha256": "042b11285042e2e4e3a0511c688d309e8eec00a9f952aa8e654044d071fa94a5",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/37632-37887.pbf": {
+   "sha256": "fd48fc8b6831c46ede620dbc2e3237af00edf2b517e9e69f9a7a966db027fe91",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/37888-38143.pbf": {
+   "sha256": "a63463adaf8a80dc00f438444f88618d32325403ca9d8428830369a8434a6e6a",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/38144-38399.pbf": {
+   "sha256": "caa3a82d9b746bb728729315a06762e6485e534ff4988afe8e2e69440a3a47f4",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/38400-38655.pbf": {
+   "sha256": "63f46a91840f384668d8dc32dfd5219180b562d3041e35823adb9bfd67a6ebe7",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/38656-38911.pbf": {
+   "sha256": "413b93b6f76350388c226de1e7f9b361c00407a643f7f516e8d089a764e4854c",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/38912-39167.pbf": {
+   "sha256": "4f0e78acbbeb33f6814f6fbfae866e6796b3180d0b8a78a82243951ff784ee61",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/39168-39423.pbf": {
+   "sha256": "ce54471045b23b6975df75740dfbd3a9c6dda7fad50e5cdaf810d94770520a52",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/39424-39679.pbf": {
+   "sha256": "5c44b060ea1fd1606c0f6aabb1ee5297bf8d9a9f43f193083ee56b511155196b",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/39680-39935.pbf": {
+   "sha256": "df3156366d2c8586c306c1a4468160a00e2c8a4d6937d740710dbfcecce61112",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/39936-40191.pbf": {
+   "sha256": "13327536839c2f0571e597bafb737e7af233969874873d41015df3305581f57d",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/40192-40447.pbf": {
+   "sha256": "52f0636a85cacbfacfa036c931952fa6182e077598ebe4b63b2cb2b614db9f82",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/40448-40703.pbf": {
+   "sha256": "ef39fd2d9415f51db99cb3a7b14e0c684842c7b383294dd549dd49b792a36d4b",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/40704-40959.pbf": {
+   "sha256": "743047aa715968e6b1fcc1d6910b52576f31abf0aa3aa6f577a20e932be39659",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/40960-41215.pbf": {
+   "sha256": "80b7b5c9e3d4ce7848e4c23459ec6eca525410720ba4cce9261ccb36dbcd76ee",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/41216-41471.pbf": {
+   "sha256": "523d109b7438247ecdc93a2d3c07999756e0c4aa30d9e6bdd0a4d2e6b00e8e7e",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/41472-41727.pbf": {
+   "sha256": "e659a5b5a07c9e3d10ed3142700eedaa64879c0cf5afb9058eb9bcc58b9cac44",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/41728-41983.pbf": {
+   "sha256": "08ec489466eda7faed4f7833509c682aa007590626058cb82db3d8505e5ddd5b",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/41984-42239.pbf": {
+   "sha256": "a5f0b2f58be6183ab5a6209d9f77f253e1c1f6973920ced565b99addd61db4f0",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/42240-42495.pbf": {
+   "sha256": "d66dcc751574fe62cc97c03268964185e56ac03ed2d74e5f255b092f4138b63f",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/42496-42751.pbf": {
+   "sha256": "a3ff635a22f2373da0457e66883d2bb9c0bbc1ea96fa8a8a0197788491cf5659",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/42752-43007.pbf": {
+   "sha256": "1026bdf4795c3a6fe0c2617ebf80ade17477230e1cba4495ff27ee4061ebb41c",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/43008-43263.pbf": {
+   "sha256": "2bcc20cb43c349326fb788fcb921d92cf43e4268752b43c41816b34cfbf8713d",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/43264-43519.pbf": {
+   "sha256": "f0414f7a77fe021a9bc1b10bbb83cb3b6d4213f8d0c38d6eb25a9e45435b9af0",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/43520-43775.pbf": {
+   "sha256": "06072aa981591514ac2b9b94a92684385ad39e049665b5277ccc19c5ff08fd7a",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/43776-44031.pbf": {
+   "sha256": "5acf5d630da8892aee738318dd28b0c7634f416f5f8ff618609ab25a3c07e3cf",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/44032-44287.pbf": {
+   "sha256": "3e6fa5fa7ee3f708722530bccf958242a51981da8f9c8416636dd3545c318d8b",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/44288-44543.pbf": {
+   "sha256": "788f7fa6ab13f4ffeb2c3d5abe125ace30b45f128e4bda45c03d112251ce01c8",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/44544-44799.pbf": {
+   "sha256": "8b978ee22b9f04a044d56f72f09807108f85e01987256e8266dffda985adfe2a",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/44800-45055.pbf": {
+   "sha256": "15d4022fa0452dfddfdec01831c3d6e59ea361f115098225840c46ff05eb3243",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/45056-45311.pbf": {
+   "sha256": "8ead35828441e037d049ca510481548c4808e3adbd75076f13c6c504c5622d5a",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/45312-45567.pbf": {
+   "sha256": "21aa075886d06558cdd8d185076f55ee39a85abdc8e992bdb097dc3199fd784c",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/45568-45823.pbf": {
+   "sha256": "df9fa6df352f6a43f32d3e16ea650dc617b4f85fda2af70b79656813d6c77e68",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/45824-46079.pbf": {
+   "sha256": "e0f7706b8579dd798f7f772af0b12786565b3337bdda36b31599ea5651bf32ff",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/46080-46335.pbf": {
+   "sha256": "ef8fca836bd4987a6691cdc33fa36292dbf44f7b9d4a06c3cc9a08042ccce7dd",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/46336-46591.pbf": {
+   "sha256": "e41559c99883ef863e89818c757e39c34245089fc5493fb39967cddb2a72ca40",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/46592-46847.pbf": {
+   "sha256": "ffdab48e252b61b9f9c5374c1448dd4f031eb93136a9ac21f642d6c3c7753884",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/46848-47103.pbf": {
+   "sha256": "2c2fbf95ee3b8a60efba4d5314190c9c59feebef006bee1268e343b3de7c657f",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/47104-47359.pbf": {
+   "sha256": "941ed27bc7b5eb81448a0d2c98c1a68ad69ee1daa5dcf2a05883f85be8f1eb51",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/47360-47615.pbf": {
+   "sha256": "87d0eded7176fdc93947e040c5f67fd4cd985b803f7290f9cbb688871e498ae6",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/47616-47871.pbf": {
+   "sha256": "6413c8b737612a36f85ae5bdb0a2b835722f4a75f507885c905b7d39af077349",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/47872-48127.pbf": {
+   "sha256": "28bd1adeaf6778a9594708075ea30d59c6f41b2006fc383d9729a7fb37634701",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/48128-48383.pbf": {
+   "sha256": "d168a3706505b52af02c6f79e76a7b183d032763572c85085d210ace8f9f8339",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/48384-48639.pbf": {
+   "sha256": "78b040c313ce3bcea61f0a0e6686d71a5404cba07f31c285fc78f162e193b734",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/48640-48895.pbf": {
+   "sha256": "9a913630cc63117e6ebaea751666f5f89ce2e97d5b7252b49f6ef5ff068093a5",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/48896-49151.pbf": {
+   "sha256": "c8fba9a7fde592ea22c390105f7b5ad83f3459ac93af12676788f7ba9d72fc02",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/49152-49407.pbf": {
+   "sha256": "daa3565da21fcbc05a548457f174cbc413c1ae1b518a8ee2a2494790ea284fdf",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/49408-49663.pbf": {
+   "sha256": "977d909da5920f309f44844328c9f5e84d9d554d0cc8132d61067c8009dbfa09",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/49664-49919.pbf": {
+   "sha256": "6eff17cee1022c66d97c2a27d6fa2ec7277f31a2aff36ae880cf95445c301778",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/49920-50175.pbf": {
+   "sha256": "f164b882da293451b60ca20901de868869bc55f57820792306f563348de3e439",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/50176-50431.pbf": {
+   "sha256": "c58d0e414263aa963dd8b8a3e1aafc94042db4be3218dc5a2ff08207b42b66df",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/50432-50687.pbf": {
+   "sha256": "ee06bb5cb11821f85e1e1df9935eddc167a0cb4f99385e10e1384fd3c2ca0dbe",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/50688-50943.pbf": {
+   "sha256": "ab14934ea9c3a509a988cc1cf9a333913533c215ff67d830a9b8e34c1371611e",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/50944-51199.pbf": {
+   "sha256": "fc77b909c7d2496a3dcf6a80e6b86e760b0a086f1ad8f44538483c43a243154a",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/51200-51455.pbf": {
+   "sha256": "4ec153c7c54d63194a7ec92c5d7fae5bef42871c4b8cfca52c7938706bde400b",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/51456-51711.pbf": {
+   "sha256": "5ee4658c03f0f55eea8d6595575dc5b634f3f4f6e0a8ff589f621e22d9f964f0",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/51712-51967.pbf": {
+   "sha256": "27e9665f472d70ff6f41c5c7a1beb9a2e76e706d21debdf194c4974c2844bf55",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/51968-52223.pbf": {
+   "sha256": "21ba849f7255ff6644ba91fe144b7d545fefcf2433e612a430d2cf6a57335bef",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/52224-52479.pbf": {
+   "sha256": "d2246343a2ff0dfb9ea4f37cb2a664a64f5c3985e24a6ff9b8c4293b3e9c989a",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/52480-52735.pbf": {
+   "sha256": "0bac93790e100950282f973bc6eb963a4c783069d8b331a3e6e285bf86d0bc08",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/52736-52991.pbf": {
+   "sha256": "5b762fe72cf3191ebef8c86e00b7ec8e442f279a6b980fefcd22a247d3bcd62f",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/52992-53247.pbf": {
+   "sha256": "8ae23b57360d79a9fc2e9c79b9a1c82ec961c608225a91777e4dc6972fa96145",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/53248-53503.pbf": {
+   "sha256": "d39824d793036be41face374bca466b914e1f924766be27e04e85b9b0ba702f8",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/53504-53759.pbf": {
+   "sha256": "312bc24f1e3e9c9b7bde19fd4b52fa548f1813c9f1ad789926ac7e47d0994872",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/53760-54015.pbf": {
+   "sha256": "991ccc2f64baf3764708525f472c0eabf253b841eea43853b03c97d80980aa98",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/54016-54271.pbf": {
+   "sha256": "6a8a2c0af8d010be2682bff5d961c923770f97894e664ae0f21a9b07230e61cb",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/54272-54527.pbf": {
+   "sha256": "a62b4b810581fc2ee5c761c8e5424e704c8dd3af36e54c829d296a631070201e",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/54528-54783.pbf": {
+   "sha256": "546d15104761080fde0bb14b0b27f5559bebd06b3cbdd4cda05cd5ec95c41ca6",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/54784-55039.pbf": {
+   "sha256": "e53eaf1b49fe1454678086a1c9d9276e05c4154327e7417939128adaed82291a",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/55040-55295.pbf": {
+   "sha256": "cef34fea6a6d0dca45843be3a7bb9813ed5b08a7d5e31619d313f6a66584e290",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/55296-55551.pbf": {
+   "sha256": "8f07af913b6d9e1ecd31ace6081af5f921e9548057fba2a228d6f47e1a0e8c5d",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/55552-55807.pbf": {
+   "sha256": "5fccbfce6171330a7bb5538189bb6ed4b47e7e6d79326a69f1f1870e187a6b8c",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/55808-56063.pbf": {
+   "sha256": "49e01c0bd8836f1d96b50ee8b5972bacc11bea1ca56d85e947af18de4c30d29c",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/56064-56319.pbf": {
+   "sha256": "e2d3b479ffb29bb3669b2436ba1342b8a5b89a58be7e36be8316b754ddf1fd11",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/56320-56575.pbf": {
+   "sha256": "adac45ec3bc068929126e1022db05bdab6db8b929d40b96e3dc9a5407f52104e",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/56576-56831.pbf": {
+   "sha256": "d18fc59eedc8eb1c8d743730302f26c3dda67481acdc334890a837d3ffda92a0",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/56832-57087.pbf": {
+   "sha256": "98ff0134079d2d043949670b896badaa68e9d84c38b473bd8e1dde61696d9776",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/57088-57343.pbf": {
+   "sha256": "abbf1aad1ce277146666462861c6170df68a17c0943ce3d852ecb7c66d268a67",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/57344-57599.pbf": {
+   "sha256": "e60605258c7f514f12c8040c5348ab6ff55b519097906e88257851f216098dde",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/57600-57855.pbf": {
+   "sha256": "3932cb8f03e059dfe174f50a49812a1a32ebfec554e0ca290bb5b3546b0a7809",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/57856-58111.pbf": {
+   "sha256": "354912f2a8afe0839e086c4d6e01c1cc11f9cc961f88a07270c06659042d69a5",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/58112-58367.pbf": {
+   "sha256": "4f6eb334af46bf09ae1f42aa10fed7ba1c6dc958103e5ae2a79049d006abff11",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/58368-58623.pbf": {
+   "sha256": "775fe1706149d7d9590a33ba7efd32f542c6c7c2c8ee5c6ce7a7c4479cd537e7",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/58624-58879.pbf": {
+   "sha256": "7a816f8f94aa9b43d66d408805ce230d4f66ad67408d6990ceb6802101ca6c45",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/58880-59135.pbf": {
+   "sha256": "dba2ea5e3b5cbd4e84a96b6bdaecdfff073ca96a4fe6ab80bdc9be056ceb581f",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/59136-59391.pbf": {
+   "sha256": "69cd014d6790ecf08682e94cfef3bcdc14dd74a781be24149322828d2314d80d",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/59392-59647.pbf": {
+   "sha256": "fadd573dbf56388c1201cc49a36ae328d7d9774aef0f276aac01bdd3f19627fb",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/59648-59903.pbf": {
+   "sha256": "abfc69124e9a50a2e94179e6984a9b4c4ca693a61982219951ed9ebfc1a73072",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/59904-60159.pbf": {
+   "sha256": "6d071d501139f04fd7ded06753aee6d862748cc2d7d1bc57904acad3275663c8",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/60160-60415.pbf": {
+   "sha256": "6050726bdcdae7f8d1dfd8bc6456c74bf3470cfb3f72579b98f19e2e57d4808d",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/60416-60671.pbf": {
+   "sha256": "9290e2081fe6c989a77143fa77207812f46ad81d2dd9f4a942df0eed2e72aad3",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/60672-60927.pbf": {
+   "sha256": "b15b15a18712c8e88f74910c4cd000092400195cbf605474b037f96411d8167e",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/60928-61183.pbf": {
+   "sha256": "25ac865074641fabadf775487bbd7585610d7f4ba7baa9974013ca7769d12987",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/61184-61439.pbf": {
+   "sha256": "3904dd2de8e4ba8b4a21158fb1b019e692fc5f384ff963126f254a881ab097d3",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/61440-61695.pbf": {
+   "sha256": "e32a43cf5ed2517fc2d60254e92e75b251ed8fe2890b92f9383bd417325ea5ab",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/61696-61951.pbf": {
+   "sha256": "6a5ca4d8261f0cd39ce4db41642f3c66e784a120030db2b654a0e62380d8f8f4",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/61952-62207.pbf": {
+   "sha256": "f0c2e3df46bc02a44f90526e66fc9bb102de9ac10abe7442dcdcf7652e467980",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/62208-62463.pbf": {
+   "sha256": "11b2aafe73959f6bb01a197d33cf97ff1aad355d881cb77bd53d6e14dc56fe34",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/62464-62719.pbf": {
+   "sha256": "004a125d477d61fdbb3b218067a9e376ac71fdb894809b73e964298e6bf1da36",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/62720-62975.pbf": {
+   "sha256": "a0a09f66e93e2bb5a0d215513c1a88968fd2aad43f71a8346156df481f8961ff",
+   "bytes": 48635
+  },
+  "fonts/Noto Sans Devanagari Regular v1/62976-63231.pbf": {
+   "sha256": "be7f98b6c4901402e099c162f04ca7a09deb59c0b540c765726b6c25402747d9",
+   "bytes": 110300
+  },
+  "fonts/Noto Sans Devanagari Regular v1/63232-63487.pbf": {
+   "sha256": "6b378bfde50aa44c346e772fa2b4dd5a5dce69b7ef743d037abc18dd6587da76",
+   "bytes": 117596
+  },
+  "fonts/Noto Sans Devanagari Regular v1/63488-63743.pbf": {
+   "sha256": "2f3c6b937839e3e46b3e024f1a8680683db67dd4ff62cd83347635e0f8947a9f",
+   "bytes": 115454
+  },
+  "fonts/Noto Sans Devanagari Regular v1/63744-63999.pbf": {
+   "sha256": "747a422156b81f2f5486fd75ddb2a35cac8d161bd2fa10ca49d08f7d1dd7ee32",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/64000-64255.pbf": {
+   "sha256": "45847e7aab563de37cd657013ec076319b5aa7dbb02b3450d1fa77a382fcc30e",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/64256-64511.pbf": {
+   "sha256": "e33eb2175f0d2d1aedf7d09c19c356b10df31972cf381e2dfd05d7d2b0f133e1",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/64512-64767.pbf": {
+   "sha256": "4d7299176b1ce20adf809fdf1ba089a3d44cbe5f648893525e1507de92b8958a",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/64768-65023.pbf": {
+   "sha256": "9226c77e6e5163c80455eca4f6f791f3e43d4853a214e115ef485a2384190afc",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/65024-65279.pbf": {
+   "sha256": "bdb067d33c484f94d29faa6f7a3394e3089105039fc9c4efc8ab01dd1d05a814",
+   "bytes": 36
+  },
+  "fonts/Noto Sans Devanagari Regular v1/65280-65535.pbf": {
+   "sha256": "04bf455a16a9573e5cdafbba3ebaf6b17056226ac1d9230127ef7235575cdd0b",
+   "bytes": 36
+  },
   "sprites/v4/dark.json": {
    "sha256": "bfac76cf7ed5c2aa2992695904056a1c6b07785b7fd20e6c640cb44fd6244a2e",
    "bytes": 3549

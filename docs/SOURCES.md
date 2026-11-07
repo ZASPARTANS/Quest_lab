@@ -106,3 +106,5 @@ These are the limits of the day; the hosting choice and a re-check of the terms 
 - **npm (exact versions in `frontend/package.json` and the lock file):** `maplibre-gl` 6.16.0, `pmtiles` 4.5.0 (+ `fflate` 0.8.3), `@protomaps/basemaps` 5.7.2; dev only: `vite` 8.3.6, `playwright` 1.65.0. Removed: `cesium` packages (D22), `topojson-client` and `world-atlas` (D38).
 - **Python:** 25 packages with hashes in `requirements.txt` (sections of 2026-11-06 18:55, 20:18 and 21:12).
 - **Not yet verified:** the wording of the credit lines for ECMWF and Open-Meteo (step 10).
+
+- 2026-11-07 15:47 UTC: font `Noto Sans Devanagari Regular v1` (256 glyph range files) added from the same repository and commit as the other fonts (github.com/protomaps/basemaps-assets at 028c18f713baecad011301ff7a69acc39bcc2ae7), SIL Open Font Licence (same `fonts/OFL.txt`), checked against `config/basemap_assets.lock.json` (hashes also compared with the commit's own tree listing by `lock-assets`). Reason: the style of `@protomaps/basemaps` 5.7.2 names it for Devanagari place names (found in step 9.3c-4).
