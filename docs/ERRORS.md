@@ -27,8 +27,9 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 | E021 | I reported the dev server as stopped after checking only 127.0.0.1; it listened on ::1 and kept running (and `TaskStop` ended only the wrapper shell) | 1 | 1/1 (found by command line, stopped by PID, verified on ::1, 127.0.0.1 and localhost) |
 | E022 | A throwaway Firefox script edit failed silently (`python3 - ... \|\| python ...` fallback), so two reported "variant" runs were the original configuration; killed runs left containers behind | 1 | 1/1 (script rewritten, each variant run once, containers removed) |
 | E023 | Map frames resampled by nearest cell dropped small showers (a single wet cell vanished from the overview); found by my test before release | 1 | 1/1 (maximum of the covered cells; tests) |
-| E025 | Step 8 browser checks: three flaws in MY checks (Firefox refusal read an interim message; an empty `referer` header counted as a referrer; an apostrophe broke a test title); no defect in the page | 1 | 3/3 (checks corrected, rerun green) |
 | E024 | I wrote a guessed time ("~00:50 UTC") into DECISIONS; the clock said 00:20. Same slip class as the earlier guessed times (E021 note, step 4/6 headings) | 1 | 1/1 (corrected after `date -u`; rule: run `date -u` before writing any time) |
+| E025 | Step 8 browser checks: three flaws in MY checks (Firefox refusal read an interim message; an empty `referer` header counted as a referrer; an apostrophe broke a test title); no defect in the page | 1 | 3/3 (checks corrected, rerun green) |
+| E026 | I replaced the home page with the plan page and left the map and globe only as small spike links without clearly telling the user the map had left the main page (communication gap against the user's own D3; user asked "y did u remove the 2d view and 3d view?") | 1 | 0/0 (proposal D29 waits for the user) |
 
 ---
 
@@ -241,3 +242,10 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 - (b) The real-geocoder run failed "no referrer is sent": the header was present but EMPTY, which means none was sent. Printing the headers showed it. Fix: assert that the header is empty or absent. Result: the real search passes.
 - (c) A Python heredoc wrote an unescaped apostrophe into a JavaScript test title (SyntaxError: the whole file failed). Fix: reworded the title. Result: 41 passed.
 - Lesson: each was found because the run printed the actual value; none was waved away.
+
+## E026 — The map left the main page without a clear warning (communication gap)
+- 2026-11-07 ~00:40 UTC (user message). seen: 1. fix worked / fix tried: 0/0.
+- What happened: PLAN-006 says "text first, map second" and step 9 brings the map back, so the plan was followed. But when I rewrote `frontend/index.html` in step 8 the map and globe disappeared from the page the user opens, and my step 8 report did not say so; the user, who chose the 2D/3D toggle themselves (D3), reasonably asked why it was removed. The page was also judged visually plain: step 8 checked correctness only, and I did not flag that no design work had been done.
+- Root cause: I reported what was verified but not what a user would notice first (what changed on the page they open and what was left out).
+- Fix: answered the user plainly; proposal D29 (map back on the home page, then a design pass, or the reverse) written down and waiting for the user's choice. From now on a step report states what visible parts of the page were removed or moved.
+- Changed lines: none in code yet.

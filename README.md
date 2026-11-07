@@ -2,18 +2,18 @@
 
 QUEST Lab application, Project 1: fetch precipitation forecasts from ECMWF Open Data (IFS and AIFS), process them, and deploy a public web app that presents the forecast through an innovative front end.
 
-**Status: work in progress. The data part runs (download, processing, validation). The web app is a one-page spike that shows one real forecast frame on a flat map and a globe; the finished app (time scrubber, location panel, model agreement) is not built yet.** This README will be rewritten at the end to say what works, what does not, how to run it and what was verified. The problem statement is in `docs/PROBLEM.md`; the plan in `docs/plans/`; the live status in `docs/PROGRESS.md`.
+**Status: work in progress (checkpoint 2026-11-07 ~00:42 UTC, after step 8). The data part runs (download, processing, validation, export to static tiles). The home page is the Plan-my-day page: choose a place and an activity and get dry windows, day cards and rain totals; it works without WebGL. The map and globe are NOT on the home page yet: they are still the one-frame spike pages, linked at the bottom (they come back as supporting views in step 9). The page is functional but visually plain; a design pass is proposed and waits for the user's decision.** This README will be rewritten at the end to say what works, what does not, how to run it and what was verified. The problem statement is in `docs/PROBLEM.md`; the plan in `docs/plans/`; the live status in `docs/PROGRESS.md`.
 
 ## Intended folder layout (decision D5 in `docs/DECISIONS.md`)
 
-Folders appear when their first real file is added. Existing so far: `config/`, `pipeline/`, `scripts/`, `frontend/`, `tests/`, `docker/`, `docs/`. Still to come: `backend/` (step 7) and `.github/workflows/` (step 11).
+Folders appear when their first real file is added. Existing so far: `config/`, `pipeline/`, `backend/`, `scripts/`, `frontend/`, `tests/`, `docker/`, `docs/`. Still to come: `.github/workflows/` (step 11).
 
 ```
 README.md            this file
 config/              all settings (TOML/JSON), no code
 pipeline/            fetch ECMWF data and process it (Python)
 backend/             builds the static data API the frontend reads (tiles + manifest)
-frontend/            web app (Vite): map, globe, location panel
+frontend/            web app (Vite): plan page now; map and globe views come in step 9
 tests/               pipeline/ and backend/ (pytest), frontend/ (node --test)
 scripts/             thin command-line entry points
 docs/                plans, progress, decisions, errors, sources, domain notes
@@ -67,14 +67,15 @@ Both sites listen on this computer only. The settings (ports, folders, pages, co
 The home page is the plan: choose a place (device location, search, or a saved place) and an activity; it shows the best dry windows, day cards with both models' blocks, and rain totals as a range. It works without WebGL. Settings are in `config/activities.json` and `config/frontend.json`. Checks: `docker compose -f docker/compose.yaml run --rm frontend-tests` (Node tests); `... run --rm process python -m scripts.plan_reference` then `... run --rm frontend-check` (the browser code on the real tiles against an independent Python calculation); `BROWSER_NAME=chromium|firefox|webkit docker compose -f docker/compose.yaml run --rm browser-checks` (real browser engines).
 
 ## Browser support and what was tested (updated 2026-11-06)
-The map needs **WebGL2** (MapLibre GL JS 6). A browser without WebGL2 currently shows a blank dark page with no message (found with Firefox in a container, `docs/evidence/firefox-headless-maplibre-flat.png`); a plain message and a non-WebGL fallback are planned (decision D23). There is **no GPU anywhere on the server side** (free static hosting has none); the map is drawn in the visitor's own browser.
+The plan page (home) needs no WebGL (checked with canvas switched off). The map preview pages need **WebGL2** (MapLibre GL JS 6); without it they show a blank dark page with no message (found with Firefox in a container, `docs/evidence/firefox-headless-maplibre-flat.png`); a plain message is planned in step 9 (decisions D23, D24). There is **no GPU anywhere on the server side** (free static hosting has none); the map is drawn in the visitor's own browser.
 
 | Browser | Where | Result |
 |---|---|---|
 | Chromium | Docker (Playwright image), software WebGL, no GPU | pass: pages draw, no console or security-policy errors, no outside request |
 | Microsoft Edge | the developer's Windows PC, real GPU | pass: both local sites, flat-to-globe switch keeps place and zoom |
 | Firefox | the user's own PC | the user reports the site loads ("the site loads files"); that the map and rain layer draw correctly is **not yet confirmed** |
-| Firefox | inside Docker | could not be tested: no WebGL context in the container in 3 configurations (an environment limit, not a result about the app) |
+| Firefox 159 | inside Docker | the PLAN page: 8 of 8 scenarios pass (location allowed, search with a mock geocoder, saved places, hostile input, no canvas; the location-refusal path cannot be exercised headlessly). The MAP could not be tested: no WebGL context in the container in 3 configurations (an environment limit, not a result about the app) |
+| Chromium 158, WebKit 27 | inside Docker | the PLAN page: 8 of 8 scenarios pass in each (WebKit is the engine of Safari, not Safari itself); Chromium also passed one request to the real Open-Meteo geocoder |
 | Safari, phones | | **not tested yet** (user decision: later) |
 
 ## Running the tests (the official way)

@@ -63,3 +63,10 @@ Everything below was found by running commands in this session. Times are UTC.
 ## 2026-11-06 ~23:55 UTC — step 7 export runs
 - `docker compose -f docker/compose.yaml run --rm export` (no network, project read-only, `data/` writable) wrote 4281 files (36.0 MB) in 4 min 37 s through the Windows bind mount; the size probe (gzip level 9 over 8 layouts, about 1.6 GB) took 11 min and had to run in the background. A tool call that outlives its time limit is moved to the background; do not poll it, wait for its completion notice.
 - The preview mounts `data/site` read-only; the export replaces that folder, so restart the preview (`down`, then `up -d preview`) after an export or it may keep showing the old inode.
+
+## 2026-11-07 ~00:42 UTC — step 8 runs (facts found by running commands)
+- **Clock:** `date -u` is the only clock to trust; my own sense of elapsed time was wrong twice (E024: a guessed 00:50 when it was 00:20; "6.7 h used" when it was 5.7 h).
+- **Re-processing and re-exporting the real run** through the Windows bind mounts took about 7 minutes together (process about 3, export about 4); the export wrote 36.1 MB in 4281 files.
+- **New compose services:** `frontend-check` (no network; `data/site` and `data/check` read-only) and `browser-checks`, which uses `network_mode: service:preview` so the browser sees the site as `http://localhost:8080`, a secure context for every engine (geolocation and clipboard-type APIs need that). Engines in the Playwright image: Chromium 158.0.8127.18, Firefox 159.0, WebKit 27.2.
+- **Shell limits seen again:** a long heredoc passed to the Bash tool failed with "unexpected EOF"; the same text written with the file tool and run as a script worked. `docker compose run` and `git` print "LF will be replaced by CRLF" warnings on this Windows checkout (autocrlf); harmless, nothing was changed by them.
+- **Local sites now:** http://localhost:8080 (Docker preview, left running for the user) serves the plan page; the Vite testing site on :5173 was not started in this step.

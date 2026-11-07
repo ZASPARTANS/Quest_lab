@@ -41,6 +41,8 @@
 | 2026-11-06 23:03 | Housekeeping review of all markdown files (this edit; its commit time is in `git log`) | 4.74 h | 67.26 h |
 | 2026-11-07 00:00 | Resume after /compact, same session ID; PROGRESS, DECISIONS and the ERRORS table re-read first (I said "about 6.7 h used" in my first message after it; the correct figure was 5.7 h) | 5.68 h | 66.32 h |
 | 2026-11-07 00:26 | Step 8 verified (see its results section); commit time in `git log` | 6.12 h | 65.88 h |
+| 2026-11-07 00:27 | Commit `1e15254`: Step 8: Plan-my-day page (plan engine, place search, saved places) checked against an independent Python calculation | 6.13 h | 65.87 h |
+| 2026-11-07 00:42 | Checkpoint requested by the user after their feedback; all markdown files updated (commit time in `git log`) | 6.39 h | 65.61 h |
 
 ## Current plan
 **`docs/plans/PLAN-006.md`** — approved by the user 2026-11-06 ~23:24 UTC (Plan-my-day as the signature; steps 7-12 reshaped; saved places and rain totals with a range as the helpful extras; 6-hour blocks; text-first, map second). **Current plan** for steps 7-12; decision D24.
@@ -86,6 +88,7 @@ Note: the built-in todo/task-list tool is not available in this session's tool s
 - **Records:** this housekeeping checked every markdown file against the others; its findings and fixes are listed in the last section of this file.
 
 ## Open items (waiting on someone, or on a later step)
+- **User feedback (2026-11-07 ~00:40 UTC, after trying the plan page):** "it looks good i mean it gives the answer that we need but it should also look good right? also y did u remove the 2d view and 3d view?". Answer given: the map and globe were demoted, not deleted (they are still the two spike links at the bottom; the home page became the plan page, as PLAN-006 says), and the page is visually plain. **Proposal waiting for the user's choice (not a decision yet):** bring the map and globe back onto the main page as step 9 and do a visual design pass (frontend-design), map first then design, or design first. Nothing was built for it.
 - **User:** open http://localhost:8080 (preview running) in their Firefox: does the PLAN page work (place by location and by search, activity buttons, saved places) and do the windows look plausible for a place they know (D24 bet); the two map pages are still the spike, confirm the Firefox map as before (the user reported "the site loads files"); [innovation ideas: DONE, chosen in D24 / PLAN-006; the list below is kept as history] (~23:03 UTC); confirm the proposed no-WebGL2 message (D23).
 - **User, later:** Safari and phone testing (deferred by the user); the geocoder service (step 8; AI recommends Open-Meteo, D20); the hosting choice (step 11); GitHub login, repo link and approval before any push.
 - **Checked in step 8:** `DecompressionStream('gzip')` reads the real tiles in Chromium 158, Firefox 159 and WebKit 27 in Docker (D25 assumption held; not yet on the user's own Firefox or Safari); time zones in Node tests (India, New York DST, Auckland, Kathmandu) and against Python on 8 real places.
@@ -313,3 +316,10 @@ Files: `frontend/src/` time.js, plan.js, windows.js, wording.js, view.js, tiles.
 - **Real browsers (Docker, `browser-checks`, site http://localhost:8080 as a secure context):** 8 scenarios (address, no canvas/WebGL, location allowed, location refused, search with a MOCK geocoder, saved places, activity change, hostile storage and address) pass in **chromium 158, firefox 159 and webkit 27** (webkit is Safari's engine, not Safari). One more run with the REAL Open-Meteo geocoder (one request, "Chennai") in Chromium passed: the policy allows exactly that host, the answer's time zone is used instead of the device's, the request carried no cookie and no referrer. Hostile text in the address is shown as text (`window.__pwned` stays undefined). Screenshots: `docs/evidence/step8-<engine>-*.png`.
 - **Fixed on the way (all in my checks, not in the page):** E025 (three flaws in my checks). Firefox's refusal path is not exercised headlessly (limit stated above).
 - **Not verified:** the user's own Firefox and any Safari or phone; the real geolocation prompt with a person answering; behaviour on the public HTTPS host (step 11); the wording "rounded to 0.1 mm" with a user; whether the windows match a place the user knows (D24 bet); two scheduled exports in a row.
+
+## Checkpoint (2026-11-07 ~00:42 UTC; requested by the user)
+- State: steps 1-8 done and committed (`1e15254`); the working tree held only the markdown updates of this checkpoint, which are committed with it. Tests at the checkpoint: Python 99 passed, Node 41 passed, `frontend-check` 8 x 8 match, `browser-checks` 8 of 8 in chromium, firefox and webkit (run at ~00:25 UTC, before the markdown edits; no code changed since).
+- Running: the Docker preview on http://localhost:8080 (left on for the user). Nothing was pushed; no remote exists.
+- Not started: step 9 and later; the design pass; the age warning (step 10); hosting (step 11).
+- Time: about 6.4 h of 72 h used; the 24 h warning is due 2026-11-07 18:19 UTC.
+- Records touched in the checkpoint: README (status, layout, browser table), PROGRESS, DECISIONS (D29 proposal), ERRORS (E026), SOURCES, DOMAIN, ENVIRONMENT. SECURITY was updated at step 8 and has no new facts. Plan files were not edited (rule).
