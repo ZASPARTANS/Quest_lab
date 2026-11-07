@@ -20,6 +20,10 @@
       <main>
         <section class="panel" aria-labelledby="where-h">
           <h2 id="where-h">1. Where</h2>
+          <div id="saved-box" hidden>
+            <h3>Saved places</h3>
+            <ul id="saved" class="saved-list"></ul>
+          </div>
           <div class="row">
             <button id="use-location" type="button" class="primary">Use my location</button>
             <form id="search-form" class="search" autocomplete="off">
@@ -28,11 +32,12 @@
               <button type="submit">Search</button>
             </form>
           </div>
-          <p class="note" id="privacy">Your location and saved places stay in this browser. Searching sends the text you type, and your IP address, to Open-Meteo (open-meteo.com). Using your location sends your position and IP address to BigDataCloud (bigdatacloud.com) to get the place name. Nobody else gets anything. You can also click the map.</p>
+          <p class="note" id="privacy">Your location and saved places stay in this browser. You can also click the map.</p>
+          <details class="note sent"><summary>What is sent to whom?</summary>
+            <p>Searching sends the text you type, and your IP address, to Open-Meteo (open-meteo.com). Using your location sends your position and IP address to BigDataCloud (bigdatacloud.com) to get the place name. Nobody else gets anything.</p>
+          </details>
           <p id="status" class="status" role="status" aria-live="polite"></p>
           <ul id="results" class="results" aria-label="Search results"></ul>
-          <h3>Saved places</h3>
-          <ul id="saved" class="saved-list"></ul>
         </section>
 
         <p id="welcome" class="welcome">Choose where you are, search for a place, or click the map, to see your plan.</p>
@@ -43,7 +48,7 @@
               <h2 id="title"></h2>
               <p id="meta" class="note"></p>
             </div>
-            <button id="save" type="button"></button>
+            <button id="save" class="save-button" type="button" aria-pressed="false"></button>
           </div>
 
           <fieldset class="panel">

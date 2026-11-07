@@ -219,7 +219,9 @@ const scenarios = {
     await waitPlan(page);
     await page.click('#save');
     await page.waitForSelector('.saved', { timeout });
-    assert.match(await text(page, '#save'), /Remove/);
+    assert.match(await text(page, '#save'), /Saved/);
+    assert.equal(await page.getAttribute('#save', 'aria-pressed'), 'true');
+    assert.equal(await page.locator('#saved-box').isVisible(), true, 'the saved places show above the search once one is saved');
     const stored = JSON.parse(await page.evaluate((k) => localStorage.getItem(k), frontend.saved_places.storage_key));
     assert.equal(stored.length, 1);
     assert.equal(stored[0].name, 'Chennai');
@@ -228,7 +230,9 @@ const scenarios = {
     await page.waitForFunction(() => /^(Dry|Rain)/.test(document.querySelector('.saved .open span')?.textContent ?? ''), null, { timeout });
     await shot(page, 'saved');
     await page.click('.saved .remove');
-    await page.waitForSelector('#saved .empty', { timeout });
+    await page.waitForSelector('#saved .empty', { state: 'attached', timeout });
+    assert.equal(await page.locator('#saved-box').isHidden(), true, 'no empty saved-places box');
+    assert.match(await text(page, '#save'), /Save this place/);
     assert.equal(await page.evaluate((k) => localStorage.getItem(k), frontend.saved_places.storage_key), '[]');
     return log;
   },
