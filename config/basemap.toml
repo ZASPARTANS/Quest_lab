@@ -1,0 +1,40 @@
+# Settings of the stored base map (plan PLAN-010, decision D38). No code here. Read with tomllib by pipeline/basemap.py.
+# Where the files go: config/pipeline.toml [paths] (basemap_*). Facts and licences: docs/SOURCES.md (Protomaps basemap = OpenStreetMap data,
+# ODbL Produced Work, "OpenStreetMap attribution required"; the fonts are SIL Open Font Licence).
+
+[source]
+planet_url = "https://build.protomaps.com/{date}.pmtiles"   # a daily world build; the newest day that exists is used (the docs say "URLs may change")
+date_format = "%Y%m%d"
+lookback_days = 4                  # today, yesterday, ... this many days back
+connect_timeout_seconds = 10
+read_timeout_seconds = 60
+
+[tool]
+# The `pmtiles` command line tool (Go, BSD-3-Clause): checked against this sha256 before one file is taken out of the archive.
+# The sha256 is the digest GitHub shows for the release file; the download is hashed again here and must match.
+version = "1.31.2"
+url = "https://github.com/protomaps/go-pmtiles/releases/download/v{version}/go-pmtiles_{version}_Linux_x86_64.tar.gz"
+sha256 = "3ed7dbf4ec2e6dfe5e25b6f70d1ffc932729f93c86db353bf514dd71010a312f"
+member = "pmtiles"                 # the only file used from the archive
+
+[extract]
+gate_zooms = [5, 6, 7]             # step 9.3d-1 measures these, ascending; it stops when one passes gate_stop_mb (a big download is never started blindly)
+gate_stop_mb = 800
+maxzoom = 7                        # the extract the site uses: zoom 0-7 = 189.6 MB measured in the gate (D38); 6 would be 45.1 MB
+download_threads = 4
+overfetch = 0.05
+timeout_minutes = 90
+
+[style_assets]
+# Fonts (glyphs) and sprites of the map style, pinned to one commit of the Protomaps assets repository and to a sha256 per file (the lock file).
+repo = "protomaps/basemaps-assets"
+commit = "028c18f713baecad011301ff7a69acc39bcc2ae7"
+raw_url = "https://raw.githubusercontent.com/{repo}/{commit}/{path}"
+tree_url = "https://api.github.com/repos/{repo}/git/trees/{commit}?recursive=1"
+fonts = ["Noto Sans Regular", "Noto Sans Medium", "Noto Sans Italic"]   # the fonts the basemap styles use
+font_range_size = 256
+font_range_max = 1535              # glyph ranges 0-1535: Latin, Greek and Cyrillic letters (English labels only for now)
+sprite_dir = "sprites/v4"
+sprite_flavor = "dark"
+licence_file = "fonts/OFL.txt"
+lock_file = "config/basemap_assets.lock.json"

@@ -45,8 +45,8 @@
 | 2026-11-07 00:42 | Checkpoint requested by the user after their feedback; all markdown files updated (commit time in `git log`) | 6.39 h | 65.61 h |
 | 2026-11-07 10:41 | The user was away about 10 hours; they replied with the layout (1/4 plan + 3/4 globe) and approved PLAN-007; clock read with `date -u` | 16.37 h | 55.63 h |
 | 2026-11-07 12:11 | PLAN-008 approved (sharper pictures); 17.87 h used | 17.87 h | 54.13 h |
-| 2026-11-07 13:41 | PLAN-010 approved (stored vector base map); 19.37 h used | 19.37 h | 52.63 h |
 | 2026-11-07 13:12 | PLAN-009 approved (browser-side drawing, close fly-in, name fix); 18.88 h used | 18.88 h | 53.12 h |
+| 2026-11-07 13:41 | PLAN-010 approved (stored vector base map); 19.37 h used | 19.37 h | 52.63 h |
 
 ## Current plan
 **`docs/plans/PLAN-010.md`** - approved by the user 2026-11-07 13:41 UTC: a stored vector base map (OpenStreetMap through Protomaps, dark style, self-hosted fonts and sprites, English labels) under the rain, measured first; nothing paid (D37); steps 9.3d-1 to 9.3d-4. It supersedes the "outlines only" base map of D22; PLAN-009 step 9.3c-4 and PLAN-007 steps 9.4 and 9.5 follow.
@@ -102,7 +102,7 @@
 | 9.3c-2 | Data window: tiles for the view and a layer accessor (PLAN-009) | **done** 2026-11-07 13:23 UTC (commit "Step 9.3c-2: ...") |
 | 9.3c-3 | Map integration: live layer above zoom 4.5, fallback picture (PLAN-009) | **done** 2026-11-07 13:29 UTC (commit "Step 9.3c-3: ..."); D36 |
 | 9.3c-4 | Browser checks in the engines, Edge look, records (PLAN-009) | not started (after PLAN-010) |
-| 9.3d-1 | Gate: measure the stored base map (extract sizes z4-z7, fonts and sprites) and show the user (PLAN-010) | not started |
+| 9.3d-1 | Gate: measure the stored base map (extract sizes z4-z7, fonts and sprites) and show the user (PLAN-010) | **done** 2026-11-07 13:48 UTC (commit "Step 9.3d-1: ..."); D38 gate results |
 | 9.3d-2 | Serve and style: nginx, the two packages, the dark style, rain below labels, outlines removed (PLAN-010) | not started |
 | 9.3d-3 | Fit the rain to the map: opacity, legibility, looks at several zooms (PLAN-010) | not started |
 | 9.3d-4 | Browser-check scenarios, records, hosting requirement for step 11 (PLAN-010) | not started |
@@ -115,7 +115,7 @@
 Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
 
 ## Status (live, rewritten in the housekeeping at ~23:03 UTC)
-- **Done:** steps 1-8, 9.1, 9.2 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is step 9.3d-1** (PLAN-010: measure the stored base map and show the user the numbers), then 9.3d-2..4, then PLAN-009 step 9.3c-4 and PLAN-007 steps 9.4 and 9.5. The user's own look at the live layer in Firefox is still pending.
+- **Done:** steps 1-8, 9.1, 9.2 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is step 9.3d-2** (PLAN-010: serve and style the stored base map), then 9.3d-3..4, then PLAN-009 step 9.3c-4 and PLAN-007 steps 9.4 and 9.5. The user's own look at the live layer in Firefox is still pending.
 - **Tests (step 9.3b-2):** Python 105 passed, Node 53 passed. Earlier: official command `docker compose -f docker/compose.yaml run --rm tests` = 99 passed; `... run --rm frontend-tests` = 41 passed (at step 8); `... run --rm frontend-check` = 8 places x 8 activities match; `BROWSER_NAME=<engine> ... run --rm browser-checks` = 8 of 8 scenarios in chromium, firefox and webkit.
 - **Git:** branch `main`, 25 commits, no remote (GitHub login and repo creation are plan step 11 and need the user's approval and link).
 - **Records:** this housekeeping checked every markdown file against the others; its findings and fixes are listed in the last section of this file.
@@ -423,3 +423,9 @@ Files: `frontend/src/maplive.js` (new, 97 lines: decides when to draw, fetches t
 
 ## User message after the live layer (2026-11-07 13:37 UTC)
 - "Is there no open world map that we can use, store and use? Because those don't change and the remaining data we have" (a stored base map under the rain). Researched (official pages, AI estimates marked): Protomaps/OpenStreetMap planet file about 120 GB, extracts to zoom 6-7 estimated 0.2-0.5 GB (not stated by the page); Natural Earth II shaded relief 84.78 MB download; OpenFreeMap online (free, no key, no limits, third party). Asked the user to choose; the answer was "I don't want to spend money on this project so no credit based please" = D37 (nothing paid, no credit-metered services). The base-map choice is asked again with the misunderstanding about "credit" (attribution) cleared up.
+
+## Step 9.3d-1 done-check results (run 2026-11-07 13:48 UTC; 19.49 h used)
+Files: `config/basemap.toml` (new), `config/basemap_assets.lock.json` (new, 23 sha256), `config/pipeline.toml` (`[paths]` basemap_*), `pipeline/basemap.py` (new, 217 lines: checked tool download, asset lock and fetch, planet lookup, extract, measure), `tests/pipeline/test_basemap.py` (10 tests), `docker/compose.yaml` (service `basemap`). Code ladder: standard library + the already vetted `requests`; the one new executable is the pinned `pmtiles` release.
+- **Tests:** Python 115 passed (105 + 10: git blob hash equals git's own, tool refused on a wrong sha256 and nothing written, only the exact named archive member accepted (a nested name, a `..` name and a missing one refused), failed download, newest existing world build (a missing day skipped, a 500 stops the run), extract command is a list built from config, the asset list follows the config, the lock refuses a file that does not match the commit's hash and writes nothing, assets verified against the lock (kept when right, replaced when damaged, refused when poisoned, nothing wrong stored), a lock for another commit or other files refused). The hygiene guard caught two literal names equal to config values (`"assets"`) and I renamed them.
+- **Real run (Docker, network):** see the D38 gate results: 1.77 MB of assets, extracts 15.1 / 45.1 / 189.6 MB for zoom 0-5 / 6 / 7 in 13.6 / 12.1 / 21.3 s; the tool's `show` confirms valid complete world pyramids. First run failed because the project folder is read-only inside the container (lock file); fixed by writing a draft under `data/` and copying it by hand.
+- **Recommendation (made):** zoom 0-7 (189.6 MB). **Not done in the gate:** pictures of the extracts (need the two packages, step 9.3d-2).

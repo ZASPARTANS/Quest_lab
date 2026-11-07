@@ -74,3 +74,8 @@ Everything below was found by running commands in this session. Times are UTC.
 ## 2026-11-07 13:18 UTC — preview server facts (step 9.3c-0, found by running)
 - The nginx preview reads `config/headers.conf` (Content-Security-Policy and the other headers) only when the container starts: after changing the file run `docker compose -f docker/compose.yaml up -d --force-recreate preview`, or a real browser keeps enforcing the old policy (seen: the new reverse-geocoder host was blocked until the restart). The same restart is needed after every export (E029).
 - Two real services were reached from the Docker browser container and from the host's Edge in the same checks (Open-Meteo geocoding, BigDataCloud reverse geocoding); both answered with CORS `*`.
+
+## 2026-11-07 13:48 UTC — base map downloads (step 9.3d-1, found by running)
+- The `basemap` service reaches `build.protomaps.com`, `github.com` (release asset, redirected to its CDN), `raw.githubusercontent.com` and `api.github.com` from the Docker container; the three downloads need about 20 MB plus the extract (15-190 MB) and took under a minute here.
+- The project folder is mounted read-only inside the service (as in every Python service), so a tool that needs to write a file into `config/` fails: results go under `data/` and are copied by hand. The host's default Python is 3.10 (no `tomllib`): use `.venv/Scripts/python.exe` or Docker to read the TOML files. A Python script run in a container with a pipe buffers its output until it ends: use `python -u`.
+- Disk: `data/basemap/` holds the three measuring extracts (250 MB together) plus the assets and the tool (17 MB).
