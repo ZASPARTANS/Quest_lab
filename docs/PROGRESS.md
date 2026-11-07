@@ -150,9 +150,9 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 | 13.2 | Base path for the sub-folder site, the security policy as a meta tag, a sub-folder test site (PLAN-013) | **done** (commit "Step 13.2: ..."; time in `git log`); results section below; E037 |
 | 13.3 | The workflow: build, deploy, smoke test; pinned actions; local dry run (PLAN-013) | **done** (commit "Step 13.3: ..."; time in `git log`); results section below; nothing is on GitHub yet |
 | 13.4 | GitHub setup (the user logs in), push, release with the base map, Pages, first deploy (PLAN-013) | **done** 2026-11-07 22:12 UTC: the site is live at https://zaspartans.github.io/Quest_lab/ (first run 7 minutes, build, deploy and smoke green); results below |
-| 13.5 | Check the public site and phones: curl, four engines, phone emulation, the user's real phone (PLAN-013) | (a)-(c) **done** 2026-11-07 22:13 UTC (curl, four engines, phone emulation found real problems); (d) the user's real phone: waiting for their report |
-| 13.6 | Phone fixes from the evidence (PLAN-013) | **built and checked** 2026-11-07 22:45 UTC (map no longer covered, tap targets 44 px); public redeploy and the user's real-phone verdict to come |
-| 13.7 | Records for hosting; README; push (PLAN-013) | not started |
+| 13.5 | Check the public site and phones: curl, four engines, phone emulation, the user's real phone (PLAN-013) | **done** 2026-11-07 (a)-(c) 22:13 UTC; (d) the user's real Android phone 22:57 UTC: "androde looks good the the site works"; an iPhone (Safari) has NOT been tried by a person |
+| 13.6 | Phone fixes from the evidence (PLAN-013) | **done** 2026-11-07 22:53 UTC: deployed (run 42422129073), re-checked on the live site, and the user's Android phone verdict is good |
+| 13.7 | Records for hosting; README; push (PLAN-013) | **done** 2026-11-07 22:57 UTC (README live section, D42 results, SECURITY S14, ENVIRONMENT, ERRORS, this table); the final README form is step 12 |
 | 12 | README + submission | not started |
 
 Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
@@ -620,3 +620,7 @@ Verification of this pass: `docker compose -f docker/compose.yaml run --rm tests
 
 ### Live re-check after the phone fixes were deployed (2026-11-07 22:53 UTC)
 - The push of `6e74b4e` redeployed the site (run `42422129073`, 22:45:58-22:52:32 UTC, build 6 min, deploy 17 s, smoke 13 s, all green). On the LIVE site: `scripts/smoke_site.py` passed; `phone_checks.mjs` passed for both emulated phones: Pixel 7 (Chromium) controls cover **23 %** of the map, iPhone 15 (WebKit) **42 %**, **0** tap targets under 44 px, no sideways scroll, a tap on a day tile moves the map, "Use my location" names the place. The user's own phone verdict (13.5 d) is still to come.
+
+### The user's real-phone verdict (2026-11-07 22:57 UTC)
+- The user, after opening https://zaspartans.github.io/Quest_lab/ on their Android phone: "ok so androde looks good the the site works". Their words, not measured; no screenshots were sent. **Not tested by a person: an iPhone (Safari).** The iPhone is covered only by the WebKit emulation (the engine of Safari, not Safari itself): layout, tap sizes, tap on a day tile and location flow pass there.
+- **PLAN-013 is complete** (13.0-13.7). Hosting facts for the final records: live at `https://zaspartans.github.io/Quest_lab/`; refresh every 6 hours (02:20, 08:20, 14:20, 20:20 UTC) by `.github/workflows/build.yml`; the first scheduled run is 2026-11-08 02:20 UTC. Open after this plan: step 9.5 (design pass of the rest of the page), step 12 (final README, `docs/SUBMISSION.md`, secret scan of the session log, `npm audit` and `pip-audit` repeats), an iPhone check if a person has one, deciding whether to keep the scheduled workflow after the submission.

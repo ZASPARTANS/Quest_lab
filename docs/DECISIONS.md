@@ -487,3 +487,6 @@ Gone since the earlier register: `scripts/spike_frame.py` (deleted at step 7), t
 ### D42 result (2026-11-07 22:45 UTC): the site is public; bets checked
 - **Bet 1 held:** GitHub Pages serves the 190 MB base-map file by HTTP range request (206, correct `Content-Range`) and the map works from it (26 browser scenarios on the real site in Edge, Chromium and Firefox). **Bet on deploy size/time held:** a 267 MB site deployed in about one minute (deploy job 22:11:34-22:11:55); the whole run took 7 minutes. **Bet 3 (phones) did NOT hold at first:** the controls covered most of a phone's map and tap targets were too small (13.5 c); fixed in 13.6 and measured again; the user's own phone is the final verdict.
 - The repository is public (73 commits at the first push); the scheduled job runs unattended every 6 hours until the owner disables it (GitHub: Actions tab, workflow, Disable).
+
+### D42 final result (2026-11-07 22:57 UTC)
+- Bet 3 (the page works on real phones): **held on the user's Android phone** ("androde looks good the the site works"), after the 13.6 fixes. Not yet checked by a person on an iPhone. All three bets of D42 are now checked: Pages serves range requests (held), the build fits the free limits and the deploy time (held: 7 minutes), phones (held on Android, iPhone emulated only).
