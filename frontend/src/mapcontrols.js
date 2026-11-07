@@ -1,9 +1,9 @@
 // The tools that float on the map: view (Auto / Flat / Globe), model, legend, and the time bar. Built with DOM text only (see dom.js).
 import { el, fill } from './dom.js';
+import { agreementKey, modelSentence } from './mapkey.js';
 
 const MODES = [{ id: 'auto', label: 'Auto' }, { id: 'flat', label: 'Flat' }, { id: 'globe', label: 'Globe' }];
 const HEX = /^#[0-9a-fA-F]{6}$/;
-const AGREEMENT_WORDS = { both_wet: 'Both models wet', disagree: 'Models disagree' };
 
 /** A group of radio buttons that looks like a segmented control. `onChange(id)` is called when another one is chosen. */
 function segmented(name, legend, items, selected, onChange) {
@@ -32,12 +32,15 @@ function rainLegend(scale) {
   return [el('li', { class: 'caption', text: scale.unit }), el('li', { class: 'legend-gradient' }, [bar, ticks])];
 }
 
-function legendNodes(kind, scale, colours) {
+/** The titled colour key (PLAN-012): plain words for every colour, from the config and the manifest (mapkey.js). */
+function legendNodes(kind, scale, key, manifest) {
+  const title = el('li', { class: 'key-title', text: key.title });
   if (kind === 'agreement') {
-    const items = Object.entries(colours).map(([name, colour]) => el('li', {}, [swatch(colour), el('span', { text: AGREEMENT_WORDS[name] ?? name })]));
-    return [...items, el('li', {}, [el('span', { class: 'swatch empty' }), el('span', { text: 'Both dry: no colour' })])];
+    const k = agreementKey(key, manifest);
+    const items = k.lines.map((line) => el('li', {}, [line.colour ? swatch(line.colour) : el('span', { class: 'swatch empty' }), el('span', { text: line.text })]));
+    return [title, ...items, ...(k.footnote ? [el('li', { class: 'caption', text: k.footnote })] : [])];
   }
-  return rainLegend(scale);
+  return [title, ...rainLegend(scale), el('li', { class: 'caption key-sentence', text: modelSentence(key) })];
 }
 
 function swatch(colour) {
@@ -57,7 +60,7 @@ export function createControls({ root, cfg, manifest, options, selectedModel, ha
   myPlace.disabled = true;
   myPlace.addEventListener('click', () => handlers.onMyPlace());
   const note = el('p', { class: 'map-note', attrs: { role: 'status' } });
-  const legend = el('ul', { class: 'legend', attrs: { 'aria-label': 'Map legend' } });
+  const legend = el('ul', { class: 'legend', attrs: { 'aria-label': 'What the colours mean' } });
   const prev = el('button', { text: '◀', attrs: { type: 'button', 'aria-label': 'Previous 6-hour block' } });
   const next = el('button', { text: '▶', attrs: { type: 'button', 'aria-label': 'Next 6-hour block' } });
   const nowButton = el('button', { class: 'now-button', text: 'Now', attrs: { type: 'button', 'aria-label': 'Show the 6-hour block that is under way' } });
@@ -90,7 +93,7 @@ export function createControls({ root, cfg, manifest, options, selectedModel, ha
       note.textContent = s.note ?? '';
       view.inputs.forEach((input) => { input.checked = input.value === s.mode; });
       model.inputs.forEach((input) => { input.checked = input.value === s.model; });
-      fill(legend, s.legendKind ? legendNodes(s.legendKind, cfg.colour_scale, manifest.frames?.agreement_colours ?? {}) : []);
+      fill(legend, s.legendKind ? legendNodes(s.legendKind, cfg.colour_scale, cfg.map.key, manifest) : []);
     },
   };
 }

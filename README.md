@@ -57,7 +57,7 @@ docker compose -f docker/compose.yaml run --rm tests            # Python: 117 pa
 docker compose -f docker/compose.yaml run --rm frontend-tests   # Node: 70 passed
 docker compose -f docker/compose.yaml run --rm process python -m scripts.plan_reference   # independent Python plan from the raw GRIB
 docker compose -f docker/compose.yaml run --rm frontend-check   # the browser code on the real tiles equals it: 8 places x 8 activities
-BROWSER_NAME=chromium docker compose -f docker/compose.yaml run --rm browser-checks   # 22 scenarios in a real engine (chromium | firefox | webkit)
+BROWSER_NAME=chromium docker compose -f docker/compose.yaml run --rm browser-checks   # 23 scenarios in a real engine (chromium | firefox | webkit)
 docker compose -f docker/compose.yaml run --rm screenshots      # real browser: screenshots, console and policy errors, hosts contacted
 ```
 Measurements in a real browser with the computer's own GPU (Edge): `frontend/tools/load_timing.mjs` and `frontend/tools/live_look.mjs` (usage in each file). The Windows `.venv` (`py -3.11`) is for quick trying only; its result is not the proof.
