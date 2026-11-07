@@ -111,6 +111,10 @@ button.block-hit { cursor: pointer; }
 .total .detail { margin: .15rem 0 0; color: var(--muted); font-size: .88rem; }
 .total .extra { color: #ffd48a; }
 footer { padding-top: .5rem; }
+.provenance p { margin: .15rem 0; color: var(--muted); font-size: .84rem; }
+.provenance .warning { margin: .5rem 0 .2rem; padding: .5rem .7rem; border-radius: 10px; border: 1px solid #f2a33a; background: #4a3410; color: #ffe9c2; font-size: .9rem; font-weight: 600; }
+.about .attribution { color: var(--text); font-weight: 600; }
+.about a { color: var(--accent); }
 .about p { margin: .3rem 0; color: var(--muted); font-size: .84rem; }
 
 /* map tools (floating on the map) */

@@ -15,6 +15,11 @@
       <header class="top">
         <h1>Rain plan</h1>
         <p class="lead">Choose a place and what you want to do. You get the best times in the next days, and how sure two forecast models are.</p>
+        <div class="provenance">
+          <p id="freshness" role="status"></p>
+          <p id="attribution"></p>
+          <p id="freshness-warning" class="warning" role="alert" hidden></p>
+        </div>
       </header>
 
       <main>
@@ -32,7 +37,7 @@
               <button type="submit">Search</button>
             </form>
           </div>
-          <p class="note" id="privacy">Your location and saved places stay in this browser. You can also click the map.</p>
+          <p class="note" id="privacy">Your location and saved places stay in this browser. Place search by <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo.com</a>. You can also click the map.</p>
           <details class="note sent"><summary>What is sent to whom?</summary>
             <p>Searching sends the text you type, and your IP address, to Open-Meteo (open-meteo.com). Using your location sends your position and IP address to BigDataCloud (bigdatacloud.com) to get the place name. Nobody else gets anything.</p>
           </details>

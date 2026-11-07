@@ -47,4 +47,7 @@ test('the local date can differ from the UTC date, and midnight is hour 0, not 2
 test('the label of a calendar day does not depend on any zone', () => {
   assert.equal(dayLabel('2026-11-07'), 'Sat 7 Nov');
   assert.equal(dayLabel('2026-12-31'), 'Thu 31 Dec');
+  // fixed tables: the same text in every browser (Safari wrote "Sat, 7 Nov" and some engines write "Sept" with the locale formatter)
+  assert.deepEqual(['2026-09-08', '2026-01-01', '2026-02-28', '2024-02-29', '2026-05-03'].map(dayLabel), ['Tue 8 Sep', 'Thu 1 Jan', 'Sat 28 Feb', 'Thu 29 Feb', 'Sun 3 May']);
+  assert.ok(Array.from({ length: 12 }, (_, i) => dayLabel(`2026-${String(i + 1).padStart(2, '0')}-15`)).every((t) => /^[A-Z][a-z]{2} 15 [A-Z][a-z]{2}$/.test(t)));
 });

@@ -114,6 +114,20 @@
   },
   "saved_places": { "storage_key": "rain-plan.saved-places.v1", "settings_key": "rain-plan.settings.v1", "max": 5 },
   "geolocation": { "timeout_ms": 10000, "max_age_ms": 600000 },
+  "freshness": {
+    "_comment": "The honesty strip (PLAN-013 step 13.1, D9): the page warns in plain words when the forecast run is older than max_age_hours. ECMWF's 00z and 12z runs (the only ones with the 240 h IFS files) appear about 7.5 h after their time and a new one comes every 12 h, so the run shown is normally 8 to 21 hours old; 30 h means a whole run was missed. A test keeps it at 24 or more.",
+    "max_age_hours": 30,
+    "models": "IFS and AIFS"
+  },
+  "credit_lines": [
+    ["Source: www.ecmwf.int. This ECMWF data is published under a Creative Commons Attribution 4.0 International licence (", ["CC BY 4.0", "https://creativecommons.org/licenses/by/4.0/"], ")."],
+    ["Disclaimer: ECMWF does not accept any liability whatsoever for any error or omission in the data, their availability, or for any loss or damage arising from their use."],
+    ["The data was changed: ECMWF's accumulated rain is turned into amounts for 6-hour blocks (millimetres, rounded to 0.1 mm), the two models are compared, and the result is shown as rain levels, maps and plans."],
+    ["Map: © ", ["OpenStreetMap", "https://www.openstreetmap.org/copyright"], " contributors (ODbL), map tiles by ", ["Protomaps", "https://protomaps.com/"], ", fonts Noto Sans (SIL Open Font Licence)."],
+    ["Place search by ", ["Open-Meteo.com", "https://open-meteo.com/"], " (location data from ", ["GeoNames", "https://www.geonames.org/"], ", CC BY)."],
+    ["The name of your position, when you use your location: ", ["BigDataCloud", "https://www.bigdatacloud.com/"], "."],
+    ["This is not an official weather warning. For warnings, use your national weather service."]
+  ],
   "plan_levels": {
     "_comment": "Colours of the four rain levels in the day view (PLAN-011 step 11.3), one entry per level id of config/activities.json. bar = the top bar and the drops (the colours follow the map's rain ramp: blue, yellow, red); bg = the dark tile; text = the words. A test checks every text/background pair (WCAG AA 4.5 : 1), the bar against the tile (3 : 1) and that the four are distinct. Colour is never the only signal: the word, the drops and the tick say the same.",
     "none": { "bar": "#8a96a6", "bg": "#16294a", "text": "#dbe6f5" },

@@ -72,11 +72,14 @@ export function clock(ms, zone) {
   return `${two(p.hour)}:${two(p.minute)}`;
 }
 
-/** 'Sat 7 Nov' for a 'YYYY-MM-DD' key (the weekday of a calendar date does not depend on any zone). */
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+/** 'Sat 7 Nov' for a 'YYYY-MM-DD' key (the weekday of a calendar date does not depend on any zone). Fixed tables, not the browser's locale: Safari wrote 'Sat, 7 Nov'
+ *  and some engines write 'Sept', so the same page read differently on different phones (found by the browser checks in step 13.1). */
 export function dayLabel(key) {
   const [y, m, d] = key.split('-').map(Number);
-  return new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', weekday: 'short', day: 'numeric', month: 'short' })
-    .format(Date.UTC(y, m - 1, d));
+  return `${WEEKDAYS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()]} ${d} ${MONTHS[m - 1]}`;
 }
 
 /** Name of the zone's offset, e.g. 'UTC+05:30', for showing next to times. */

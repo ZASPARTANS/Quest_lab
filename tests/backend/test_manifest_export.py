@@ -106,3 +106,20 @@ def test_the_manifest_check_catches_each_kind_of_damage(cfg, backend, processed_
     assert manifest.validate(doc) == []
     damage(doc)
     assert text in " ".join(manifest.validate(doc))
+
+
+def test_the_status_file_holds_only_ok_run_and_build_time(cfg, backend, processed_run):
+    """D26: the public status file has no log text, path or environment, only whether the build worked, the run and the time."""
+    export.export(cfg, backend, RUN)
+    site = _site(cfg)
+    doc = json.loads((site / backend["manifest"]["file"]).read_text(encoding="utf-8"))
+    status = json.loads((site / backend["status"]["file"]).read_text(encoding="utf-8"))
+    assert status == {"ok": True, "run": doc["run"], "built_at": doc["exported_at"]}
+    assert list(status) == ["ok", "run", "built_at"]
+
+
+def test_the_manifest_carries_ecmwfs_own_attribution_sentence_word_for_word(cfg, backend, processed_run):
+    """The wording ECMWF's Terms of Use prescribe for a service built on its data (read 2026-11-07 on apps.ecmwf.int/datasets/licences/general/)."""
+    export.export(cfg, backend, RUN)
+    doc = json.loads((_site(cfg) / backend["manifest"]["file"]).read_text(encoding="utf-8"))
+    assert doc["source"]["attribution"] == "This service is based on data and products of the European Centre for Medium-Range Weather Forecasts (ECMWF)."

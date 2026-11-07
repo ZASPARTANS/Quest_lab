@@ -10,7 +10,7 @@ import { addPlace, cleanCoordinates, loadSaved, readAddress, removePlace, samePl
 import { buildBlocks } from './plan.js';
 import { atMost, levelLegendText } from './wording.js';
 import { applyLevelColours } from './levelcolours.js';
-import { activityNote, renderAbout, renderActivities, renderDays, renderResults, renderSaved, renderTotals, renderWindows } from './render.js';
+import { activityNote, renderAbout, renderActivities, renderFreshness, renderDays, renderResults, renderSaved, renderTotals, renderWindows } from './render.js';
 import { clock, dayKey, dayLabel, deviceZone, offsetLabel } from './time.js';
 import { mapPointName } from './mapstate.js';
 import * as pageMap from './pagemap.js';
@@ -108,7 +108,7 @@ function draw(place, act, view) {
   renderDays(ui.days, view, cardPick(), state.step);
   withMap((m) => m.setZone(view.zone));
   renderTotals(ui.totals, view, cfg.model_labels);
-  renderAbout(ui.about, state.manifest, view.zone, !place.zone);
+  renderAbout(ui.about, state.manifest, view.zone, !place.zone, cfg.credit_lines);
 }
 
 async function render() {
@@ -258,7 +258,7 @@ async function chooseStart() {
 
 function collect() {
   for (const id of ['status', 'welcome', 'plan', 'title', 'meta', 'save', 'note', 'windows', 'days', 'totals', 'about', 'saved', 'saved-box', 'results',
-    'activities', 'level-legend', 'custom-box', 'custom-accept', 'search-form', 'search-input', 'use-location', 'map', 'map-message', 'map-tools']) {
+    'freshness', 'attribution', 'freshness-warning', 'activities', 'level-legend', 'custom-box', 'custom-accept', 'search-form', 'search-input', 'use-location', 'map', 'map-message', 'map-tools']) {
     ui[id.replace(/-(.)/g, (_, c) => c.toUpperCase())] = byId(id);
   }
   ui.input = ui.searchInput;
@@ -286,7 +286,8 @@ async function main() {
   }
   state.getter = bufferGetter(maxTileBytes(state.manifest));
   state.map = pageMap.startMap({ state, ui, cfg, onPick: pickOnMap, onStep: mapStep, redrawBlocks: () => state.lastView && renderDays(ui.days, state.lastView, null, null) });
-  setInterval(() => { if (!document.hidden) render(); }, cfg.refresh_seconds * 1000);
+  setInterval(() => { if (!document.hidden) { render(); renderFreshness(ui, state.manifest, Date.now(), cfg.freshness); } }, cfg.refresh_seconds * 1000);
+  renderFreshness(ui, state.manifest, Date.now(), cfg.freshness);
   return chooseStart();
 }
 
