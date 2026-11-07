@@ -2,10 +2,10 @@
 
 ## Time budget (72 h)
 - First user prompt (from the session log): **2026-11-06T18:19:13.452Z**
-- Session ID: `3e56a452-e5f8-4bb9-b353-63bad43748f4` (unchanged since the first turn; the only resume so far was the /compact at 20:22 UTC)
+- Session ID: `3e56a452-e5f8-4bb9-b353-63bad43748f4` (unchanged since the first turn; the resumes after compaction are in the table below)
 - Log file: `<Claude Code config folder>/projects/<project folder>/3e56a452-e5f8-4bb9-b353-63bad43748f4.jsonl`
 - Deadline (first prompt + 72 h): **2026-11-09T18:19:13Z**
-- Warnings due at 24 h (2026-11-07 18:19Z), 48 h (2026-11-08 18:19Z), 60 h (2026-11-09 06:19Z). No new features after hour 64 (2026-11-09 10:19Z). None of the three warnings is due yet.
+- Warnings due at 24 h (2026-11-07 18:19Z), 48 h (2026-11-08 18:19Z), 60 h (2026-11-09 06:19Z). No new features after hour 64 (2026-11-09 10:19Z). The 24 h warning is due today at 18:19 UTC; at the housekeeping edit (2026-11-07 14:17 UTC) 19.98 h had passed, so none has been due yet.
 - The table below is rebuilt from `git log` (commit times are the committer times, UTC); every row is a real commit or an event noted at the time.
 
 | Date/time (UTC) | Event | Elapsed | Remaining |
@@ -43,35 +43,47 @@
 | 2026-11-07 00:26 | Step 8 verified (see its results section); commit time in `git log` | 6.12 h | 65.88 h |
 | 2026-11-07 00:27 | Commit `1e15254`: Step 8: Plan-my-day page (plan engine, place search, saved places) checked against an independent Python calculation | 6.13 h | 65.87 h |
 | 2026-11-07 00:42 | Checkpoint requested by the user after their feedback; all markdown files updated (commit time in `git log`) | 6.39 h | 65.61 h |
+| 2026-11-07 00:42 | Commit `394d64f`: Checkpoint after step 8: update all markdown records, record the user's feedback and proposal D29 | 6.40 h | 65.60 h |
+| 2026-11-07 00:43 | Commit `3a3ec86`: ERRORS: E024 seen 2 (a time guessed ahead again while writing the checkpoint) | 6.40 h | 65.60 h |
 | 2026-11-07 10:41 | The user was away about 10 hours; they replied with the layout (1/4 plan + 3/4 globe) and approved PLAN-007; clock read with `date -u` | 16.37 h | 55.63 h |
+| 2026-11-07 10:42 | Commit `a9ca4bf`: Adopt PLAN-007: globe-first map (1/4 plan + 3/4 globe), then a design pass; record D29 decided and D30 | 16.38 h | 55.62 h |
+| 2026-11-07 10:45 | Commit `4cd80ed`: Step 9.1: spike gate for the globe fly-in; the zoom-driven projection morph is chosen (D31) | 16.44 h | 55.56 h |
+| 2026-11-07 10:52 | Commit `5a10456`: Step 9.2: map data contract (agreement colours in the manifest, checked frames) and pure map helpers | 16.55 h | 55.45 h |
+| 2026-11-07 11:07 | Commit `4f2c67e`: Step 9.3 (part 1): globe-first map in a 3/4 area next to the plan (1/4), device position named, cache rules | 16.80 h | 55.20 h |
 | 2026-11-07 12:11 | PLAN-008 approved (sharper pictures); 17.87 h used | 17.87 h | 54.13 h |
+| 2026-11-07 12:27 | Commit `c124285`: Step 9.3b-1: gate for sharper rain pictures: measured four ways, 1440 px gradient palette PNG chosen (D34) | 18.14 h | 53.86 h |
+| 2026-11-07 12:39 | Commit `0d9a3f7`: Step 9.3b-2: sharper rain pictures (1440 px smooth gradient palette PNGs, per-pixel agreement) and 50 m coastlines | 18.34 h | 53.66 h |
+| 2026-11-07 13:08 | Commit `b6ec64d`: Record user feedback after the sharper pictures: E030 (reverse geocoder redirect), E031 (still blocky at city zoom) | 18.82 h | 53.17 h |
 | 2026-11-07 13:12 | PLAN-009 approved (browser-side drawing, close fly-in, name fix); 18.88 h used | 18.88 h | 53.12 h |
+| 2026-11-07 13:18 | Commit `131b60e`: Step 9.3c-0: place name works with the real service, close fly-in by place kind, My place button, rotation off | 18.99 h | 53.01 h |
+| 2026-11-07 13:22 | Commit `9430f99`: Step 9.3c-1: browser-side drawing core (smooth sampling, continuous colours, soft agreement), tested against Python | 19.05 h | 52.95 h |
+| 2026-11-07 13:24 | Commit `a576824`: Step 9.3c-2: data window for the browser-side drawing (tiles for the view, shared cache, layer accessor) | 19.08 h | 52.92 h |
+| 2026-11-07 13:29 | Commit `1390501`: Step 9.3c-3: the rain is drawn in the browser at screen sharpness above zoom 4.5 (monotone cubic from the exact tile values) | 19.17 h | 52.83 h |
+| 2026-11-07 13:37 | Commit `880a710`: Record D37: nothing paid, no credit-metered services (user constraint); base-map options researched | 19.30 h | 52.70 h |
 | 2026-11-07 13:41 | PLAN-010 approved (stored vector base map); 19.37 h used | 19.37 h | 52.63 h |
+| 2026-11-07 13:41 | Commit `b94d35d`: Adopt PLAN-010: a stored vector base map under the rain (user's choice); D38 started, sources read | 19.37 h | 52.63 h |
+| 2026-11-07 13:49 | Commit `f9708f4`: Step 9.3d-1: gate for the stored base map: checked downloads, real sizes measured (zoom 0-7 = 189.6 MB), zoom 7 chosen | 19.50 h | 52.50 h |
+| 2026-11-07 14:02 | Commit `cf82d26`: Step 9.3d-2: stored OpenStreetMap base map (Protomaps, zoom 0-7) under the rain, bright names and borders, Now button | 19.73 h | 52.27 h |
+| 2026-11-07 14:09 | Resume after compaction, same session ID; the markdown records re-read first; clock read with `date -u` | 19.83 h | 52.17 h |
+| 2026-11-07 14:17 | Housekeeping review of all markdown files (this edit; its commit time is in `git log`; rows after 00:43 on 2026-11-07 were added here, they were missing) | 19.98 h | 52.02 h |
 
 ## Current plan
-**`docs/plans/PLAN-010.md`** - approved by the user 2026-11-07 13:41 UTC: a stored vector base map (OpenStreetMap through Protomaps, dark style, self-hosted fonts and sprites, English labels) under the rain, measured first; nothing paid (D37); steps 9.3d-1 to 9.3d-4. It supersedes the "outlines only" base map of D22; PLAN-009 step 9.3c-4 and PLAN-007 steps 9.4 and 9.5 follow.
+**`docs/plans/PLAN-010.md`** (approved by the user 2026-11-07 13:41 UTC) is the plan in progress: a stored vector base map (OpenStreetMap through Protomaps, dark style, self-hosted fonts and sprites, English labels) under the rain; nothing paid (D37). Steps 9.3d-1 and 9.3d-2 are done; **next: 9.3d-3 (fit the rain to the map), then 9.3d-4.** After it: PLAN-009 step 9.3c-4, PLAN-007 steps 9.4 and 9.5 and PLAN-006 steps 10-12 (all still in force).
 
-`docs/plans/PLAN-009.md` (steps 9.3c-0 to 9.3c-3 done; step 9.3c-4 follows PLAN-010):
-**`docs/plans/PLAN-009.md`** - approved by the user 2026-11-07 13:12 UTC: the rain is drawn in the browser at screen sharpness from the exact tile values (live layer above zoom 4.5), the fly-in goes close (zoom 8 for the device location), the place name is fixed (E030) and a "My place" button is added (steps 9.3c-0 to 9.3c-4). It supersedes PLAN-008 assumption A19 and its step 9.3b-3 (the sharper pictures did not pass the user's look, E031); PLAN-007 steps 9.4 and 9.5 follow.
+Plan files, oldest first (approved plan files are never edited, so their status is kept only here):
 
-`docs/plans/PLAN-008.md` (steps 9.3b-1 and 9.3b-2 done; A19 and 9.3b-3 superseded by PLAN-009):
-**`docs/plans/PLAN-008.md`** - approved by the user 2026-11-07 12:11 UTC: sharper rain pictures (step 9.3b: measure, then smooth higher-resolution frames) after the user's feedback "the image does not look good at all"; it supersedes PLAN-007 assumption A17 (E027) and adds step 9.3b; PLAN-007 steps 9.4 and 9.5 remain in force.
-
-`docs/plans/PLAN-007.md` (still the plan for the map and the design pass; its A17 is superseded by PLAN-008):
-**`docs/plans/PLAN-007.md`** - approved by the user 2026-11-07 about 10:41 UTC: the home page is split, the plan panel about 1/4 of the width on the left and the globe/map about 3/4 on the right; the globe opens first, flies to the chosen place and settles into the flat 2D map; then a design pass (steps 9.1-9.5). It replaces PLAN-006 step 9; PLAN-006 steps 10-12 stay.
-
-`docs/plans/PLAN-006.md` - approved ~23:24 UTC on 2026-11-06 (Plan-my-day, steps 7-12). **Status: steps 7-8 done under it; step 9 superseded by PLAN-007; steps 10-12 remain in force.** Its original entry:
-**`docs/plans/PLAN-006.md`** — approved by the user 2026-11-06 ~23:24 UTC (Plan-my-day as the signature; steps 7-12 reshaped; saved places and rain totals with a range as the helpful extras; 6-hour blocks; text-first, map second). **Current plan** for steps 7-12; decision D24.
-
-`docs/plans/PLAN-005.md` — approved ~20:51 UTC (security steps S1-S5, then PLAN-004's steps 5-12 with security notes). **Status: S1-S5 and steps 5-6 done under it; superseded by PLAN-006 for steps 7-12.** Its security rules (D15, notes on every step) stay in force.
-
-`docs/plans/PLAN-004.md` — approved by the user 2026-11-06 ~20:13 UTC (replaced PLAN-003: Docker as the official test run and a localhost preview, see E010, D10-D12). **Status: superseded by PLAN-005 (security, E013)**; steps 1-4 were done under it and carried over; its step text for 7-12 is superseded by PLAN-006.
-
-`docs/plans/PLAN-003.md` — approved 2026-11-06 ~19:20 UTC. **Status: superseded by PLAN-004** (reason: no localhost/Docker test run; see E010).
-
-`docs/plans/PLAN-002.md` — approved 2026-11-06 ~18:49 UTC. **Status: superseded by PLAN-003** (reason: A1 wrong for AIFS units; see E006). Steps 1b, 2, 3 were completed under it and carried over.
-
-`docs/plans/PLAN-001.md` — approved 2026-11-06 ~18:42 UTC. **Status: superseded by PLAN-002** (reason: no folder layout; see E002). Step 1 of PLAN-001 was completed and is carried over.
+| Plan | Approved (UTC) | Status |
+|---|---|---|
+| PLAN-001 | 2026-11-06 ~18:42 | superseded by PLAN-002 (no folder layout, E002); its step 1 carried over |
+| PLAN-002 | ~18:49 | superseded by PLAN-003 (A1 wrong for AIFS units, E006); steps 1b, 2, 3 carried over |
+| PLAN-003 | ~19:20 | superseded by PLAN-004 (no localhost or Docker test run, E010) |
+| PLAN-004 | ~20:13 | superseded by PLAN-005 (security, E013); steps 1-4 carried over; its text for steps 7-12 was superseded by PLAN-006 |
+| PLAN-005 | ~20:51 | steps S1-S5, 5 and 6 done under it; superseded by PLAN-006 for steps 7-12; its security rules (D15, a security note in every plan) stay in force |
+| PLAN-006 | ~23:24 | Plan-my-day (D24): steps 7 and 8 done; its step 9 superseded by PLAN-007; **steps 10-12 remain in force** |
+| PLAN-007 | 2026-11-07 ~10:41 | layout 1/4 plan + 3/4 globe, then a design pass: 9.1-9.3 done; its A17 superseded by PLAN-008; **steps 9.4 and 9.5 remain in force** |
+| PLAN-008 | 12:11 | sharper pictures: 9.3b-1 and 9.3b-2 done; A19 and 9.3b-3 superseded by PLAN-009 (E031) |
+| PLAN-009 | 13:12 | browser-side drawing, close fly-in, name fix: 9.3c-0 to 9.3c-3 done; **9.3c-4 remains** (after PLAN-010) |
+| PLAN-010 | 13:41 | stored base map; supersedes D22's outlines-only base map: 9.3d-1 and 9.3d-2 done; **9.3d-3 and 9.3d-4 remain** |
 
 | Step | What | Status |
 |---|---|---|
@@ -93,7 +105,7 @@
 | 9 | Map and globe as supporting views (PLAN-006) | **superseded by PLAN-007** (rows 9.1-9.5) |
 | 9.1 | Spike gate: fly-in from globe and flatten, two ways, screenshots (PLAN-007) | **done** 2026-11-07 ~10:45 UTC (commit "Step 9.1: ..."); D31 |
 | 9.2 | Data contract (frames in the manifest, agreement colours) and pure map helpers (PLAN-007) | **done** 2026-11-07 ~10:53 UTC (commit "Step 9.2: ...") |
-| 9.3 | Map module, controls, 1/4 + 3/4 layout, spike removed (PLAN-007) | **in progress** (11:07 UTC): built and working in Chromium; open: frame quality (E027), real-service check of D32 |
+| 9.3 | Map module, controls, 1/4 + 3/4 layout, spike removed (PLAN-007) | **done** 2026-11-07 11:07 UTC (commit `4f2c67e`); the points open then (frame quality E027, real-service check of D32) were closed by 9.3b and 9.3c-0 |
 | 9.3b-1 | Gate Q1: measure and look at four ways to make the rain pictures sharper (PLAN-008) | **done** 2026-11-07 12:27 UTC (commit "Step 9.3b-1: ..."); D34 |
 | 9.3b-2 | Build the sharper frames: smooth up-sampling, agreement per pixel, config, tests, re-export (PLAN-008) | **done** 2026-11-07 12:39 UTC (commit "Step 9.3b-2: ..."); D34 results |
 | 9.3b-3 | Look and confirm (Chromium, Edge, the user), records (PLAN-008) | **failed the user's look** (blocky when zoomed in, E031); superseded by PLAN-009 |
@@ -104,42 +116,48 @@
 | 9.3c-4 | Browser checks in the engines, Edge look, records (PLAN-009) | not started (after PLAN-010) |
 | 9.3d-1 | Gate: measure the stored base map (extract sizes z4-z7, fonts and sprites) and show the user (PLAN-010) | **done** 2026-11-07 13:48 UTC (commit "Step 9.3d-1: ..."); D38 gate results |
 | 9.3d-2 | Serve and style: nginx, the two packages, the dark style, rain below labels, outlines removed (PLAN-010) | **done** 2026-11-07 14:02 UTC (commit "Step 9.3d-2: ..."); D38 results, D39, E032 |
-| 9.3d-3 | Fit the rain to the map: opacity, legibility, looks at several zooms (PLAN-010) | not started |
+| 9.3d-3 | Fit the rain to the map: opacity, legibility, looks at several zooms (PLAN-010) | not started (next, after the user's go) |
 | 9.3d-4 | Browser-check scenarios, records, hosting requirement for step 11 (PLAN-010) | not started |
 | 9.4 | Browser checks in three engines, real GPU in Edge, records (PLAN-007) | not started |
 | 9.5 | Design pass with the frontend-design skill, user review (PLAN-007) | not started |
 | 10 | Provenance + honesty strip, final policy (PLAN-006) | not started |
-| 11 | Hosting gate + deploy | not started |
+| 11 | Hosting gate + deploy (free host only, D37; the 190 MB base-map file leaves only GitHub Pages) | not started |
 | 12 | README + submission | not started |
 
 Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
 
-## Status (live, rewritten in the housekeeping at ~23:03 UTC)
-- **Done:** steps 1-8, 9.1, 9.2 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is step 9.3d-3** (PLAN-010: fit the rain to the map; the user's look), then 9.3d-4, then PLAN-009 step 9.3c-4 and PLAN-007 steps 9.4 and 9.5. The user's own look at the live layer in Firefox is still pending.
-- **Tests (step 9.3b-2):** Python 105 passed, Node 53 passed. Earlier: official command `docker compose -f docker/compose.yaml run --rm tests` = 99 passed; `... run --rm frontend-tests` = 41 passed (at step 8); `... run --rm frontend-check` = 8 places x 8 activities match; `BROWSER_NAME=<engine> ... run --rm browser-checks` = 8 of 8 scenarios in chromium, firefox and webkit.
-- **Git:** branch `main`, 25 commits, no remote (GitHub login and repo creation are plan step 11 and need the user's approval and link).
-- **Records:** this housekeeping checked every markdown file against the others; its findings and fixes are listed in the last section of this file.
+## Status (live, rewritten in the housekeeping of 2026-11-07 14:17 UTC; 19.98 h used)
+- **Done:** steps 1-8, 9.1-9.3, 9.3b-1, 9.3b-2, 9.3c-0 to 9.3c-3, 9.3d-1, 9.3d-2 and the security steps S1-S5. The pipeline (fetch, process, validate, export) runs in Docker. The page runs on http://localhost:8080 (Docker preview, running): Plan-my-day on the left (1/4), globe that flies to the place and flattens into a flat map on the right (3/4), a stored OpenStreetMap base map, rain drawn in the browser from zoom 4.5 (pre-made pictures on the globe and zoomed out), time bar with Now, My place, model switch. The testing site on :5173 is not running. The user's overall verdict after the base map: "ok so all looks good". **Next:** step 9.3d-3 (fit the rain to the map, the user's look), 9.3d-4, then PLAN-009 step 9.3c-4, PLAN-007 steps 9.4 and 9.5, PLAN-006 steps 10-12. Not deployed; no remote.
+- **Tests (last recorded 2026-11-07 14:02 UTC, step 9.3d-2):** `docker compose -f docker/compose.yaml run --rm tests` = **117 passed**; `... run --rm frontend-tests` = **70 passed**; `BROWSER_NAME=chromium ... run --rm browser-checks` = **9 of 9 scenarios**. `frontend-check` (the browser code on the real tiles equals the independent Python plan: 8 places x 8 activities) was last recorded at step 9.3b-2 and has not been re-run since the live layer; Firefox and WebKit `browser-checks` were last recorded at step 8 (8 of 8) and have not been re-run since the map work.
+- **Git:** branch `main`, 48 commits before this housekeeping commit (the last: `cf82d26` at 2026-11-07 14:02 UTC), no remote (GitHub login and repo creation are plan step 11 and need the user's approval and link).
+- **Size limits:** the largest source file is `frontend/src/app.js` with 284 lines; no function was written over 50 lines in the last steps (checked by line counts at each commit; the full check is repeated before submission).
+- **Records:** this housekeeping checked every markdown file; findings and fixes are in the last section of this file.
 
 ## Open items (waiting on someone, or on a later step)
-- **User feedback (2026-11-07 ~00:40 UTC, after trying the plan page):** "it looks good i mean it gives the answer that we need but it should also look good right? also y did u remove the 2d view and 3d view?". Answer given: the map and globe were demoted, not deleted (they are still the two spike links at the bottom; the home page became the plan page, as PLAN-006 says), and the page is visually plain. **Decided at 10:41 UTC (see D29): map first, then the design pass; the layout is 1/4 plan on the left and 3/4 globe/map on the right. Earlier proposal text:** bring the map and globe back onto the main page as step 9 and do a visual design pass (frontend-design), map first then design, or design first. Nothing was built for it.
-- **User:** open http://localhost:8080 (preview running) in their Firefox: does the PLAN page work (place by location and by search, activity buttons, saved places) and do the windows look plausible for a place they know (D24 bet); the two map pages are still the spike, confirm the Firefox map as before (the user reported "the site loads files"); [innovation ideas: DONE, chosen in D24 / PLAN-006; the list below is kept as history] (~23:03 UTC); confirm the proposed no-WebGL2 message (D23).
-- **User, later:** Safari and phone testing (deferred by the user); the geocoder service (step 8; AI recommends Open-Meteo, D20); the hosting choice (step 11); GitHub login, repo link and approval before any push.
-- **Checked in step 8:** `DecompressionStream('gzip')` reads the real tiles in Chromium 158, Firefox 159 and WebKit 27 in Docker (D25 assumption held; not yet on the user's own Firefox or Safari); time zones in Node tests (India, New York DST, Auckland, Kathmandu) and against Python on 8 real places.
+- **Waiting on the user:** (1) the go for step 9.3d-3 (fit the rain to the map); (2) in their Firefox the time bar once showed the first block (Fri 6 Nov 12:00-18:00): did they move the slider? (D39, not reproduced in Edge or Chromium); (3) how fast the live layer feels in their Firefox (only measured in Edge and Chromium); (4) Safari and phone tests, deferred by the user (D23); (5) GitHub login, repo link and approval before any push, and the hosting choice at step 11 (only GitHub Pages fits: D37 and the file size); (6) confirm the plain no-WebGL2 message wording (D23 item 3, built in step 9.3).
+- **Settled by the user since the last housekeeping:** the layout (1/4 plan + 3/4 globe, D29), nothing paid (D37), the stored base map (D38), brighter names and borders (D39). The user's overall verdict after the base map, 2026-11-07 (time not logged): "ok so all looks good".
 - **E007:** IFS to 360 h is still deferred (D12).
-- **Pending results of bets:** D2/A6 and D4 (size limits, steps 7 and 11), D8 (once the scheduled job runs), D9 and addendum (steps 7 and 10), D14 (step 7).
-- **Throwaway code to replace:** `scripts/spike_frame.py` (step 7), `frontend/spikes/maplibre.*` and `frontend/index.html` (step 9). Shortcut register: DECISIONS.md.
-- **Not yet created by design:** `docs/SUBMISSION.md` and the final README (step 12), `backend/` (step 7), `.github/workflows/` (step 11).
+- **Checked in step 8:** `DecompressionStream('gzip')` reads the real tiles in Chromium 158, Firefox 159 and WebKit 27 in Docker, and the user's Firefox draws the page (their screenshots); time zones in Node tests (India, New York DST, Auckland, Kathmandu) and against Python on 8 real places.
+- **Pending results of bets:** D2/A6 and D4 (size limits are met locally, host limits are checked at step 11), D8 (once the scheduled job runs), D9 and addendum (step 10), D14 (step 7 done, see DECISIONS), D37 (no bill: step 11), D11/D19 (re-check both local sites with the finished page, step 9.4).
+- **Throwaway code:** none left. The spike generator, the spike pages and the picture-quality viewer were removed (steps 7, 9.3, 9.3b-2); `ls` of `frontend/` and `scripts/` on 2026-11-07 14:17 UTC shows none. Shortcut markers in code: see the register in DECISIONS.md (4 `shortcut:` lines in 3 files).
+- **Requirements the base map puts on step 11:** a free host that serves a 190 MB file with HTTP range requests (GitHub Pages; not tested), the file kept out of git (A27: how it reaches the build is decided at step 11), the security headers as a CSP `<meta>` if the host cannot set headers (S14).
+- **Not yet created by design:** `docs/SUBMISSION.md` and the final README (step 12), `.github/workflows/` (step 11). `backend/` exists since step 7.
 
 ## Known issues
-- Python 3.10's pip is broken (E001); use `py -3.11`.
-- Firefox cannot create a WebGL context inside the Docker test container (environment limit); Firefox is tested by the user on a real PC. Safari and phones are untested.
-- The plan page works without WebGL (checked with canvas disabled); the two map preview pages still show a blank page without WebGL2 until step 9.
-- **Timing:** the 24 h warning is due 2026-11-07 18:19 UTC and falls during step 9 (PLAN-007 time estimate shifted by the 10 h break; plan now ends around hour 27-28).
-- No age warning yet: if the scheduled job ever fails the plan would show an old forecast without saying so (step 10, D9). The page does show the run time at the bottom.
+- Python 3.10's pip is broken (E001); use `py -3.11` (the project `.venv` is 3.11.9).
+- Firefox cannot create a WebGL context inside the Docker test container (environment limit), so the map can only be tested in Chromium (software WebGL), in Edge with the real GPU, and in the user's own Firefox. Safari and phones are untested.
+- The plan part works without WebGL (checked with canvas disabled at step 8).
+- **The forecast shown is the 2026-11-06 12:00 UTC run (exported 2026-11-07 12:35 UTC).** Nothing refreshes it until the scheduled job exists (step 11), and there is no out-of-date warning yet (step 10, D9). The page shows the run time at the bottom.
+- **Timing:** the 24 h warning is due 2026-11-07 18:19 UTC; the map and design work (steps 9.3d-3 to 9.5) should end around hour 32-33 by the estimates in PLAN-010 (estimates, not measurements); the last 8 hours (from hour 64) are for deployment, README and submission.
+- **Weight of the page:** first visit of the globe 1.56 MB, of a place at zoom 7 about 4.3 MB; a repeat visit still makes about 53 requests at zoom 7 because browsers cache partial (206) answers poorly (D38 results).
+- **Base-map detail** stops at zoom 7 (cities, main roads); further in, the lines stay crisp but no new streets appear (D38).
+- **Rain detail:** the cells are 0.25 degree (about 28 km). The live layer is smooth between cell centres and creates no detail the models do not have (D36). On the pre-made pictures (globe and zoomed out) a lone one-cell peak looks about a quarter as strong as its value (D34 and its test).
 - Firefox headless cannot answer the location prompt, so the refusal path is exercised in Chromium and WebKit only.
+- The user's Firefox once showed the time bar on the first block: not reproduced, cause unknown (D39).
 - Linux hosts: file ownership of `data/` and the `APP_UID`/`APP_GID` override are documented but untested (no Linux host).
 - The processed 6 h values carry up to about 0.24 mm (IFS, late steps) or 0.125 mm (AIFS) of GRIB packing rounding (DOMAIN.md, D14).
 - Test runs of this session used one pair of forecast runs (00z and 12z of 2026-11-06); the publication-lag estimate (about 7.5 h) is from one run.
+- Disk: `data/basemap/` is 486 MB because it still holds the three measuring extracts (zoom 0-5 and 0-6) next to the chosen one; they can be deleted, they are not used.
 
 ## Submission checklist — security (added at the user's request, 2026-11-06 ~20:43 UTC)
 Each item is ticked in `docs/SUBMISSION.md` only after running the check. These come on top of the checklist in CLAUDE.md.
@@ -150,6 +168,8 @@ Each item is ticked in `docs/SUBMISSION.md` only after running the check. These 
 - [ ] Every finding in `docs/SECURITY.md` is marked fixed, accepted (with the reason) or open, and the "could not check" list is updated.
 - [ ] Public/private check: only the intended files are in the public repo; the identity decision (S06) is applied; no token or personal data beyond the decision appears in any log or file.
 - [ ] Every plan file since D15 contains a "Security note".
+- [ ] `npm audit` repeated on the final `package-lock.json` (last run at the install of the base-map packages, 0 vulnerabilities) and `pip-audit` on the final `requirements.txt`.
+- [ ] The base-map file, fonts and sprites on the public host equal the checked originals (sha256 in `config/basemap.toml` and `config/basemap_assets.lock.json`).
 
 # Results log (oldest first)
 
@@ -435,3 +455,16 @@ Files: `frontend/src/basemap.js` (new, style builder), `frontend/src/mapview.js`
 - **Tests:** Node 70 passed (4 geo tests removed, 6 basemap tests added: every style address is same-origin; labels above the rain; only stored fonts; the language changes the style; our colours are real flavor fields and in the style; contrast at least 7 : 1 against the land, with the old defaults failing it); Python 117 passed; `frontend-build` passes (map code 310 kB gzipped); Chromium browser checks 9 of 9 (the map starts on the block under way; drag to a past block says so; Now returns).
 - **Real browsers:** Edge with the real GPU and the user's own Firefox (their screenshot): the base map, the rain, the credit and the labels draw; after the user's remark the names and borders are bright (Edge screenshots `docs/evidence/edge/step9-3c-*.png`); range requests answered 206 by nginx; fonts and sprites 200; no outside host. Load times in D38 results.
 - **Open:** the user's Firefox showed the time bar on the first block (not reproduced; D39); 9.3d-3 (fit the rain to the map); the user's verdict on the base map's look; Firefox timing of the live layer.
+
+## Housekeeping review of all markdown files (run 2026-11-07 14:17 UTC; 19.98 h used; user request: "find all the stale .md and update them"; markdown only, no code or config changed)
+Checked: README, PROBLEM, PLAN-001..010, PROGRESS, DECISIONS, ERRORS, SOURCES, DOMAIN, ENVIRONMENT, SECURITY (22 files). `docs/SUBMISSION.md` does not exist yet (step 12). The plan files and PROBLEM.md were not touched (rule).
+Stale and fixed:
+- **README:** status, folder layout, commands, test counts, browser table and credits described the plan-page stage (outline map, a spike page); rewritten for the current state: map, live layer, stored base map, the two outside services, nothing paid, what is not done.
+- **PROGRESS (this file):** the time table had no commit after 00:43 on 2026-11-07 (17 rows added from `git log`, plus the 14:09 resume); step 9.3 still said "in progress"; the Current plan section repeated lines; Status said 25 commits and a spike page; Open items and Known issues spoke of spikes and a blank map page; the security checklist got two new items.
+- **DECISIONS:** bets that now have a result are closed in a new section (D22, D23, D34, D35, D36, D38 and the size bets); the shortcut register was rebuilt from `grep` (the spike entries were gone).
+- **ERRORS:** counters brought up to date (E007 wording, E026, E027, E031); a mislabelled "repeat" paragraph in E026 is corrected by a note (it was a guessed time, the E024 class).
+- **SECURITY:** header and "what exists today" said there was no front end or hosting host list; the "could not check" lines for the front end, npm and the geocoder were out of date; a status summary of S01-S14 was added with what remains for steps 10 and 11.
+- **SOURCES:** a summary of what the project uses now (the 13:41 section says "nothing installed yet"; it was installed at 14:02). **DOMAIN:** pointers where an earlier fact is superseded. **ENVIRONMENT:** the current state found by running commands.
+Found but not changed: the plan-mode file in the Claude folder (`plans/groovy-waddling-octopus.md`) is a working copy of PLAN-010 and not a record.
+Small slip of mine in this pass: my first README draft said the map shows its plain message in the Docker Firefox and WebKit; I had not run that since the map work, so the sentence now says only what is known.
+Verification of this pass: `docker compose -f docker/compose.yaml run --rm tests` = 117 passed in 18.74 s (2026-11-07 14:18 UTC; the secret scan covers the docs); tracked root entries: .gitignore README.md backend config docker docs frontend pipeline pyproject.toml requirements.txt scripts tests (allowed); `git status` shows only the eight markdown files.

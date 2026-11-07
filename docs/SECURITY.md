@@ -1,10 +1,10 @@
 # SECURITY
 
-Audit of everything built up to commit `dc2535c` (steps 1-4 and 3b). Written 2026-11-06 ~20:41 UTC at the user's request, before step 5. **Extended since, in dated sections below, through commit `fb92a96` (steps S1-S4, 5 and 6); housekeeping review ~23:02 UTC.** The first sections describe the state at the audit, not today.
+Audit of everything built up to commit `dc2535c` (steps 1-4 and 3b). Written 2026-11-06 ~20:41 UTC at the user's request, before step 5. **Extended since, in dated sections below, through commit `cf82d26` (steps S1-S4, 5 to 9.3d-2); housekeeping reviews ~23:02 UTC on 2026-11-06 and 2026-11-07 14:17 UTC.** A status summary of S01-S14 is at the end of this file. The first sections describe the state at the audit, not today.
 Severity is the AI's own judgement (Critical / High / Medium / Low / Info). **No Critical or High finding was found, but several areas could not be checked yet because they do not exist** (see "Could not check").
 
 ## What exists today (so you know what the audit could cover)
-A Python pipeline (`pipeline/`) that downloads public ECMWF files and processes them, tests, Docker files, config and docs. **There is no web server, no API endpoint, no query parameter, no front end, no hosting and no GitHub repo yet.** So input validation on endpoints, CORS, rate limiting, HTTPS and security headers have nothing to attack today; they are listed as requirements for the later steps (section "Controls for what is not built yet") and are not claimed as verified. (State at the audit. Today there is also a front-end spike on two local sites; still no hosting and no GitHub repo. See "Front end and local sites".)
+A Python pipeline (`pipeline/`) that downloads public ECMWF files and processes them, tests, Docker files, config and docs. **There is no web server, no API endpoint, no query parameter, no front end, no hosting and no GitHub repo yet.** So input validation on endpoints, CORS, rate limiting, HTTPS and security headers have nothing to attack today; they are listed as requirements for the later steps (section "Controls for what is not built yet") and are not claimed as verified. (State at the audit. Today there is also the page on two local sites (Plan-my-day, map, stored base map, two outside geocoder hosts); still no hosting and no GitHub repo. See the dated sections from "Front end and local sites" on and the summary at the end.)
 
 ## Findings
 
@@ -37,9 +37,9 @@ A Python pipeline (`pipeline/`) that downloads public ECMWF files and processes 
 - **Vulnerabilities that PyPI's and npm's databases do not list:** the Python scan (25 packages) and the npm scan (70 packages) found nothing, but they only know what those services know; the C libraries inside `eccodeslib`/`eckitlib` may have issues that are not listed there.
 - **Whether ECMWF publishes checksums for the files:** the client does not use any and I did not look on the site. Integrity today rests on TLS plus the structural checks above.
 - **HTTPS, security headers, CORS, rate limiting, error pages of a live site:** no host exists. These depend on the hosting choice in step 11.
-- **Front-end issues in code that does not exist yet:** the location panel (XSS through place names, geolocation privacy, the online geocoder's requests and its effect on the policy) is built in steps 8-10. Step 6 only checked the spike page, the headers and the local sites.
+- **Front-end code review:** the page is covered by tests with hostile inputs, mutation checks and real-browser runs against the policy (steps 8 to 9.3d-2), but nobody independent has reviewed the front-end code; MapLibre and pmtiles are trusted through version pins, the lock file and the scans only. (Updated 2026-11-07 14:17 UTC; the older text said the page did not exist yet.)
 - **GitHub account and repo settings** (private e-mail setting, branch protection, Actions permissions): I am not logged in (`gh auth status`) and no repo exists.
-- **npm packages:** 70 are installed and were scanned (S12); only the direct ones were looked at on the registry.
+- **npm packages:** 70 were scanned at S12; since then two outline packages were removed and `pmtiles`, `fflate` and `@protomaps/basemaps` added (vetted on the registry, 0 vulnerabilities reported at install); a final `npm audit` runs before submission (standing approval).
 - **Your machine:** Docker Desktop and Windows security settings are outside this audit.
 - **Secrets of unknown format** in the session log or files: only the listed formats and the three known environment values were searched.
 
@@ -57,7 +57,7 @@ A Python pipeline (`pipeline/`) that downloads public ECMWF files and processes 
 ## Controls for what is not built yet (requirements for the next plans)
 - **Static site, no server:** no endpoint, query parameter or server-side validation exists. The browser code must still treat the manifest and tile files as untrusted: check array bounds and sizes, clamp latitude/longitude, and write place names with `textContent`, never `innerHTML`.
 - **Hosting (step 11 gate):** must serve HTTPS only. Prefer a host that can set response headers (`Content-Security-Policy`, `X-Content-Type-Options`, `Referrer-Policy`); a host that cannot (some static hosts) needs a CSP `<meta>` tag instead. CORS: the data is public, so `Access-Control-Allow-Origin: *` on data files is acceptable if another origin must read them; none is needed if the site and data share an origin. Rate limiting is the host's/CDN's job; the app has nothing to rate-limit.
-- **Third-party requests (step 6 gate, decided in D20/D22):** the base map is self-hosted (no third-party request). Place search will use an **online geocoder** (user's choice): the typed text and the visitor's IP go to that service, so the page needs a plain privacy line and the policy allows exactly that one host in `connect-src`. Service chosen at step 8 (AI recommends Open-Meteo, see D20).
+- **Third-party requests (step 6 gate, decided in D20/D22):** the base map is self-hosted (no third-party request). Place search will use an **online geocoder** (user's choice): the typed text and the visitor's IP go to that service, so the page needs a plain privacy line and the policy allows exactly that one host in `connect-src`. Services chosen: Open-Meteo for place search (D27, step 8) and BigDataCloud client-side reverse geocoding to name the device position (D32, host `api-bdc.io`); the policy allows exactly these two hosts.
 - **npm (step 6, done):** exact versions, lockfile, `npm ci --ignore-scripts`, scan run (S12). The Vite dev server is bound to localhost and was shown to refuse the LAN address and path traversal (S13). Still open: vet each new direct package before adding it, and repeat `npm audit` before submission.
 - **GitHub Actions (step 11):** least-privilege `permissions:`, third-party actions pinned to a commit and vetted, no `pull_request_target`, a time limit on every job, no secrets needed, no environment dumps in logs.
 
@@ -112,3 +112,24 @@ Could not check in step 6: how the policy behaves with an online geocoder (not a
 - **Credit line:** the map credit is HTML written from our own config (two https links with `rel=noopener`); a test rejects any other markup there. Place names and other text come from the map tiles and are drawn by MapLibre as text, never as HTML.
 - **New packages:** `pmtiles` (+ `fflate`) and `@protomaps/basemaps`, exact versions, no install scripts, lock file committed, 0 vulnerabilities reported by npm's audit at install.
 - **Not checked:** the behaviour of the public host with large range requests (step 11); a tile file that is damaged or hostile (it is data read by the `pmtiles` library and MapLibre; if it is invalid the map shows no base map and the page keeps working).
+
+## Status summary (housekeeping, 2026-11-07 14:17 UTC; state at commit `cf82d26`)
+What exists: the pipeline, the static export, and the page on two local sites (testing site on :5173, public-like preview on :8080); no hosting, no GitHub repo, no remote. Outside hosts the page may contact (one test keeps `connect-src` equal to the config): `geocoding-api.open-meteo.com` (typed searches) and `api-bdc.io` (the device position, only when "Use my location" is used). Everything else is same-origin: data, base map, fonts, sprites, workers and `blob:` pictures. The older line in "Step 9.3" that says the real BigDataCloud service was not checked is superseded by step 9.3c-0 (real call in Edge).
+
+| ID | Status now | What remains |
+|---|---|---|
+| S01 | fixed (step S2) | none |
+| S02 | fixed (hashes on all 25 Python packages, scan clean, D18) | repeat `pip-audit` on the final file before submission |
+| S03 | fixed (non-root, no capabilities, read-only root, `process` without network) | Linux host file ownership untested |
+| S04 | decided (D26: category and time only) | build the status file with the scheduled job at step 11 |
+| S05 | fixed | final secret scan of the history and the session log at submission |
+| S06 | accepted (D16) | the e-mail becomes public when the repo is pushed |
+| S07 | keep the rule | never print the environment; the workflow needs no secrets |
+| S08 | documented | re-check the pinned image digests before submission |
+| S09 | ok | keep workflow logs free of environment dumps |
+| S10, S11 | avoided (Cesium gone) / accepted | none |
+| S12 | scanned, 0 vulnerabilities | repeat `npm audit` before submission |
+| S13 | ok | none |
+| S14 | open for step 11 | (a) `.mjs` served as JavaScript, (b) headers or a CSP `<meta>`, (c) `worker-src blob:`, (d) `connect-src` limited to the two geocoder hosts, (e) new: range requests for the 190 MB base-map file |
+
+Step 11 notes, labelled as knowledge I have NOT checked in this session: GitHub Pages is my expectation for the host (D37 and the file size leave no other free choice found); I believe it cannot set custom response headers, in which case the policy goes into a `<meta>` tag, and the CSP specification ignores some directives there (`frame-ancestors`, `report-uri`, `sandbox`); both points are to be read on the official pages at step 11 before relying on them.

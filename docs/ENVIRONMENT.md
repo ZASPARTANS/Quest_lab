@@ -79,3 +79,10 @@ Everything below was found by running commands in this session. Times are UTC.
 - The `basemap` service reaches `build.protomaps.com`, `github.com` (release asset, redirected to its CDN), `raw.githubusercontent.com` and `api.github.com` from the Docker container; the three downloads need about 20 MB plus the extract (15-190 MB) and took under a minute here.
 - The project folder is mounted read-only inside the service (as in every Python service), so a tool that needs to write a file into `config/` fails: results go under `data/` and are copied by hand. The host's default Python is 3.10 (no `tomllib`): use `.venv/Scripts/python.exe` or Docker to read the TOML files. A Python script run in a container with a pipe buffers its output until it ends: use `python -u`.
 - Disk: `data/basemap/` holds the three measuring extracts (250 MB together) plus the assets and the tool (17 MB).
+
+## 2026-11-07 14:17 UTC - current state (housekeeping; found by running commands)
+- Windows 11 Home, Git Bash and PowerShell; Docker 29.9.2; Node v22.23.4 and npm 10.9.9 on the host; Git 2.56.0.windows.1; host `python` is 3.10.11 (pip broken, E001); `py -3.11` and the project `.venv` are 3.11.9.
+- Disk: 603 GB free on `E:` (1.9 TB, 68 % used). In `data/`: `basemap` 486 MB, `processed` 476 MB, `raw` 120 MB, `site` 71 MB, `check` 140 KB. `frontend/node_modules` 104 MB, `frontend/dist` 1.8 MB, `.venv` 159 MB, `docs/evidence` 31 MB (67 files). 204 files are tracked by git.
+- Docker images of this project: `precip-forecast:local` 688 MB, `precip-frontend:local` 585 MB, `precip-playwright:local` 3.9 GB (the machine also holds images from other projects). The preview container `docker-preview-1` is up on 127.0.0.1:8080 (answers 200); nothing listens on localhost:5173 (the testing site is stopped).
+- Largest source file: `frontend/src/app.js`, 284 lines (limit 300).
+- Surprise worth remembering: the project folder is read-only inside every Python service, so anything that must write into `config/` is done by hand from a draft under `data/` (seen at step 9.3d-1).

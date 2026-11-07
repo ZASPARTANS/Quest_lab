@@ -1,88 +1,80 @@
 # Precipitation forecast app (ECMWF IFS + AIFS)
 
-QUEST Lab application, Project 1: fetch precipitation forecasts from ECMWF Open Data (IFS and AIFS), process them, and deploy a public web app that presents the forecast through an innovative front end.
+QUEST Lab application, Project 1: fetch precipitation forecasts from ECMWF Open Data (IFS and AIFS), process them, and deploy a public web app that presents the forecast through an innovative front end. The problem statement is in `docs/PROBLEM.md`; the plans in `docs/plans/`; the live status in `docs/PROGRESS.md`; decisions, errors, sources, domain facts, environment and security notes in the other files of `docs/`.
 
-**Status: work in progress (checkpoint 2026-11-07 ~00:42 UTC, after step 8). The data part runs (download, processing, validation, export to static tiles). The home page is the Plan-my-day page: choose a place and an activity and get dry windows, day cards and rain totals; it works without WebGL. The home page is split: the plan on the left (about a quarter of the width) and a globe on the right that flies to the chosen place and flattens into a 2D map (Auto / Flat / Globe, IFS / AIFS / both, time bar, click to choose a place). Zoomed out (and on the globe) the rain is a smooth pre-made picture; from zoom 4.5 the browser draws the rain itself at screen sharpness from the exact forecast values (plan steps 9.3b, 9.3c). Under the rain is a stored OpenStreetMap base map (Protomaps extract to zoom 7, 190 MB, served from our own site, plan PLAN-010). A design pass and the multi-browser map checks (steps 9.4, 9.5) are still to do.** This README will be rewritten at the end to say what works, what does not, how to run it and what was verified. The problem statement is in `docs/PROBLEM.md`; the plan in `docs/plans/`; the live status in `docs/PROGRESS.md`.
+**Status (housekeeping 2026-11-07 ~14:15 UTC): work in progress, not deployed.** Nothing is pushed and no remote exists; hosting is plan step 11. What runs today on this computer:
+- **Data pipeline (Docker, no GPU, plain Python):** download the newest complete IFS and AIFS run, process it to 6-hour millimetre blocks with the agreement of the two models, validate against the raw files, export static point tiles, map pictures and a manifest.
+- **The page** (http://localhost:8080 once the preview is running): on the left (about a quarter of the width) **Plan-my-day**: choose a place (device location, search, saved place, map click) and an activity; it shows the best dry windows, day cards with both models' blocks, and rain totals as a range. On the right (about three quarters) a **globe that flies to the chosen place and flattens into a flat map**, with IFS / AIFS / both-models switch, a time bar (Now button), My place button, and a stored **OpenStreetMap base map** under the rain. Zoomed out the rain is a smooth pre-made picture; from zoom 4.5 the browser draws the rain itself at screen sharpness from the exact forecast values. The plan part works without WebGL.
+- **Not done yet:** the design pass (step 9.5), the out-of-date warning and the attribution wording (step 10), hosting and the scheduled deploy (step 11), this README's final form and `docs/SUBMISSION.md` (step 12), the three-engine check of the final page (steps 9.3c-4 and 9.4). Safari and phones are untested (user decision: later). The README will be rewritten at the end to say what works, what does not, how to run it and what was verified.
 
-## Intended folder layout (decision D5 in `docs/DECISIONS.md`)
-
-Folders appear when their first real file is added. Existing so far: `config/`, `pipeline/`, `backend/`, `scripts/`, `frontend/`, `tests/`, `docker/`, `docs/`. Still to come: `.github/workflows/` (step 11).
+## Folder layout (decision D5 in `docs/DECISIONS.md`)
 
 ```
 README.md            this file
-config/              all settings (TOML/JSON), no code
-pipeline/            fetch ECMWF data and process it (Python)
-backend/             builds the static data API the frontend reads (tiles + manifest)
-frontend/            web app (Vite): plan page now; map and globe views come in step 9
-tests/               pipeline/ and backend/ (pytest), frontend/ (node --test)
-scripts/             thin command-line entry points
-docs/                plans, progress, decisions, errors, sources, domain notes
-.github/workflows/   scheduled build and deploy
-data/                IGNORED by git: raw downloads, processed output, exported site data
+config/              all settings (TOML/JSON), no code; secrets are never stored here
+pipeline/            fetch ECMWF data and process it; the base-map downloader (Python)
+backend/             builds the static data the front end reads (tiles, map pictures, manifest)
+frontend/            the web app (Vite): plan page, map, live rain layer, base map style; tools/ = browser checks and measurements
+tests/               pipeline/ backend/ hygiene/ tooling/ (pytest), frontend/ (node --test)
+scripts/             thin command-line entry points (validation, fixtures, hashes)
+docker/              Dockerfiles, compose.yaml (all services), nginx.conf of the preview
+docs/                plans, progress, decisions, errors, sources, domain notes, security, evidence (screenshots)
+.github/workflows/   scheduled build and deploy: not created yet (step 11)
+data/                IGNORED by git: raw/ processed/ site/ (forecast), basemap/ (map file, fonts, tool), check/
 ```
 
-## Data and licence
-Forecast data: ECMWF Open Data (IFS and AIFS), CC-BY-4.0 and the ECMWF Terms of Use. The exact attribution text will be added once verified on the official terms page (plan step 10).
+## Data, services and credits
+- **Forecast:** ECMWF Open Data, IFS and AIFS Single, total precipitation. CC BY 4.0 and the ECMWF Terms of Use. The exact attribution wording will be verified on the official terms page and shown in the page (step 10).
+- **Base map:** OpenStreetMap contributors (ODbL), as a Protomaps world extract to zoom 7 (190 MB), with Noto Sans fonts (SIL Open Font Licence) and the Protomaps sprites, all **stored with the site** (no outside request for the map). The credit "(c) OpenStreetMap contributors, Protomaps" is on the map.
+- **Place search:** Open-Meteo geocoding (typed text and IP go there; credit requested, CC BY 4.0). **Naming the device position:** BigDataCloud client-side reverse geocoding (position and IP go there). The page says both in plain words. These are the only two outside hosts the page may contact (`config/headers.conf`); nothing else leaves the browser (location, saved places and settings stay in it).
+- **Nothing in the project costs money** (decision D37): no paid service, no credit-metered hosting.
+- Libraries and where each came from: `docs/SOURCES.md`; MapLibre GL JS 6.16.0, pmtiles 4.5.0, @protomaps/basemaps 5.7.2 (all BSD-3-Clause), Python packages pinned with hashes in `requirements.txt`.
 
-## Fetching and processing data (Docker, Linux)
+## Run it (Docker, Linux containers; Windows host tested)
+Pipeline (the `fetch` and `basemap` services have network access; the others have none):
 ```
-docker compose -f docker/compose.yaml run --rm fetch     # download the newest complete IFS + AIFS run (about 62 MB); the only service with network
-docker compose -f docker/compose.yaml run --rm process   # process it into data/processed/<run>/ and print a summary; no network
+docker compose -f docker/compose.yaml run --rm fetch      # newest complete IFS + AIFS run into data/raw (about 62 MB)
+docker compose -f docker/compose.yaml run --rm process    # data/processed/<run>/ (6 h mm blocks + agreement)
+docker compose -f docker/compose.yaml run --rm process python -m scripts.validate_points   # compare with the raw GRIB at 8 places
+docker compose -f docker/compose.yaml run --rm export     # data/site: tiles, map pictures, manifest (about 70 MB, several minutes)
+docker compose -f docker/compose.yaml run --rm export python -m scripts.validate_site       # tiles equal the processed data and the raw files
+docker compose -f docker/compose.yaml run --rm basemap python -u -m pipeline.basemap build  # the stored base map (data/basemap/world.pmtiles, once)
+docker compose -f docker/compose.yaml run --rm basemap python -u -m pipeline.basemap fetch-assets   # fonts and sprites, checked against config/basemap_assets.lock.json
 ```
-
-Every service runs as a normal user (not root) with all Linux capabilities dropped and a read-only file system; only the git-ignored `data/` folder is writable (security finding S03). On Docker Desktop (Windows) `data/` is created on the first run (checked). On Linux, create `data/` yourself and run `export APP_UID=$(id -u) APP_GID=$(id -g)` first, so the files belong to you (not tested: no Linux host here). The base image is pinned by digest, so it gets no operating-system updates until the digest in `docker/Dockerfile` is changed; re-check it before relying on the project for long.
-
-To check the processed data against the raw files (eccodes' own nearest-point search at 8 named places, tolerance 0.05 mm):
-
+The page (two local sites, decision D19):
 ```
-docker compose -f docker/compose.yaml run --rm process python -m scripts.validate_points
+docker compose -f docker/compose.yaml run --rm frontend-build                 # production build into frontend/dist
+docker compose -f docker/compose.yaml up -d --force-recreate preview          # public-like site http://localhost:8080 (stop: ... down)
+cd frontend && npm ci --ignore-scripts && npm run dev                          # testing site http://localhost:5173 with a DEV badge
 ```
+Restart the preview after every export and after any change of `config/headers.conf` (the container reads them at start). Both sites listen on this computer only. Settings are in `config/` (`pipeline.toml`, `backend.toml`, `basemap.toml`, `frontend.json`, `activities.json`, `headers.conf`).
 
-Processing turns both models into millimetres per 6-hour interval, converts each model's own unit, and builds the IFS-vs-AIFS agreement field (details: `docs/DOMAIN.md`, decisions D13 and D14).
+**Every service runs as a normal user** with all Linux capabilities dropped and a read-only file system; only `data/` is writable (finding S03). On Linux set `APP_UID`/`APP_GID` and create `data/` first (not tested: no Linux host here). The base images are pinned by digest, so re-check them before relying on the project for long.
 
-## Looking at the web app locally (two sites, decision D19)
-Work in progress: only a page with one exported forecast frame (flat map and globe, MapLibre GL JS) exists so far; no finished app (the day plan is built in steps 8-9).
-
+## Tests and checks (the official way is Docker)
 ```
-# once: turn the processed run into the static site data in data/site (tiles, map frames, manifest; about 36 MB; no network)
-docker compose -f docker/compose.yaml run --rm export
-# optional check: what a browser reads from the tiles equals the processed data and the raw files
-docker compose -f docker/compose.yaml run --rm process python -m scripts.validate_site
-
-# testing site, with live reload and a DEV badge: http://localhost:5173
-cd frontend && npm ci --ignore-scripts && npm run dev
-
-# public-like site, the production build as nginx serves it: http://localhost:8080
-docker compose -f docker/compose.yaml run --rm frontend-build
-docker compose -f docker/compose.yaml up -d preview        # stop with: docker compose -f docker/compose.yaml down
-
-# automatic checks
-docker compose -f docker/compose.yaml run --rm frontend-tests     # Node tests
-docker compose -f docker/compose.yaml run --rm screenshots        # real browser: screenshots + errors + hosts contacted (starts the preview)
+docker compose -f docker/compose.yaml run --rm tests            # Python: 117 passed (14:02 UTC); no network, project read-only
+docker compose -f docker/compose.yaml run --rm frontend-tests   # Node: 70 passed
+docker compose -f docker/compose.yaml run --rm process python -m scripts.plan_reference   # independent Python plan from the raw GRIB
+docker compose -f docker/compose.yaml run --rm frontend-check   # the browser code on the real tiles equals it: 8 places x 8 activities
+BROWSER_NAME=chromium docker compose -f docker/compose.yaml run --rm browser-checks   # 9 scenarios in a real engine (chromium | firefox | webkit)
+docker compose -f docker/compose.yaml run --rm screenshots      # real browser: screenshots, console and policy errors, hosts contacted
 ```
+Measurements in a real browser with the computer's own GPU (Edge): `frontend/tools/load_timing.mjs` and `frontend/tools/live_look.mjs` (usage in each file). The Windows `.venv` (`py -3.11`) is for quick trying only; its result is not the proof.
 
-Both sites listen on this computer only. The settings (ports, folders, pages, colours) are in `config/frontend.json`, the security headers in `config/headers.conf`.
+## What leaves the browser (privacy)
+Typed place searches (to Open-Meteo), and the device position (to BigDataCloud) when "Use my location" is used, each with the visitor's IP address. No cookies, no analytics. Saved places and settings stay in the browser (`localStorage`).
 
-## The web page (step 8)
-The home page is the plan: choose a place (device location, search, or a saved place) and an activity; it shows the best dry windows, day cards with both models' blocks, and rain totals as a range. It works without WebGL. Settings are in `config/activities.json` and `config/frontend.json`. Checks: `docker compose -f docker/compose.yaml run --rm frontend-tests` (Node tests); `... run --rm process python -m scripts.plan_reference` then `... run --rm frontend-check` (the browser code on the real tiles against an independent Python calculation); `BROWSER_NAME=chromium|firefox|webkit docker compose -f docker/compose.yaml run --rm browser-checks` (real browser engines).
-
-## Browser support and what was tested (updated 2026-11-06)
-The plan page (home) needs no WebGL (checked with canvas switched off). The map preview pages need **WebGL2** (MapLibre GL JS 6); without it they show a blank dark page with no message (found with Firefox in a container, `docs/evidence/firefox-headless-maplibre-flat.png`); a plain message is planned in step 9 (decisions D23, D24). There is **no GPU anywhere on the server side** (free static hosting has none); the map is drawn in the visitor's own browser.
+## Browser support and what was tested
+There is **no GPU on the server side** (free static hosting serves files only); the map is drawn by the **visitor's own browser with WebGL2**, which normal PCs, laptops and phones have through their built-in graphics. Without WebGL2 the map area shows a plain message and the plan still works.
 
 | Browser | Where | Result |
 |---|---|---|
-| Chromium | Docker (Playwright image), software WebGL, no GPU | pass: pages draw, no console or security-policy errors, no outside request |
-| Microsoft Edge | the developer's Windows PC, real GPU | pass: both local sites, flat-to-globe switch keeps place and zoom |
-| Firefox | the user's own PC | the user reports the site loads ("the site loads files"); that the map and rain layer draw correctly is **not yet confirmed** |
-| Firefox 159 | inside Docker | the PLAN page: 8 of 8 scenarios pass (location allowed, search with a mock geocoder, saved places, hostile input, no canvas; the location-refusal path cannot be exercised headlessly). The MAP could not be tested: no WebGL context in the container in 3 configurations (an environment limit, not a result about the app) |
-| Chromium 158, WebKit 27 | inside Docker | the PLAN page: 8 of 8 scenarios pass in each (WebKit is the engine of Safari, not Safari itself); Chromium also passed one request to the real Open-Meteo geocoder |
+| Firefox | the user's own PC | the base map, the rain (live layer too), the credit line and the device place name draw (user's screenshots, 2026-11-07); speed not measured |
+| Microsoft Edge | the developer's Windows PC, real GPU | all checks and measurements run here (map, live layer 21-65 ms per drawing, load times, real Open-Meteo and BigDataCloud calls) |
+| Chromium 158 | Docker, software WebGL | browser checks 9 of 9 (14:02 UTC) |
+| Firefox 159, WebKit 27 | Docker | the PLAN page, 8 scenarios (step 8); no WebGL in the container (environment limit), so the map there can only show its plain message; not re-run since the map work |
 | Safari, phones | | **not tested yet** (user decision: later) |
 
-## Running the tests (the official way)
-Tests run in Docker on Linux, with the project mounted read-only and no network:
-
-```
-docker compose -f docker/compose.yaml run --rm tests
-```
-
-The first run builds the image from `requirements.txt` (about 30 s). The Windows `.venv/` (`py -3.11 -m venv .venv`, then `pip install --require-hashes -r requirements.txt`; after changing a version run `python -m scripts.pin_hashes`) is only for quick trying; its result is not the proof. Front-end tests: `docker compose -f docker/compose.yaml run --rm frontend-tests`.
+## Known limits (full list: `docs/PROGRESS.md` and the shortcut register in `docs/DECISIONS.md`)
+IFS 3-hourly detail is not used (6-hour blocks, D14); tiny negative differences from GRIB packing are set to zero (D14, at most about 0.06 % of the rain mass); IFS stops at 240 h (D12); the plan uses a device time zone for a place found by the device or the map (D24, D30); a lone one-cell peak looks lighter on the smoothed map (D34); the first visit loads 1.5-4.3 MB; the security headers exist as one copy for the local preview (converter for the public host at step 11); no out-of-date warning yet (step 10).

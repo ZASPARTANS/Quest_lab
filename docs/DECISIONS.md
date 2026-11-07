@@ -405,3 +405,22 @@ The README's "known limitations" (step 12) must list every item above and every 
 - 2026-11-07 14:02 UTC. Decided by: **user** (screenshot from their Firefox: "the name and the borders make it white because the dark colour makes it hard to see" = make them light) for the colours; **AI** for the time bar (the user's screenshot again showed the first block, Fri 6 Nov 12:00-18:00, at Sat 13:55; not reproduced in Edge or Chromium).
 - Chosen: label and border colours in `config/frontend.json` `map.basemap.colours` override the dark flavor (city and country names white, other names #dde4ef-#d6deea, borders #d3dbe8, outlines of #0b1020 around the text); a test checks every key is a real field of the flavor and that every label colour has a contrast of at least 7 : 1 with the land colour (the old defaults, #3d3d3d to #7a7a7a on #1f1f1f, are shown by the same test to fail it: 1.4 to 4.2 : 1 against the land). The time bar says "already over" for a block that has passed and has a **Now** button that jumps to the block under way; the browser check proves the map starts on the block under way and that the two controls work.
 - Not explained: why the user's Firefox showed the first block. Possible causes I can name: the slider was moved (the label now says so); an unknown Firefox-only difference. To be asked.
+
+## Results of checkable bets and register update (housekeeping, 2026-11-07 14:17 UTC)
+Appended because evidence now exists; the original entries above are unchanged.
+- **D2/A6 and D4 (size on the host):** the data part is met locally: `data/site` is 71 MB on disk (the export reported 64.3 MB in 4281 files at step 9.3b-2), the stored base map 190 MB and its fonts and sprites 12 MB: about 265 MB in all, under the 1 GB limit of GitHub Pages read on its official page (SOURCES, 2026-11-06). The host itself is checked at step 11.
+- **D22 (base map = Natural Earth outlines):** superseded by D38 (user, 2026-11-07); the outline code and packages are removed. Its other parts stand (MapLibre GL JS 6.16.0 is in use; scans under standing approval). Its bet (flat <-> globe at run time keeps place and time) is still to be checked in the finished page in step 9.4.
+- **D23 (the app shows the map in Firefox on the user's PC):** **held** (the user's own Firefox screenshots on 2026-11-07 show the base map, the rain and the names; their Firefox runs an ad blocker). Item 3 (a plain message without WebGL2) was adopted in D24 and built in step 9.3.
+- **D34 (50 m outlines chosen by the user):** superseded by D38; the outline files are no longer shipped.
+- **D35 and D36 (people see their own place without zooming by hand; the zoomed-in map looks good):** the user's overall verdict after the base map was "ok so all looks good" (2026-11-07, time not logged); not tested with anyone else, and not measured in Firefox.
+- **D38 (a z6/z7 extract plus assets within about 400 MB):** **held**: 189.6 MB plus 12 MB of assets (gate and results above).
+- **D37 (no bill):** still pending until the host is chosen and used (step 11).
+- Still pending, by design: D8, D9 and its addendum (step 10), D11 and D19 for the finished page (step 9.4), D12 (E007), D14.
+
+## Shortcut register (rebuilt from `grep -rn "shortcut:"`, 2026-11-07 14:17 UTC)
+Four marker lines in three files; each is recorded here and has to appear in the README's known limits (it does):
+1. `pipeline/process.py`: IFS 3-hourly detail dropped, 6 h common axis (D14, shortcut 1).
+2. `pipeline/process.py`: negative differences from packing rounding set to 0, not carried to the next interval (D14, shortcut 2).
+3. `config/headers.conf`: the security headers exist as one copy for the local preview; a converter for the public host's own format comes at step 11 (D19, D21).
+4. `frontend/src/app.js`: a place found by the device has no known time zone, so the device's own zone is used and labelled (D24, A8, D30).
+Gone since the earlier register: `scripts/spike_frame.py` (deleted at step 7), the spike pages and `window.__map` (deleted at step 9.3). Known limits that have no `shortcut:` marker in code (mark them when the files are next touched): the lone one-cell peak on the pre-made pictures (stated in `tests/backend/test_frames.py` and DOMAIN), the base map stopping at zoom 7 (D38), 6 h blocks (D14).

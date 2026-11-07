@@ -102,3 +102,7 @@ Facts learned about the subject. No raw data here; point to the command or scrip
 - A layer's `text-font` in this style is a conditional expression (`["case", ...]`) naming Noto Sans Regular, Medium or Italic: any check of "which fonts are used" must read the names inside the expression.
 - Place names that have no English name are drawn in their own script (Arabic, Cyrillic and others), which needs glyph ranges beyond 0-1535 (range 65024-65279 was asked for in the Middle East); with `lang: en` that is the only reason for them.
 - PMTiles over HTTP: the reader asks for parts of the file (range requests, answer 206); browsers cache such partial answers poorly, so a repeat visit still fetches most base-map tiles again (about 2.3 MB at zoom 7 in Edge).
+
+## 2026-11-07 14:17 UTC - Pointers where an earlier fact is superseded (housekeeping; nothing new measured)
+- The "sampling limit" of 2026-11-07 12:39 (a lone one-cell peak is drawn about a quarter as strong) applies to the **pre-made 1440 px pictures** only. The live layer (D36) reads the exact tile values and equals the stored value at every cell centre (test `tests/frontend/live.test.mjs`).
+- The 12:27 picture-quality facts compare four ways of making a pre-made picture; the choice they led to (D34) no longer decides what the user sees when zoomed in (live layer, D36) and the 50 m outlines mentioned there were replaced by the stored base map (D38).
