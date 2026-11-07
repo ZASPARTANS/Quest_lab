@@ -4,6 +4,7 @@ kept in <basemap_dir> (git-ignored) and served by our own site. Nothing is downl
 What is downloaded, and how it is checked (finding S02 style, docs/SECURITY.md):
   the `pmtiles` tool     one release archive, sha256 from config/basemap.toml, one named file taken out of it (no path from the archive is used)
   the world extract      `pmtiles extract <daily world build URL> --maxzoom=N`, which reads only the needed part of the remote file
+  base-map file          the scheduled build downloads it from the GitHub Release in config/basemap.toml [release] (`fetch-release`, size and sha256 checked)
   fonts and sprites      pinned to one commit; every file is checked against config/basemap_assets.lock.json (sha256), and the lock itself was
                          made from files whose git blob hash equals the one in the commit's tree listing (`lock-assets`)
 Every name, folder, URL and number comes from config/basemap.toml and config/pipeline.toml [paths] (decision D17).
@@ -11,6 +12,7 @@ Run (the `basemap` container has network access, runs as a normal user, and can 
   python -m pipeline.basemap measure       tool + assets + the extracts of the gate zooms, prints sizes and times (step 9.3d-1)
   python -m pipeline.basemap lock-assets   write a DRAFT assets lock (reviewed and copied to config/ by hand: the project folder is read-only here)
   python -m pipeline.basemap fetch-assets  fonts and sprites only
+  python -m pipeline.basemap fetch-release  the stored base-map file from its release asset (checked)
   python -m pipeline.basemap build         the extract the site uses (extract.maxzoom)
 """
 import datetime as dt
@@ -166,6 +168,48 @@ def fetch_assets(bm, session, lock_path, assets_dir):
     return downloaded, kept, total
 
 
+def _sha256_of_file(path):
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def fetch_release(bm, session, target, partial_suffix):
+    """Download the stored base-map file from its GitHub Release asset (step 13.3) and check size and sha256 before it is used.
+    Returns True if it was downloaded, False if the file already there matches. A wrong size or hash deletes the partial file and raises."""
+    r = bm["release"]
+    if not r["url"].startswith("https://"):
+        raise ValueError("the base-map release address must be https")
+    if target.is_file() and target.stat().st_size == r["bytes"] and _sha256_of_file(target) == r["sha256"]:
+        return False
+    target.parent.mkdir(parents=True, exist_ok=True)
+    part = target.with_name(target.name + partial_suffix)
+    response = session.get(r["url"], stream=True)
+    try:
+        if response.status_code != 200:
+            raise RuntimeError(f"{r['url']} answered {response.status_code}")
+        digest, size = hashlib.sha256(), 0
+        with part.open("wb") as out:
+            for chunk in response.iter_content(1 << 20):
+                size += len(chunk)
+                if size > r["bytes"]:
+                    raise ValueError("the downloaded base-map file is larger than config/basemap.toml says; it was not used")
+                digest.update(chunk)
+                out.write(chunk)
+    except BaseException:
+        part.unlink(missing_ok=True)
+        raise
+    finally:
+        response.close()
+    if size != r["bytes"] or digest.hexdigest() != r["sha256"]:
+        part.unlink(missing_ok=True)
+        raise ValueError("the downloaded base-map file does not match the size and sha256 in config/basemap.toml; it was not used")
+    part.replace(target)
+    return True
+
+
 def measure(cfg, bm, session):
     """The gate (step 9.3d-1): tool, assets, then extracts of the gate zooms (ascending) with sizes and times; stops at gate_stop_mb."""
     f = folders(cfg)
@@ -203,6 +247,10 @@ def main(argv):
     elif command == "fetch-assets":
         downloaded, kept, total = fetch_assets(bm, session, lock, f["assets_dir"])
         print(f"assets: {downloaded} downloaded, {kept} kept, {total / 1e6:.2f} MB")
+    elif command == "fetch-release":
+        target = f["root"] / cfg["paths"]["basemap_file"]
+        done = fetch_release(bm, session, target, cfg["paths"]["partial_suffix"])
+        print(f"{target.relative_to(ROOT)}: {'downloaded and checked' if done else 'already there and matches'} ({bm['release']['bytes'] / 1e6:.1f} MB)")
     elif command == "build":
         tool = fetch_tool(bm, session, f["tool_dir"])
         url, _ = newest_planet(bm, session, dt.datetime.now(dt.UTC).date())
@@ -210,7 +258,7 @@ def main(argv):
         seconds, nbytes = run_extract(bm, tool, url, out, bm["extract"]["maxzoom"])
         print(f"built {out.relative_to(ROOT)}: zoom 0-{bm['extract']['maxzoom']}, {nbytes / 1e6:.1f} MB in {seconds:.0f} s from {url}")
     else:
-        raise SystemExit(f"unknown command {command!r}; use measure, lock-assets, fetch-assets or build")
+        raise SystemExit(f"unknown command {command!r}; use measure, lock-assets, fetch-assets, fetch-release or build")
     return 0
 
 

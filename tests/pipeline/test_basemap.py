@@ -165,3 +165,71 @@ def test_a_lock_for_another_commit_or_other_files_is_refused(bm, tmp_path):
     lock.write_text(json.dumps({"commit": bm["style_assets"]["commit"], "files": {"fonts/extra.pbf": {"sha256": "0", "bytes": 1}}}))
     with pytest.raises(ValueError, match="other files"):
         basemap.fetch_assets(bm, FakeSession({}), lock, tmp_path / "a")
+
+
+PART = load_config()["paths"]["partial_suffix"]
+
+
+class StreamResponse:
+    """A streamed download: status, the bytes in chunks, and close()."""
+
+    def __init__(self, status=200, content=b"", chunk=7):
+        self.status_code, self._content, self._chunk, self.closed = status, content, chunk, False
+
+    def iter_content(self, size):
+        for i in range(0, len(self._content), self._chunk):
+            yield self._content[i:i + self._chunk]
+
+    def close(self):
+        self.closed = True
+
+
+def _release(bm, content, url="https://example.org/basemap-v1/world.pmtiles"):
+    release = copy.deepcopy(bm)
+    release["release"] = {"url": url, "bytes": len(content), "sha256": hashlib.sha256(content).hexdigest()}
+    return release
+
+
+def test_fetch_release_downloads_checks_and_then_keeps_the_file(bm, tmp_path):
+    content = b"invented base map bytes " * 10
+    release = _release(bm, content)
+    session = FakeSession({release["release"]["url"]: StreamResponse(200, content)})
+    target = tmp_path / "world.pmtiles"
+    assert basemap.fetch_release(release, session, target, PART) is True
+    assert target.read_bytes() == content and not (tmp_path / ("world.pmtiles" + PART)).exists()
+    assert basemap.fetch_release(release, session, target, PART) is False  # already there and matching: no second download
+    assert len(session.requests) == 1
+
+
+def test_fetch_release_refuses_a_wrong_hash_a_too_large_file_a_bad_status_and_a_non_https_address(bm, tmp_path):
+    content = b"x" * 50
+    release = _release(bm, content)
+    url, target = release["release"]["url"], tmp_path / "world.pmtiles"
+    with pytest.raises(ValueError, match="does not match"):
+        basemap.fetch_release(release, FakeSession({url: StreamResponse(200, b"y" * 50)}), target, PART)  # same size, other bytes
+    with pytest.raises(ValueError, match="larger"):
+        basemap.fetch_release(release, FakeSession({url: StreamResponse(200, b"x" * 80)}), target, PART)
+    with pytest.raises(ValueError, match="does not match"):
+        basemap.fetch_release(release, FakeSession({url: StreamResponse(200, b"x" * 20)}), target, PART)  # too short
+    with pytest.raises(RuntimeError, match="404"):
+        basemap.fetch_release(release, FakeSession({url: StreamResponse(404)}), target, PART)
+    assert not target.exists() and not (tmp_path / ("world.pmtiles" + PART)).exists()  # nothing half-written is left behind
+    with pytest.raises(ValueError, match="https"):
+        basemap.fetch_release(_release(bm, content, url="http://example.org/x"), FakeSession({}), target, PART)
+
+
+def test_fetch_release_replaces_a_file_that_does_not_match(bm, tmp_path):
+    content = b"right bytes" * 5
+    release = _release(bm, content)
+    target = tmp_path / "world.pmtiles"
+    target.write_bytes(b"old and wrong")
+    session = FakeSession({release["release"]["url"]: StreamResponse(200, content)})
+    assert basemap.fetch_release(release, session, target, PART) is True
+    assert target.read_bytes() == content
+
+
+def test_the_real_release_settings_are_https_and_have_a_sha256_of_the_right_shape(bm):
+    release = bm["release"]
+    assert release["url"].startswith("https://github.com/") and release["url"].endswith("/" + load_config()["paths"]["basemap_file"])
+    assert len(release["sha256"]) == 64 and set(release["sha256"]) <= set("0123456789abcdef")
+    assert release["bytes"] > 100_000_000

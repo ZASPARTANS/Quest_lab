@@ -19,7 +19,7 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 | E013 | PLAN-001 to PLAN-004 had no security work or security notes (planning gap; user raised it) | 1 | 1/1 (PLAN-005 steps S1-S5 done; security note in every plan, D15) |
 | E014 | `requests` became a direct dependency (E008) without being vetted on PyPI/GitHub as the package rule requires | 1 | 1/1 (vetted in step S4; recorded in SOURCES.md) |
 | E015 | `save()` ignored errors when deleting an old output folder; with files left by another user the run died as a misleading `OSError: Directory not empty` | 1 | 1/1 (errors now surface; regression test) |
-| E016 | Folder/file names (`tp.grib2`, `meta.json`, `%Y%m%d%H`, `.part`, ...) and the compose data mount were hardcoded, against the config-file rule (user reminder) | 1 | 1/1 (names moved to config `[paths]`, `pipeline/paths.py`, guard test) |
+| E016 | Folder/file names (`tp.grib2`, `meta.json`, `%Y%m%d%H`, `.part`, ...) and the compose data mount were hardcoded, against the config-file rule (user reminder) | 3 | 3/3 (names moved to config `[paths]`, `pipeline/paths.py`, guard test) |
 | E017 | MapLibre `Worker failed to load`: the bundler did not emit `maplibre-gl-worker.mjs` (and v6 has no default export) | 1 | 1/1 (`?url` import + `setWorkerUrl`) |
 | E018 | nginx served `.mjs` as `application/octet-stream`; with `nosniff` the browser refuses the worker module | 1 | 1/1 (`types { text/javascript mjs; }`) |
 | E019 | CesiumJS `Viewer` fails under a strict CSP: `Evaluating a string as JavaScript violates ... 'unsafe-eval'` (Knockout) | 1 | 1/1 (use `CesiumWidget` from `@cesium/engine`) |
@@ -346,3 +346,6 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 ## E035 / E034 seen again (step 13.2)
 - E035 seen: 2. I used a backslash regex in a Python heredoc again (`mapProblemText`, 20:36 UTC); the same corruption (two backspace bytes instead of `\b`) was found at once because I now scan the changed files for byte 8 after every such edit, and repaired with `chr()`. Rule from now on: no backslashes in heredoc scripts at all; any regex goes in with the Write or Edit tool.
 - E034 seen: 2. WebKit also reports "Worker failed to load" for the first page when a second page load starts at once; added to the same ignore list (only in WebKit and only after a second navigation).
+
+## E016 seen again, twice (step 13.3, 2026-11-07 21:12 UTC)
+- seen: 3. fix worked / fix tried: 3/3. Both times it was MY code, caught by the guard test `tests/hygiene/test_no_hardcoded_paths.py` before any commit: (1) `pipeline/basemap.py` `fetch_release` used the literal `".part"` (config: `[paths] partial_suffix`); (2) `scripts/smoke_site.py` used a dictionary key `"assets"` that equals the configured folder name `basemap_assets_dir`. Fix: the suffix is passed in from the config; the key was renamed `map_assets`. The guard works as designed.
