@@ -9,7 +9,7 @@ import { defineConfig } from 'vite';
 const frontendDir = dirname(fileURLToPath(import.meta.url));
 const repoDir = resolve(frontendDir, '..');
 const cfg = JSON.parse(readFileSync(join(repoDir, 'config', 'frontend.json'), 'utf8'));
-const MIME = { '.png': 'image/png', '.jpg': 'image/jpeg', '.json': 'application/json', '.js': 'text/javascript', '.css': 'text/css',
+const MIME = { '.pbf': 'application/x-protobuf', '.png': 'image/png', '.jpg': 'image/jpeg', '.json': 'application/json', '.js': 'text/javascript', '.css': 'text/css',
   '.xml': 'application/xml', '.svg': 'image/svg+xml', '.wasm': 'application/wasm' };
 
 /** Dev-server middleware: GET/HEAD files below `dir` at `urlPath`. Anything outside `dir` is refused (path traversal). */
@@ -43,10 +43,32 @@ function serveFolder(urlPath, dir) {
           return res.end('not found');
         }
         res.setHeader('Content-Type', MIME[extname(target).toLowerCase()] ?? 'application/octet-stream');
-        res.setHeader('Content-Length', info.size);
+        res.setHeader('Accept-Ranges', 'bytes');
         res.setHeader('X-Content-Type-Options', 'nosniff');
+        let start = 0;
+        let end = info.size - 1;
+        const range = req.headers.range;
+        if (range) {
+          // one range only: bytes=a-b, bytes=a- or bytes=-n (the last n bytes); anything else is refused
+          const m = /^bytes=(\d*)-(\d*)$/.exec(range);
+          if (m && (m[1] !== '' || m[2] !== '')) {
+            if (m[1] === '') start = Math.max(0, info.size - Number(m[2]));
+            else {
+              start = Number(m[1]);
+              if (m[2] !== '') end = Math.min(Number(m[2]), info.size - 1);
+            }
+          }
+          if (!m || start > end || start >= info.size) {
+            res.statusCode = 416;
+            res.setHeader('Content-Range', `bytes */${info.size}`);
+            return res.end();
+          }
+          res.statusCode = 206;
+          res.setHeader('Content-Range', `bytes ${start}-${end}/${info.size}`);
+        }
+        res.setHeader('Content-Length', end - start + 1);
         if (req.method === 'HEAD') return res.end();
-        createReadStream(target).pipe(res);
+        createReadStream(target, { start, end }).pipe(res);
       });
     },
   };
@@ -55,7 +77,8 @@ function serveFolder(urlPath, dir) {
 export default defineConfig({
   root: frontendDir,
   cacheDir: process.env[cfg.cache_dir_env] ?? join(frontendDir, 'node_modules', '.vite'),
-  plugins: [serveFolder(cfg.data_url_path, join(repoDir, cfg.dev_data_dir))],
+  // the base-map folder first: its address lies below the data address, and the first matching folder answers
+  plugins: [serveFolder(cfg.data_url_path + cfg.map.basemap.url_prefix, join(repoDir, cfg.dev_basemap_dir)), serveFolder(cfg.data_url_path, join(repoDir, cfg.dev_data_dir))],
   server: {
     host: cfg.dev_server.host,
     port: cfg.dev_server.port,

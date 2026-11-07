@@ -31,8 +31,9 @@ async function open(browser, options = {}, allowedHosts = [siteHost]) {
   const page = await context.newPage();
   const log = { problems: [], tiles: 0, geocoder: [], dialogs: 0 };
   page.on('request', (r) => {
-    const host = new URL(r.url()).host;
-    if (!allowedHosts.includes(host)) log.problems.push(`request to ${host}`);
+    const url = new URL(r.url());
+    const host = url.host;
+    if (url.protocol !== 'blob:' && url.protocol !== 'data:' && !allowedHosts.includes(host)) log.problems.push(`request to ${host || url.protocol}`); // a blob: or data: address is the page's own memory, not a network request
     if (r.url().includes('/tiles/')) log.tiles += 1;
     if (host === geocoderHost) log.geocoder.push(r);
   });
@@ -75,7 +76,21 @@ const scenarios = {
     await checkPlanShown(page, 'Chennai');
     assert.ok(log.tiles >= 1, 'a tile was fetched and decoded');
     assert.match(await text(page, '#meta'), /UTC\+05:30/);
-    if ((await mapState(page)) === 'ready') await assertLanded(page, 13.08, 80.27, frontend.map.fly.zoom_by_source.address);
+    if ((await mapState(page)) === 'ready') {
+      await assertLanded(page, 13.08, 80.27, frontend.map.fly.zoom_by_source.address);
+      // the block the map shows first is the one under way: it ends after now and not more than one block (6 h) after now
+      const shown = await page.evaluate(async () => {
+        const run = Date.parse((await (await fetch('/data/manifest.json')).json()).run);
+        const step = Number(document.getElementById('map').dataset.frame.split('_').pop());
+        return { endMs: run + step * 3600e3, nowMs: Date.now(), label: document.querySelector('.when-label').textContent };
+      });
+      assert.ok(shown.endMs > shown.nowMs && shown.endMs <= shown.nowMs + 6 * 3600e3, `the map starts on a block that is not the one under way: ${shown.label}`);
+      assert.doesNotMatch(shown.label, /already over/);
+      await page.click('.timebar input[type="range"]', { position: { x: 2, y: 5 } }); // drag to the first block (over)
+      await page.waitForFunction(() => /already over/.test(document.querySelector('.when-label').textContent), null, { timeout });
+      await page.click('.now-button');
+      await page.waitForFunction(() => !/already over/.test(document.querySelector('.when-label').textContent), null, { timeout });
+    }
     await shot(page, 'address');
     return log;
   },

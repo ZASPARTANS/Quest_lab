@@ -96,3 +96,9 @@ Facts learned about the subject. No raw data here; point to the command or scrip
 - The files are PMTiles v3, clustered, gzip-compressed vector tiles (MVT), complete pyramids (5,461 tiles to zoom 6, 21,845 to zoom 7), bounds -180..180 x +-85.051129, with the OpenStreetMap attribution inside.
 - Glyph (font) files are 256 files per font, one per range of 256 characters; Noto Sans Regular is 6.2 MB in full but 0.59 MB for the ranges 0-1535 (Latin, Greek, Cyrillic); the dark sprite v4 is 16 kB + 28 kB (1x and 2x pictures) with small JSON indexes. A style that asks for a glyph range that was not stored gets a 404 for it and shows no label in that script.
 - The GitHub API listing of the assets repository has no releases or tags: pin by commit.
+
+## 2026-11-07 14:02 UTC — The dark base-map style, measured (step 9.3d-2)
+- The dark flavor of `@protomaps/basemaps` writes place names in `#7a7a7a` (cities), `#5c5c5c` (countries) and `#3d3d3d` (states) on land `#1f1f1f`: contrast ratios of about 4.2, 2.6 and 1.4 to 1 (WCAG formula), too dim to read on a dark map, as the user said. The flavor is a plain object of colours: our overrides are merged over it.
+- A layer's `text-font` in this style is a conditional expression (`["case", ...]`) naming Noto Sans Regular, Medium or Italic: any check of "which fonts are used" must read the names inside the expression.
+- Place names that have no English name are drawn in their own script (Arabic, Cyrillic and others), which needs glyph ranges beyond 0-1535 (range 65024-65279 was asked for in the Middle East); with `lang: en` that is the only reason for them.
+- PMTiles over HTTP: the reader asks for parts of the file (range requests, answer 206); browsers cache such partial answers poorly, so a repeat visit still fetches most base-map tiles again (about 2.3 MB at zoom 7 in Edge).

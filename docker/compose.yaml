@@ -164,6 +164,7 @@ services:
       - ../config/headers.conf:/etc/nginx/headers.conf:ro
       - ${FRONTEND_DIST_DIR:-../frontend/dist}:/srv/site:ro
       - ${DATA_DIR:-../data}/site:/srv/data:ro
+      - ${DATA_DIR:-../data}/basemap:/srv/basemap:ro  # the stored base map; the world extract is made by the `basemap` service (data/basemap/world.pmtiles)
 
   screenshots:
     # A real browser (Playwright image) opens the preview and saves screenshots plus a report of what the page loaded.

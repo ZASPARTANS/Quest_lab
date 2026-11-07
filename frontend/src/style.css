@@ -115,6 +115,7 @@ footer { padding-top: .5rem; }
 .swatch { width: 1.1rem; height: .8rem; border-radius: 3px; display: inline-block; border: 1px solid #ffffff55; }
 .swatch.empty { background: transparent; border-style: dashed; }
 .timebar { display: flex; gap: .5rem; align-items: center; }
+.now-button { padding: .45rem .8rem; font-weight: 600; }
 .timebar input[type="range"] { flex: 1; min-width: 0; accent-color: var(--accent); }
 .when-label { font-size: .9rem; font-weight: 600; }
 .place-marker { width: 16px; height: 16px; border-radius: 50%; background: #ffd48a; border: 3px solid #fff; box-shadow: 0 0 0 3px rgba(11, 29, 51, .7); }

@@ -47,7 +47,7 @@ function swatch(colour) {
 }
 
 /**
- * Build the tools inside `root`. `handlers` = { onMode(id), onModel(id), onStep(step), onMyPlace() }.
+ * Build the tools inside `root`. `handlers` = { onMode(id), onModel(id), onStep(step), onMyPlace(), onNow() }.
  * Returns { update({ model, mode, steps, step, when, note, legendKind, hasPlace }) }.
  */
 export function createControls({ root, cfg, manifest, options, selectedModel, handlers }) {
@@ -60,6 +60,8 @@ export function createControls({ root, cfg, manifest, options, selectedModel, ha
   const legend = el('ul', { class: 'legend', attrs: { 'aria-label': 'Map legend' } });
   const prev = el('button', { text: '◀', attrs: { type: 'button', 'aria-label': 'Previous 6-hour block' } });
   const next = el('button', { text: '▶', attrs: { type: 'button', 'aria-label': 'Next 6-hour block' } });
+  const nowButton = el('button', { class: 'now-button', text: 'Now', attrs: { type: 'button', 'aria-label': 'Show the 6-hour block that is under way' } });
+  nowButton.addEventListener('click', () => handlers.onNow());
   const range = el('input', { attrs: { type: 'range', min: '0', 'aria-label': 'Forecast block shown on the map' } });
   const when = el('span', { class: 'when-label' });
   let steps = [];
@@ -71,7 +73,7 @@ export function createControls({ root, cfg, manifest, options, selectedModel, ha
   next.addEventListener('click', () => move(1));
   range.addEventListener('input', () => handlers.onStep(steps[Number(range.value)]));
   fill(root, [el('div', { class: 'map-top' }, [view.node, model.node, myPlace]),
-    el('div', { class: 'map-bottom' }, [note, legend, el('div', { class: 'timebar' }, [prev, range, next]), when])]);
+    el('div', { class: 'map-bottom' }, [note, legend, el('div', { class: 'timebar' }, [prev, range, next, nowButton]), when])]);
 
   return {
     update(s) {

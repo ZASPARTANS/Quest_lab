@@ -2,6 +2,7 @@
   "_comment": "Settings of the front end (read by Vite and by the browser code). No code here. Decisions: D17 (no hardcoded paths), D19 (dev badge), D22 (MapLibre GL JS).",
   "data_url_path": "/data/",
   "dev_data_dir": "data/site",
+  "dev_basemap_dir": "data/basemap",
   "dev_server": { "host": "localhost", "port": 5173 },
   "build_pages": ["index.html"],
   "screenshots": {
@@ -38,7 +39,34 @@
     "max_zoom": 10,
     "fly": { "zoom": 4.5, "duration_ms": 2500, "morph_from_zoom": 2.5, "zoom_by_source": { "location": 8, "search": 7, "saved": 7, "address": 7 } },
     "start_model": "ifs",
-    "sea_colour": "#12304f",
+    "basemap": {
+      "_comment": "The stored base map (PLAN-010, D38): an OpenStreetMap extract served from our own site, below data_url_path + url_prefix. file, assets_dir, sprite_set and flavor must equal config/pipeline.toml (basemap_file, basemap_assets_dir) and config/basemap.toml (style_assets.sprite_dir, sprite_flavor); a test checks. attribution_html is shown on the map (the OpenStreetMap licence asks for it); only https links are allowed there (a test checks).",
+      "url_prefix": "basemap/",
+      "file": "world.pmtiles",
+      "assets_dir": "assets",
+      "sprite_set": "sprites/v4",
+      "flavor": "dark",
+      "language": "en",
+      "colours": {
+        "_comment": "Brighter place names, borders and road names than the style's dark defaults (#3d3d3d to #7a7a7a on land #1f1f1f were too dim to read; user feedback, D39). Keys are fields of the dark flavor of @protomaps/basemaps (a test checks the names); every label colour must keep a contrast of at least 7 : 1 with the land colour (a test measures it).",
+        "boundaries": "#d3dbe8",
+        "country_label": "#ffffff",
+        "state_label": "#dde4ef",
+        "state_label_halo": "#0b1020",
+        "city_label": "#ffffff",
+        "city_label_halo": "#0b1020",
+        "subplace_label": "#eef2f8",
+        "subplace_label_halo": "#0b1020",
+        "ocean_label": "#b9c8de",
+        "roads_label_major": "#eef2f8",
+        "roads_label_major_halo": "#0b1020",
+        "roads_label_minor": "#d6deea",
+        "roads_label_minor_halo": "#0b1020",
+        "address_label": "#d6deea",
+        "address_label_halo": "#0b1020"
+      },
+      "attribution_html": "<a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\" rel=\"noopener\">&copy; OpenStreetMap</a> contributors, <a href=\"https://protomaps.com\" target=\"_blank\" rel=\"noopener\">Protomaps</a>"
+    },
     "resampling": "linear",
     "live": {
       "_comment": "The browser-side drawing of the rain at screen sharpness (PLAN-009, D35): used on the flat map from min_zoom up; below it, and on the globe, the pre-made pictures are shown. canvas_scale = picture pixels per screen pixel (0.5: each picture pixel covers 2 x 2 screen pixels, smoothed by the browser); lut_size = steps of the continuous colour ramp; agreement_soft_steps = half the width, in 0.1 mm storage steps, over which the agreement fades around the plan's threshold; fade_from_mm must equal frames.fade_from_mm in config/backend.toml (a test checks); max_tiles = most tiles fetched for one view, above it the pre-made picture is used; debounce_ms = wait after the last map move before drawing.",

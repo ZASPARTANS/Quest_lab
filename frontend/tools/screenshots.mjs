@@ -32,7 +32,7 @@ for (const item of cfg.pages) {
     const sizes = await r.sizes();
     bytes += sizes.responseBodySize + sizes.responseHeadersSize;
   });
-  page.on('requestfailed', (r) => problems.push(`request failed: ${r.url()} ${r.failure()?.errorText}`));
+  page.on('requestfailed', (r) => { if (r.failure()?.errorText !== 'net::ERR_ABORTED') problems.push(`request failed: ${r.url()} ${r.failure()?.errorText}`); }); // a cancelled request (the map cancels tile requests while moving) is normal
   page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') problems.push(`console ${m.type()}: ${m.text().slice(0, 240)}`); });
   page.on('pageerror', (e) => problems.push(`page error: ${e.message.slice(0, 200)} | ${String(e.stack ?? '').split('\n').slice(1, 3).join(' ').slice(0, 200)}`));
 
