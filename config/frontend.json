@@ -3,7 +3,7 @@
   "data_url_path": "/data/",
   "dev_data_dir": "data/site",
   "dev_server": { "host": "localhost", "port": 5173 },
-  "build_pages": ["index.html"],
+  "build_pages": ["index.html", "spikes/quality.html"],
   "screenshots": {
     "_comment": "Read by frontend/tools/screenshots.mjs (a real browser in Docker). The base URL and the output folder come from the environment variables named here.",
     "base_url_env": "SCREENSHOT_BASE_URL",
