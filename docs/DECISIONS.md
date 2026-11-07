@@ -302,3 +302,11 @@ The README's "known limitations" (step 12) must list every item above and every 
 - Chosen: a place picked by clicking the map is named "Map point (lat, lon)" and shows times in the device's own time zone, labelled; no reverse lookup (the geocoder has none, and sending coordinates to a third party was not approved). Searching the place gives its exact zone.
 - Known weakness: for a place far from the device the local day boundaries can be off by hours. Alternative not chosen: estimate the zone from the longitude (wrong for countries such as India).
 - Checkable bet: users understand the label. Result: pending.
+
+## D31 — Fly-in and flatten: the zoom-driven projection morph (way B) (PLAN-007 step 9.1)
+- 2026-11-07 ~10:45 UTC. Decided by: **AI** within the approved PLAN-007 (the plan made step 9.1 a visual decision gate; the user can overrule after looking at the screenshots).
+- Chosen: the map's projection is a zoom expression, `['interpolate', ['linear'], ['zoom'], 2.5, 'vertical-perspective', 4.5, 'mercator']`, so the globe flattens gradually while the map flies in; the flight ends at zoom 4.5 on the flat map. The explicit Flat / Globe buttons will set a fixed projection (mercator / globe) and so override the morph. Way A (fly on a fixed 'globe', call `setProjection({type:'mercator'})` at the end) stays the fallback.
+- Evidence (`docs/evidence/step9-1-*.png`, `frontend/tools/spike_flyin.mjs`): both ways, in Chromium in Docker (software WebGL) and in the developer's Edge with the real GPU, ended **exactly** on the target (Chennai 80.27 E, 13.08 N, zoom 4.5; offset 0.00000 degrees) with no console error. In the middle of the flight (zoom 3.2) way A still shows a full globe and way B is already flattening; the end pictures are identical.
+- Findings to carry into the design pass: at zoom 4.5 the 0.5 degree pixels of the frames look blocky (resampling is `nearest`; a `linear` look or a lower fly-in zoom of about 3.5-4 may look better); the spike page is throwaway and goes with the spike pages in step 9.3.
+- Alternatives not chosen: way A (simpler, a visible switch at the end); a fixed globe all the way (never becomes the flat map the user asked for).
+- Checkable bet: the morph looks right to the user. Result: pending (the user's look at the finished page, step 9.4).
