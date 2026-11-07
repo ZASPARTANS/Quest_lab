@@ -96,7 +96,9 @@ function draw(place, act, view) {
   ui.plan.hidden = false;
   ui.title.textContent = place.name;
   ui.meta.textContent = `Now ${dayLabel(dayKey(now, view.zone))} ${clock(now, view.zone)} (${offsetLabel(now, view.zone)}${place.zone ? '' : ", this device's time zone"})`;
-  ui.save.textContent = state.saved.some((p) => samePlace(p, place)) ? 'Remove from saved places' : 'Save this place';
+  const isSaved = state.saved.some((p) => samePlace(p, place));
+  ui.save.textContent = isSaved ? '★ Saved (press to remove)' : '☆ Save this place';
+  ui.save.setAttribute('aria-pressed', String(isSaved));
   ui.note.textContent = activityNote(act, act.wet_mm);
   ui.customBox.hidden = state.activityId !== 'custom';
   renderWindows(ui.windows, view, act);
@@ -133,6 +135,7 @@ async function render() {
 async function renderSavedList() {
   const act = currentActivity();
   const token = state.token;
+  ui.savedBox.hidden = state.saved.length === 0; // nothing saved: no empty box (the Save button under the place name is the way to add one)
   const row = (place, summary) => ({ place, summary, active: Boolean(state.place) && samePlace(place, state.place) });
   renderSaved(ui.saved, state.saved.map((p) => row(p, 'Loading…')), showSaved, forget);
   const items = await Promise.all(state.saved.map((place) => blocksFor(place)
@@ -252,7 +255,7 @@ async function chooseStart() {
 }
 
 function collect() {
-  for (const id of ['status', 'welcome', 'plan', 'title', 'meta', 'save', 'note', 'windows', 'days', 'totals', 'about', 'saved', 'results',
+  for (const id of ['status', 'welcome', 'plan', 'title', 'meta', 'save', 'note', 'windows', 'days', 'totals', 'about', 'saved', 'saved-box', 'results',
     'activities', 'custom-box', 'custom-wet', 'search-form', 'search-input', 'use-location', 'map', 'map-message', 'map-tools']) {
     ui[id.replace(/-(.)/g, (_, c) => c.toUpperCase())] = byId(id);
   }

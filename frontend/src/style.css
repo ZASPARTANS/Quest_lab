@@ -28,6 +28,7 @@ h4 { margin: 0 0 .25rem; font-size: 1rem; }
 .lead { color: var(--muted); margin: 0 0 1rem; font-size: .95rem; }
 .note { color: var(--muted); font-size: .88rem; margin: .4rem 0; }
 .status { min-height: 1.4em; margin: .4rem 0; color: #ffd48a; }
+.status:empty, .results:empty { display: none; } /* no reserved blank space in the Where box while there is nothing to say */
 .welcome { color: var(--muted); padding: .5rem 0; }
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: .9rem; margin: 0 0 .9rem; min-width: 0; }
 fieldset.panel { margin-inline: 0; }
@@ -44,6 +45,12 @@ input[type="search"], select { background: #0b1d33; border: 1px solid var(--line
 :focus-visible { outline: 3px solid #ffd48a; outline-offset: 2px; }
 .place-head { display: flex; justify-content: space-between; gap: .8rem; align-items: flex-start; margin: .8rem 0 .6rem; flex-wrap: wrap; }
 .place-head h2 { font-size: 1.4rem; margin: 0; }
+.save-button { border-color: var(--accent); font-weight: 600; }
+.save-button[aria-pressed="true"] { background: var(--panel-2); color: var(--muted); }
+.sent summary { cursor: pointer; text-decoration: underline; }
+.sent p { margin: .4rem 0 0; }
+#saved-box h3 { margin: .2rem 0 .5rem; }
+#saved-box { margin-bottom: .8rem; }
 
 .results, .saved-list, .windows, .blocks { list-style: none; margin: 0; padding: 0; }
 .results { display: flex; flex-direction: column; gap: .35rem; margin-bottom: .5rem; }
