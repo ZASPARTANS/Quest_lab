@@ -49,6 +49,13 @@ backend_config_file = "config/backend.toml"  # settings of the static data expor
 site_dir = "data/site"            # ignored by git; the exported static site data (tiles, frames, manifest). frontend.json dev_data_dir must be the same folder
 activities_file = "config/activities.json"  # presets of the Plan-my-day feature (frontend reads it too; scripts/plan_reference.py uses it for the independent check)
 plan_reference_file = "data/check/plan_reference.json"  # ignored by git; made by scripts/plan_reference.py from the raw GRIB files, read by frontend/tools/plan_check.mjs (frontend.json "check" must name the same file)
+basemap_config_file = "config/basemap.toml"  # settings of the stored base map (plan PLAN-010)
+basemap_dir = "data/basemap"      # ignored by git; the stored base map: tool, world extract and assets (fonts, sprites)
+basemap_file = "world.pmtiles"    # the extract the site uses, inside basemap_dir
+basemap_measure_file = "world_z{zoom}.pmtiles"  # the extracts of the measuring gate, inside basemap_dir
+basemap_tool_dir = "bin"          # inside basemap_dir: the checked pmtiles tool
+basemap_assets_dir = "assets"     # inside basemap_dir: fonts/<name>/<range>.pbf, sprites and the font licence
+basemap_lock_draft = "assets.lock.json"  # inside basemap_dir: where `lock-assets` writes the draft lock; it is reviewed and copied to config/ by hand
 
 # Grid every GRIB message must have (checked by pipeline/grid.py; verified on real files 2026-11-06,
 # docs/DOMAIN.md). Row 0 is the north edge, column 0 is longitude lon_first = 180 (not 0).

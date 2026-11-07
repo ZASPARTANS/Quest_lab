@@ -1,0 +1,97 @@
+{
+ "commit": "028c18f713baecad011301ff7a69acc39bcc2ae7",
+ "files": {
+  "fonts/Noto Sans Regular/0-255.pbf": {
+   "sha256": "62c6d49b15fa836eb6aa45e259c7ca6762f44b011b09e47776efbe4a6db1b397",
+   "bytes": 76044
+  },
+  "fonts/Noto Sans Regular/256-511.pbf": {
+   "sha256": "2eca7561f9f566bcacfda5dd04fb5880baec1328ec0f5484678289a13994de8a",
+   "bytes": 127726
+  },
+  "fonts/Noto Sans Regular/512-767.pbf": {
+   "sha256": "6abc80badad0e823e228ab739515be257c8b33bc68bb077dd873030e9b2d143a",
+   "bytes": 94728
+  },
+  "fonts/Noto Sans Regular/768-1023.pbf": {
+   "sha256": "537ccbee79180f4f8b3f6d2bdd27df979260ce1a0358c40d7aa7db505d9b03aa",
+   "bytes": 77034
+  },
+  "fonts/Noto Sans Regular/1024-1279.pbf": {
+   "sha256": "302231023f7048d9694a7b3f3b737c8bc378f5af0175aed5bb4f2f3b6188919a",
+   "bytes": 125320
+  },
+  "fonts/Noto Sans Regular/1280-1535.pbf": {
+   "sha256": "34345ffc1a3c6748147e079a7971a4ef10561f721fdf76a4a91491280ab8bccb",
+   "bytes": 84434
+  },
+  "fonts/Noto Sans Medium/0-255.pbf": {
+   "sha256": "ba2f0118dd024e3041b158e5f9eb49bc0a658019f53f458e9f5c0b8efcd79b91",
+   "bytes": 77628
+  },
+  "fonts/Noto Sans Medium/256-511.pbf": {
+   "sha256": "d5e801a1a5b1d409d3298c3a1e1ca76328e2314a751078833a618620e8e66e4d",
+   "bytes": 129635
+  },
+  "fonts/Noto Sans Medium/512-767.pbf": {
+   "sha256": "985e56060887a8e774fdf62ec4619f26bd44d264fcb837d315023f87d768f8e2",
+   "bytes": 96169
+  },
+  "fonts/Noto Sans Medium/768-1023.pbf": {
+   "sha256": "4b92939b4d3779b2d0b6be5b69c105e8c88352c047170e474011e82511ac03e9",
+   "bytes": 71160
+  },
+  "fonts/Noto Sans Medium/1024-1279.pbf": {
+   "sha256": "1fd3385560bae824ee48de8c920412ca3a75cabe5ada5ea67d8d188787018319",
+   "bytes": 128608
+  },
+  "fonts/Noto Sans Medium/1280-1535.pbf": {
+   "sha256": "655ca6c720bba0bbfc5c6e916eac896a38f6c92346cead859dcbbc7a6ee7544e",
+   "bytes": 86131
+  },
+  "fonts/Noto Sans Italic/0-255.pbf": {
+   "sha256": "43edfca91c285ba1226f09d5e74d68e1473a088c517f02a5212ff6ccb10037dc",
+   "bytes": 79344
+  },
+  "fonts/Noto Sans Italic/256-511.pbf": {
+   "sha256": "a6f9f6574c86a4a28aba630ca1017857ceadd2370ed32a1293c35f819ab9bd60",
+   "bytes": 132976
+  },
+  "fonts/Noto Sans Italic/512-767.pbf": {
+   "sha256": "5849298255f12639422a8b8ef32927b1ac49d59f725afaa6cbaf51550a5752fe",
+   "bytes": 96460
+  },
+  "fonts/Noto Sans Italic/768-1023.pbf": {
+   "sha256": "52bfd64775b91f7847da983b7bbc277135e006423cec22a44499e03e182e614e",
+   "bytes": 71308
+  },
+  "fonts/Noto Sans Italic/1024-1279.pbf": {
+   "sha256": "9c3f67dce1f538ee635405a5562c364c95ba4db06a6b312a45c84ad6edf4c28a",
+   "bytes": 128015
+  },
+  "fonts/Noto Sans Italic/1280-1535.pbf": {
+   "sha256": "12c88da54998281f49363094120d158ab9fd956573c724f632aa6745be998566",
+   "bytes": 26727
+  },
+  "sprites/v4/dark.json": {
+   "sha256": "bfac76cf7ed5c2aa2992695904056a1c6b07785b7fd20e6c640cb44fd6244a2e",
+   "bytes": 3549
+  },
+  "sprites/v4/dark.png": {
+   "sha256": "8920f68e8f9f7a4188da43e62a81bbc426532579fff7b5f27aad09e130f4246e",
+   "bytes": 16054
+  },
+  "sprites/v4/dark@2x.json": {
+   "sha256": "1fb5b123fbe35d2e1f6ac171513ce01df89e671273a417ee89c44886a4c132f0",
+   "bytes": 3579
+  },
+  "sprites/v4/dark@2x.png": {
+   "sha256": "6e01b4e366d304f27bbd55390511a3d4e39aa1d03eb3e82f873f7ea32e74cbe4",
+   "bytes": 28407
+  },
+  "fonts/OFL.txt": {
+   "sha256": "7713cfc8e3c36d5ec4aa3d6cffe7500a1b3310f8a86d914b8ea09c2a9dee7c2d",
+   "bytes": 4374
+  }
+ }
+}
