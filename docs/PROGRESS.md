@@ -5,7 +5,7 @@
 - Session ID: `3e56a452-e5f8-4bb9-b353-63bad43748f4` (unchanged since the first turn; the resumes after compaction are in the table below)
 - Log file: `<Claude Code config folder>/projects/<project folder>/3e56a452-e5f8-4bb9-b353-63bad43748f4.jsonl`
 - Deadline (first prompt + 72 h): **2026-11-09T18:19:13Z**
-- Warnings due at 24 h (2026-11-07 18:19Z), 48 h (2026-11-08 18:19Z), 60 h (2026-11-09 06:19Z). No new features after hour 64 (2026-11-09 10:19Z). The 24 h warning is due today at 18:19 UTC; at the housekeeping edit (2026-11-07 14:17 UTC) 19.98 h had passed, so none has been due yet.
+- Warnings due at 24 h (2026-11-07 18:19Z; **given 18:59Z**, late: the clock was not read between 18:06 and 18:59), 48 h (2026-11-08 18:19Z), 60 h (2026-11-09 06:19Z). No new features after hour 64 (2026-11-09 10:19Z). The 24 h warning is due today at 18:19 UTC; at the housekeeping edit (2026-11-07 14:17 UTC) 19.98 h had passed, so none has been due yet.
 - The table below is rebuilt from `git log` (commit times are the committer times, UTC); every row is a real commit or an event noted at the time.
 
 | Date/time (UTC) | Event | Elapsed | Remaining |
@@ -78,6 +78,7 @@
 | 2026-11-07 17:42 | Commit `166745a`: Step 11.0: PLAN-011 and PLAN-012 written, D41, sources read | 23.38 h | 48.62 h |
 | 2026-11-07 17:51 | Commit `6cbb4d4`: Step 12.1: the map's Both models view in one blue family; colour test; re-export | 23.53 h | 48.47 h |
 | 2026-11-07 18:06 | Commit `b55bba0`: Step 12.2: a titled colour key for both map views; E035 | 23.78 h | 48.22 h |
+| 2026-11-07 18:59 | **24 h warning given to the user** (clock read with `date -u`; the user's verdict on the map colours and key: "ok ;i like it."); next: PLAN-011 step 11.1 | 24.67 h | 47.33 h |
 
 ## Current plan
 **`docs/plans/PLAN-012.md`** (approved by the user 2026-11-07 17:42 UTC; it amends PLAN-011: one blue colour for the map's "Both models" view and a clear colour key, steps 12.1-12.2; order: 11.0, 12.1, 12.2, then 11.1-11.4) and **`docs/plans/PLAN-011.md`** (approved by the user 2026-11-07 17:37 UTC) are the plans in progress. Note: "11.x" = PLAN-011's own steps; "step 11" (without a dot) = hosting. PLAN-011: rain levels (no rain / light / moderate / heavy) instead of wet and dry, and a clearer day view; steps 11.0-11.4 (table below); the user asked for it before anything else (hosting order A/B is still open). Earlier plan in progress, now complete: **`docs/plans/PLAN-010.md`** (approved by the user 2026-11-07 13:41 UTC): a stored vector base map (OpenStreetMap through Protomaps, dark style, self-hosted fonts and sprites, English labels) under the rain; nothing paid (D37). Steps 9.3d-1, 9.3d-2 and 9.3d-4 are done; 9.3d-3 was dropped by the user (D40); **PLAN-010 is complete.** PLAN-009 is complete (step 9.3c-4 done). PLAN-007 step 9.4 is done. Next: the user chooses the order (A: step 10, 11, then the design pass 9.5; B: 9.5 first). After it: PLAN-009 step 9.3c-4, PLAN-007 steps 9.4 and 9.5 and PLAN-006 steps 10-12 (all still in force).
@@ -136,7 +137,7 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 | 9.5 | Design pass with the frontend-design skill, user review (PLAN-007) | not started |
 | 11.0 | Records and sources (PLAN-011) | **done** (commit "Step 11.0: ..."; time in `git log`): PLAN-011 and PLAN-012 files, D41, SOURCES (AMS and yr.no read; IMD and BoM marked as not verified), DOMAIN |
 | 12.1 | One blue for the agreement view: config colour, colour test, re-export, validate_site, restart preview (PLAN-012) | **done** (commit "Step 12.1: ..."; time in `git log`); results section below |
-| 12.2 | A titled colour key for both map views, texts from config, tests, user's look (PLAN-012) | **done** (commit "Step 12.2: ..."; time in `git log`) except the user's look; results section below; E035 |
+| 12.2 | A titled colour key for both map views, texts from config, tests, user's look (PLAN-012) | **done** (commit `b55bba0`); the user's look: "ok ;i like it." (2026-11-07 ~18:59 UTC); results section below; E035 |
 | 11.1 | Engine, config and tests for rain levels; Python reference and frontend-check (PLAN-011) | not started |
 | 11.2 | Words everywhere: blocks, windows, activity note, legend line, saved line, Custom, map legend (PLAN-011) | not started |
 | 11.3 | The day view: one row of four coloured cells per day, level colours, contrast test, user's look (PLAN-011) | not started |
