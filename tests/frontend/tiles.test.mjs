@@ -103,7 +103,7 @@ const GOOD = () => ({ format_version: 1, interval_hours: 6, quantum_mm: 0.1, run
   grid: { ni: 1440, nj: 721, step_degrees: 0.25, lat_first: 90, lon_first: 180 },
   tiles: { size: 16, rows: 46, cols: 90, layers: 3, path: 'tiles/{row}_{col}.bin.gz' },
   models: { ifs: { layer_offset: 0, layers: 1, valid_times: ['2026-11-06T18:00:00Z'] }, 'aifs-single': { layer_offset: 1, layers: 2, valid_times: ['2026-11-06T18:00:00Z', '2026-11-07T00:00:00Z'] } },
-  agreement: { models: ['ifs', 'aifs-single'] } });
+  agreement: { models: ['ifs', 'aifs-single'] }, frames: null });
 
 test('the manifest check accepts a good manifest and names what is wrong in damaged ones', () => {
   assert.deepEqual(manifestProblems(GOOD()), []);

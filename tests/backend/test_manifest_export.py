@@ -77,6 +77,13 @@ def test_a_second_export_replaces_the_first_completely(cfg, backend, processed_r
     assert not (_site(cfg) / "stale.txt").exists() and (_site(cfg) / backend["manifest"]["file"]).exists()
 
 
+def test_the_manifest_carries_the_agreement_colours_for_the_map_legend(cfg, backend, processed_run):
+    export.export(cfg, backend, RUN)
+    colours = readback.load_manifest(cfg, backend)["frames"]["agreement_colours"]
+    assert colours == {name: c for name, c in backend["frames"]["agreement_colours"].items() if c}  # the transparent class is not listed
+    assert set(colours) == {"both_wet", "disagree"}
+
+
 def test_frames_can_be_switched_off(cfg, backend, processed_run):
     export.export(cfg, backend | {"frames": backend["frames"] | {"enabled": False}}, RUN)
     assert readback.load_manifest(cfg, backend)["frames"] is None and not (_site(cfg) / "frames").exists()
@@ -90,6 +97,8 @@ def test_frames_can_be_switched_off(cfg, backend, processed_run):
     (lambda d: d["tiles"].__setitem__("rows", 5), "cover the grid"),
     (lambda d: d["agreement"]["models"].append("nope"), "not among the models"),
     (lambda d: d["frames"]["files"]["ifs"].pop("6"), "do not match its steps"),
+    (lambda d: d["frames"]["agreement_colours"].__setitem__("both_wet", "blue"), "agreement_colours"),
+    (lambda d: d["frames"].pop("agreement_colours"), "agreement_colours"),
 ])
 def test_the_manifest_check_catches_each_kind_of_damage(cfg, backend, processed_run, damage, text):
     export.export(cfg, backend, RUN)

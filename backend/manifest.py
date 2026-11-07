@@ -3,7 +3,9 @@ are laid out and where the data came from. The browser treats it as untrusted; `
 Times are UTC ISO strings ending in Z; a block's valid time is the END of the 6 h block (pipeline/process.py).
 """
 import datetime as dt
+import re
 
+HEX = re.compile(r"#[0-9a-fA-F]{6}")
 TOP_KEYS = {"format_version", "run", "retrieved_at", "processed_at", "exported_at", "interval_hours", "unit", "quantum_mm", "grid",
             "tiles", "models", "agreement", "frames", "source"}
 
@@ -36,7 +38,9 @@ def build(cfg, backend, run, meta, retrieved_at, frame_files, tile_counts):
         "models": models,
         "agreement": meta["agreement"],
         "frames": None if frame_files is None else {"size": frames["size"], "max_latitude": frames["max_latitude"],
-                                                    "projection": "web-mercator", "files": frame_files},
+                                                    "projection": "web-mercator", "files": frame_files,
+                                                    # colours the map legend needs; classes drawn transparent (an empty colour in the config) are left out
+                                                    "agreement_colours": {k: v for k, v in frames["agreement_colours"].items() if v}},
         "source": {k: v for k, v in backend["source"].items() if k != "models"},
     }
 
@@ -65,6 +69,9 @@ def validate(manifest):
         if name not in manifest["models"]:
             problems.append(f"agreement model {name} is not among the models")
     if manifest["frames"] is not None:
+        colours = manifest["frames"].get("agreement_colours")
+        if not isinstance(colours, dict) or not colours or not all(isinstance(c, str) and HEX.fullmatch(c) for c in colours.values()):
+            problems.append("frames.agreement_colours must map class names to #rrggbb colours")
         for kind, files in manifest["frames"]["files"].items():
             known = manifest["agreement"]["steps"] if kind == "agreement" else manifest["models"].get(kind, {}).get("steps")
             if known is None or sorted(int(s) for s in files) != known:
