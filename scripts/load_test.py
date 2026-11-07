@@ -87,6 +87,12 @@ class Pace:
             time.sleep(slot - now)
 
 
+def expected_bytes(rec):
+    """What the answer should weigh: for a Range request what the header asks for (the recorded size can be short when the browser cancelled that read), else the recorded size."""
+    match = re.match(r"^bytes=(\d+)-(\d+)$", rec["range"] or "")
+    return int(match.group(2)) - int(match.group(1)) + 1 if match else rec["bytes"]
+
+
 def judge(rec, status, headers, length, oversize):
     """Problems with one answer, compared with the recorded request. A recorded Range request must be answered 206 with the right Content-Range."""
     problems = []
@@ -110,7 +116,7 @@ def judge(rec, status, headers, length, oversize):
 
 def fetch(base, rec, budget, pace, agent):
     """Send one recorded request; returns its result, or None if the budget or the stop flag forbids it."""
-    expected = max(rec["bytes"], 1)
+    expected = max(expected_bytes(rec), 1)
     limit = expected * 2 + 4096
     if not budget.reserve(expected):
         return None
@@ -146,7 +152,7 @@ def run_visitor(base, requests, budget, pace, agent):
 def plan(visits, levels):
     """(visitors, requests, bytes) the levels would use: visitor i replays visit i modulo the number of recorded visits."""
     chosen = [visits[i % len(visits)] for level in levels for i in range(level)]
-    return len(chosen), sum(len(v["requests"]) for v in chosen), sum(r["bytes"] for v in chosen for r in v["requests"])
+    return len(chosen), sum(len(v["requests"]) for v in chosen), sum(expected_bytes(r) for v in chosen for r in v["requests"])
 
 
 def run_level(base, visits, level, budget, pace, agent):

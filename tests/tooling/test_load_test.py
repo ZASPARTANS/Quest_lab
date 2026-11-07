@@ -193,3 +193,16 @@ def test_the_plan_adds_up_and_warns_when_it_is_larger_than_the_cap(site, capsys)
     assert load_test.plan(VISITS["visitors"], [1, 3]) == (4, 5 + 4 + 5 + 5, 2100 + 1520 + 2100 + 2100 - 0 * 0)
     run(base, visits, "--levels", "40", "--max-mb", "0.001", "--dry-run")
     assert "WARNING: the plan is larger than the byte cap" in capsys.readouterr().out
+
+
+def test_a_range_request_is_judged_by_its_header_not_by_a_recorded_size_that_a_cancelled_read_left_wrong(site, tmp_path, capsys):
+    """Found by the first local run (step 14.2): the browser had cancelled some ranged reads, so their recorded size was tiny; the tool must use the Range header."""
+    server, base, visits = site
+    odd = {"visitors": [{"name": "C", "requests": [
+        {"path": "/map.pmtiles", "range": "bytes=2000-5999", "status": 206, "bytes": 0, "kind": "basemap"},
+        {"path": "/map.pmtiles", "range": "bytes=10-19", "status": 206, "bytes": 3, "kind": "basemap"}]}]}
+    path = tmp_path / "odd.json"
+    path.write_text(json.dumps(odd), encoding="utf-8")
+    assert load_test.plan(odd["visitors"], [1]) == (1, 2, 4000 + 10)
+    assert run(base, str(path), "--levels", "1") == 0
+    assert "every answer was correct" in capsys.readouterr().out

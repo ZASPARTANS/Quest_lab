@@ -21,7 +21,7 @@ async function record(browser, name, start, act) {
   const seen = [];
   page.on('response', async (r) => {
     const url = new URL(r.url());
-    if (url.origin !== origin) return;
+    if (url.origin !== origin || !(url.pathname === sitePath || url.pathname.startsWith(`${sitePath}/`))) return; // only the site's own files, not the browser's own requests
     const body = await r.body().catch(() => null);
     seen.push({ at: Date.now(), path: url.pathname.slice(sitePath.length) + url.search, range: r.request().headers().range ?? null, status: r.status(), bytes: body ? body.length : 0 });
   });

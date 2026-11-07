@@ -1,0 +1,48 @@
+PLAN: 186 visitors in levels [1, 10, 25, 50, 100], 7740 requests, about 701.5 MB; caps 2000 MB, 600 s, 2000 requests/s; site http://127.0.0.1:8081/Quest_lab
+preflight: every recorded address exists on this site
+level 1: 49 requests, 3.8 MB, 0.7 s, statuses {200: 23, 206: 26}, problems 0
+    asset     median      52 ms   p95      78 ms   max      78 ms
+    basemap   median      88 ms   p95     111 ms   max     111 ms
+    font      median     109 ms   p95     116 ms   max     116 ms
+    manifest  median      65 ms   p95      65 ms   max      65 ms
+    page      median      13 ms   p95      13 ms   max      13 ms
+    picture   median     121 ms   p95     121 ms   max     121 ms
+    sprite    median      85 ms   p95      89 ms   max      89 ms
+    tile      median      87 ms   p95     112 ms   max     112 ms
+level 10: 421 requests, 37.7 MB, 5.5 s, statuses {200: 197, 206: 224}, problems 0
+    asset     median     554 ms   p95     829 ms   max     852 ms
+    basemap   median     527 ms   p95     944 ms   max     977 ms
+    font      median     856 ms   p95     955 ms   max     971 ms
+    manifest  median     534 ms   p95     773 ms   max     773 ms
+    page      median     460 ms   p95     683 ms   max     683 ms
+    picture   median     754 ms   p95     963 ms   max     963 ms
+    sprite    median     782 ms   p95     880 ms   max     880 ms
+    tile      median     459 ms   p95     819 ms   max     931 ms
+level 25: 1041 requests, 94.2 MB, 13.3 s, statuses {200: 487, 206: 554}, problems 0
+    asset     median    1216 ms   p95    2439 ms   max    2505 ms
+    basemap   median    1256 ms   p95    2373 ms   max    2504 ms
+    font      median    1823 ms   p95    2352 ms   max    2505 ms
+    manifest  median    1293 ms   p95    2343 ms   max    2358 ms
+    page      median     794 ms   p95    1945 ms   max    2122 ms
+    picture   median    1749 ms   p95    1908 ms   max    2458 ms
+    sprite    median    2349 ms   p95    2496 ms   max    2503 ms
+    tile      median    1164 ms   p95    2408 ms   max    2504 ms
+level 50: 2088 requests, 189.3 MB, 31.3 s, statuses {200: 972, 206: 1116}, problems 0
+    asset     median    3111 ms   p95    5364 ms   max    5520 ms
+    basemap   median    2842 ms   p95    5238 ms   max    5517 ms
+    font      median    4475 ms   p95    4891 ms   max    5296 ms
+    manifest  median    4641 ms   p95    5236 ms   max    5252 ms
+    page      median    1396 ms   p95    2106 ms   max    2360 ms
+    picture   median    4818 ms   p95    5054 ms   max    5264 ms
+    sprite    median    4976 ms   p95    5497 ms   max    5528 ms
+    tile      median    2557 ms   p95    5296 ms   max    5437 ms
+level 100: 4141 requests, 376.6 MB, 69.8 s, statuses {200: 1937, 206: 2204}, problems 0
+    asset     median    4379 ms   p95    9579 ms   max   11957 ms
+    basemap   median    5753 ms   p95   14664 ms   max   15317 ms
+    font      median   12900 ms   p95   15028 ms   max   15308 ms
+    manifest  median    7304 ms   p95    8051 ms   max    8128 ms
+    page      median    2222 ms   p95    3139 ms   max    3251 ms
+    picture   median   12064 ms   p95   14272 ms   max   15174 ms
+    sprite    median   10258 ms   p95   12939 ms   max   13232 ms
+    tile      median    5502 ms   p95   11277 ms   max   15128 ms
+finished; sent 7740 requests, 701.5 MB; every answer was correct
