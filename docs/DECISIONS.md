@@ -483,3 +483,7 @@ Gone since the earlier register: `scripts/spike_frame.py` (deleted at step 7), t
 
 ### D42 addendum (2026-11-07 21:38 UTC): how the unattended job is kept safe
 - The workflow's safety rules are enforced by a script and tests, not by good intentions: only GitHub-owned actions pinned to commits; write access only in the deploy job; no secrets; no pull-request trigger; no environment dump; no `${{ }}` in shell code. The base-map file is downloaded from a GitHub Release asset and refused unless its size and sha256 equal the values in `config/basemap.toml` (the same pattern as the `pmtiles` tool and the fonts). Decided by: AI, as part of the approved PLAN-013; the user approves the outward actions (login, push, release, Pages) at step 13.4.
+
+### D42 result (2026-11-07 22:45 UTC): the site is public; bets checked
+- **Bet 1 held:** GitHub Pages serves the 190 MB base-map file by HTTP range request (206, correct `Content-Range`) and the map works from it (26 browser scenarios on the real site in Edge, Chromium and Firefox). **Bet on deploy size/time held:** a 267 MB site deployed in about one minute (deploy job 22:11:34-22:11:55); the whole run took 7 minutes. **Bet 3 (phones) did NOT hold at first:** the controls covered most of a phone's map and tap targets were too small (13.5 c); fixed in 13.6 and measured again; the user's own phone is the final verdict.
+- The repository is public (73 commits at the first push); the scheduled job runs unattended every 6 hours until the owner disables it (GitHub: Actions tab, workflow, Disable).

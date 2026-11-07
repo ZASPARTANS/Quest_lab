@@ -34,13 +34,12 @@ function rainLegend(scale) {
 
 /** The titled colour key (PLAN-012): plain words for every colour, from the config and the manifest (mapkey.js). */
 function legendNodes(kind, scale, key, manifest) {
-  const title = el('li', { class: 'key-title', text: key.title });
   if (kind === 'agreement') {
     const k = agreementKey(key, manifest);
     const items = k.lines.map((line) => el('li', {}, [line.colour ? swatch(line.colour) : el('span', { class: 'swatch empty' }), el('span', { text: line.text })]));
-    return [title, ...items, ...(k.footnote ? [el('li', { class: 'caption', text: k.footnote })] : [])];
+    return [...items, ...(k.footnote ? [el('li', { class: 'caption', text: k.footnote })] : [])];
   }
-  return [title, ...rainLegend(scale), el('li', { class: 'caption key-sentence', text: modelSentence(key) })];
+  return [...rainLegend(scale), el('li', { class: 'caption key-sentence', text: modelSentence(key) })];
 }
 
 function swatch(colour) {
@@ -60,7 +59,8 @@ export function createControls({ root, cfg, manifest, options, selectedModel, ha
   myPlace.disabled = true;
   myPlace.addEventListener('click', () => handlers.onMyPlace());
   const note = el('p', { class: 'map-note', attrs: { role: 'status' } });
-  const legend = el('ul', { class: 'legend', attrs: { 'aria-label': 'What the colours mean' } });
+  const legendList = el('ul', { class: 'legend-list' });
+  const legend = el('details', { class: 'legend', attrs: { open: '' } }, [el('summary', { class: 'key-title', text: cfg.map.key.title }), legendList]); // open by default, a tap folds it away
   const prev = el('button', { text: '◀', attrs: { type: 'button', 'aria-label': 'Previous 6-hour block' } });
   const next = el('button', { text: '▶', attrs: { type: 'button', 'aria-label': 'Next 6-hour block' } });
   const nowButton = el('button', { class: 'now-button', text: 'Now', attrs: { type: 'button', 'aria-label': 'Show the 6-hour block that is under way' } });
@@ -93,7 +93,8 @@ export function createControls({ root, cfg, manifest, options, selectedModel, ha
       note.textContent = s.note ?? '';
       view.inputs.forEach((input) => { input.checked = input.value === s.mode; });
       model.inputs.forEach((input) => { input.checked = input.value === s.model; });
-      fill(legend, s.legendKind ? legendNodes(s.legendKind, cfg.colour_scale, cfg.map.key, manifest) : []);
+      fill(legendList, s.legendKind ? legendNodes(s.legendKind, cfg.colour_scale, cfg.map.key, manifest) : []);
+      legend.hidden = !s.legendKind;
     },
   };
 }

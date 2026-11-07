@@ -253,7 +253,8 @@ const scenarios = {
     await page.addInitScript(([a, b]) => { localStorage.setItem(a, '{"evil":true'); localStorage.setItem(b, '<script>alert(1)</script>'); },
       [frontend.saved_places.storage_key, frontend.saved_places.settings_key]);
     await page.goto(base + '/?lat=999&lon=abc&activity=%3Cscript%3E&wet=77');
-    await page.waitForSelector('#welcome:not([hidden])', { timeout });
+    await page.waitForSelector('#welcome:not([hidden])', { timeout }); // the welcome text is there from the start, before the forecast list has loaded
+    await mapState(page); // so wait until the page has finished starting; leaving at once cancels its requests and WebKit reports that as errors (E034)
     const hostile = '<img src=x onerror=window.__pwned=1>';
     await page.goto(`${base}/?lat=10&lon=20&name=${encodeURIComponent(hostile)}`);
     await waitPlan(page);

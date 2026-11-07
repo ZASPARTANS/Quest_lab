@@ -125,8 +125,9 @@ footer { padding-top: .5rem; }
 .map-bottom { position: absolute; left: .75rem; bottom: 1.6rem; width: min(38rem, calc(100% - 1.5rem)); display: flex; flex-direction: column; gap: .4rem; pointer-events: auto; background: var(--glass); border: 1px solid var(--line); border-radius: 14px; padding: .6rem .75rem; }
 .map-note { margin: 0; color: #ffd48a; font-size: .88rem; }
 .map-note:empty { display: none; }
-.legend { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .3rem; font-size: .88rem; align-items: flex-start; }
-.legend .key-title { font-weight: 700; font-size: .95rem; }
+.legend { margin: 0; padding: 0; font-size: .88rem; }
+.legend summary.key-title { font-weight: 700; font-size: .95rem; cursor: pointer; }
+.legend-list { list-style: none; margin: .3rem 0 0; padding: 0; display: flex; flex-direction: column; gap: .3rem; align-items: flex-start; }
 .legend .key-sentence { max-width: 34rem; }
 .legend li { display: flex; align-items: center; gap: .5rem; }
 .legend .caption { color: var(--muted); }
@@ -143,9 +144,27 @@ footer { padding-top: .5rem; }
 .place-marker { width: 16px; height: 16px; border-radius: 50%; background: #ffd48a; border: 3px solid #fff; box-shadow: 0 0 0 3px rgba(11, 29, 51, .7); }
 
 @media (max-width: 56rem) {
+  /* A phone (PLAN-013 step 13.6): the map on top with only its two compact control rows over it; the key and the time bar sit BELOW the map, so they never cover it
+     (measured on the public site before: the controls covered 64 % of the map on a Pixel 7 and 90 % on an iPhone 15). */
   .layout { grid-template-columns: 1fr; height: auto; }
-  .stage { order: -1; height: 62vh; height: 62dvh; }
+  .stage { order: -1; height: auto; display: flex; flex-direction: column; --map-height: max(18rem, 56dvh); }
+  .stage > .map { position: relative; inset: auto; height: var(--map-height); }
+  .stage > .map-message { inset: 0 0 auto 0; height: var(--map-height); }
+  .map-tools { position: static; pointer-events: auto; }
+  .map-top { z-index: 3; top: .5rem; left: .5rem; right: .5rem; gap: .35rem; }
+  .map-top .seg { padding: .2rem; }
+  .map-top .seg-item label, .my-place { font-size: .86rem; }
+  .map-bottom { position: static; width: auto; margin: 0; border-radius: 0; border-width: 1px 0 0; padding: .6rem .75rem; background: var(--panel); }
   .side { overflow: visible; border-right: 0; }
-  .map-bottom { bottom: 1.8rem; }
+  .blocks { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+/* Touch targets (WCAG 2.5.5): at least 44 x 44 px on phones and every touch screen. Inline text links inside a sentence are exempt. */
+@media (max-width: 56rem), (pointer: coarse) {
+  button, input[type="search"], select { min-height: 44px; }
+  .chip label, .seg-item label { display: inline-flex; align-items: center; min-height: 44px; padding-block: 0; }
+  .timebar button { min-width: 44px; }
+  summary { display: block; padding: .8rem 0; }
+  .legend summary.key-title { padding: .7rem 0; }
+  .timebar input[type="range"] { min-height: 44px; }
 }
 @media (prefers-reduced-motion: no-preference) { button { transition: border-color .15s; } }
