@@ -1,0 +1,111 @@
+# Build the forecast site and publish it on GitHub Pages (plan PLAN-013 step 13.3, decision D42).
+# Every 6 hours (and on every push to main, and by hand): fetch the newest complete ECMWF IFS + AIFS run, process and export it, put it together with the page and
+# the stored base map, deploy it, and then check the PUBLIC site with a smoke test. The page, the pipeline and the checks are the ones tested in Docker locally;
+# this file only runs them in order. Rules kept by scripts/check_workflow.py (a test): only GitHub-owned actions, each pinned to a commit; least-privilege
+# permissions (write access only in the deploy job); no secrets; no environment dump; no ${{ }} inside shell code.
+name: Build and deploy the forecast site
+
+on:
+  schedule:
+    # ECMWF's 00z and 12z runs appear about 7.5 hours after their time (07:45 and 19:45 UTC): 08:20 and 20:20 pick up a new run; 02:20 and 14:20 are retries.
+    - cron: "20 2,8,14,20 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Find the site address (base path)
+        id: pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
+      - name: Prepare folders and user ids for the containers
+        run: |
+          mkdir -p data/pages/dist
+          echo "APP_UID=$(id -u)" >> "$GITHUB_ENV"
+          echo "APP_GID=$(id -g)" >> "$GITHUB_ENV"
+
+      - name: Build the container images
+        run: docker compose -f docker/compose.yaml build fetch frontend-build
+
+      - name: Fetch the newest complete forecast run
+        run: docker compose -f docker/compose.yaml run --rm fetch
+
+      - name: Process the run and check it against the raw files
+        run: |
+          docker compose -f docker/compose.yaml run --rm process
+          docker compose -f docker/compose.yaml run --rm process python -m scripts.validate_points
+
+      - name: Export the site data and check it
+        run: |
+          docker compose -f docker/compose.yaml run --rm export
+          docker compose -f docker/compose.yaml run --rm export python -m scripts.validate_site
+
+      - name: Get the stored base map (checked by size and sha256) and its fonts and sprites
+        run: |
+          docker compose -f docker/compose.yaml run --rm basemap python -u -m pipeline.basemap fetch-release
+          docker compose -f docker/compose.yaml run --rm basemap python -u -m pipeline.basemap fetch-assets
+
+      - name: Build the page for the site's own base path
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          FRONTEND_DIST_DIR: ../data/pages/dist
+        run: docker compose -f docker/compose.yaml run --rm frontend-build /node_modules/.bin/vite build --base="$BASE_PATH/"
+
+      - name: Put the site together (page, data, base map, security policy in the page)
+        run: docker compose -f docker/compose.yaml run --rm export python -m scripts.assemble_site
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: data/pages/_site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  smoke:
+    needs: deploy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check the public site (page, fresh forecast, status file, a tile, base map by range request)
+        env:
+          SITE_URL: ${{ needs.deploy.outputs.page_url }}
+        run: python3 scripts/smoke_site.py "$SITE_URL" --retries 8 --wait 20

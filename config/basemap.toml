@@ -38,3 +38,11 @@ sprite_dir = "sprites/v4"
 sprite_flavor = "dark"
 licence_file = "fonts/OFL.txt"
 lock_file = "config/basemap_assets.lock.json"
+
+[release]
+# The stored base-map file as a GitHub Release asset (plan PLAN-013 step 13.3, assumption A37): the file (about 190 MB) is not in git, so the scheduled build
+# downloads it from here and refuses it unless the size and the sha256 match. Made from data/basemap/world.pmtiles (the zoom 0-7 extract, step 9.3d-2) on 2026-11-07.
+# If the file is rebuilt (`build`), upload the new file as a new release tag and change url, bytes and sha256 together.
+url = "https://github.com/ZASPARTANS/Quest_lab/releases/download/basemap-v1/world.pmtiles"
+bytes = 189610941
+sha256 = "1857567474198b95c08e091a4fb6e8465509173a4aa875c070ba472ded888be2"
