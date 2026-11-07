@@ -24,9 +24,11 @@ agreement_opacity = 0.8
 
 [frames.agreement_colours]
 # Colour per agreement class (names as in meta.json "codes"); an empty string means transparent.
+# ONE blue family (PLAN-012, user feedback: orange looked like heat): bright blue = both models say rain, dimmer blue of the same hue = only one model
+# says rain. A test checks the same hue and a clear step in lightness; measured over the dark base map: bright 4.5 : 1, dim 2.1 : 1 against the land.
 both_dry = ""
-both_wet = "#2a6fd6"
-disagree = "#f28a17"
+both_wet = "#5aa0ff"
+disagree = "#2b5fa6"
 
 [manifest]
 file = "manifest.json"

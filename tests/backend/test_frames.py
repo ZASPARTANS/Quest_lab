@@ -149,3 +149,21 @@ def test_agreement_uses_the_plans_rule_on_the_stored_values():
 def test_agreement_palette_leaves_empty_classes_transparent():
     palette = frames.agreement_palette(CODES, {"both_dry": "", "both_wet": "#0000ff", "disagree": "#ff8000"}, 0.8)
     assert palette.tolist() == [[0, 0, 0, 0], [0, 0, 255, 204], [255, 128, 0, 204]]
+
+
+def _hls(hex_colour):
+    import colorsys
+    r, g, b = (int(hex_colour[i:i + 2], 16) / 255 for i in (1, 3, 5))
+    h, lightness, _ = colorsys.rgb_to_hls(r, g, b)
+    return h * 360, lightness
+
+
+def test_the_agreement_view_uses_one_blue_family_with_a_clear_step_in_lightness(backend):
+    """PLAN-012: orange for 'models disagree' read as heat, so both coloured classes are blue (same hue, within 10 degrees, blue range); the class where
+    both models say rain is clearly brighter than the one where only one does; dry stays transparent."""
+    colours = backend["frames"]["agreement_colours"]
+    assert colours["both_dry"] == ""
+    (hue_both, light_both), (hue_one, light_one) = _hls(colours["both_wet"]), _hls(colours["disagree"])
+    assert 190 <= hue_both <= 250 and 190 <= hue_one <= 250, "both coloured classes are blue"
+    assert abs(hue_both - hue_one) <= 10
+    assert light_both - light_one >= 0.15, "bright = both models, dimmer = one model"
