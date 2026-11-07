@@ -43,8 +43,12 @@
 | 2026-11-07 00:26 | Step 8 verified (see its results section); commit time in `git log` | 6.12 h | 65.88 h |
 | 2026-11-07 00:27 | Commit `1e15254`: Step 8: Plan-my-day page (plan engine, place search, saved places) checked against an independent Python calculation | 6.13 h | 65.87 h |
 | 2026-11-07 00:42 | Checkpoint requested by the user after their feedback; all markdown files updated (commit time in `git log`) | 6.39 h | 65.61 h |
+| 2026-11-07 10:41 | The user was away about 10 hours; they replied with the layout (1/4 plan + 3/4 globe) and approved PLAN-007; clock read with `date -u` | 16.37 h | 55.63 h |
 
 ## Current plan
+**`docs/plans/PLAN-007.md`** - approved by the user 2026-11-07 about 10:41 UTC: the home page is split, the plan panel about 1/4 of the width on the left and the globe/map about 3/4 on the right; the globe opens first, flies to the chosen place and settles into the flat 2D map; then a design pass (steps 9.1-9.5). It replaces PLAN-006 step 9; PLAN-006 steps 10-12 stay.
+
+`docs/plans/PLAN-006.md` - approved ~23:24 UTC on 2026-11-06 (Plan-my-day, steps 7-12). **Status: steps 7-8 done under it; step 9 superseded by PLAN-007; steps 10-12 remain in force.** Its original entry:
 **`docs/plans/PLAN-006.md`** — approved by the user 2026-11-06 ~23:24 UTC (Plan-my-day as the signature; steps 7-12 reshaped; saved places and rain totals with a range as the helpful extras; 6-hour blocks; text-first, map second). **Current plan** for steps 7-12; decision D24.
 
 `docs/plans/PLAN-005.md` — approved ~20:51 UTC (security steps S1-S5, then PLAN-004's steps 5-12 with security notes). **Status: S1-S5 and steps 5-6 done under it; superseded by PLAN-006 for steps 7-12.** Its security rules (D15, notes on every step) stay in force.
@@ -74,7 +78,12 @@
 | 6 | Front-end spike + decision gate + localhost | **done** 2026-11-06 (commits `c7baf2d`, `ba46ed2`); library MapLibre (D22) |
 | 7 | Static data export: point tiles, optional lower-resolution frames, manifest; size gate (PLAN-006) | **done** 2026-11-06 (commit "Step 7: ...", time in `git log`); D25, E023 |
 | 8 | Plan engine + place panel: activities, day cards, best windows, rain totals with a range, saved places, text first (PLAN-006) | **done** 2026-11-07 (commit "Step 8: ...", time in `git log`); D27, D28, E024, E025 |
-| 9 | Map and globe as supporting views, model switch, no-WebGL2 message (PLAN-006) | not started |
+| 9 | Map and globe as supporting views (PLAN-006) | **superseded by PLAN-007** (rows 9.1-9.5) |
+| 9.1 | Spike gate: fly-in from globe and flatten, two ways, screenshots (PLAN-007) | not started |
+| 9.2 | Data contract (frames in the manifest, agreement colours) and pure map helpers (PLAN-007) | not started |
+| 9.3 | Map module, controls, 1/4 + 3/4 layout, spike removed (PLAN-007) | not started |
+| 9.4 | Browser checks in three engines, real GPU in Edge, records (PLAN-007) | not started |
+| 9.5 | Design pass with the frontend-design skill, user review (PLAN-007) | not started |
 | 10 | Provenance + honesty strip, final policy (PLAN-006) | not started |
 | 11 | Hosting gate + deploy | not started |
 | 12 | README + submission | not started |
@@ -82,13 +91,13 @@
 Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
 
 ## Status (live, rewritten in the housekeeping at ~23:03 UTC)
-- **Done:** steps 1-8 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is step 9** (map and globe as supporting views).
+- **Done:** steps 1-8 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is step 9.1** (PLAN-007: the spike gate for the fly-in and flatten).
 - **Tests:** official command `docker compose -f docker/compose.yaml run --rm tests` = 99 passed; `... run --rm frontend-tests` = 41 passed (at step 8); `... run --rm frontend-check` = 8 places x 8 activities match; `BROWSER_NAME=<engine> ... run --rm browser-checks` = 8 of 8 scenarios in chromium, firefox and webkit.
 - **Git:** branch `main`, 25 commits, no remote (GitHub login and repo creation are plan step 11 and need the user's approval and link).
 - **Records:** this housekeeping checked every markdown file against the others; its findings and fixes are listed in the last section of this file.
 
 ## Open items (waiting on someone, or on a later step)
-- **User feedback (2026-11-07 ~00:40 UTC, after trying the plan page):** "it looks good i mean it gives the answer that we need but it should also look good right? also y did u remove the 2d view and 3d view?". Answer given: the map and globe were demoted, not deleted (they are still the two spike links at the bottom; the home page became the plan page, as PLAN-006 says), and the page is visually plain. **Proposal waiting for the user's choice (not a decision yet):** bring the map and globe back onto the main page as step 9 and do a visual design pass (frontend-design), map first then design, or design first. Nothing was built for it.
+- **User feedback (2026-11-07 ~00:40 UTC, after trying the plan page):** "it looks good i mean it gives the answer that we need but it should also look good right? also y did u remove the 2d view and 3d view?". Answer given: the map and globe were demoted, not deleted (they are still the two spike links at the bottom; the home page became the plan page, as PLAN-006 says), and the page is visually plain. **Decided at 10:41 UTC (see D29): map first, then the design pass; the layout is 1/4 plan on the left and 3/4 globe/map on the right. Earlier proposal text:** bring the map and globe back onto the main page as step 9 and do a visual design pass (frontend-design), map first then design, or design first. Nothing was built for it.
 - **User:** open http://localhost:8080 (preview running) in their Firefox: does the PLAN page work (place by location and by search, activity buttons, saved places) and do the windows look plausible for a place they know (D24 bet); the two map pages are still the spike, confirm the Firefox map as before (the user reported "the site loads files"); [innovation ideas: DONE, chosen in D24 / PLAN-006; the list below is kept as history] (~23:03 UTC); confirm the proposed no-WebGL2 message (D23).
 - **User, later:** Safari and phone testing (deferred by the user); the geocoder service (step 8; AI recommends Open-Meteo, D20); the hosting choice (step 11); GitHub login, repo link and approval before any push.
 - **Checked in step 8:** `DecompressionStream('gzip')` reads the real tiles in Chromium 158, Firefox 159 and WebKit 27 in Docker (D25 assumption held; not yet on the user's own Firefox or Safari); time zones in Node tests (India, New York DST, Auckland, Kathmandu) and against Python on 8 real places.
@@ -101,6 +110,7 @@ Note: the built-in todo/task-list tool is not available in this session's tool s
 - Python 3.10's pip is broken (E001); use `py -3.11`.
 - Firefox cannot create a WebGL context inside the Docker test container (environment limit); Firefox is tested by the user on a real PC. Safari and phones are untested.
 - The plan page works without WebGL (checked with canvas disabled); the two map preview pages still show a blank page without WebGL2 until step 9.
+- **Timing:** the 24 h warning is due 2026-11-07 18:19 UTC and falls during step 9 (PLAN-007 time estimate shifted by the 10 h break; plan now ends around hour 27-28).
 - No age warning yet: if the scheduled job ever fails the plan would show an old forecast without saying so (step 10, D9). The page does show the run time at the bottom.
 - Firefox headless cannot answer the location prompt, so the refusal path is exercised in Chromium and WebKit only.
 - Linux hosts: file ownership of `data/` and the `APP_UID`/`APP_GID` override are documented but untested (no Linux host).
