@@ -70,6 +70,7 @@
 | 2026-11-07 14:20 | Commit `f27e29d`: Record the user's answers (time bar moved by them, live layer fast in their Firefox) | 20.03 h | 51.97 h |
 | 2026-11-07 14:25 | Commit `df04244`: Record D40: step 9.3d-3 dropped (scope cut); E024 seen again | 20.10 h | 51.90 h |
 | 2026-11-07 14:32 | Commit `232f75b`: Step 9.3d-4: browser scenarios for the stored base map, records, hosting requirement | 20.22 h | 51.78 h |
+| 2026-11-07 15:48 | Commit `759e186`: Step 9.3c-4: live-layer, north-up and early-choice scenarios; Devanagari font, start-up race and WebKit noise fixed (E032-E034) | 21.48 h | 50.52 h |
 
 ## Current plan
 **`docs/plans/PLAN-010.md`** (approved by the user 2026-11-07 13:41 UTC) is the plan in progress: a stored vector base map (OpenStreetMap through Protomaps, dark style, self-hosted fonts and sprites, English labels) under the rain; nothing paid (D37). Steps 9.3d-1, 9.3d-2 and 9.3d-4 are done; 9.3d-3 was dropped by the user (D40); **PLAN-010 is complete.** PLAN-009 is complete (step 9.3c-4 done). Next in force: PLAN-007 step 9.4. After it: PLAN-009 step 9.3c-4, PLAN-007 steps 9.4 and 9.5 and PLAN-006 steps 10-12 (all still in force).
@@ -117,7 +118,7 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 | 9.3c-1 | Drawing core: smooth sampling, continuous colours, soft agreement (pure, tested) (PLAN-009) | **done** 2026-11-07 13:21 UTC (commit "Step 9.3c-1: ...") |
 | 9.3c-2 | Data window: tiles for the view and a layer accessor (PLAN-009) | **done** 2026-11-07 13:23 UTC (commit "Step 9.3c-2: ...") |
 | 9.3c-3 | Map integration: live layer above zoom 4.5, fallback picture (PLAN-009) | **done** 2026-11-07 13:29 UTC (commit "Step 9.3c-3: ..."); D36 |
-| 9.3c-4 | Browser checks in the engines, Edge look, records (PLAN-009) | **done** 2026-11-07 15:47 UTC (commit "Step 9.3c-4: ..."); results section below; E032 seen again, E033, E034 |
+| 9.3c-4 | Browser checks in the engines, Edge look, records (PLAN-009) | **done** 2026-11-07 15:48 UTC (commit `759e186`); results section below; E032 seen again, E033, E034 |
 | 9.3d-1 | Gate: measure the stored base map (extract sizes z4-z7, fonts and sprites) and show the user (PLAN-010) | **done** 2026-11-07 13:48 UTC (commit "Step 9.3d-1: ..."); D38 gate results |
 | 9.3d-2 | Serve and style: nginx, the two packages, the dark style, rain below labels, outlines removed (PLAN-010) | **done** 2026-11-07 14:02 UTC (commit "Step 9.3d-2: ..."); D38 results, D39, E032 |
 | 9.3d-3 | Fit the rain to the map: opacity, legibility, looks at several zooms (PLAN-010) | **dropped** 2026-11-07 14:24 UTC by the user (scope cut, D40); a look at the rain over the map at zoom 3, 5, 7 moves into step 9.5 |
