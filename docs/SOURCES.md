@@ -86,3 +86,11 @@ These are the limits of the day; the hosting choice and a re-check of the terms 
 
 ## 2026-11-07 12:39 UTC — Natural Earth 50 m outlines (D34)
 - `world-atlas` 2.0.2 `countries-50m.json` (Natural Earth 1:50m, public domain, https://www.naturalearthdata.com/about/terms-of-use/, already installed and vetted in step 6); used for the coastlines and borders of the map from step 9.3b-2 (the user chose it); 756 kB raw, 236 kB gzipped; replaces the 110 m file (108 kB raw).
+
+## 2026-11-07 13:41 UTC — Base map sources read for PLAN-010 (official pages, access date 2026-11-07; used for the decision, nothing installed yet)
+- Protomaps basemap downloads: https://docs.protomaps.com/basemaps/downloads (ODbL Produced Work, "OpenStreetMap attribution required", planet about 120 GB zoom 0-15, `--maxzoom` extracts, URLs may change, copy to your own storage).
+- PMTiles CLI: https://docs.protomaps.com/pmtiles/cli (`pmtiles extract`, remote source, `--maxzoom` efficient; single Go binary on https://github.com/protomaps/go-pmtiles/releases; Docker image `protomaps/go-pmtiles`).
+- Protomaps with MapLibre: https://docs.protomaps.com/basemaps/maplibre (`pmtiles://` source prefix, `@protomaps/basemaps` `layers()` with flavors light/dark/white/black/grayscale and `lang`, glyphs and sprites from `basemaps-assets`, to be self-hosted).
+- Daily builds: `https://build.protomaps.com/20261107.pmtiles` (headers only, 139,356,959,640 bytes, `Accept-Ranges: bytes`, last modified 2026-11-07 09:03 UTC).
+- npm registry (JSON, `latest`): `pmtiles` 4.5.0 BSD-3-Clause (dependency `fflate`); `@protomaps/basemaps` 5.7.2 BSD-3-Clause (no dependencies, repository github.com/protomaps/basemaps). Not installed yet; vetting is part of step 9.3d-2.
+- Also read: Natural Earth II 50m raster page (84.78 MB small download, licence not stated on that page) and OpenFreeMap (free public tiles, no key, "no limits on the number of map views", attribution required, self-hostable): options not chosen.
