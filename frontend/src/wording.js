@@ -2,8 +2,18 @@
 // `levels` = the config levels (no rain, light, moderate, heavy), `max` = the index of the most rain the activity accepts.
 import { clock, dayKey, dayLabel } from './time.js';
 
+/** The level cut-offs in plain words, from the config (the page shows this under the day cards; they are ours, not an official standard). */
+export function levelLegendText(levels) {
+  const parts = levels.map((level, i) => {
+    if (i === 0) return `${level.label}: under ${levels[1].from_mm} mm`;
+    if (i === levels.length - 1) return `${level.label}: ${level.from_mm} mm or more`;
+    return `${level.label}: ${level.from_mm}–${levels[i + 1].from_mm} mm`;
+  });
+  return `${parts.join(' · ')}, per 6 hours. These cut-offs are our own; there is no official standard for 6-hour blocks.`;
+}
+
 export const CONFIDENCE_WORD = {
-  sure: 'Both models agree.',
+  sure: 'Neither model expects more rain than this.',
   uncertain: 'The models differ about part of it.',
   'one-model': 'Only one model reaches this far, so it cannot be checked against the other.',
 };

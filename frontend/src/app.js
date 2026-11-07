@@ -8,7 +8,7 @@ import { byId, el, fill } from './dom.js';
 import { searchPlaces, searchText } from './geocode.js';
 import { addPlace, cleanCoordinates, loadSaved, readAddress, removePlace, samePlace, storeSaved, writeAddress } from './places.js';
 import { buildBlocks } from './plan.js';
-import { atMost } from './wording.js';
+import { atMost, levelLegendText } from './wording.js';
 import { activityNote, renderAbout, renderActivities, renderDays, renderResults, renderSaved, renderTotals, renderWindows } from './render.js';
 import { clock, dayKey, dayLabel, deviceZone, offsetLabel } from './time.js';
 import { mapPointName } from './mapstate.js';
@@ -257,10 +257,11 @@ async function chooseStart() {
 
 function collect() {
   for (const id of ['status', 'welcome', 'plan', 'title', 'meta', 'save', 'note', 'windows', 'days', 'totals', 'about', 'saved', 'saved-box', 'results',
-    'activities', 'custom-box', 'custom-accept', 'search-form', 'search-input', 'use-location', 'map', 'map-message', 'map-tools']) {
+    'activities', 'level-legend', 'custom-box', 'custom-accept', 'search-form', 'search-input', 'use-location', 'map', 'map-message', 'map-tools']) {
     ui[id.replace(/-(.)/g, (_, c) => c.toUpperCase())] = byId(id);
   }
   ui.input = ui.searchInput;
+  ui.levelLegend.textContent = levelLegendText(activities.levels);
   fill(ui.customAccept, activities.custom.level_choices.map((id) => el('option', { text: atMost(activities.levels, activities.levels.findIndex((l) => l.id === id)), attrs: { value: id } })));
 }
 

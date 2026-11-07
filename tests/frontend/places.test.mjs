@@ -5,7 +5,8 @@ import { test } from 'node:test';
 import { parseReply, searchPlaces, searchText, searchUrl } from '../../frontend/src/geocode.js';
 import { addPlace, cleanCoordinates, cleanPlace, loadSaved, parseSaved, readAddress, removePlace, storeSaved, writeAddress } from '../../frontend/src/places.js';
 import { nameOfPosition, parseReverse, reverseUrl } from '../../frontend/src/reverse.js';
-import { dayVerdict, placeSummary, rangeText, windowText } from '../../frontend/src/wording.js';
+import { activityNote } from '../../frontend/src/render.js';
+import { CONFIDENCE_WORD, dayVerdict, levelLegendText, placeSummary, rangeText, windowText } from '../../frontend/src/wording.js';
 
 const readJson = (rel) => JSON.parse(readFileSync(new URL(rel, import.meta.url), 'utf8'));
 const ACTIVITIES = readJson('../../config/activities.json');
@@ -177,6 +178,18 @@ test('no sentence of the plan uses "wet" or "dry" any more (the user found them 
   }
   assert.ok(texts.length > 20);
   assert.doesNotMatch(texts.join(' '), /\b(wet|dry)\b/i);
+});
+
+test('the level legend, the window sentences, every activity note and the static page text speak in rain levels', () => {
+  const L = ACTIVITIES.levels;
+  assert.equal(levelLegendText(L), 'No rain: under 0.5 mm · Light rain: 0.5–3 mm · Moderate rain: 3–10 mm · Heavy rain: 10 mm or more, per 6 hours. These cut-offs are our own; there is no official standard for 6-hour blocks.');
+  const notes = [...ACTIVITIES.activities, { ...ACTIVITIES.custom, max_level: ACTIVITIES.custom.default_level }].map((a) => activityNote(a, L));
+  assert.match(notes[0], /A good time has no rain in a 6-hour block\. Hours used: 08:00–22:00\. Shortest window shown: 6 hours\./); // outdoor
+  assert.match(notes[1], /A good time has light rain at most in a 6-hour block/); // commute
+  const html = readFileSync(new URL('../../frontend/index.html', import.meta.url), 'utf8').replace(/<script[\s\S]*?<\/script>/g, '').replace(/<[^>]+>/g, ' ');
+  const all = [levelLegendText(L), ...Object.values(CONFIDENCE_WORD), ...notes, html].join(' ');
+  assert.doesNotMatch(all, /\b(wet|dry)\b/i);
+  assert.match(html, /3\. Best times/);
 });
 
 test('the reverse lookup names a device position: most local name, region, country; repeats and junk are dropped', () => {

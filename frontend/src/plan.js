@@ -4,7 +4,7 @@ import { dayKey, hourOfDay } from './time.js';
 
 export const HOUR_MS = 3600 * 1000;
 
-/** Smallest stored value that counts as wet: stored * quantum >= threshold_mm. Same rule as pipeline/process.py `wet_limit`. */
+/** Smallest stored value at or above a threshold in mm: stored * quantum >= threshold_mm. Same rule as pipeline/process.py `wet_limit`. */
 export function wetLimit(thresholdMm, quantumMm) {
   return Math.ceil(thresholdMm / quantumMm - 1e-9);
 }
