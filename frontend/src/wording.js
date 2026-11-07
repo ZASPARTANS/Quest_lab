@@ -44,7 +44,7 @@ export const blockWord = (levels, block) => levels[block.level].short;
 
 /** Where the two models stand, for blocks where they are in different levels: 'IFS: No rain, AIFS: Light rain'. */
 export function modelsText(levels, block, labels) {
-  return Object.entries(block.levels).map(([model, level]) => `${labels[model] ?? model}: ${levels[level].label}`).join(', ');
+  return Object.entries(block.levels).map(([model, level]) => `${(labels ?? {})[model] ?? model}: ${levels[level].label}`).join(', ');
 }
 
 /** What the activity accepts, in words: 'no rain' or 'light rain at most'. */

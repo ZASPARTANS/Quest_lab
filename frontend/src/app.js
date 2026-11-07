@@ -9,6 +9,7 @@ import { searchPlaces, searchText } from './geocode.js';
 import { addPlace, cleanCoordinates, loadSaved, readAddress, removePlace, samePlace, storeSaved, writeAddress } from './places.js';
 import { buildBlocks } from './plan.js';
 import { atMost, levelLegendText } from './wording.js';
+import { applyLevelColours } from './levelcolours.js';
 import { activityNote, renderAbout, renderActivities, renderDays, renderResults, renderSaved, renderTotals, renderWindows } from './render.js';
 import { clock, dayKey, dayLabel, deviceZone, offsetLabel } from './time.js';
 import { mapPointName } from './mapstate.js';
@@ -76,7 +77,7 @@ function viewOptions(place) {
   const m = state.manifest;
   return { zone: place.zone ?? deviceZone(), nowMs: Date.now(), quantumMm: m.quantum_mm, intervalHours: m.interval_hours, models: m.agreement.models,
     minRemaining: activities.current_block_min_remaining_fraction, daysShown: activities.days_shown, windowsShown: activities.windows_shown,
-    totalsDays: activities.totals_days, levels: activities.levels };
+    totalsDays: activities.totals_days, levels: activities.levels, labels: cfg.model_labels };
 }
 
 const withMap = (fn) => pageMap.withMap(state, fn);
@@ -262,6 +263,7 @@ function collect() {
   }
   ui.input = ui.searchInput;
   ui.levelLegend.textContent = levelLegendText(activities.levels);
+  applyLevelColours(document.documentElement, cfg.plan_levels, activities.levels);
   fill(ui.customAccept, activities.custom.level_choices.map((id) => el('option', { text: atMost(activities.levels, activities.levels.findIndex((l) => l.id === id)), attrs: { value: id } })));
 }
 
