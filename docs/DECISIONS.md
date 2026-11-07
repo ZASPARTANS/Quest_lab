@@ -459,3 +459,6 @@ Gone since the earlier register: `scripts/spike_frame.py` (deleted at step 7), t
 
 ### D41 / PLAN-012 result (2026-11-07 18:06 UTC)
 - The map's agreement view is one blue family (bright = both models, dim = one model) with a titled colour key for both map views; decided by the user ("One colour + a clear key"), colours chosen by the AI by measurement (first candidate rejected: brighter than the "both" colour). Bet to check: the user no longer reads the map colours as heat and finds the key without help (their next look). Result: not known yet.
+
+### D41 / PLAN-012 bet result (2026-11-07 18:59 UTC)
+- The user looked at the new map colours and the key and said: "ok ;i like it." The bet "the user no longer reads the colours as heat and finds the key" held for the user (one person, at 1100 px; phones not looked at). The 390 px problem (key covers the map) remains for the design pass.
