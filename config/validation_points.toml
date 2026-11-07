@@ -2,6 +2,8 @@
 # Chosen to cover: both hemispheres, a monsoon coast, the tropics, a rainy mountain city, high latitude, and two places
 # near the date line where the longitude wrap matters (grid column 0 is 180 E, see docs/DOMAIN.md).
 # Coordinates are approximate city centres in degrees (north and east positive); they only need to be the same for both paths.
+# zone / utc_offset_minutes are used only by scripts/plan_reference.py and frontend/tools/plan_check.mjs (plan step 8): the offset is what the zone has on the
+# fixed check day in November 2026 (written by the AI from the time zone database rules; the check fails if the browser's database disagrees).
 
 [tolerance]
 max_abs_diff_mm = 0.05   # half of quantise_mm (0.1 mm) in config/pipeline.toml: the most that storing in tenths of a mm can change a value
@@ -9,40 +11,56 @@ float_slack_mm = 0.001   # room for float32 versus float64 rounding
 
 [[points]]
 name = "Chennai"
+zone = "Asia/Kolkata"
+utc_offset_minutes = 330
 lat = 13.08
 lon = 80.27
 
 [[points]]
 name = "London"
+zone = "Europe/London"
+utc_offset_minutes = 0
 lat = 51.51
 lon = -0.13
 
 [[points]]
 name = "Honolulu"
+zone = "Pacific/Honolulu"
+utc_offset_minutes = -600
 lat = 21.31
 lon = -157.86
 
 [[points]]
 name = "Sydney"
+zone = "Australia/Sydney"
+utc_offset_minutes = 660
 lat = -33.87
 lon = 151.21
 
 [[points]]
 name = "Quito"
+zone = "America/Guayaquil"
+utc_offset_minutes = -300
 lat = -0.18
 lon = -78.47
 
 [[points]]
 name = "Anchorage"
+zone = "America/Anchorage"
+utc_offset_minutes = -540
 lat = 61.22
 lon = -149.90
 
 [[points]]
 name = "Auckland"
+zone = "Pacific/Auckland"
+utc_offset_minutes = 780
 lat = -36.85
 lon = 174.76
 
 [[points]]
 name = "Suva (Fiji)"
+zone = "Pacific/Fiji"
+utc_offset_minutes = 720
 lat = -18.14
 lon = 178.44

@@ -14,7 +14,7 @@ from pipeline import paths, process, processed
 RUN = dt.datetime(2026, 11, 6, 12)
 
 
-def _make_raw(cfg, write_grib, const_field):
+def _make_raw(cfg, write_grib, const_field, aifs=None):
     """Write a raw folder for run 2026-11-06 12 UTC: IFS in metres (steps 3 6 9 12), AIFS in kg m**-2 (steps 6 12 18)."""
     for model in cfg["models"]:
         paths.raw_file(cfg, RUN, model).parent.mkdir(parents=True)
@@ -22,8 +22,17 @@ def _make_raw(cfg, write_grib, const_field):
     ifs = {3: 0.009, 6: 0.001, 9: 0.009, 12: 0.004}
     write_grib(paths.raw_file(cfg, RUN, "ifs"), {s: const_field(v) for s, v in ifs.items()}, unit="m")
     # AIFS cumulative mm: 6 h 0.25 (dry), 12 h 3.25, 18 h 3.5
-    aifs = {6: 0.25, 12: 3.25, 18: 3.5}
+    aifs = aifs or {6: 0.25, 12: 3.25, 18: 3.5}
     write_grib(paths.raw_file(cfg, RUN, "aifs-single"), {s: const_field(v) for s, v in aifs.items()}, unit="kg m**-2")
+
+
+def test_the_agreement_uses_the_stored_values_so_map_and_plan_share_one_rule(cfg, write_grib, const_field):
+    # AIFS 6 h interval is 0.47 mm: unrounded it is dry (< 0.5), stored it is 0.5 mm = wet. IFS has 1.0 mm (wet). Decision D28.
+    _make_raw(cfg, write_grib, const_field, aifs={6: 0.47, 12: 3.25, 18: 3.5})
+    results, field, _ = processed.build(cfg, RUN)
+    assert results["aifs-single"]["mm"][0, 0, 0] < 0.5
+    assert process.quantise(results["aifs-single"]["mm"], cfg["process"]["quantise_mm"])[0][0, 0, 0] == 5
+    assert (field[0] == process.AGREE_BOTH_WET).all()
 
 
 def test_build_gives_mm_per_interval_and_agreement_on_the_common_steps(cfg, write_grib, const_field):

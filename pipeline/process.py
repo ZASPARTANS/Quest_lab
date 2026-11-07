@@ -13,6 +13,7 @@ and the 3 h detail is dropped (decision D14). shortcut: negative differences fro
 0, not redistributed to the neighbouring interval (their total is 0.06 % of the precipitation, docs/DOMAIN.md).
 """
 import datetime as dt
+import math
 
 import eccodes
 import numpy as np
@@ -107,8 +108,17 @@ def dequantise(stored, quantum):
     return stored.astype(np.float32) * np.float32(quantum)
 
 
+def wet_limit(threshold_mm, quantum):
+    """Smallest stored value (a whole number of `quantum`) that counts as wet: stored * quantum >= threshold_mm.
+
+    The browser applies the same rule to the stored values (frontend/src/plan.js), so the map and the plan never disagree
+    at the edge (decision D28). The tiny allowance stops float noise (0.5 / 0.1) from rounding the wrong way.
+    """
+    return math.ceil(threshold_mm / quantum - 1e-9)
+
+
 def agreement(mm_a, mm_b, wet_threshold):
-    """uint8 field: AGREE_BOTH_WET, AGREE_BOTH_DRY or AGREE_DISAGREE. Wet means mm >= the threshold."""
+    """uint8 field: AGREE_BOTH_WET, AGREE_BOTH_DRY or AGREE_DISAGREE. Wet means value >= the threshold (same unit for all three)."""
     wet_a, wet_b = mm_a >= wet_threshold, mm_b >= wet_threshold
     out = np.full(mm_a.shape, AGREE_DISAGREE, dtype=np.uint8)
     out[wet_a & wet_b] = AGREE_BOTH_WET

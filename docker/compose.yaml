@@ -5,8 +5,10 @@
 #   docker compose -f docker/compose.yaml run --rm export           turn data/processed into the static site data in data/site (NO network)
 #   docker compose -f docker/compose.yaml run --rm frontend-tests   Node tests of the front-end helper code (no network)
 #   docker compose -f docker/compose.yaml run --rm frontend-build   build the web app into frontend/dist
+#   docker compose -f docker/compose.yaml run --rm frontend-check   browser plan code on the real tiles vs the Python reference (scripts/plan_reference.py first)
 #   docker compose -f docker/compose.yaml up -d preview             the "public-like" site on http://localhost:8080 (stop: ... down)
 #   docker compose -f docker/compose.yaml run --rm screenshots      browser screenshots of the preview into docs/evidence (starts preview)
+#   BROWSER_NAME=firefox docker compose -f docker/compose.yaml run --rm browser-checks   the plan page in a real browser engine (chromium, firefox, webkit)
 # After changing frontend/package.json add --build to the first `run` so the image is rebuilt.
 #
 # Hardening shared by every service (finding S03 in docs/SECURITY.md): not root, no Linux capabilities,
@@ -111,9 +113,27 @@ services:
     environment:
       HOME: /tmp
     volumes:
+      - ../config:/work/config:ro
       - ../frontend/src:/work/frontend/src:ro
       - ../tests/frontend:/work/tests/frontend:ro
     command: ["node", "--test", "tests/frontend/*.test.mjs"]
+
+  frontend-check:
+    # Runs the browser plan code on the real exported tiles and compares it with the independent Python reference
+    # (made first by: ... run --rm process python -m scripts.plan_reference). No network; the data folders are read-only.
+    <<: *security
+    image: precip-frontend:local
+    working_dir: /work
+    network_mode: none
+    environment:
+      HOME: /tmp
+    volumes:
+      - ../config:/work/config:ro
+      - ../frontend/src:/work/frontend/src:ro
+      - ../frontend/tools:/work/frontend/tools:ro
+      - ${DATA_DIR:-../data}/site:/work/data/site:ro
+      - ${DATA_DIR:-../data}/check:/work/data/check:ro
+    command: ["node", "frontend/tools/plan_check.mjs"]
 
   preview:
     # The "public-like" site: the production build plus the forecast data, served by nginx the way a static host would,
@@ -159,3 +179,26 @@ services:
       - ../frontend/tools:/work/frontend/tools:ro
       - ../docs/evidence:/out
     command: ["node", "tools/screenshots.mjs"]
+
+  browser-checks:
+    # Step 8 done-check: the plan page in a real browser engine (BROWSER_NAME=chromium | firefox | webkit). It shares the preview's network, so
+    # the site is http://localhost:8080 - a secure context for every engine, like the HTTPS public site. The geocoder is a MOCK unless
+    # BROWSER_CHECK_REAL_SEARCH=1 (then one real request is sent to Open-Meteo, which needs the container to have internet).
+    <<: *security
+    image: precip-playwright:local
+    working_dir: /work/frontend
+    shm_size: 1gb
+    network_mode: "service:preview"
+    depends_on:
+      - preview
+    environment:
+      HOME: /tmp
+      SCREENSHOT_BASE_URL: http://localhost:8080
+      SCREENSHOT_OUT_DIR: /out
+      BROWSER_NAME: ${BROWSER_NAME:-chromium}
+      BROWSER_CHECK_REAL_SEARCH: ${BROWSER_CHECK_REAL_SEARCH:-}
+    volumes:
+      - ../config:/work/config:ro
+      - ../frontend/tools:/work/frontend/tools:ro
+      - ../docs/evidence:/out
+    command: ["node", "tools/browser_checks.mjs"]

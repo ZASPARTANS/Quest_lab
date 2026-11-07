@@ -39,6 +39,8 @@
 | 2026-11-06 22:21 | Commit `ba46ed2`: Step 6 (part 2): adopt MapLibre GL JS and Natural Earth outlines, remove Cesium (D22) | 4.04 h | 67.96 h |
 | 2026-11-06 22:21 | Commit `fb92a96`: Correct a guessed time in ERRORS E021 (found by checking the clock) | 4.04 h | 67.96 h |
 | 2026-11-06 23:03 | Housekeeping review of all markdown files (this edit; its commit time is in `git log`) | 4.74 h | 67.26 h |
+| 2026-11-07 00:00 | Resume after /compact, same session ID; PROGRESS, DECISIONS and the ERRORS table re-read first (I said "about 6.7 h used" in my first message after it; the correct figure was 5.7 h) | 5.68 h | 66.32 h |
+| 2026-11-07 00:26 | Step 8 verified (see its results section); commit time in `git log` | 6.12 h | 65.88 h |
 
 ## Current plan
 **`docs/plans/PLAN-006.md`** — approved by the user 2026-11-06 ~23:24 UTC (Plan-my-day as the signature; steps 7-12 reshaped; saved places and rain totals with a range as the helpful extras; 6-hour blocks; text-first, map second). **Current plan** for steps 7-12; decision D24.
@@ -69,7 +71,7 @@
 | 5 | Independent validation | **done** 2026-11-06 (commit "Step 5...", time in `git log`) |
 | 6 | Front-end spike + decision gate + localhost | **done** 2026-11-06 (commits `c7baf2d`, `ba46ed2`); library MapLibre (D22) |
 | 7 | Static data export: point tiles, optional lower-resolution frames, manifest; size gate (PLAN-006) | **done** 2026-11-06 (commit "Step 7: ...", time in `git log`); D25, E023 |
-| 8 | Plan engine + place panel: activities, day cards, best windows, rain totals with a range, saved places, text first (PLAN-006) | not started |
+| 8 | Plan engine + place panel: activities, day cards, best windows, rain totals with a range, saved places, text first (PLAN-006) | **done** 2026-11-07 (commit "Step 8: ...", time in `git log`); D27, D28, E024, E025 |
 | 9 | Map and globe as supporting views, model switch, no-WebGL2 message (PLAN-006) | not started |
 | 10 | Provenance + honesty strip, final policy (PLAN-006) | not started |
 | 11 | Hosting gate + deploy | not started |
@@ -78,15 +80,15 @@
 Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
 
 ## Status (live, rewritten in the housekeeping at ~23:03 UTC)
-- **Done:** steps 1-7 and the security steps S1-S5; the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is step 8** (plan engine and place panel).
-- **Tests:** official command `docker compose -f docker/compose.yaml run --rm tests` = 95 passed; `... run --rm frontend-tests` = 4 passed (at step 7).
+- **Done:** steps 1-8 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is step 9** (map and globe as supporting views).
+- **Tests:** official command `docker compose -f docker/compose.yaml run --rm tests` = 99 passed; `... run --rm frontend-tests` = 41 passed (at step 8); `... run --rm frontend-check` = 8 places x 8 activities match; `BROWSER_NAME=<engine> ... run --rm browser-checks` = 8 of 8 scenarios in chromium, firefox and webkit.
 - **Git:** branch `main`, 25 commits, no remote (GitHub login and repo creation are plan step 11 and need the user's approval and link).
 - **Records:** this housekeeping checked every markdown file against the others; its findings and fixes are listed in the last section of this file.
 
 ## Open items (waiting on someone, or on a later step)
-- **User:** confirm that the map and the rain layer draw in Firefox on the user's PC (the user reported "the site loads files"); [innovation ideas: DONE, chosen in D24 / PLAN-006; the list below is kept as history] (~23:03 UTC); confirm the proposed no-WebGL2 message (D23).
+- **User:** open http://localhost:8080 (preview running) in their Firefox: does the PLAN page work (place by location and by search, activity buttons, saved places) and do the windows look plausible for a place they know (D24 bet); the two map pages are still the spike, confirm the Firefox map as before (the user reported "the site loads files"); [innovation ideas: DONE, chosen in D24 / PLAN-006; the list below is kept as history] (~23:03 UTC); confirm the proposed no-WebGL2 message (D23).
 - **User, later:** Safari and phone testing (deferred by the user); the geocoder service (step 8; AI recommends Open-Meteo, D20); the hosting choice (step 11); GitHub login, repo link and approval before any push.
-- **Check in step 8:** `DecompressionStream('gzip')` reads the real tiles in Chromium and in the user's Firefox (D25 assumption); time zones in Node tests.
+- **Checked in step 8:** `DecompressionStream('gzip')` reads the real tiles in Chromium 158, Firefox 159 and WebKit 27 in Docker (D25 assumption held; not yet on the user's own Firefox or Safari); time zones in Node tests (India, New York DST, Auckland, Kathmandu) and against Python on 8 real places.
 - **E007:** IFS to 360 h is still deferred (D12).
 - **Pending results of bets:** D2/A6 and D4 (size limits, steps 7 and 11), D8 (once the scheduled job runs), D9 and addendum (steps 7 and 10), D14 (step 7).
 - **Throwaway code to replace:** `scripts/spike_frame.py` (step 7), `frontend/spikes/maplibre.*` and `frontend/index.html` (step 9). Shortcut register: DECISIONS.md.
@@ -95,7 +97,9 @@ Note: the built-in todo/task-list tool is not available in this session's tool s
 ## Known issues
 - Python 3.10's pip is broken (E001); use `py -3.11`.
 - Firefox cannot create a WebGL context inside the Docker test container (environment limit); Firefox is tested by the user on a real PC. Safari and phones are untested.
-- A browser without WebGL2 shows a blank dark page with no message (D23 proposes a message and a fallback).
+- The plan page works without WebGL (checked with canvas disabled); the two map preview pages still show a blank page without WebGL2 until step 9.
+- No age warning yet: if the scheduled job ever fails the plan would show an old forecast without saying so (step 10, D9). The page does show the run time at the bottom.
+- Firefox headless cannot answer the location prompt, so the refusal path is exercised in Chromium and WebKit only.
 - Linux hosts: file ownership of `data/` and the `APP_UID`/`APP_GID` override are documented but untested (no Linux host).
 - The processed 6 h values carry up to about 0.24 mm (IFS, late steps) or 0.125 mm (AIFS) of GRIB packing rounding (DOMAIN.md, D14).
 - Test runs of this session used one pair of forecast runs (00z and 12z of 2026-11-06); the publication-lag estimate (about 7.5 h) is from one run.
@@ -299,3 +303,13 @@ Files: new `backend/` (`tiles.py` 91 lines, `frames.py` 68, `manifest.py` 72, `e
 - **Real-browser check of the public-like site** with the exported data (Docker Chromium): home, MapLibre flat, MapLibre globe all `ok: true`, no console or policy errors, no outside host, 484 kB loaded per map page; the manifest, a frame and tiles are served (tiles as `application/octet-stream`, which is right for files the browser decompresses itself).
 - **Found on the way:** E023 (small showers lost by nearest-cell resampling) plus four small self-review fixes listed in it. A very slow command (the size probe, 11 min) was moved to the background by the tool.
 - **Not verified yet:** reading the tiles in a browser with `DecompressionStream` (step 8); export time on Linux; behaviour of two consecutive scheduled exports on a real host (step 11); the attribution wording (step 10).
+
+## Step 8 done-check results (run 2026-11-07 ~00:05-00:30 UTC)
+Files: `frontend/src/` time.js, plan.js, windows.js, wording.js, view.js, tiles.js, manifest.js, data.js, places.js, geocode.js, dom.js, render.js, app.js, style.css; `frontend/index.html` (now the Plan-my-day page); `config/activities.json`; `config/frontend.json` (geocoder, saved places, check, browser checks); `config/headers.conf` (geocoder host in connect-src); `pipeline/process.py` + `processed.py` (D28 rule 1); `scripts/plan_reference.py`, `scripts/make_js_fixtures.py`; `frontend/tools/plan_check.mjs`, `browser_checks.mjs`; compose services `frontend-check`, `browser-checks`; tests (`tests/frontend/*.test.mjs`, `tests/frontend/fixtures/python_reference.json`). Largest new source file 243 lines. Decisions D27, D28; errors E024, E025. Code ladder: standard browser APIs (Intl, DecompressionStream, fetch, localStorage), no new package.
+- **Pipeline change first (D28 rule 1):** the agreement field is decided on the stored 0.1 mm values. Re-ran `process` and `export` on the real 12z run: agreement both wet 17.6 % (was 15.1 %), both dry 64.6 %, disagree 17.8 %; export again 36.1 MB in 4281 files. Python tests 99 passed (97 + 2 config guards; 2 new tests for the rule).
+- **Node tests:** 41 passed (time zones incl. India +05:30, Kathmandu +05:45, New York DST change at 06:00 UTC on 1 Nov, the local date differing from UTC; blocks across local midnight; threshold edge; current partly elapsed block at exactly half and one second less; window ranking; totals incl. the AIFS-only tail; hostile tiles, manifests, addresses, storage and geocoder replies). Mutation check: 5 deliberate breaks (round-half-up, `>` for `>=`, day by block start, wrong byte order, reversed window order) each made at least one test fail; baseline restored.
+- **Tiles read by the browser code equal the Python code:** 2 tile files made by `backend/tiles.py` (shuffled and plain) decode to the same numbers; 16 tricky places (ties, date line, poles, longitudes beyond 360) land in the same grid cell and tile as `pipeline/grid.py` (round-half-even was needed: JavaScript's `Math.round` picks another cell).
+- **Real data, independent calculation:** `scripts/plan_reference.py` (raw GRIB through eccodes' nearest-point search, its own Python version of the rules, fixed check time 2026-11-07 08:00 UTC) vs the browser code on the real exported tiles (`frontend-check`, no network): **8 places x 8 activities match** (windows, day states, totals for 3/7/10 days); all **800 tile values are identical** to the raw reads (0 off by one step); the browser's time zone database agrees with the offsets I wrote for the 8 zones. The check fails when the logic is broken (mutation: day by block start made Chennai and Sydney fail).
+- **Real browsers (Docker, `browser-checks`, site http://localhost:8080 as a secure context):** 8 scenarios (address, no canvas/WebGL, location allowed, location refused, search with a MOCK geocoder, saved places, activity change, hostile storage and address) pass in **chromium 158, firefox 159 and webkit 27** (webkit is Safari's engine, not Safari). One more run with the REAL Open-Meteo geocoder (one request, "Chennai") in Chromium passed: the policy allows exactly that host, the answer's time zone is used instead of the device's, the request carried no cookie and no referrer. Hostile text in the address is shown as text (`window.__pwned` stays undefined). Screenshots: `docs/evidence/step8-<engine>-*.png`.
+- **Fixed on the way (all in my checks, not in the page):** E025 (three flaws in my checks). Firefox's refusal path is not exercised headlessly (limit stated above).
+- **Not verified:** the user's own Firefox and any Safari or phone; the real geolocation prompt with a person answering; behaviour on the public HTTPS host (step 11); the wording "rounded to 0.1 mm" with a user; whether the windows match a place the user knows (D24 bet); two scheduled exports in a row.

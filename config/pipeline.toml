@@ -47,6 +47,8 @@ validation_points_file = "config/validation_points.toml"  # places checked by sc
 frontend_config_file = "config/frontend.json"  # settings of the front end; scripts that draw frames read the colour scale from it
 backend_config_file = "config/backend.toml"  # settings of the static data export (backend/)
 site_dir = "data/site"            # ignored by git; the exported static site data (tiles, frames, manifest). frontend.json dev_data_dir must be the same folder
+activities_file = "config/activities.json"  # presets of the Plan-my-day feature (frontend reads it too; scripts/plan_reference.py uses it for the independent check)
+plan_reference_file = "data/check/plan_reference.json"  # ignored by git; made by scripts/plan_reference.py from the raw GRIB files, read by frontend/tools/plan_check.mjs (frontend.json "check" must name the same file)
 
 # Grid every GRIB message must have (checked by pipeline/grid.py; verified on real files 2026-11-06,
 # docs/DOMAIN.md). Row 0 is the north edge, column 0 is longitude lon_first = 180 (not 0).

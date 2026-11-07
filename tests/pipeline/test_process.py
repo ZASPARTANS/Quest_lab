@@ -111,6 +111,13 @@ def test_quantise_limits_and_counts_saturated_values():
 
 # ---- agreement
 
+def test_wet_limit_is_the_smallest_stored_value_that_reaches_the_threshold():
+    assert process.wet_limit(0.5, 0.1) == 5      # 0.5 / 0.1 is 5.000000000000000 or 4.999999999999999 depending on rounding
+    assert process.wet_limit(0.3, 0.1) == 3      # 0.3 / 0.1 = 2.9999999999999996 in floating point
+    assert process.wet_limit(0.55, 0.1) == 6     # between two stored values: the next one up (0.5 mm is below 0.55)
+    assert process.wet_limit(1.0, 0.1) == 10 and process.wet_limit(0.1, 0.1) == 1
+
+
 def test_agreement_classes_and_the_threshold_edge():
     a = np.array([0.5, 0.49, 0.5, 0.1, 9.0])
     b = np.array([0.5, 0.50, 0.1, 0.2, 0.0])

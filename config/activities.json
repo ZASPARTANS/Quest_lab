@@ -1,0 +1,26 @@
+{
+  "_comment": "Plan-my-day settings (decisions D24, D27, D28). No code here. The numbers are the AI's judgement, NOT measured: change them freely. wet_mm = a 6-hour block counts as wet from this many mm (stored values are in 0.1 mm steps, so use multiples of 0.1). min_blocks = shortest window worth showing, in 6-hour blocks. hours = [from, to) in the place's local time; a block is 'in hours' when its MIDPOINT is inside. To fit, floor((to - from) / 6) must be at least min_blocks (checked by a test).",
+  "default_activity": "outdoor",
+  "windows_shown": 3,
+  "days_shown": 10,
+  "totals_days": [3, 7, 10],
+  "current_block_min_remaining_fraction": 0.5,
+  "custom": {
+    "id": "custom",
+    "label": "Custom",
+    "wet_choices_mm": [0.1, 0.5, 1.0, 2.0, 5.0],
+    "default_wet_mm": 0.5,
+    "min_blocks": 1,
+    "hours": [0, 24],
+    "blurb": "You choose what counts as wet."
+  },
+  "activities": [
+    { "id": "outdoor", "label": "Outdoor plans", "wet_mm": 0.5, "min_blocks": 1, "hours": [8, 22], "blurb": "A walk, errands, anything outside." },
+    { "id": "commute", "label": "Commute", "wet_mm": 1.0, "min_blocks": 1, "hours": [6, 22], "blurb": "A little drizzle is fine." },
+    { "id": "laundry", "label": "Drying laundry", "wet_mm": 0.1, "min_blocks": 2, "hours": [7, 19], "blurb": "Any rain counts, and clothes need about 12 hours." },
+    { "id": "picnic", "label": "Picnic or event", "wet_mm": 0.3, "min_blocks": 1, "hours": [9, 21], "blurb": "Light rain already spoils it." },
+    { "id": "cricket", "label": "Cricket or sport", "wet_mm": 0.2, "min_blocks": 1, "hours": [8, 20], "blurb": "Play stops at the first rain." },
+    { "id": "farming", "label": "Field work", "wet_mm": 2.0, "min_blocks": 2, "hours": [5, 19], "blurb": "Light rain is fine, heavy rain stops work." },
+    { "id": "travel", "label": "Travel by road", "wet_mm": 2.0, "min_blocks": 1, "hours": [0, 24], "blurb": "Any time of day; only heavier rain matters." }
+  ]
+}

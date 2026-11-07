@@ -18,9 +18,42 @@
       { "name": "maplibre-globe", "path": "/spikes/maplibre.html?mode=3d", "wait_for_ready": true }
     ]
   },
+  "browser_checks": {
+    "_comment": "Read by frontend/tools/browser_checks.mjs (step 8 done-check: the plan page in real browsers). Environment variables name the site, the screenshot folder, the engine (chromium, firefox or webkit) and an optional computer-installed browser (msedge).",
+    "base_url_env": "SCREENSHOT_BASE_URL",
+    "out_dir_env": "SCREENSHOT_OUT_DIR",
+    "browser_env": "BROWSER_NAME",
+    "channel_env": "SCREENSHOT_BROWSER_CHANNEL",
+    "real_search_env": "BROWSER_CHECK_REAL_SEARCH",
+    "file_prefix": "step8-",
+    "viewport": { "width": 1100, "height": 900 },
+    "timeout_seconds": 30
+  },
   "build_dir_env": "FRONTEND_OUT_DIR",
   "cache_dir_env": "VITE_CACHE_DIR",
   "dev_badge": { "enabled": true, "text": "DEV" },
+  "manifest_file": "manifest.json",
+  "max_manifest_bytes": 200000,
+  "model_labels": { "ifs": "IFS", "aifs-single": "AIFS" },
+  "refresh_seconds": 120,
+  "geocoder": {
+    "_comment": "Place search (decision D27): Open-Meteo geocoding. ONLY the typed text and the visitor's IP address go to this host; its origin is the single outside host in connect-src of config/headers.conf (a test keeps the two in step). Search runs only when the visitor presses Enter or the button.",
+    "url": "https://geocoding-api.open-meteo.com/v1/search",
+    "language": "en",
+    "min_chars": 2,
+    "max_chars": 60,
+    "max_results": 5,
+    "timeout_ms": 8000,
+    "max_reply_chars": 100000
+  },
+  "saved_places": { "storage_key": "rain-plan.saved-places.v1", "settings_key": "rain-plan.settings.v1", "max": 5 },
+  "geolocation": { "timeout_ms": 10000, "max_age_ms": 600000 },
+  "check": {
+    "_comment": "Read by frontend/tools/plan_check.mjs (checks the browser code on the real exported tiles against the reference made by scripts/plan_reference.py). Same files as config/pipeline.toml [paths] site_dir and plan_reference_file.",
+    "site_dir": "data/site",
+    "reference_file": "data/check/plan_reference.json",
+    "now_hours_after_run": 20
+  },
   "colour_scale": {
     "unit": "mm per 6 h",
     "_comment": "Colour for a value at or above the first number of each pair; below the first stop the pixel is transparent. Used by the export (backend/export.py) for the map frames and by the page for the legend.",

@@ -48,7 +48,10 @@ def build(cfg, run):
     results = {m: process_model(cfg, run, m) for m in cfg["models"]}
     a, b = cfg["process"]["agreement_models"]
     n = min(len(results[a]["steps"]), len(results[b]["steps"]))
-    field = process.agreement(results[a]["mm"][:n], results[b]["mm"][:n], cfg["process"]["wet_threshold_mm"])
+    quantum = cfg["process"]["quantise_mm"]
+    # The agreement is decided on the STORED values (what the browser reads), not on the unrounded ones (decision D28).
+    stored_a, stored_b = (process.quantise(results[m]["mm"][:n], quantum)[0] for m in (a, b))
+    field = process.agreement(stored_a, stored_b, process.wet_limit(cfg["process"]["wet_threshold_mm"], quantum))
     return results, field, results[a]["steps"][:n]
 
 

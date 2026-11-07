@@ -1,0 +1,273 @@
+{
+ "_comment": "Made by scripts/make_js_fixtures.py from the real Python code; invented values.",
+ "grid": {
+  "ni": 1440,
+  "nj": 721,
+  "step_degrees": 0.25,
+  "lat_first": 90.0,
+  "lon_first": 180.0
+ },
+ "tile_size": 16,
+ "tiles": [
+  {
+   "shuffled": true,
+   "layers": 3,
+   "rows": 2,
+   "cols": 4,
+   "file_base64": "H4sIAAAAAAACA2NkYGJgYWBmYGT4z4ACGGGM/9r6dhpmVvzMosK29gxKDJz/ORQsRcWFAZXFsA06AAAA",
+   "values": [
+    65535,
+    43,
+    47,
+    62,
+    40,
+    54,
+    58,
+    15,
+    3,
+    21,
+    19,
+    61,
+    63,
+    0,
+    34,
+    256,
+    9,
+    255,
+    8,
+    32,
+    57,
+    21,
+    23,
+    19
+   ]
+  },
+  {
+   "shuffled": false,
+   "layers": 3,
+   "rows": 2,
+   "cols": 4,
+   "file_base64": "H4sIAAAAAAACAw3JMQ5AQBAAwDkUVAoRragkiuskJPj/q9a2M0Wj0yLiUL12p9uYNps8vryNMgi91ZW+5Pwfh3xjOgAAAA==",
+   "values": [
+    65535,
+    43,
+    47,
+    62,
+    40,
+    54,
+    58,
+    15,
+    3,
+    21,
+    19,
+    61,
+    63,
+    0,
+    34,
+    256,
+    9,
+    255,
+    8,
+    32,
+    57,
+    21,
+    23,
+    19
+   ]
+  }
+ ],
+ "cells": [
+  {
+   "lat": 13.0827,
+   "lon": 80.2707,
+   "row": 308,
+   "col": 1041,
+   "tile": [
+    19,
+    65,
+    4,
+    1
+   ]
+  },
+  {
+   "lat": 0.125,
+   "lon": -0.125,
+   "row": 360,
+   "col": 720,
+   "tile": [
+    22,
+    45,
+    8,
+    0
+   ]
+  },
+  {
+   "lat": 0.375,
+   "lon": 179.875,
+   "row": 358,
+   "col": 0,
+   "tile": [
+    22,
+    0,
+    6,
+    0
+   ]
+  },
+  {
+   "lat": -0.125,
+   "lon": 0.125,
+   "row": 360,
+   "col": 720,
+   "tile": [
+    22,
+    45,
+    8,
+    0
+   ]
+  },
+  {
+   "lat": 51.5,
+   "lon": -0.1,
+   "row": 154,
+   "col": 720,
+   "tile": [
+    9,
+    45,
+    10,
+    0
+   ]
+  },
+  {
+   "lat": 90.0,
+   "lon": 0.0,
+   "row": 0,
+   "col": 720,
+   "tile": [
+    0,
+    45,
+    0,
+    0
+   ]
+  },
+  {
+   "lat": -90.0,
+   "lon": 180.0,
+   "row": 720,
+   "col": 0,
+   "tile": [
+    45,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "lat": 89.9,
+   "lon": -179.99,
+   "row": 0,
+   "col": 0,
+   "tile": [
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "lat": -33.87,
+   "lon": 151.21,
+   "row": 495,
+   "col": 1325,
+   "tile": [
+    30,
+    82,
+    15,
+    13
+   ]
+  },
+  {
+   "lat": 0.0,
+   "lon": 359.9,
+   "row": 360,
+   "col": 720,
+   "tile": [
+    22,
+    45,
+    8,
+    0
+   ]
+  },
+  {
+   "lat": 12.5,
+   "lon": -180.0,
+   "row": 310,
+   "col": 0,
+   "tile": [
+    19,
+    0,
+    6,
+    0
+   ]
+  },
+  {
+   "lat": 12.5,
+   "lon": 180.0,
+   "row": 310,
+   "col": 0,
+   "tile": [
+    19,
+    0,
+    6,
+    0
+   ]
+  },
+  {
+   "lat": 45.0625,
+   "lon": 90.0625,
+   "row": 180,
+   "col": 1080,
+   "tile": [
+    11,
+    67,
+    4,
+    8
+   ]
+  },
+  {
+   "lat": -1e-07,
+   "lon": -1e-07,
+   "row": 360,
+   "col": 720,
+   "tile": [
+    22,
+    45,
+    8,
+    0
+   ]
+  },
+  {
+   "lat": 60.0,
+   "lon": 540.25,
+   "row": 120,
+   "col": 1,
+   "tile": [
+    7,
+    0,
+    8,
+    1
+   ]
+  },
+  {
+   "lat": -45.1,
+   "lon": -720.4,
+   "row": 540,
+   "col": 718,
+   "tile": [
+    33,
+    44,
+    12,
+    14
+   ]
+  }
+ ]
+}
