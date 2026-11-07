@@ -96,3 +96,7 @@ Could not check in step 6: how the policy behaves with an online geocoder (not a
 ### Step 9.3c-0 (2026-11-07 13:18 UTC)
 - The second outside host is now `api-bdc.io` (the final host of the BigDataCloud reverse geocoder; the documented host redirects to it, and a redirect to a host the policy does not allow is blocked by the browser). A redirect that is blocked is a safe failure: the page keeps "Your location". The consistency test fails if the policy and `reverse_geocoder.url` differ. Verified with the real service in Edge.
 - Rotation and tilt are off on the map; nothing else changed in the policy.
+
+### Step 9.3c-3: the live layer (2026-11-07 13:29 UTC)
+- The live picture is made in memory from tile files that are checked as before (header, length, size-limited gunzip, the shape the manifest describes); it becomes a PNG blob of our own and an `blob:` URL that the map loads (`img-src blob:` was already allowed) and that is revoked when replaced. No new host, no new permission. A failing or hostile tile leaves the pre-made picture on screen (tested: damaged tile, offline tile, too many tiles).
+- More tiles are fetched when zooming in: at most 150 per view and cached, so the load is bounded.

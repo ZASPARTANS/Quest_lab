@@ -46,6 +46,7 @@
       "canvas_scale": 0.5,
       "lut_size": 512,
       "agreement_soft_steps": 1.0,
+      "agreement_opacity": 0.8,
       "fade_from_mm": 0.05,
       "max_tiles": 150,
       "debounce_ms": 150

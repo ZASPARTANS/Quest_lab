@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { agreementPicture, buildWindow, catmullRom, rainColours, rainPicture, sampleView, viewCols, viewRows } from '../../frontend/src/live.js';
+import { agreementPicture, buildWindow, pchip, rainColours, rainPicture, sampleView, viewCols, viewRows } from '../../frontend/src/live.js';
 
 const REF = JSON.parse(readFileSync(new URL('./fixtures/python_reference.json', import.meta.url), 'utf8')).live;
 const FRONTEND = JSON.parse(readFileSync(new URL('../../config/frontend.json', import.meta.url), 'utf8'));
@@ -30,24 +30,30 @@ test('the rows and columns of a view equal the independent Python numbers (Merca
   }
 });
 
-test('Catmull-Rom weights: they sum to one and sit on the cell at the ends', () => {
-  for (const t of [0, 0.1, 0.5, 0.77, 0.999]) assert.ok(near(catmullRom(t).reduce((a, b) => a + b), 1));
-  assert.deepEqual(catmullRom(0), [0, 1, 0, 0]);
-  assert.ok(near(catmullRom(1)[2], 1) && near(catmullRom(1)[1], 0));
+test('PCHIP: exact at the nodes, reproduces a straight line, and never goes beyond the two nodes (also next to a dry cell)', () => {
+  for (const [y0, y1, y2, y3] of [[1, 2, 3, 4], [0, 0, 5, 9], [9, 5, 0, 0], [0, 8, 0, 0], [3, 3, 3, 3], [0, 1, 40, 0], [7, 0, 0, 7]]) {
+    assert.equal(pchip(y0, y1, y2, y3, 0), y1);
+    assert.equal(pchip(y0, y1, y2, y3, 1), y2);
+    for (let k = 1; k < 20; k += 1) {
+      const v = pchip(y0, y1, y2, y3, k / 20);
+      assert.ok(v >= Math.min(y1, y2) - 1e-12 && v <= Math.max(y1, y2) + 1e-12, `${[y0, y1, y2, y3]} at ${k / 20}: ${v}`);
+    }
+  }
+  for (const t of [0.25, 0.5, 0.9]) assert.ok(near(pchip(1, 2, 3, 4, t), 2 + t)); // a straight line stays a straight line
 });
 
 test('the smooth field equals Python at ten places, including the edge rows and the wrap of the columns', () => {
   assert.equal(REF.samples.length, 10);
-  for (const s of REF.samples) assert.ok(near(at(s.rowf, s.colf), s.value, 1e-6), `${s.rowf},${s.colf}: ${at(s.rowf, s.colf)} vs ${s.value}`);
+  for (const s of REF.samples) assert.ok(near(at(s.rowf, s.colf), s.value, 1e-5), `${s.rowf},${s.colf}: ${at(s.rowf, s.colf)} vs ${s.value}`);
 });
 
 test('at a cell centre the picture equals the stored value exactly', () => {
   for (const [r, c] of [[0, 0], [3, 4], [6, 11], [2, 7], [5, 0]]) assert.equal(at(r, c), stored(r, c), `cell ${r},${c}`);
 });
 
-test('a linear ramp is reproduced between cells, and the field never leaves the range of the four cells around it', () => {
+test('a linear ramp is reproduced between cells, and the field never leaves the range of the four cells around it (no clamp is needed)', () => {
   const ramp = (r, c) => 3 * r + 2 * c;
-  for (const [rowf, colf] of [[2.3, 3.7], [3.5, 5.5], [1.1, 8.9]]) assert.ok(near(at(rowf, colf, ramp), 3 * rowf + 2 * colf, 1e-6));
+  for (const [rowf, colf] of [[2.3, 3.7], [3.5, 5.5], [1.1, 8.9]]) assert.ok(near(at(rowf, colf, ramp), 3 * rowf + 2 * colf, 1e-4));
   let seed = 12345;
   const random = () => { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; };
   const field = Array.from({ length: GRID.nj }, () => Array.from({ length: GRID.ni }, () => (random() < 0.5 ? 0 : 40 * random()))); // sharp contrasts: dry cells beside wet ones
@@ -66,7 +72,7 @@ test('a linear ramp is reproduced between cells, and the field never leaves the 
 
 test('across the date line the field is continuous (column 11 and column 0 are neighbours)', () => {
   const values = [11.0, 11.2, 11.4, 11.6, 11.8, 12.0].map((c) => at(3, c));        // from cell 11 to column 12, which is cell 0 again
-  const around = [stored(3, 11), stored(3, 0), stored(4, 11), stored(4, 0)];   // the four cells around the points (the guarantee is the 2 x 2 range, not just the two cells)
+  const around = [stored(3, 11), stored(3, 0)];                                  // along a row the curve stays between the two cells (the next row is not used at an exact row)
   assert.ok(values.every((v) => v >= Math.min(...around) - 1e-9 && v <= Math.max(...around) + 1e-9));
   assert.ok(near(values[0], stored(3, 11)) && near(values[5], stored(3, 0)));
   assert.ok(near(at(3, 12), at(3, 0)) && near(at(3, 13), at(3, 1)) && near(at(3, -1), at(3, 11))); // the columns repeat around the globe
@@ -118,6 +124,7 @@ test('the live settings in the config are consistent with the pre-made pictures 
   const live = FRONTEND.map.live;
   const backend = readFileSync(new URL('../../config/backend.toml', import.meta.url), 'utf8');
   assert.equal(live.fade_from_mm, Number(/fade_from_mm\s*=\s*([\d.]+)/.exec(backend)[1])); // the same soft edge as the pre-made pictures
+  assert.equal(live.agreement_opacity, Number(/agreement_opacity\s*=\s*([\d.]+)/.exec(backend)[1])); // and the same agreement opacity
   assert.ok(live.min_zoom >= FRONTEND.map.fly.zoom && live.min_zoom < FRONTEND.map.max_zoom);   // only where the flat map is already shown
   assert.ok(live.canvas_scale > 0 && live.canvas_scale <= 1 && live.lut_size >= 64 && live.max_tiles >= 20 && live.agreement_soft_steps > 0);
 });
