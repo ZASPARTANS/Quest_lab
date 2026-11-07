@@ -26,13 +26,15 @@ export async function createMapApp(o) {
     const end = Date.parse(manifest.run) + state.step * HOUR_MS;
     const start = end - manifest.interval_hours * HOUR_MS;
     const day = dayLabel(dayKey((start + end) / 2, state.zone));
-    return `${day} ${clock(start, state.zone)}–${clock(end, state.zone)} (${state.hasPlace ? state.zone : 'UTC'})`;
+    const over = end <= Date.now() ? ' \u2013 already over' : ''; // a block that has passed is said so, never shown as if it were current
+    return `${day} ${clock(start, state.zone)}\u2013${clock(end, state.zone)} (${state.hasPlace ? state.zone : 'UTC'})${over}`;
   };
 
   const controls = createControls({ root: o.toolsRoot, cfg, manifest, options, selectedModel: state.model, handlers: {
     onMode: (mode) => { state.mode = mode; view.setMode(mode); refresh(); live.update(); },
     onModel: (model) => { state.model = model; refresh(); live.update(); },
     onStep: (step) => setStep(step),
+    onNow: () => setStep(firstUpcomingStep(manifest, Date.now())),
     onMyPlace: () => {
       if (!state.place) return;
       const reduced = prefersReducedMotion((q) => window.matchMedia(q));

@@ -1,12 +1,15 @@
-// The MapLibre map (loaded on demand, after the plan is on screen). It draws the exported rain frame as an image on a globe that flattens
-// while it zooms in (decision D31), the Natural Earth outlines, and a marker for the chosen place. No outside request: no online style or tiles.
+// The MapLibre map (loaded on demand, after the plan is on screen). It draws the stored OpenStreetMap base map (decision D38), the rain on top of it (a pre-made
+// picture, or the live picture drawn in the browser) with the place names above the rain, on a globe that flattens while it zooms in (decision D31), and a
+// marker for the chosen place. No outside request: the base map, its fonts and sprites are files of our own site.
 // State for the browser tests is written to data- attributes of the container (no globals).
-import { Map as MapLibreMap, Marker, setWorkerUrl } from 'maplibre-gl';
+import { addProtocol, Map as MapLibreMap, Marker, setWorkerUrl } from 'maplibre-gl';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url'; // the worker is a separate file the bundler must emit and name (E017)
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { Protocol } from 'pmtiles';
+import { buildBasemap } from './basemap.js';
 import { effectiveView, projectionSpec } from './mapstate.js';
-import { borders, coastlines } from './outlines.js';
 
+let protocolRegistered = false;
 const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`); // MapLibre writes the attribution as HTML
 
 export function createMapView({ container, cfg, manifest, onClick, onProblem }) {
@@ -14,11 +17,16 @@ export function createMapView({ container, cfg, manifest, onClick, onProblem }) 
   const mapCfg = cfg.map;
   const source = manifest.source ?? {};
   const state = { mode: 'auto', marker: null, liveUrl: null, liveVisible: false };
+  if (!protocolRegistered) {
+    addProtocol('pmtiles', new Protocol().tile); // lets the style read the stored .pmtiles file with range requests
+    protocolRegistered = true;
+  }
+  const base = buildBasemap(mapCfg, cfg.data_url_path, location.origin);
   const map = new MapLibreMap({
     container, center: mapCfg.start.center, zoom: mapCfg.start.zoom, minZoom: mapCfg.min_zoom, maxZoom: mapCfg.max_zoom, renderWorldCopies: false,
     dragRotate: false, pitchWithRotate: false, maxPitch: 0, touchPitch: false, // a weather map stays north-up and flat on the screen
-    attributionControl: { compact: true, customAttribution: `Forecast: ${escapeHtml(source.name)}, ${escapeHtml(source.licence)}. Outlines: Natural Earth.` },
-    style: { version: 8, projection: projectionSpec('auto', mapCfg), sources: {}, layers: [{ id: 'sea', type: 'background', paint: { 'background-color': mapCfg.sea_colour } }] },
+    attributionControl: { compact: true, customAttribution: `Forecast: ${escapeHtml(source.name)}, ${escapeHtml(source.licence)}. Map: ${mapCfg.basemap.attribution_html}` }, // the map credit is our own config text
+    style: { version: 8, projection: projectionSpec('auto', mapCfg), sources: base.sources, glyphs: base.glyphs, sprite: base.sprite, layers: base.layers },
   });
   const data = container.dataset;
   data.mode = 'auto';
@@ -36,13 +44,10 @@ export function createMapView({ container, cfg, manifest, onClick, onProblem }) 
   map.on('click', (e) => onClick(e.lngLat.lat, e.lngLat.lng));
 
   const ready = new Promise((resolve) => map.on('load', () => {
-    map.addSource('coast', { type: 'geojson', data: coastlines });
-    map.addSource('borders', { type: 'geojson', data: borders });
-    map.addLayer({ id: 'borders', type: 'line', source: 'borders', paint: { 'line-color': '#ffffff', 'line-opacity': 0.35, 'line-width': 0.6 } });
-    map.addLayer({ id: 'coast', type: 'line', source: 'coast', paint: { 'line-color': '#ffffff', 'line-opacity': 0.8, 'line-width': 0.9 } });
     reflect();
     resolve();
   }));
+  const belowLabels = base.firstLabelId ?? undefined; // the rain goes below the first label layer, so names stay readable above it
 
   /** Show the frame at `url` (null = no frame). Frames are Web Mercator images covering the whole world up to the Mercator latitude limit. */
   async function setFrame(url) {
@@ -58,7 +63,7 @@ export function createMapView({ container, cfg, manifest, onClick, onProblem }) 
     }
     const lat = manifest.frames.max_latitude;
     map.addSource('rain', { type: 'image', url, coordinates: [[-180, lat], [180, lat], [180, -lat], [-180, -lat]] });
-    map.addLayer({ id: 'rain', type: 'raster', source: 'rain', paint: { 'raster-fade-duration': 0, 'raster-resampling': mapCfg.resampling } }, 'borders');
+    map.addLayer({ id: 'rain', type: 'raster', source: 'rain', paint: { 'raster-fade-duration': 0, 'raster-resampling': mapCfg.resampling } }, belowLabels);
   }
 
   function setMode(mode) {
@@ -104,7 +109,7 @@ export function createMapView({ container, cfg, manifest, onClick, onProblem }) 
       map.getSource('live').updateImage({ url, coordinates });
     } else {
       map.addSource('live', { type: 'image', url, coordinates });
-      map.addLayer({ id: 'live', type: 'raster', source: 'live', layout: { visibility: 'none' }, paint: { 'raster-fade-duration': 0, 'raster-resampling': mapCfg.resampling } }, 'borders');
+      map.addLayer({ id: 'live', type: 'raster', source: 'live', layout: { visibility: 'none' }, paint: { 'raster-fade-duration': 0, 'raster-resampling': mapCfg.resampling } }, belowLabels);
     }
     const old = state.liveUrl;
     state.liveUrl = url;

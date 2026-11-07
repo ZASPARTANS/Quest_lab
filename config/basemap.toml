@@ -33,7 +33,7 @@ raw_url = "https://raw.githubusercontent.com/{repo}/{commit}/{path}"
 tree_url = "https://api.github.com/repos/{repo}/git/trees/{commit}?recursive=1"
 fonts = ["Noto Sans Regular", "Noto Sans Medium", "Noto Sans Italic"]   # the fonts the basemap styles use
 font_range_size = 256
-font_range_max = 1535              # glyph ranges 0-1535: Latin, Greek and Cyrillic letters (English labels only for now)
+font_range_max = 65535             # every glyph range of the three fonts (about 11 MB): English labels need only 0-1535, but place names without an English name show their own script (Arabic and others) and would otherwise ask for a range that is not stored
 sprite_dir = "sprites/v4"
 sprite_flavor = "dark"
 licence_file = "fonts/OFL.txt"
