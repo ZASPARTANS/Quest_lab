@@ -63,6 +63,9 @@ docker compose -f docker/compose.yaml run --rm screenshots        # real browser
 
 Both sites listen on this computer only. The settings (ports, folders, pages, colours) are in `config/frontend.json`, the security headers in `config/headers.conf`.
 
+## The web page (step 8)
+The home page is the plan: choose a place (device location, search, or a saved place) and an activity; it shows the best dry windows, day cards with both models' blocks, and rain totals as a range. It works without WebGL. Settings are in `config/activities.json` and `config/frontend.json`. Checks: `docker compose -f docker/compose.yaml run --rm frontend-tests` (Node tests); `... run --rm process python -m scripts.plan_reference` then `... run --rm frontend-check` (the browser code on the real tiles against an independent Python calculation); `BROWSER_NAME=chromium|firefox|webkit docker compose -f docker/compose.yaml run --rm browser-checks` (real browser engines).
+
 ## Browser support and what was tested (updated 2026-11-06)
 The map needs **WebGL2** (MapLibre GL JS 6). A browser without WebGL2 currently shows a blank dark page with no message (found with Firefox in a container, `docs/evidence/firefox-headless-maplibre-flat.png`); a plain message and a non-WebGL fallback are planned (decision D23). There is **no GPU anywhere on the server side** (free static hosting has none); the map is drawn in the visitor's own browser.
 

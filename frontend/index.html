@@ -3,22 +3,81 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
   <link rel="icon" href="data:,">
-  <title>Precipitation forecast - work in progress</title>
-  <style>
-    body { font: 16px/1.5 system-ui, sans-serif; margin: 2rem auto; max-width: 40rem; padding: 0 1rem; background: #0b1d33; color: #e8f0fa; }
-    a { color: #8cc4ff; }
-    #env-badge { position: fixed; top: 0; right: 0; background: #d6281e; color: #fff; font: 700 12px system-ui; padding: 4px 10px; letter-spacing: .1em; z-index: 10; }
-  </style>
+  <link rel="stylesheet" href="/src/style.css">
+  <title>Rain plan: when is it dry for what you want to do?</title>
 </head>
 <body>
   <div id="env-badge" hidden></div>
-  <h1>Precipitation forecast</h1>
-  <p><strong>Work in progress.</strong> This page only shows one real forecast frame
-  (ECMWF IFS, a 6 h interval) on a map and on a globe. It is not the finished app.</p>
-  <ul>
-    <li><a href="/spikes/maplibre.html?mode=2d">Flat map</a> | <a href="/spikes/maplibre.html?mode=3d">Globe</a></li>
-  </ul>
-  <script type="module" src="/src/badge.js"></script>
+  <header class="top">
+    <h1>Rain plan</h1>
+    <p class="lead">Choose a place and what you want to do. You get the dry windows of the next days, and how sure two forecast models are.</p>
+  </header>
+
+  <main>
+    <section class="panel" aria-labelledby="where-h">
+      <h2 id="where-h">1. Where</h2>
+      <div class="row">
+        <button id="use-location" type="button" class="primary">Use my location</button>
+        <form id="search-form" class="search" autocomplete="off">
+          <label for="search-input" class="sr-only">Search for a place</label>
+          <input id="search-input" type="search" maxlength="60" placeholder="Or search for a place, e.g. Chennai" enterkeyhint="search">
+          <button type="submit">Search</button>
+        </form>
+      </div>
+      <p class="note" id="privacy">Your location and saved places stay in this browser. Searching sends the text you type, and your IP address, to Open-Meteo (open-meteo.com) and nobody else.</p>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <ul id="results" class="results" aria-label="Search results"></ul>
+      <h3>Saved places</h3>
+      <ul id="saved" class="saved-list"></ul>
+    </section>
+
+    <p id="welcome" class="welcome">Choose where you are, or search for a place, to see your plan.</p>
+
+    <section id="plan" hidden>
+      <div class="place-head">
+        <div>
+          <h2 id="title"></h2>
+          <p id="meta" class="note"></p>
+        </div>
+        <button id="save" type="button"></button>
+      </div>
+
+      <fieldset class="panel">
+        <legend>2. What do you want to do?</legend>
+        <div id="activities" class="chips"></div>
+        <div id="custom-box" class="custom" hidden>
+          <label for="custom-wet">Count a 6-hour block as wet from</label>
+          <select id="custom-wet"></select>
+        </div>
+        <p id="note" class="note"></p>
+      </fieldset>
+
+      <section class="panel" aria-labelledby="win-h">
+        <h2 id="win-h">3. Best dry windows</h2>
+        <ol id="windows" class="windows"></ol>
+      </section>
+
+      <section class="panel" aria-labelledby="days-h">
+        <h2 id="days-h">Day by day</h2>
+        <p class="note">Each block is 6 hours. Dry and wet are what <em>both</em> models say; a hatched block means one says wet and the other dry.</p>
+        <div id="days" class="days"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="tot-h">
+        <h2 id="tot-h">Rain totals</h2>
+        <p class="note">From the 6-hour block now under way. The range is the lowest and highest of the two models.</p>
+        <div id="totals" class="totals"></div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <div id="about" class="about"></div>
+    <p class="note dev">Work in progress: <a href="/spikes/maplibre.html?mode=2d">flat map preview</a> | <a href="/spikes/maplibre.html?mode=3d">globe preview</a></p>
+  </footer>
+  <noscript><p class="status">This page needs JavaScript to show the forecast.</p></noscript>
+  <script type="module" src="/src/app.js"></script>
 </body>
 </html>

@@ -27,6 +27,8 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 | E021 | I reported the dev server as stopped after checking only 127.0.0.1; it listened on ::1 and kept running (and `TaskStop` ended only the wrapper shell) | 1 | 1/1 (found by command line, stopped by PID, verified on ::1, 127.0.0.1 and localhost) |
 | E022 | A throwaway Firefox script edit failed silently (`python3 - ... \|\| python ...` fallback), so two reported "variant" runs were the original configuration; killed runs left containers behind | 1 | 1/1 (script rewritten, each variant run once, containers removed) |
 | E023 | Map frames resampled by nearest cell dropped small showers (a single wet cell vanished from the overview); found by my test before release | 1 | 1/1 (maximum of the covered cells; tests) |
+| E025 | Step 8 browser checks: three flaws in MY checks (Firefox refusal read an interim message; an empty `referer` header counted as a referrer; an apostrophe broke a test title); no defect in the page | 1 | 3/3 (checks corrected, rerun green) |
+| E024 | I wrote a guessed time ("~00:50 UTC") into DECISIONS; the clock said 00:20. Same slip class as the earlier guessed times (E021 note, step 4/6 headings) | 1 | 1/1 (corrected after `date -u`; rule: run `date -u` before writing any time) |
 
 ---
 
@@ -225,3 +227,17 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 - Fix: `frames.resample` takes the MAXIMUM of the grid cells each pixel covers (`np.maximum.reduceat` over row and column spans), works for either longitude start (180 or 0), and for the agreement codes lets "disagree" win over "wet" over "dry". New tests: shape and orientation, a single wet cell stays visible and lands within 1 degree of its place, and the longitude column lands in the right image column for both conventions.
 - Also found by self-review in the same step and fixed before any run: a hardcoded model name in the manifest check (D17), a missing `file` key in `scripts/validate_site.py` (the manifest does not carry processed file names), and test fixtures on a non-global grid that the new resampling (correctly) does not accept.
 - Changed lines: `backend/frames.py`, `backend/export.py`, `tests/backend/test_frames.py`, `tests/backend/conftest.py`.
+
+## E024 — A guessed time was written into a record
+- 2026-11-07 00:21 UTC (`date -u`). seen: 1. fix worked / fix tried: 1/1.
+- What happened: in the "D28 consequence" paragraph of docs/DECISIONS.md I wrote "~00:50 UTC" without running `date -u`. The clock said 00:20 (the paragraph was written about 00:15). Found by my own habit of checking the clock before the next record entry, not by a test.
+- Root cause: writing a time from a feeling of elapsed work instead of the command. The rule in CLAUDE.md ("never guess the time") was known; the same slip happened before (see the notes in E021 and the step 4 and housekeeping sections of PROGRESS.md).
+- Fix: the heading now says "~00:15 UTC; corrected from a guessed 00:50". Prevention used from here: run `date -u` in the same command that appends any record that carries a time.
+- Changed lines: docs/DECISIONS.md (heading of the D28 consequence paragraph).
+
+## E025 — Three flaws in my step 8 checks (not in the page)
+- 2026-11-07 ~00:30 UTC. seen: 1. fix worked / fix tried: 3/3.
+- (a) `browser_checks.mjs` "location refused" failed in Firefox: it read "Looking for your location..." because headless Firefox never answers the permission prompt and the page's location timeout only starts after an answer. Fix: wait for the final text for 12 s, and in Firefox accept "still waiting"; the limit is written in the tool and in PROGRESS. Result: Firefox, Chromium and WebKit pass.
+- (b) The real-geocoder run failed "no referrer is sent": the header was present but EMPTY, which means none was sent. Printing the headers showed it. Fix: assert that the header is empty or absent. Result: the real search passes.
+- (c) A Python heredoc wrote an unescaped apostrophe into a JavaScript test title (SyntaxError: the whole file failed). Fix: reworded the title. Result: 41 passed.
+- Lesson: each was found because the run printed the actual value; none was waved away.

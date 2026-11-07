@@ -1,0 +1,190 @@
+// Plan step 8 done-check in a real browser engine (Playwright): the plan page with a place from the address, from the device position
+// (allowed and refused), from a place search, saved places, hostile input and no WebGL. The site is reached as http://localhost:8080
+// (the browser container shares the preview's network), so the browser treats it as a secure context like the HTTPS public site.
+// The place search is answered by a MOCK geocoder unless the real-search switch is set (then one real request goes to Open-Meteo).
+// Exit code 1 if any scenario fails. Engines: chromium | firefox | webkit (BROWSER_NAME). WebKit is the engine of Safari, not Safari itself.
+import assert from 'node:assert/strict';
+import { mkdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { chromium, firefox, webkit } from 'playwright';
+
+const frontend = JSON.parse(readFileSync(new URL('../../config/frontend.json', import.meta.url), 'utf8'));
+const cfg = frontend.browser_checks;
+const base = process.env[cfg.base_url_env];
+const outDir = process.env[cfg.out_dir_env];
+const engineName = process.env[cfg.browser_env] ?? 'chromium';
+const channel = process.env[cfg.channel_env];
+const realSearch = Boolean(process.env[cfg.real_search_env]);
+if (!base || !outDir) throw new Error(`set ${cfg.base_url_env} and ${cfg.out_dir_env}`);
+mkdirSync(outDir, { recursive: true });
+const siteHost = new URL(base).host;
+const geocoderHost = new URL(frontend.geocoder.url).host;
+const timeout = cfg.timeout_seconds * 1000;
+const ADDRESS = '/?lat=13.08&lon=80.27&name=Chennai&tz=Asia/Kolkata&activity=outdoor';
+const MOCK = { results: [
+  { name: 'Chennai', latitude: 13.08784, longitude: 80.27847, timezone: 'Asia/Kolkata', country: 'India', admin1: 'Tamil Nadu' },
+  { name: 'Chennai International Airport', latitude: 12.98833, longitude: 80.16578, timezone: 'Asia/Kolkata', country: 'India', admin1: 'Tamil Nadu' }] };
+
+async function open(browser, options = {}, allowedHosts = [siteHost]) {
+  const context = await browser.newContext({ viewport: cfg.viewport, ...options });
+  const page = await context.newPage();
+  const log = { problems: [], tiles: 0, geocoder: [], dialogs: 0 };
+  page.on('request', (r) => {
+    const host = new URL(r.url()).host;
+    if (!allowedHosts.includes(host)) log.problems.push(`request to ${host}`);
+    if (r.url().includes('/tiles/')) log.tiles += 1;
+    if (host === geocoderHost) log.geocoder.push(r);
+  });
+  page.on('console', (m) => { if (m.type() === 'error') log.problems.push(`console error: ${m.text().slice(0, 200)}`); });
+  page.on('pageerror', (e) => log.problems.push(`page error: ${e.message.slice(0, 200)}`));
+  page.on('dialog', (d) => { log.dialogs += 1; d.dismiss(); });
+  return { context, page, log };
+}
+
+const shot = (page, name) => page.screenshot({ path: join(outDir, `${cfg.file_prefix}${engineName}-${name}.png`), fullPage: true });
+const waitPlan = (page) => page.waitForSelector('#plan:not([hidden]) .day', { timeout });
+const text = (page, selector) => page.locator(selector).first().innerText();
+
+async function checkPlanShown(page, title) {
+  await waitPlan(page);
+  assert.equal(await text(page, '#title'), title);
+  assert.ok((await page.locator('.day').count()) >= 8, 'at least 8 day cards');
+  assert.equal(await page.locator('.total .big').count(), 3, 'three rain totals');
+  assert.ok((await page.locator('.window, #windows .empty').count()) >= 1, 'windows or the "no dry stretch" line');
+}
+
+const scenarios = {
+  async address(browser) {
+    const { page, log } = await open(browser);
+    await page.goto(base + ADDRESS);
+    await checkPlanShown(page, 'Chennai');
+    assert.ok(log.tiles >= 1, 'a tile was fetched and decoded');
+    assert.match(await text(page, '#meta'), /UTC\+05:30/);
+    await shot(page, 'address');
+    return log;
+  },
+  async 'no webgl, no canvas'(browser) {
+    const { page, log } = await open(browser);
+    await page.addInitScript(() => { HTMLCanvasElement.prototype.getContext = () => null; });
+    await page.goto(base + ADDRESS);
+    await checkPlanShown(page, 'Chennai');
+    return log;
+  },
+  async 'location allowed'(browser) {
+    const { page, log } = await open(browser, { permissions: ['geolocation'], geolocation: { latitude: 13.08, longitude: 80.27 }, timezoneId: 'Asia/Kolkata' });
+    await page.goto(base + '/');
+    await checkPlanShown(page, 'Your location');
+    assert.match(await text(page, '#meta'), /UTC\+05:30, this device's time zone/);
+    assert.equal(new URL(page.url()).search, '', 'the position is not written into the address');
+    await page.click('#use-location');
+    await checkPlanShown(page, 'Your location');
+    await shot(page, 'location-allowed');
+    return log;
+  },
+  async 'location refused'(browser) {
+    const { page, log } = await open(browser);
+    await page.goto(base + '/');
+    await page.click('#use-location');
+    // Firefox (headless) leaves the permission prompt unanswered, and the location timeout only starts after an answer, so the page keeps waiting.
+    // LIMIT of this check: in Firefox the refusal path is therefore NOT exercised, only "still waiting for the visitor's answer" (chromium and webkit do exercise it).
+    const final = /switched off|could not be found|cannot share/;
+    await page.waitForFunction((source) => new RegExp(source).test(document.getElementById('status').textContent), final.source, { timeout: 12000 }).catch(() => {});
+    const status = await text(page, '#status');
+    assert.ok(final.test(status) || (engineName === 'firefox' && /^Looking for your location/.test(status)), `status was: ${status}`);
+    assert.equal(await page.locator('#plan').isHidden(), true);
+    assert.equal(await page.locator('#welcome').isVisible(), true);
+    log.problems = log.problems.filter((p) => !/geolocation|location/i.test(p)); // the browser itself may log the refusal
+    await shot(page, 'location-refused');
+    return log;
+  },
+  async search(browser) {
+    const { context, page, log } = await open(browser, { timezoneId: 'Europe/London' }, [siteHost, geocoderHost]);
+    if (!realSearch) {
+      await context.route(`https://${geocoderHost}/**`, (route) => route.fulfill({ status: 200, contentType: 'application/json',
+        headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(route.request().url().includes('Zzzz') ? { generationtime_ms: 0.1 } : MOCK) }));
+    }
+    await page.goto(base + '/');
+    await page.fill('#search-input', 'Chennai');
+    await page.press('#search-input', 'Enter');
+    await page.waitForSelector('.result', { timeout });
+    await page.locator('.result').first().click();
+    await waitPlan(page);
+    assert.match(await text(page, '#title'), /^Chennai/);
+    assert.match(await text(page, '#meta'), /UTC\+05:30\)$/, 'time zone comes from the geocoder, not from the device (London)');
+    const request = log.geocoder[0];
+    const sent = new URL(request.url());
+    assert.deepEqual([...sent.searchParams.keys()].sort(), ['count', 'format', 'language', 'name']);
+    assert.ok(!request.headers().referer, 'no referrer is sent (an empty header counts as none)');
+    assert.ok(!request.headers().cookie, 'no cookie is sent');
+    await shot(page, realSearch ? 'search-real' : 'search-mock');
+    if (!realSearch) {
+      await page.fill('#search-input', 'Zzzz');
+      await page.press('#search-input', 'Enter');
+      await page.waitForFunction(() => /No place found/.test(document.getElementById('status').textContent), null, { timeout });
+    }
+    return log;
+  },
+  async saved(browser) {
+    const { page, log } = await open(browser);
+    await page.goto(base + ADDRESS);
+    await waitPlan(page);
+    await page.click('#save');
+    await page.waitForSelector('.saved', { timeout });
+    assert.match(await text(page, '#save'), /Remove/);
+    const stored = JSON.parse(await page.evaluate((k) => localStorage.getItem(k), frontend.saved_places.storage_key));
+    assert.equal(stored.length, 1);
+    assert.equal(stored[0].name, 'Chennai');
+    await page.goto(base + '/');
+    await checkPlanShown(page, 'Chennai');
+    await page.waitForFunction(() => /^(Dry|Rain)/.test(document.querySelector('.saved .open span')?.textContent ?? ''), null, { timeout });
+    await shot(page, 'saved');
+    await page.click('.saved .remove');
+    await page.waitForSelector('#saved .empty', { timeout });
+    assert.equal(await page.evaluate((k) => localStorage.getItem(k), frontend.saved_places.storage_key), '[]');
+    return log;
+  },
+  async 'activity change'(browser) {
+    const { page, log } = await open(browser);
+    await page.goto(base + ADDRESS);
+    await waitPlan(page);
+    await page.click('label[for="activity-laundry"]');
+    await page.waitForFunction(() => /Shortest window shown: 12 hours/.test(document.getElementById('note').textContent), null, { timeout });
+    assert.match(new URL(page.url()).search, /activity=laundry/);
+    return log;
+  },
+  async 'hostile storage and address'(browser) {
+    const { page, log } = await open(browser);
+    await page.addInitScript(([a, b]) => { localStorage.setItem(a, '{"evil":true'); localStorage.setItem(b, '<script>alert(1)</script>'); },
+      [frontend.saved_places.storage_key, frontend.saved_places.settings_key]);
+    await page.goto(base + '/?lat=999&lon=abc&activity=%3Cscript%3E&wet=77');
+    await page.waitForSelector('#welcome:not([hidden])', { timeout });
+    const hostile = '<img src=x onerror=window.__pwned=1>';
+    await page.goto(`${base}/?lat=10&lon=20&name=${encodeURIComponent(hostile)}`);
+    await waitPlan(page);
+    assert.equal(await text(page, '#title'), hostile, 'a place name is shown as text, never as markup');
+    assert.equal(await page.evaluate(() => window.__pwned), undefined);
+    assert.equal(log.dialogs, 0);
+    return log;
+  },
+};
+
+const engines = { chromium, firefox, webkit };
+const launchOptions = engineName === 'chromium' ? (channel ? { channel } : { args: ['--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] }) : {};
+const browser = await engines[engineName].launch(launchOptions);
+console.log(`engine ${engineName} ${browser.version()}${channel ? ` (${channel})` : ''}; site ${base}; place search: ${realSearch ? 'REAL Open-Meteo' : 'MOCK geocoder'}`);
+let failed = 0;
+for (const [name, run] of Object.entries(scenarios)) {
+  if (name === 'search' && realSearch && !process.env[cfg.real_search_env]) continue;
+  try {
+    const log = await run(browser);
+    const bad = log.problems.length > 0;
+    failed += bad ? 1 : 0;
+    console.log(`${bad ? 'FAIL' : 'ok  '} ${name}${bad ? `: ${log.problems.slice(0, 4).join(' | ')}` : ''}`);
+  } catch (error) {
+    failed += 1;
+    console.log(`FAIL ${name}: ${String(error.message).split('\n')[0].slice(0, 300)}`);
+  }
+}
+await browser.close();
+console.log(failed ? `${failed} scenario(s) failed` : 'all scenarios passed');
+process.exit(failed ? 1 : 0);
