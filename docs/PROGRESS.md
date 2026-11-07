@@ -80,7 +80,7 @@
 | 8 | Plan engine + place panel: activities, day cards, best windows, rain totals with a range, saved places, text first (PLAN-006) | **done** 2026-11-07 (commit "Step 8: ...", time in `git log`); D27, D28, E024, E025 |
 | 9 | Map and globe as supporting views (PLAN-006) | **superseded by PLAN-007** (rows 9.1-9.5) |
 | 9.1 | Spike gate: fly-in from globe and flatten, two ways, screenshots (PLAN-007) | **done** 2026-11-07 ~10:45 UTC (commit "Step 9.1: ..."); D31 |
-| 9.2 | Data contract (frames in the manifest, agreement colours) and pure map helpers (PLAN-007) | not started |
+| 9.2 | Data contract (frames in the manifest, agreement colours) and pure map helpers (PLAN-007) | **done** 2026-11-07 ~10:53 UTC (commit "Step 9.2: ...") |
 | 9.3 | Map module, controls, 1/4 + 3/4 layout, spike removed (PLAN-007) | not started |
 | 9.4 | Browser checks in three engines, real GPU in Edge, records (PLAN-007) | not started |
 | 9.5 | Design pass with the frontend-design skill, user review (PLAN-007) | not started |
@@ -91,7 +91,7 @@
 Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
 
 ## Status (live, rewritten in the housekeeping at ~23:03 UTC)
-- **Done:** steps 1-8 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is step 9.1** (PLAN-007: the spike gate for the fly-in and flatten).
+- **Done:** steps 1-8, 9.1, 9.2 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is step 9.3** (PLAN-007: the map module, controls and the 1/4 + 3/4 layout).
 - **Tests:** official command `docker compose -f docker/compose.yaml run --rm tests` = 99 passed; `... run --rm frontend-tests` = 41 passed (at step 8); `... run --rm frontend-check` = 8 places x 8 activities match; `BROWSER_NAME=<engine> ... run --rm browser-checks` = 8 of 8 scenarios in chromium, firefox and webkit.
 - **Git:** branch `main`, 25 commits, no remote (GitHub login and repo creation are plan step 11 and need the user's approval and link).
 - **Records:** this housekeeping checked every markdown file against the others; its findings and fixes are listed in the last section of this file.
@@ -339,3 +339,9 @@ Files: `frontend/spikes/flyin.{html,js}` and `frontend/tools/spike_flyin.mjs` (t
 - Real browsers: Docker Chromium 158 (software WebGL, public-like site) and the host's Microsoft Edge (real GPU, Vite testing site on 5173), way A and way B each: finished on the target within 0.00000 degrees and zoom 4.500, no console or policy error. Mid-flight pictures: A shows the full globe, B is already flattening; end pictures identical. Choice: B (D31), A kept as fallback.
 - Not measured: how smooth the animation is in frames per second (software rendering is slow, a screenshot cannot show it); Firefox and Safari (Firefox in Docker has no WebGL); a phone.
 - Process note: the host dev server was first "stopped" with a lookup by port that found nothing and `curl` still answered 200; it was then found by command line and stopped by PID, and checked on `localhost`, `::1` and `127.0.0.1` (the E021 lesson applied, one wasted step).
+
+## Step 9.2 done-check results (run 2026-11-07 ~10:46-10:53 UTC)
+Files: `backend/manifest.py` (agreement colours in `frames`, checked by `validate`), `frontend/src/mapstate.js` (new, 88 lines), `frontend/src/manifest.js` (frame checks), `config/frontend.json` (`map` section: start view, zoom limits, fly-in, start model, sea colour), tests `tests/backend/test_manifest_export.py` (+3), `tests/frontend/mapstate.test.mjs` (9 tests), `tests/frontend/tiles.test.mjs` (fixture has `frames`). Code ladder: standard library and the existing helpers only; no new package.
+- **Tests:** Python 102 passed (99 + 3: colours present and equal to the config minus the transparent class, two kinds of damage caught); Node 50 passed (41 + 9: hostile frame paths (`..`, absolute, query string, `javascript:`), wrong steps, bad colours, frames switched off, block -> step, first upcoming step incl. the block that ended exactly now, frame choice for IFS / AIFS / both incl. the steps only AIFS reaches, model options, frame URLs with the export version, fly rules, reduced motion, projection spec, WebGL2 detection with an injected canvas, the name of a map point). Mutation check: 3 deliberate breaks (a click on the map flies, an off-by-one at the block that ended now, the path rule removed) each made a test fail; restored.
+- **Real data:** re-exported the real 12z run (36.1 MB, 4281 files, manifest 10.7 kB); the manifest holds `agreement_colours` (`both_wet` #2a6fd6, `disagree` #f28a17); `scripts.validate_site`: all 16 rows identical and within 0.05 mm of the raw GRIB, manifest problems none; `frontend-check` (the browser code validates the real manifest, frame paths included, then 8 places x 8 activities) still matches.
+- **Not verified:** nothing is drawn yet (step 9.3); the colour of the legend in a browser.
