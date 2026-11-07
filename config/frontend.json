@@ -39,7 +39,17 @@
     "fly": { "zoom": 4.5, "duration_ms": 2500, "morph_from_zoom": 2.5, "zoom_by_source": { "location": 8, "search": 7, "saved": 7, "address": 7 } },
     "start_model": "ifs",
     "sea_colour": "#12304f",
-    "resampling": "linear"
+    "resampling": "linear",
+    "live": {
+      "_comment": "The browser-side drawing of the rain at screen sharpness (PLAN-009, D35): used on the flat map from min_zoom up; below it, and on the globe, the pre-made pictures are shown. canvas_scale = picture pixels per screen pixel (0.5: each picture pixel covers 2 x 2 screen pixels, smoothed by the browser); lut_size = steps of the continuous colour ramp; agreement_soft_steps = half the width, in 0.1 mm storage steps, over which the agreement fades around the plan's threshold; fade_from_mm must equal frames.fade_from_mm in config/backend.toml (a test checks); max_tiles = most tiles fetched for one view, above it the pre-made picture is used; debounce_ms = wait after the last map move before drawing.",
+      "min_zoom": 4.5,
+      "canvas_scale": 0.5,
+      "lut_size": 512,
+      "agreement_soft_steps": 1.0,
+      "fade_from_mm": 0.05,
+      "max_tiles": 150,
+      "debounce_ms": 150
+    }
   },
   "manifest_file": "manifest.json",
   "max_manifest_bytes": 200000,
