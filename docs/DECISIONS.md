@@ -424,3 +424,6 @@ Four marker lines in three files; each is recorded here and has to appear in the
 3. `config/headers.conf`: the security headers exist as one copy for the local preview; a converter for the public host's own format comes at step 11 (D19, D21).
 4. `frontend/src/app.js`: a place found by the device has no known time zone, so the device's own zone is used and labelled (D24, A8, D30).
 Gone since the earlier register: `scripts/spike_frame.py` (deleted at step 7), the spike pages and `window.__map` (deleted at step 9.3). Known limits that have no `shortcut:` marker in code (mark them when the files are next touched): the lone one-cell peak on the pre-made pictures (stated in `tests/backend/test_frames.py` and DOMAIN), the base map stopping at zoom 7 (D38), 6 h blocks (D14).
+
+### D39 result (2026-11-07 14:20 UTC)
+- The user answered: they had moved the time-bar slider, which explains the first block shown in their Firefox; no Firefox-only defect. The "already over" note and the Now button (this decision) are what tell a visitor that a moved slider shows a past block. They also said the live rain layer is fast in their Firefox ("it fast", their words; no number measured).

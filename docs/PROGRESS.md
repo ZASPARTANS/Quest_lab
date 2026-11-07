@@ -468,3 +468,6 @@ Stale and fixed:
 Found but not changed: the plan-mode file in the Claude folder (`plans/groovy-waddling-octopus.md`) is a working copy of PLAN-010 and not a record.
 Small slip of mine in this pass: my first README draft said the map shows its plain message in the Docker Firefox and WebKit; I had not run that since the map work, so the sentence now says only what is known.
 Verification of this pass: `docker compose -f docker/compose.yaml run --rm tests` = 117 passed in 18.74 s (2026-11-07 14:18 UTC; the secret scan covers the docs); tracked root entries: .gitignore README.md backend config docker docs frontend pipeline pyproject.toml requirements.txt scripts tests (allowed); `git status` shows only the eight markdown files.
+
+## User answers after the housekeeping (2026-11-07 14:20 UTC)
+- The time bar showing Fri 6 Nov in their Firefox: they had moved the slider (D39 result). The live layer is fast in their Firefox (their words, not measured). Open items (2) and (3) of the list above are closed. Still waiting: the go for step 9.3d-3.
