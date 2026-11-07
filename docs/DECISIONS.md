@@ -375,3 +375,10 @@ The README's "known limitations" (step 12) must list every item above and every 
 - Measured (real GPU Edge / Chromium with software rendering): drawing takes 21-48 ms (Edge) and 19-76 ms (Chromium software) per view for a 734 x 560 picture (target: under 150 ms), at zoom 5, 7 and 8, rain and agreement, London and Chennai, no console or policy error. Firefox timing: not measured (the user's own look).
 - Alternatives not chosen: a WebGL shader layer, vector contour tiles, bigger pre-made pictures (PLAN-009 text).
 - Checkable bet: people find the map good-looking when they zoom in. Result: pending (the user's look in Firefox).
+
+## D37 — Nothing paid: no paid services and no credit-metered hosting (constraint from the user)
+- 2026-11-07 13:37 UTC (clock read by the script). Decided by: **user** (answering the base-map question: "I dont want to spendmoeny on this project so no credit based based please").
+- Chosen: the project must cost nothing. No paid service, no paid tier and no credit-metered plan (for example Netlify's Free plan with 300 credits per month, D25 / SOURCES: a deploy costs 15 credits) for hosting, map data, geocoding or anything else. Services must be free to use under their published terms.
+- AI's reading, stated so it can be corrected: "credit based" means paid or metered credits. It is NOT about the text line that crediting OpenStreetMap or Natural Earth on the map (attribution is a licence condition, costs nothing, and stays). If the user meant attribution lines, this decision is to be re-read.
+- Consequences: the hosting choice at step 11 is between free static hosts with no credits (GitHub Pages, Cloudflare Pages); Netlify is out. The base-map question stays open (asked again with this clarified); every base-map option is free of charge, but a stored vector map of more than 25 MiB per file only fits GitHub Pages (Cloudflare Pages limit 25 MiB per file).
+- Checkable bet: the whole project, including the hosted site, runs without any bill. Result: pending (step 11).
