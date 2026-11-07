@@ -77,7 +77,7 @@
 | 2026-11-07 16:58 | Commit `736f90e`: Step 9.4: seven map-page browser scenarios; 22 of 22 in four engines | 22.65 h | 49.35 h |
 
 ## Current plan
-**`docs/plans/PLAN-010.md`** (approved by the user 2026-11-07 13:41 UTC) is the plan in progress: a stored vector base map (OpenStreetMap through Protomaps, dark style, self-hosted fonts and sprites, English labels) under the rain; nothing paid (D37). Steps 9.3d-1, 9.3d-2 and 9.3d-4 are done; 9.3d-3 was dropped by the user (D40); **PLAN-010 is complete.** PLAN-009 is complete (step 9.3c-4 done). PLAN-007 step 9.4 is done. Next: the user chooses the order (A: step 10, 11, then the design pass 9.5; B: 9.5 first). After it: PLAN-009 step 9.3c-4, PLAN-007 steps 9.4 and 9.5 and PLAN-006 steps 10-12 (all still in force).
+**`docs/plans/PLAN-012.md`** (approved by the user 2026-11-07 17:42 UTC; it amends PLAN-011: one blue colour for the map's "Both models" view and a clear colour key, steps 12.1-12.2; order: 11.0, 12.1, 12.2, then 11.1-11.4) and **`docs/plans/PLAN-011.md`** (approved by the user 2026-11-07 17:37 UTC) are the plans in progress. Note: "11.x" = PLAN-011's own steps; "step 11" (without a dot) = hosting. PLAN-011: rain levels (no rain / light / moderate / heavy) instead of wet and dry, and a clearer day view; steps 11.0-11.4 (table below); the user asked for it before anything else (hosting order A/B is still open). Earlier plan in progress, now complete: **`docs/plans/PLAN-010.md`** (approved by the user 2026-11-07 13:41 UTC): a stored vector base map (OpenStreetMap through Protomaps, dark style, self-hosted fonts and sprites, English labels) under the rain; nothing paid (D37). Steps 9.3d-1, 9.3d-2 and 9.3d-4 are done; 9.3d-3 was dropped by the user (D40); **PLAN-010 is complete.** PLAN-009 is complete (step 9.3c-4 done). PLAN-007 step 9.4 is done. Next: the user chooses the order (A: step 10, 11, then the design pass 9.5; B: 9.5 first). After it: PLAN-009 step 9.3c-4, PLAN-007 steps 9.4 and 9.5 and PLAN-006 steps 10-12 (all still in force).
 
 Plan files, oldest first (approved plan files are never edited, so their status is kept only here):
 
@@ -93,6 +93,8 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 | PLAN-008 | 12:11 | sharper pictures: 9.3b-1 and 9.3b-2 done; A19 and 9.3b-3 superseded by PLAN-009 (E031) |
 | PLAN-009 | 13:12 | browser-side drawing, close fly-in, name fix: 9.3c-0 to 9.3c-4 done; **complete** |
 | PLAN-010 | 13:41 | stored base map; supersedes D22's outlines-only base map: 9.3d-1, 9.3d-2 and 9.3d-4 done; 9.3d-3 dropped (D40); **complete** |
+| PLAN-011 | 2026-11-07 17:37 | rain levels and the day view (user request after step 9.4): thresholds 0.5 / 3 / 10 mm per 6 h, the wetter model + "models differ"; its decision 3 (map: legend words only) and the map-legend part of 11.2 superseded by PLAN-012; **11.0-11.4 in progress** |
+| PLAN-012 | 2026-11-07 17:42 | amends PLAN-011: one blue colour for the map's agreement view (re-export) and a titled colour key; **12.1-12.2 in progress after 11.0** |
 
 | Step | What | Status |
 |---|---|---|
@@ -129,6 +131,13 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 | 9.3d-4 | Browser-check scenarios, records, hosting requirement for step 11 (PLAN-010) | **done** 2026-11-07 14:32 UTC (commit "Step 9.3d-4: ..."); results section below |
 | 9.4 | Browser checks in three engines, real GPU in Edge, records (PLAN-007) | **done** 2026-11-07 16:58 UTC (commit "Step 9.4: ..."); results section below; the user's look at the finished page is still to come |
 | 9.5 | Design pass with the frontend-design skill, user review (PLAN-007) | not started |
+| 11.0 | Records and sources (PLAN-011) | **done** (commit "Step 11.0: ..."; time in `git log`): PLAN-011 and PLAN-012 files, D41, SOURCES (AMS and yr.no read; IMD and BoM marked as not verified), DOMAIN |
+| 12.1 | One blue for the agreement view: config colour, colour test, re-export, validate_site, restart preview (PLAN-012) | not started |
+| 12.2 | A titled colour key for both map views, texts from config, tests, user's look (PLAN-012) | not started |
+| 11.1 | Engine, config and tests for rain levels; Python reference and frontend-check (PLAN-011) | not started |
+| 11.2 | Words everywhere: blocks, windows, activity note, legend line, saved line, Custom, map legend (PLAN-011) | not started |
+| 11.3 | The day view: one row of four coloured cells per day, level colours, contrast test, user's look (PLAN-011) | not started |
+| 11.4 | Browser checks in four engines and records (PLAN-011) | not started |
 | 10 | Provenance + honesty strip, final policy (PLAN-006) | not started |
 | 11 | Hosting gate + deploy (free host only, D37; the 190 MB base-map file leaves only GitHub Pages) | not started |
 | 12 | README + submission | not started |
