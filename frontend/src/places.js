@@ -5,7 +5,7 @@ import { validZone } from './time.js';
 const MAX_NAME = 80;
 const MAX_STORED_CHARS = 8000;
 
-function cleanName(value) {
+export function cleanName(value) {
   if (typeof value !== 'string') return null;
   const text = value.replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, MAX_NAME);
   return text || null;

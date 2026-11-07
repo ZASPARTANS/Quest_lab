@@ -81,7 +81,7 @@
 | 9 | Map and globe as supporting views (PLAN-006) | **superseded by PLAN-007** (rows 9.1-9.5) |
 | 9.1 | Spike gate: fly-in from globe and flatten, two ways, screenshots (PLAN-007) | **done** 2026-11-07 ~10:45 UTC (commit "Step 9.1: ..."); D31 |
 | 9.2 | Data contract (frames in the manifest, agreement colours) and pure map helpers (PLAN-007) | **done** 2026-11-07 ~10:53 UTC (commit "Step 9.2: ...") |
-| 9.3 | Map module, controls, 1/4 + 3/4 layout, spike removed (PLAN-007) | not started |
+| 9.3 | Map module, controls, 1/4 + 3/4 layout, spike removed (PLAN-007) | **in progress** (11:07 UTC): built and working in Chromium; open: frame quality (E027), real-service check of D32 |
 | 9.4 | Browser checks in three engines, real GPU in Edge, records (PLAN-007) | not started |
 | 9.5 | Design pass with the frontend-design skill, user review (PLAN-007) | not started |
 | 10 | Provenance + honesty strip, final policy (PLAN-006) | not started |
@@ -345,3 +345,9 @@ Files: `backend/manifest.py` (agreement colours in `frames`, checked by `validat
 - **Tests:** Python 102 passed (99 + 3: colours present and equal to the config minus the transparent class, two kinds of damage caught); Node 50 passed (41 + 9: hostile frame paths (`..`, absolute, query string, `javascript:`), wrong steps, bad colours, frames switched off, block -> step, first upcoming step incl. the block that ended exactly now, frame choice for IFS / AIFS / both incl. the steps only AIFS reaches, model options, frame URLs with the export version, fly rules, reduced motion, projection spec, WebGL2 detection with an injected canvas, the name of a map point). Mutation check: 3 deliberate breaks (a click on the map flies, an off-by-one at the block that ended now, the path rule removed) each made a test fail; restored.
 - **Real data:** re-exported the real 12z run (36.1 MB, 4281 files, manifest 10.7 kB); the manifest holds `agreement_colours` (`both_wet` #2a6fd6, `disagree` #f28a17); `scripts.validate_site`: all 16 rows identical and within 0.05 mm of the raw GRIB, manifest problems none; `frontend-check` (the browser code validates the real manifest, frame paths included, then 8 places x 8 activities) still matches.
 - **Not verified:** nothing is drawn yet (step 9.3); the colour of the legend in a browser.
+
+## Step 9.3 progress notes (2026-11-07 11:07 UTC; not the final results)
+- Built: `frontend/src/{mapview,mapcontrols,mapapp,pagemap,reverse}.js`, new `index.html` / `style.css` (left panel about 1/4, map about 3/4, stacked on narrow screens), day-card blocks are buttons that show the block on the map, map click chooses a place, spike pages and driver tool removed, `window.__map` gone. Plan chunk 35 kB (14 kB gzipped); map chunk 1.19 MB (335 kB gzipped), loaded in parallel with the manifest.
+- User feedback during the step: the search box kept an old search after "Use my location" (fixed, D32); "can we cache the globe loading" (D33, measured); "integrated GPUs" (right, see D33); **"the image does not look good at all"** (E027: the frames are too coarse; the fix needs a revised plan, PLAN-008, before any change).
+- Verified: Node 53 passed, Python 102 passed, Chromium browser checks 8 of 8 (incl. the search box and the device name with a MOCK reverse service), screenshots of the globe start and of an address place (flat, zoom 4.5). Load times in Edge (real GPU) in D33.
+- Not verified: Firefox and WebKit with the new page, the real BigDataCloud call, map scenarios of step 9.4, the image quality fix.

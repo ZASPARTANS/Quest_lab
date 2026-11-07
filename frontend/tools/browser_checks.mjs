@@ -19,6 +19,7 @@ if (!base || !outDir) throw new Error(`set ${cfg.base_url_env} and ${cfg.out_dir
 mkdirSync(outDir, { recursive: true });
 const siteHost = new URL(base).host;
 const geocoderHost = new URL(frontend.geocoder.url).host;
+const reverseHost = new URL(frontend.reverse_geocoder.url).host;
 const timeout = cfg.timeout_seconds * 1000;
 const ADDRESS = '/?lat=13.08&lon=80.27&name=Chennai&tz=Asia/Kolkata&activity=outdoor';
 const MOCK = { results: [
@@ -71,13 +72,25 @@ const scenarios = {
     return log;
   },
   async 'location allowed'(browser) {
-    const { page, log } = await open(browser, { permissions: ['geolocation'], geolocation: { latitude: 13.08, longitude: 80.27 }, timezoneId: 'Asia/Kolkata' });
+    const { context, page, log } = await open(browser, { permissions: ['geolocation'], geolocation: { latitude: 11.46, longitude: 78.19 }, timezoneId: 'Asia/Kolkata' }, [siteHost, reverseHost]);
+    const asked = [];
+    if (!realSearch) {
+      await context.route(`https://${reverseHost}/**`, (route) => { asked.push(route.request().url()); return route.fulfill({ status: 200, contentType: 'application/json',
+        headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ locality: 'Rasipuram', city: 'Rasipuram', principalSubdivision: 'Tamil Nadu', countryName: 'India' }) }); });
+    }
     await page.goto(base + '/');
-    await checkPlanShown(page, 'Your location');
+    await checkPlanShown(page, 'Rasipuram, Tamil Nadu, India'); // the position is named by the (mock) reverse geocoder
     assert.match(await text(page, '#meta'), /UTC\+05:30, this device's time zone/);
+    assert.equal(await page.inputValue('#search-input'), 'Rasipuram, Tamil Nadu, India', 'the search box shows the place that is chosen now');
     assert.equal(new URL(page.url()).search, '', 'the position is not written into the address');
+    if (!realSearch) {
+      const sent = new URL(asked[0]);
+      assert.deepEqual([...sent.searchParams.keys()].sort(), ['latitude', 'localityLanguage', 'longitude']);
+    }
+    await page.fill('#search-input', 'rasipuram'); // an earlier search is still typed in the box: using the location must replace it
+    await page.fill('#search-input', 'some earlier search');
     await page.click('#use-location');
-    await checkPlanShown(page, 'Your location');
+    await page.waitForFunction(() => document.getElementById('search-input').value === 'Rasipuram, Tamil Nadu, India', null, { timeout });
     await shot(page, 'location-allowed');
     return log;
   },
@@ -110,6 +123,7 @@ const scenarios = {
     await page.locator('.result').first().click();
     await waitPlan(page);
     assert.match(await text(page, '#title'), /^Chennai/);
+    assert.match(await page.inputValue('#search-input'), /^Chennai/);
     assert.match(await text(page, '#meta'), /UTC\+05:30\)$/, 'time zone comes from the geocoder, not from the device (London)');
     const request = log.geocoder[0];
     const sent = new URL(request.url());

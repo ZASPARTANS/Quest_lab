@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { parseReply, searchPlaces, searchText, searchUrl } from '../../frontend/src/geocode.js';
 import { addPlace, cleanCoordinates, cleanPlace, loadSaved, parseSaved, readAddress, removePlace, storeSaved, writeAddress } from '../../frontend/src/places.js';
+import { nameOfPosition, parseReverse, reverseUrl } from '../../frontend/src/reverse.js';
 import { dayVerdict, placeSummary, rangeText, windowText } from '../../frontend/src/wording.js';
 
 const readJson = (rel) => JSON.parse(readFileSync(new URL(rel, import.meta.url), 'utf8'));
@@ -139,4 +140,29 @@ test('wording: ranges, windows across midnight, day verdicts and the one-line su
   assert.equal(placeSummary(planned, 'Asia/Kolkata'), 'Rain possible Sat 7 Nov 11:30–17:30 (models disagree).');
   assert.equal(placeSummary([planned[0]], 'UTC'), 'Dry through Sat 7 Nov.');
   assert.equal(placeSummary([], 'UTC'), 'No forecast left in your hours.');
+});
+
+test('the reverse lookup names a device position: most local name, region, country; repeats and junk are dropped', () => {
+  const cfg = FRONTEND.reverse_geocoder;
+  const url = new URL(reverseUrl(cfg, 11.4602, 78.1862));
+  assert.equal(url.origin + url.pathname, cfg.url);
+  assert.deepEqual([...url.searchParams.keys()].sort(), ['latitude', 'localityLanguage', 'longitude']);
+  assert.equal(parseReverse({ locality: 'Rasipuram', city: 'Rasipuram', principalSubdivision: 'Tamil Nadu', countryName: 'India' }), 'Rasipuram, Tamil Nadu, India');
+  assert.equal(parseReverse({ locality: '', city: 'London', principalSubdivision: 'England', countryName: 'United Kingdom' }), 'London, England, United Kingdom');
+  assert.equal(parseReverse({ city: 'Singapore', principalSubdivision: 'singapore', countryName: 'Singapore' }), 'Singapore'); // same name three times
+  assert.equal(parseReverse({ locality: '  A B  ', countryName: 'X' }), 'A B, X');
+  assert.equal(parseReverse({ locality: '<img src=x onerror=1>' }), '<img src=x onerror=1>'); // stays text; the page uses textContent / input.value
+  for (const bad of [null, 'text', 5, [], {}, { locality: 7, city: null }]) assert.equal(parseReverse(bad), null, JSON.stringify(bad));
+});
+
+test('asking for the name sends no cookie and no referrer, and any failure throws (the page then keeps "Your location")', async () => {
+  const cfg = FRONTEND.reverse_geocoder;
+  let seen;
+  const ok = async (url, init) => { seen = [url, init]; return { ok: true, text: async () => JSON.stringify({ locality: 'Rasipuram', countryName: 'India' }) }; };
+  assert.equal(await nameOfPosition(cfg, 11.46, 78.19, ok), 'Rasipuram, India');
+  assert.equal(seen[1].credentials, 'omit');
+  assert.equal(seen[1].referrerPolicy, 'no-referrer');
+  await assert.rejects(nameOfPosition(cfg, 1, 2, async () => ({ ok: false, status: 402 })), /402/);
+  await assert.rejects(nameOfPosition(cfg, 1, 2, async () => ({ ok: true, text: async () => 'x'.repeat(cfg.max_reply_chars + 1) })), /too large/);
+  await assert.rejects(nameOfPosition(cfg, 1, 2, async () => ({ ok: true, text: async () => '<html>' })));
 });
