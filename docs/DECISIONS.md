@@ -427,3 +427,10 @@ Gone since the earlier register: `scripts/spike_frame.py` (deleted at step 7), t
 
 ### D39 result (2026-11-07 14:20 UTC)
 - The user answered: they had moved the time-bar slider, which explains the first block shown in their Firefox; no Firefox-only defect. The "already over" note and the Now button (this decision) are what tell a visitor that a moved slider shows a past block. They also said the live rain layer is fast in their Firefox ("it fast", their words; no number measured).
+
+## D40 — Step 9.3d-3 (fit the rain to the base map) is not done as a separate step (scope cut)
+- 2026-11-07 14:24 UTC. Decided by: **user** ("is it really necessary to fit the rain to the base map? if yes then we can do that, if not we will not spend time on that"), after the **AI** answered that it is not necessary. This cut is not a plan failure, so there is no PLAN-011; the status is kept in PROGRESS (approved plan files are never edited).
+- Why it is not needed: the points it was meant to cover are already in place and checked. The rain layers sit below the first label layer, so names and borders stay above the rain (step 9.3d-2); label and border colours were brightened to a contrast of at least 7:1 on the dark land (D39); the user's own verdict after looking at the finished map in their Firefox was "ok so all looks good". No opacity or edge defect has been reported or seen.
+- What is lost: a planned side-by-side look at the rain over London, Chennai, a coast and mountains at zoom 3, 5 and 7, with the opacity and soft edge tuned for them. The rain opacity stays at the value in `config/frontend.json`.
+- Where the one useful part goes: the screenshots at several sizes and the contrast test of the design pass (PLAN-007 step 9.5) will include the map with rain at zoom 3, 5 and 7 for a place or two; if a legibility problem shows there, it is fixed there, in config only.
+- Bet that can be checked later: no legibility defect of the rain over the base map shows in step 9.5 or in the user's later looks. Result: not known yet.
