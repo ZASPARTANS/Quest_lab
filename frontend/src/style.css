@@ -107,6 +107,10 @@ footer { padding-top: .5rem; }
 .legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .25rem .6rem; font-size: .78rem; align-items: center; }
 .legend li { display: flex; align-items: center; gap: .25rem; }
 .legend .caption { color: var(--muted); }
+.legend .legend-gradient { display: block; width: min(24rem, 100%); } /* more specific than `.legend li` (flex) */
+.legend-bar { display: block; width: 100%; height: .55rem; border-radius: 3px; border: 1px solid #ffffff55; }
+.legend-ticks { display: block; position: relative; height: 1rem; }
+.legend-ticks .tick { position: absolute; transform: translateX(-50%); font-size: .72rem; color: var(--muted); }
 .swatch { width: 1.1rem; height: .8rem; border-radius: 3px; display: inline-block; border: 1px solid #ffffff55; }
 .swatch.empty { background: transparent; border-style: dashed; }
 .timebar { display: flex; gap: .5rem; align-items: center; }

@@ -11,9 +11,12 @@ folder = "tiles"
 file = "{row}_{col}.bin.gz"                # plain tile row and column numbers (the browser fills them in), counted from the north-west corner
 
 [frames]
-# Colour map frames for the supporting map view (backend/frames.py): one Web Mercator PNG per model and block, plus the agreement.
+# Colour map frames for the map view (backend/frames.py): one Web Mercator palette PNG per model and block, plus the agreement. D34, PLAN-008.
 enabled = true
-size = 720                                  # pixels; the overview only, the plan is made from the tiles
+size = 1440                                 # pixels (D34: 720 was blocky when magnified); the plan is made from the tiles, not from these pictures
+gradient_levels = 16                        # rain colours: a continuous gradient in log10(mm) quantised to this many steps (palette PNG, D34)
+fade_levels = 16                            # steps of the soft edge where rain starts
+fade_from_mm = 0.05                         # below this nothing is drawn; the edge rises to full colour at the first colour stop
 max_latitude = 85.0511287798                # Web Mercator limit
 folder = "frames"
 file = "{kind}_{step}.png"                  # kind = a model name or "agreement"; step = forecast hour at the END of the block

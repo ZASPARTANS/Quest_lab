@@ -1,7 +1,8 @@
-// Coastlines and country borders from Natural Earth (public domain) through the world-atlas package, as GeoJSON lines.
+// Coastlines and country borders from Natural Earth 1:50m (public domain) through the world-atlas package, as GeoJSON lines (the 50 m detail was
+// the user's choice, D34: real coast shapes at regional zoom, about 197 kB more to download than 110 m, cached after the first visit).
 // Lines are cut where they cross the date line, so they are not drawn straight across the whole map.
 import { mesh } from 'topojson-client';
-import world from 'world-atlas/countries-110m.json';
+import world from 'world-atlas/countries-50m.json';
 import { splitAtDateLine } from './geo.js';
 
 function lines(geometry) {

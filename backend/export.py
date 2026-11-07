@@ -29,27 +29,32 @@ def retrieval_time(cfg, run):
 
 
 def write_frames(cfg, backend, folder, meta, arrays, out):
-    """One PNG per model and block plus the agreement. Returns {kind: {step: relative path}}."""
+    """One palette PNG per model and block plus the agreement (backend/frames.py). Returns {kind: {step: relative path}}."""
     fe = json.loads((ROOT / cfg["paths"]["frontend_config_file"]).read_text(encoding="utf-8"))
     spec = backend["frames"]
     (out / spec["folder"]).mkdir(parents=True, exist_ok=True)
-    quantum = cfg["process"]["quantise_mm"]
+    grid, quantum = cfg["grid"], meta["quantise_mm"]
     listed = {}
 
-    def save(kind, step, image):
+    def save(kind, step, indices, palette):
         relative = f"{spec['folder']}/{spec['file'].format(kind=kind, step=step)}"
-        frames.write_png(out / relative, image)
+        frames.write_png_indexed(out / relative, indices, palette)
         listed.setdefault(kind, {})[str(step)] = relative
 
+    def smooth(stored_block):
+        return frames.interpolate(np.asarray(stored_block), grid, spec["size"], spec["max_latitude"])
+
+    palette = frames.rain_palette(fe["colour_scale"], spec["gradient_levels"], spec["fade_levels"])
     for model, info in meta["models"].items():
-        stored = arrays[model]
         for k, step in enumerate(info["steps"]):
-            save(model, step, frames.colourise(process.dequantise(frames.resample(np.asarray(stored[k]), cfg["grid"], spec["size"], spec["max_latitude"]), quantum), fe["colour_scale"]))
+            indices = frames.rain_indices(smooth(arrays[model][k]) * quantum, fe["colour_scale"], spec["gradient_levels"], spec["fade_levels"], spec["fade_from_mm"])
+            save(model, step, indices, palette)
     codes = meta["agreement"]["codes"]
-    names = {codes[name]: colour for name, colour in spec["agreement_colours"].items()}
-    field = np.load(folder / meta["agreement"]["file"], mmap_mode="r")
+    shades = frames.agreement_palette(codes, spec["agreement_colours"], spec["agreement_opacity"])
+    a, b = meta["agreement"]["models"]
+    limit = process.wet_limit(meta["agreement"]["wet_threshold_mm"], quantum)
     for k, step in enumerate(meta["agreement"]["steps"]):
-        save("agreement", step, frames.colourise_agreement(frames.resample(np.asarray(field[k]), cfg["grid"], spec["size"], spec["max_latitude"]), names, spec["agreement_opacity"]))
+        save("agreement", step, frames.agreement_indices(smooth(arrays[a][k]), smooth(arrays[b][k]), limit, codes), shades)
     return listed
 
 
@@ -73,9 +78,10 @@ def export(cfg, backend, run):
     (part / backend["manifest"]["file"]).write_text(json.dumps(doc, indent=1), encoding="utf-8")
     remove_folder(out)
     os.replace(part, out)
-    frame_bytes = sum(p.stat().st_size for p in (out / backend["frames"]["folder"]).glob("*")) if listed else 0
+    sizes = [p.stat().st_size for p in (out / backend["frames"]["folder"]).glob("*")] if listed else []
+    frame_bytes, largest_frame = sum(sizes), max(sizes, default=0)
     return {"out": out, "tile_files": count, "tile_bytes": tile_bytes, "largest_tile": largest, "frame_files": sum(map(len, (listed or {}).values())),
-            "frame_bytes": frame_bytes, "manifest_bytes": (out / backend["manifest"]["file"]).stat().st_size}
+            "frame_bytes": frame_bytes, "largest_frame": largest_frame, "manifest_bytes": (out / backend["manifest"]["file"]).stat().st_size}
 
 
 def main(argv):
@@ -88,7 +94,7 @@ def main(argv):
     total = s["tile_bytes"] + s["frame_bytes"] + s["manifest_bytes"]
     print(f"exported run {run:%Y-%m-%d %H:%M} UTC -> {s['out'].relative_to(ROOT)}")
     print(f"  tiles : {s['tile_files']} files, {s['tile_bytes'] / 1e6:.1f} MB, largest {s['largest_tile'] / 1e3:.1f} kB")
-    print(f"  frames: {s['frame_files']} files, {s['frame_bytes'] / 1e6:.1f} MB")
+    print(f"  frames: {s['frame_files']} files, {s['frame_bytes'] / 1e6:.1f} MB, largest {s['largest_frame'] / 1e3:.1f} kB")
     print(f"  manifest: {s['manifest_bytes'] / 1e3:.1f} kB; total {total / 1e6:.1f} MB in {s['tile_files'] + s['frame_files'] + 1} files")
 
 
