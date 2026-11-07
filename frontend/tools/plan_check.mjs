@@ -28,15 +28,15 @@ const close = (a, b) => Math.abs(a - b) < 1e-6;
 
 function options(place, nowMs) {
   return { zone: place.zone, nowMs, quantumMm: manifest.quantum_mm, intervalHours: manifest.interval_hours, models: manifest.agreement.models,
-    minRemaining: activities.current_block_min_remaining_fraction, daysShown: activities.days_shown, windowsShown: 1000, totalsDays: activities.totals_days };
+    minRemaining: activities.current_block_min_remaining_fraction, daysShown: activities.days_shown, windowsShown: 1000, totalsDays: activities.totals_days, levels: activities.levels };
 }
 
 function compare(view, expected) {
   const problems = [];
-  const windows = view.windows.map((w) => [iso(w.startMs), iso(w.endMs), w.blocks, w.confidence, w.startsNow]);
+  const windows = view.windows.map((w) => [iso(w.startMs), iso(w.endMs), w.blocks, w.confidence, w.startsNow, w.level]);
   if (!same(windows, expected.windows)) problems.push(`windows ${JSON.stringify(windows)} != ${JSON.stringify(expected.windows)}`);
-  const days = Object.fromEntries(view.days.map((d) => [d.key, d.blocks.map((b) => b.state)]));
-  if (!same(days, expected.days)) problems.push('day states differ');
+  const days = Object.fromEntries(view.days.map((d) => [d.key, d.blocks.map((b) => [b.level, b.fit])]));
+  if (!same(days, expected.days)) problems.push('day levels or fits differ');
   return problems;
 }
 
@@ -74,7 +74,7 @@ async function checkPlace(place, nowMs, list) {
   return { exact, off, problems };
 }
 
-const list = [...activities.activities, { ...activities.custom, wet_mm: activities.custom.default_wet_mm }];
+const list = [...activities.activities, { ...activities.custom, max_level: activities.custom.default_level }];
 const found = manifestProblems(manifest);
 if (found.length) throw new Error(`manifest: ${found.join('; ')}`);
 if (manifest.run !== reference.run) throw new Error(`manifest run ${manifest.run} is not the reference run ${reference.run}`);

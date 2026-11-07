@@ -1,15 +1,17 @@
-// Tests for frontend/src/plan.js and windows.js: wet rule, blocks, windows, current block, totals.
+// Tests for frontend/src/plan.js and windows.js: rain levels and fit (D41, D28), blocks, windows, current block, totals.
 // TEST FIXTURES ONLY: invented rain values (in stored 0.1 mm steps) for a pretend run at 2026-11-06 00:00 UTC.
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { buildBlocks, blockState, HOUR_MS, planBlocks, wetLimit } from '../../frontend/src/plan.js';
+import { blockFit, buildBlocks, HOUR_MS, levelLimits, levelOf, maxLevelIndex, planBlocks, wetLimit } from '../../frontend/src/plan.js';
 import { buildView } from '../../frontend/src/view.js';
 import { findWindows, rainTotals } from '../../frontend/src/windows.js';
 
 const RUN = Date.parse('2026-11-06T00:00:00Z');
 const iso = (ms) => new Date(ms).toISOString().replace('.000Z', 'Z');
 const MODELS = ['ifs', 'aifs-single'];
-const WET = 50;
+const WET = 50; // 5.0 mm: moderate, over the limit of every activity that accepts no rain or light rain only
+const LEVELS = JSON.parse(readFileSync(new URL('../../config/activities.json', import.meta.url), 'utf8')).levels; // the real levels: 0 / 0.5 / 3 / 10 mm
 
 /** Manifest + series for a run at RUN: block k ends at RUN + 6 h * (k + 1). */
 function make(ifs, aifs) {
@@ -21,19 +23,43 @@ function make(ifs, aifs) {
   const series = { ifs: all.subarray(0, ifs.length), 'aifs-single': all.subarray(ifs.length) };
   return { manifest, blocks: buildBlocks(manifest, series) };
 }
-const activity = (over = {}) => ({ wet_mm: 0.5, min_blocks: 1, hours: [0, 24], ...over });
-const ctx = (over = {}) => ({ zone: 'UTC', nowMs: RUN, minRemaining: 0.5, ...over });
+const activity = (over = {}) => ({ id: 'test', max_level: 'none', min_blocks: 1, hours: [0, 24], ...over });
+const ctx = (over = {}) => ({ zone: 'UTC', nowMs: RUN, minRemaining: 0.5, levels: LEVELS, ...over });
 
-test('the wet rule: a stored value at or above the threshold is wet (0.5 mm = 5 steps), one step below is dry', () => {
+test('the rain levels: a stored value at or above a lower bound is in that level (0.5 mm = 5 steps), one step below is in the level under it', () => {
   assert.equal(wetLimit(0.5, 0.1), 5);
-  assert.equal(wetLimit(0.3, 0.1), 3);
   assert.equal(wetLimit(0.55, 0.1), 6);
-  const state = (a, b) => blockState({ tenths: { ifs: a, 'aifs-single': b } }, 5).state;
-  assert.equal(state(5, 5), 'wet');
-  assert.equal(state(4, 4), 'dry');
-  assert.equal(state(5, 4), 'disagree');
-  assert.equal(blockState({ tenths: { 'aifs-single': 9 } }, 5).single, true);
-  assert.equal(blockState({ tenths: { ifs: 9, 'aifs-single': 9 } }, 5).single, false);
+  const limits = levelLimits(LEVELS, 0.1);
+  assert.deepEqual(limits, [0, 5, 30, 100]);
+  const level = (stored) => levelOf(stored, limits);
+  assert.deepEqual([0, 4, 5, 29, 30, 99, 100, 5000].map(level), [0, 0, 1, 1, 2, 2, 3, 3]); // 0.4 / 0.5, 2.9 / 3.0 and 9.9 / 10.0 mm
+  assert.deepEqual(levelLimits(LEVELS, 0.25), [0, 2, 12, 40]); // a different storage step: the ceiling rule holds (0.5 / 0.25 = 2, 3 / 0.25 = 12, 10 / 0.25 = 40)
+});
+
+test('how a block fits an activity: ok when every model is within the limit, over when every model is over it, maybe when the models differ; one model only is marked', () => {
+  const fit = (a, b) => blockFit({ tenths: { ifs: a, 'aifs-single': b } }, 5).fit;
+  assert.equal(fit(5, 5), 'over');
+  assert.equal(fit(4, 4), 'ok');
+  assert.equal(fit(5, 4), 'maybe');
+  assert.equal(blockFit({ tenths: { 'aifs-single': 9 } }, 5).single, true);
+  assert.equal(blockFit({ tenths: { ifs: 9, 'aifs-single': 9 } }, 5).single, false);
+  assert.equal(maxLevelIndex({ id: 'a', max_level: 'light' }, LEVELS), 1);
+  assert.throws(() => maxLevelIndex({ id: 'a', max_level: 'heavy' }, LEVELS), /not a level with a higher one/); // there is nothing above heavy to be over
+  assert.throws(() => maxLevelIndex({ id: 'a', max_level: 'foggy' }, LEVELS), /not a level/);
+});
+
+test('a planned block shows the level of the WETTER model, says when the models differ, and fits the activity by its own limit', () => {
+  const { blocks } = make([0, 4, 5, 29, 30, 99, 100], [0, 5, 5, 30, 30, 100, 100]);
+  const none = planBlocks(blocks, activity({ max_level: 'none' }), ctx(), 0.1);
+  assert.deepEqual(none.map((b) => b.level), [0, 1, 1, 2, 2, 3, 3]); // 4 vs 5: the wetter model is light; 29 vs 30: moderate
+  assert.deepEqual(none.map((b) => b.differ), [false, true, false, true, false, true, false]);
+  assert.deepEqual(none.map((b) => b.levels), [{ ifs: 0, 'aifs-single': 0 }, { ifs: 0, 'aifs-single': 1 }, { ifs: 1, 'aifs-single': 1 }, { ifs: 1, 'aifs-single': 2 }, { ifs: 2, 'aifs-single': 2 }, { ifs: 2, 'aifs-single': 3 }, { ifs: 3, 'aifs-single': 3 }]);
+  assert.deepEqual(none.map((b) => b.fit), ['ok', 'maybe', 'over', 'over', 'over', 'over', 'over']);
+  const light = planBlocks(blocks, activity({ max_level: 'light' }), ctx(), 0.1); // accepts up to light: the limit is 3.0 mm (30 steps)
+  assert.deepEqual(light.map((b) => b.fit), ['ok', 'ok', 'ok', 'maybe', 'over', 'over', 'over']);
+  const moderate = planBlocks(blocks, activity({ max_level: 'moderate' }), ctx(), 0.1); // accepts up to moderate: the limit is 10.0 mm (100 steps)
+  assert.deepEqual(moderate.map((b) => b.fit), ['ok', 'ok', 'ok', 'ok', 'ok', 'maybe', 'over']);
+  assert.equal(none[0].usable && none[1].usable && !none[2].usable, true); // a "maybe" block is still usable (D28)
 });
 
 test('blocks are joined by their END time, sorted, and a block beyond the IFS range has one model only', () => {
@@ -104,10 +130,22 @@ test('past blocks are dropped and the block under way counts only if enough of i
   assert.equal(w2[0].startMs, RUN + 12 * HOUR_MS);
 });
 
-test('the edge: 0.5 mm per 6 h counts as wet for a 0.5 mm activity but not for a 0.6 mm one', () => {
-  const { blocks } = make([5, 5], [5, 5]);
-  assert.equal(planBlocks(blocks, activity({ wet_mm: 0.5 }), ctx(), 0.1)[0].state, 'wet');
-  assert.equal(planBlocks(blocks, activity({ wet_mm: 0.6 }), ctx(), 0.1)[0].state, 'dry');
+test('the edge of the activity limit: exactly 0.5 mm per 6 h is over the limit of an activity that accepts no rain, exactly 3.0 mm over a light-rain limit', () => {
+  const { blocks } = make([5, 5, 30, 30], [5, 5, 30, 30]);
+  assert.equal(planBlocks(blocks, activity({ max_level: 'none' }), ctx(), 0.1)[0].fit, 'over');
+  assert.equal(planBlocks(blocks, activity({ max_level: 'light' }), ctx(), 0.1)[0].fit, 'ok');
+  assert.equal(planBlocks(blocks, activity({ max_level: 'light' }), ctx(), 0.1)[2].fit, 'over');
+  assert.equal(planBlocks(blocks, activity({ max_level: 'moderate' }), ctx(), 0.1)[2].fit, 'ok');
+});
+
+test('a window carries the worst level inside it (the wetter model decides)', () => {
+  const { blocks } = make([0, 5, 0], [0, 4, 0]); // block 1: IFS 0.5 mm = light, AIFS 0.4 mm = none: a "maybe" block for an activity that accepts no rain
+  const planned = planBlocks(blocks, activity(), ctx(), 0.1);
+  const windows = findWindows(planned, activity(), RUN);
+  assert.equal(windows.length, 1);
+  assert.deepEqual([windows[0].blocks, windows[0].confidence, windows[0].level], [3, 'uncertain', 1]);
+  const clear = findWindows(planBlocks(make([0, 0], [0, 0]).blocks, activity(), ctx(), 0.1), activity(), RUN);
+  assert.equal(clear[0].level, 0);
 });
 
 test('rain totals: whole blocks from the one under way; range and each model; the single-model blocks stay apart', () => {
@@ -148,12 +186,14 @@ test('rain totals have no floating-point dust (three steps of 0.1 mm are 0.3 mm)
 test('the view: day cards start with the first day that is not over, keep the past blocks of that day, and are limited', () => {
   const { blocks } = make(Array(16).fill(0), Array(16).fill(0)); // 4 days of blocks from 2026-11-06 00:00 UTC
   const nowMs = RUN + 30 * HOUR_MS; // 2026-11-07 06:00 UTC: blocks ending at or before it are over
-  const options = { zone: 'UTC', nowMs, quantumMm: 0.1, intervalHours: 6, models: MODELS, minRemaining: 0.5, daysShown: 2, windowsShown: 1, totalsDays: [1] };
+  const options = { zone: 'UTC', nowMs, quantumMm: 0.1, intervalHours: 6, models: MODELS, minRemaining: 0.5, daysShown: 2, windowsShown: 1, totalsDays: [1], levels: LEVELS };
   const view = buildView(blocks, activity({ hours: [0, 24] }), options);
   assert.deepEqual(view.days.map((d) => d.key), ['2026-11-07', '2026-11-08']);
   assert.deepEqual(view.days[0].blocks.map((b) => b.past), [true, false, false, false]); // 03:00 block is over, the rest of the 7th is not
   assert.equal(view.windows.length, 1);
   assert.ok(view.windowCount >= 1);
-  assert.match(view.days[0].verdict, /^Dry/);
+  assert.match(view.days[0].verdict, /^No rain/);
+  assert.equal(view.max, 0);
+  assert.equal(view.levels, LEVELS);
   assert.equal(view.totals[0].blocks, 4);
 });

@@ -1,14 +1,14 @@
-// Plan engine, part 2: dry windows and rain totals (decision D28). Pure functions.
+// Plan engine, part 2: windows (runs of blocks that fit the activity) and rain totals (decisions D28, D41). Pure functions.
 const RANK = { sure: 0, uncertain: 1, 'one-model': 2 };
 
 function confidenceOf(run) {
   if (run.some((b) => b.single)) return 'one-model'; // part of it is covered by one model only: nothing to compare
-  if (run.some((b) => b.state === 'disagree')) return 'uncertain';
+  if (run.some((b) => b.fit === 'maybe')) return 'uncertain';
   return 'sure';
 }
 
 /**
- * All dry windows of a planned block list, best first. A window is a run of consecutive usable blocks (not wet, in hours, not over)
+ * All windows of a planned block list, best first. A window is a run of consecutive usable blocks (not over the activity's limit in both models, in hours, not over)
  * that is at least `activity.min_blocks` long. Order: confidence (sure, uncertain, one model), then longer, then sooner.
  * A window that starts in the block under way starts "now" (`startsNow`, and startMs becomes nowMs).
  */
@@ -28,7 +28,7 @@ export function findWindows(planned, activity, nowMs) {
   return runs
     .filter((r) => r.length >= activity.min_blocks)
     .map((r) => ({ startMs: r[0].current ? nowMs : r[0].startMs, endMs: r[r.length - 1].endMs, startsNow: r[0].current,
-      blocks: r.length, confidence: confidenceOf(r), day: r[0].day }))
+      blocks: r.length, confidence: confidenceOf(r), level: Math.max(...r.map((b) => b.level)), day: r[0].day }))
     .sort((a, b) => RANK[a.confidence] - RANK[b.confidence] || b.blocks - a.blocks || a.startMs - b.startMs);
 }
 

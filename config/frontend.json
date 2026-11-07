@@ -115,10 +115,11 @@
   "saved_places": { "storage_key": "rain-plan.saved-places.v1", "settings_key": "rain-plan.settings.v1", "max": 5 },
   "geolocation": { "timeout_ms": 10000, "max_age_ms": 600000 },
   "check": {
-    "_comment": "Read by frontend/tools/plan_check.mjs (checks the browser code on the real exported tiles against the reference made by scripts/plan_reference.py). Same files as config/pipeline.toml [paths] site_dir and plan_reference_file.",
+    "_comment": "Read by frontend/tools/plan_check.mjs (checks the browser code on the real exported tiles against the reference made by scripts/plan_reference.py) and by scripts/level_shares.py (level_share_days = how many days of the newest run it counts). Same files as config/pipeline.toml [paths] site_dir and plan_reference_file.",
     "site_dir": "data/site",
     "reference_file": "data/check/plan_reference.json",
-    "now_hours_after_run": 20
+    "now_hours_after_run": 20,
+    "level_share_days": 7
   },
   "colour_scale": {
     "unit": "mm per 6 h",

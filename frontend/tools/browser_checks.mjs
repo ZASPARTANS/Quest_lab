@@ -228,7 +228,7 @@ const scenarios = {
     assert.equal(stored[0].name, 'Chennai');
     await page.goto(base + '/');
     await checkPlanShown(page, 'Chennai');
-    await page.waitForFunction(() => /^(Dry|Rain)/.test(document.querySelector('.saved .open span')?.textContent ?? ''), null, { timeout });
+    await page.waitForFunction(() => /^(No rain|Light|Moderate|Heavy)/.test(document.querySelector('.saved .open span')?.textContent ?? ''), null, { timeout });
     await shot(page, 'saved');
     await page.click('.saved .remove');
     await page.waitForSelector('#saved .empty', { state: 'attached', timeout });

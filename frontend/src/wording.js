@@ -1,11 +1,10 @@
-// Plain-language text for the plan (decisions D3, D9: never a probability, no technical terms). Pure functions; times are local to the place.
+// Plain-language text for the plan (decisions D3, D9, D41: rain levels, never a probability, no technical terms). Pure functions; times are local to the place.
+// `levels` = the config levels (no rain, light, moderate, heavy), `max` = the index of the most rain the activity accepts.
 import { clock, dayKey, dayLabel } from './time.js';
 
-export const STATE_WORD = { dry: 'Dry', wet: 'Wet', disagree: 'Models disagree' };
-
 export const CONFIDENCE_WORD = {
-  sure: 'Both models say dry.',
-  uncertain: 'The models disagree about part of it.',
+  sure: 'Both models agree.',
+  uncertain: 'The models differ about part of it.',
   'one-model': 'Only one model reaches this far, so it cannot be checked against the other.',
 };
 
@@ -25,17 +24,40 @@ export function blockText(block, zone) {
 
 const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
+/** What a window or a block holds at most: 'No rain' or 'Light rain at most' (the wetter model decides). */
+export function atMost(levels, level) {
+  return level === 0 ? levels[0].label : `${levels[level].label} at most`;
+}
+
+/** The word of a block cell: the level of the wetter model ('No rain', 'Light', 'Moderate', 'Heavy'). */
+export const blockWord = (levels, block) => levels[block.level].short;
+
+/** Where the two models stand, for blocks where they are in different levels: 'IFS: No rain, AIFS: Light rain'. */
+export function modelsText(levels, block, labels) {
+  return Object.entries(block.levels).map(([model, level]) => `${labels[model] ?? model}: ${levels[level].label}`).join(', ');
+}
+
+/** What the activity accepts, in words: 'no rain' or 'light rain at most'. */
+export function acceptText(levels, max) {
+  return max === 0 ? levels[0].label.toLowerCase() : `${levels[max].label.toLowerCase()} at most`;
+}
+
 /** One line for a day card. `blocks` = the day's planned entries, `best` = the best window that starts that day (or undefined). */
-export function dayVerdict(blocks, best, zone) {
+export function dayVerdict(blocks, best, zone, levels, max) {
   const counted = blocks.filter((b) => b.inHours && !b.past);
   if (!counted.length) return blocks.every((b) => b.past) ? 'Over.' : 'Outside the hours for this activity.';
-  const wet = counted.filter((b) => b.state === 'wet').length;
-  const unsure = counted.filter((b) => b.state === 'disagree').length;
-  const of = `${wet} of ${plural(counted.length, 'block')}`;
-  if (wet === counted.length) return 'Wet all day.';
-  if (wet === 0 && unsure === 0) return counted.some((b) => b.single) ? 'Dry (one model only).' : 'Dry. Both models agree.';
-  if (wet === 0) return `No block is wet in both models; they disagree about ${plural(unsure, 'block')}.`;
-  return best ? `Rain in ${of}. Best window ${windowText(best, zone)}.` : `Rain in ${of}. No dry window long enough.`;
+  const over = counted.filter((b) => b.fit === 'over').length;
+  const unsure = counted.filter((b) => b.fit === 'maybe').length;
+  const worst = Math.max(...counted.map((b) => b.level));
+  const rain = max === 0 ? 'Rain' : `${levels[max + 1].label} or more`;
+  const of = `${over} of ${plural(counted.length, 'block')}`;
+  if (over === counted.length) return `${levels[worst].label} all day.`;
+  if (over === 0 && unsure === 0) {
+    const how = counted.some((b) => b.single) ? 'one model only' : 'both models agree';
+    return worst === 0 ? `No rain (${how}).` : `${atMost(levels, worst)} (${how}).`;
+  }
+  if (over === 0) return `The models differ about ${plural(unsure, 'block')}.`;
+  return best ? `${rain} in ${of}. Best window ${windowText(best, zone)}.` : `${rain} in ${of}. No window long enough.`;
 }
 
 /** Range text for a total: '4–7 mm' or '5 mm'. */
@@ -53,12 +75,12 @@ export function totalsLines(t, labels) {
   return lines;
 }
 
-/** One line for a saved place: the first block that is not dry in both models, or that it stays dry. */
-export function placeSummary(planned, zone) {
+/** One line for a saved place: the first block over the activity's limit (or where the models differ), or that it stays within it. */
+export function placeSummary(planned, zone, levels, max) {
   const upcoming = planned.filter((b) => b.inHours && !b.past);
   if (!upcoming.length) return 'No forecast left in your hours.';
-  const next = upcoming.find((b) => b.state !== 'dry');
-  if (!next) return `Dry through ${dayLabel(upcoming[upcoming.length - 1].day)}.`;
+  const next = upcoming.find((b) => b.fit !== 'ok');
+  if (!next) return max === 0 ? `No rain through ${dayLabel(upcoming[upcoming.length - 1].day)}.` : `${atMost(levels, max)} through ${dayLabel(upcoming[upcoming.length - 1].day)}.`;
   const when = `${dayLabel(next.day)} ${blockText(next, zone)}`;
-  return next.state === 'wet' ? `Rain ${when}.` : `Rain possible ${when} (models disagree).`;
+  return next.fit === 'over' ? `${levels[next.level].label} ${when}.` : `${levels[next.level].label} possible ${when} (models differ).`;
 }

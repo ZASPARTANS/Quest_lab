@@ -1,26 +1,32 @@
 {
-  "_comment": "Plan-my-day settings (decisions D24, D27, D28). No code here. The numbers are the AI's judgement, NOT measured: change them freely. wet_mm = a 6-hour block counts as wet from this many mm (stored values are in 0.1 mm steps, so use multiples of 0.1). min_blocks = shortest window worth showing, in 6-hour blocks. hours = [from, to) in the place's local time; a block is 'in hours' when its MIDPOINT is inside. To fit, floor((to - from) / 6) must be at least min_blocks (checked by a test).",
+  "_comment": "Plan-my-day settings (decisions D24, D27, D28, D41). No code here. The numbers are the AI's judgement and the user's choice of cut-offs, NOT an official standard (there is none for 6-hour blocks, see docs/DOMAIN.md): change them freely. levels = the rain levels of a 6-hour block, lowest first; from_mm = the block's rain (stored in 0.1 mm steps, so use multiples of 0.1) from which the level starts; the first level starts at 0. max_level = the most rain an activity accepts (it must not be the last level). min_blocks = shortest window worth showing, in 6-hour blocks. hours = [from, to) in the place's local time; a block is 'in hours' when its MIDPOINT is inside. To fit, floor((to - from) / 6) must be at least min_blocks (checked by a test).",
   "default_activity": "outdoor",
   "windows_shown": 3,
   "days_shown": 10,
   "totals_days": [3, 7, 10],
   "current_block_min_remaining_fraction": 0.5,
+  "levels": [
+    { "id": "none", "label": "No rain", "short": "No rain", "from_mm": 0 },
+    { "id": "light", "label": "Light rain", "short": "Light", "from_mm": 0.5 },
+    { "id": "moderate", "label": "Moderate rain", "short": "Moderate", "from_mm": 3 },
+    { "id": "heavy", "label": "Heavy rain", "short": "Heavy", "from_mm": 10 }
+  ],
   "custom": {
     "id": "custom",
     "label": "Custom",
-    "wet_choices_mm": [0.1, 0.5, 1.0, 2.0, 5.0],
-    "default_wet_mm": 0.5,
+    "level_choices": ["none", "light", "moderate"],
+    "default_level": "none",
     "min_blocks": 1,
     "hours": [0, 24],
-    "blurb": "You choose what counts as wet."
+    "blurb": "You choose how much rain is fine."
   },
   "activities": [
-    { "id": "outdoor", "label": "Outdoor plans", "wet_mm": 0.5, "min_blocks": 1, "hours": [8, 22], "blurb": "A walk, errands, anything outside." },
-    { "id": "commute", "label": "Commute", "wet_mm": 1.0, "min_blocks": 1, "hours": [6, 22], "blurb": "A little drizzle is fine." },
-    { "id": "laundry", "label": "Drying laundry", "wet_mm": 0.1, "min_blocks": 2, "hours": [7, 19], "blurb": "Any rain counts, and clothes need about 12 hours." },
-    { "id": "picnic", "label": "Picnic or event", "wet_mm": 0.3, "min_blocks": 1, "hours": [9, 21], "blurb": "Light rain already spoils it." },
-    { "id": "cricket", "label": "Cricket or sport", "wet_mm": 0.2, "min_blocks": 1, "hours": [8, 20], "blurb": "Play stops at the first rain." },
-    { "id": "farming", "label": "Field work", "wet_mm": 2.0, "min_blocks": 2, "hours": [5, 19], "blurb": "Light rain is fine, heavy rain stops work." },
-    { "id": "travel", "label": "Travel by road", "wet_mm": 2.0, "min_blocks": 1, "hours": [0, 24], "blurb": "Any time of day; only heavier rain matters." }
+    { "id": "outdoor", "label": "Outdoor plans", "max_level": "none", "min_blocks": 1, "hours": [8, 22], "blurb": "A walk, errands, anything outside." },
+    { "id": "commute", "label": "Commute", "max_level": "light", "min_blocks": 1, "hours": [6, 22], "blurb": "A little drizzle is fine." },
+    { "id": "laundry", "label": "Drying laundry", "max_level": "none", "min_blocks": 2, "hours": [7, 19], "blurb": "Any rain counts, and clothes need about 12 hours." },
+    { "id": "picnic", "label": "Picnic or event", "max_level": "none", "min_blocks": 1, "hours": [9, 21], "blurb": "Light rain already spoils it." },
+    { "id": "cricket", "label": "Cricket or sport", "max_level": "none", "min_blocks": 1, "hours": [8, 20], "blurb": "Play stops at the first rain." },
+    { "id": "farming", "label": "Field work", "max_level": "light", "min_blocks": 2, "hours": [5, 19], "blurb": "Light rain is fine, heavy rain stops work." },
+    { "id": "travel", "label": "Travel by road", "max_level": "light", "min_blocks": 1, "hours": [0, 24], "blurb": "Any time of day; only heavier rain matters." }
   ]
 }
