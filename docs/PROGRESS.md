@@ -79,7 +79,7 @@
 | 7 | Static data export: point tiles, optional lower-resolution frames, manifest; size gate (PLAN-006) | **done** 2026-11-06 (commit "Step 7: ...", time in `git log`); D25, E023 |
 | 8 | Plan engine + place panel: activities, day cards, best windows, rain totals with a range, saved places, text first (PLAN-006) | **done** 2026-11-07 (commit "Step 8: ...", time in `git log`); D27, D28, E024, E025 |
 | 9 | Map and globe as supporting views (PLAN-006) | **superseded by PLAN-007** (rows 9.1-9.5) |
-| 9.1 | Spike gate: fly-in from globe and flatten, two ways, screenshots (PLAN-007) | not started |
+| 9.1 | Spike gate: fly-in from globe and flatten, two ways, screenshots (PLAN-007) | **done** 2026-11-07 ~10:45 UTC (commit "Step 9.1: ..."); D31 |
 | 9.2 | Data contract (frames in the manifest, agreement colours) and pure map helpers (PLAN-007) | not started |
 | 9.3 | Map module, controls, 1/4 + 3/4 layout, spike removed (PLAN-007) | not started |
 | 9.4 | Browser checks in three engines, real GPU in Edge, records (PLAN-007) | not started |
@@ -333,3 +333,9 @@ Files: `frontend/src/` time.js, plan.js, windows.js, wording.js, view.js, tiles.
 - Not started: step 9 and later; the design pass; the age warning (step 10); hosting (step 11).
 - Time: about 6.4 h of 72 h used; the 24 h warning is due 2026-11-07 18:19 UTC.
 - Records touched in the checkpoint: README (status, layout, browser table), PROGRESS, DECISIONS (D29 proposal), ERRORS (E026), SOURCES, DOMAIN, ENVIRONMENT. SECURITY was updated at step 8 and has no new facts. Plan files were not edited (rule).
+
+## Step 9.1 done-check results (run 2026-11-07 ~10:42-10:46 UTC)
+Files: `frontend/spikes/flyin.{html,js}` and `frontend/tools/spike_flyin.mjs` (throwaway, removed in step 9.3), `config/frontend.json` (`build_pages` + the spike page, removed with it), screenshots `docs/evidence/step9-1-{chromium,msedge}-{A,B}-{1-start-globe,2-mid-flight,3-end}.png` (12 files). Decision D31.
+- Real browsers: Docker Chromium 158 (software WebGL, public-like site) and the host's Microsoft Edge (real GPU, Vite testing site on 5173), way A and way B each: finished on the target within 0.00000 degrees and zoom 4.500, no console or policy error. Mid-flight pictures: A shows the full globe, B is already flattening; end pictures identical. Choice: B (D31), A kept as fallback.
+- Not measured: how smooth the animation is in frames per second (software rendering is slow, a screenshot cannot show it); Firefox and Safari (Firefox in Docker has no WebGL); a phone.
+- Process note: the host dev server was first "stopped" with a lookup by port that found nothing and `curl` still answered 200; it was then found by command line and stopped by PID, and checked on `localhost`, `::1` and `127.0.0.1` (the E021 lesson applied, one wasted step).
