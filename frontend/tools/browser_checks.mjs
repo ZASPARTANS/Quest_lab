@@ -46,6 +46,20 @@ const shot = (page, name) => page.screenshot({ path: join(outDir, `${cfg.file_pr
 const waitPlan = (page) => page.waitForSelector('#plan:not([hidden]) .day', { timeout });
 const text = (page, selector) => page.locator(selector).first().innerText();
 
+/** 'ready' (the map is drawn), 'unavailable' (no WebGL2: a plain message) or 'failed'; waits until the page has decided. */
+async function mapState(page) {
+  await page.waitForFunction(() => ['ready', 'unavailable', 'failed'].includes(document.body.dataset.map), null, { timeout });
+  return page.evaluate(() => document.body.dataset.map);
+}
+
+/** The map has flown to the place: flight over, the expected zoom, centred on the place within 0.01 degrees, and the flat view. */
+async function assertLanded(page, lat, lon, zoom) {
+  await page.waitForFunction((z) => { const m = document.getElementById('map'); return m.dataset.flying === 'false' && Math.abs(Number(m.dataset.zoom) - z) < 0.01; }, zoom, { timeout });
+  const [clon, clat] = (await page.evaluate(() => document.getElementById('map').dataset.center)).split(',').map(Number);
+  assert.ok(Math.abs(clon - lon) < 0.01 && Math.abs(clat - lat) < 0.01, `the map centre is ${clon},${clat}, not ${lon},${lat}`);
+  assert.equal(await page.evaluate(() => document.getElementById('map').dataset.effective), 'flat');
+}
+
 async function checkPlanShown(page, title) {
   await waitPlan(page);
   assert.equal(await text(page, '#title'), title);
@@ -61,6 +75,7 @@ const scenarios = {
     await checkPlanShown(page, 'Chennai');
     assert.ok(log.tiles >= 1, 'a tile was fetched and decoded');
     assert.match(await text(page, '#meta'), /UTC\+05:30/);
+    if ((await mapState(page)) === 'ready') await assertLanded(page, 13.08, 80.27, frontend.map.fly.zoom_by_source.address);
     await shot(page, 'address');
     return log;
   },
@@ -79,9 +94,13 @@ const scenarios = {
         headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ locality: 'Rasipuram', city: 'Rasipuram', principalSubdivision: 'Tamil Nadu', countryName: 'India' }) }); });
     }
     await page.goto(base + '/');
-    await checkPlanShown(page, 'Rasipuram, Tamil Nadu, India'); // the position is named by the (mock) reverse geocoder
+    await waitPlan(page);
+    // the position is named by the reverse geocoder: a MOCK by default, the REAL service when the real-search switch is set
+    await page.waitForFunction((real) => { const name = document.getElementById('title').textContent; return real ? /Rasipuram/.test(name) : name === 'Rasipuram, Tamil Nadu, India'; }, realSearch, { timeout });
+    const named = await text(page, '#title');
     assert.match(await text(page, '#meta'), /UTC\+05:30, this device's time zone/);
-    assert.equal(await page.inputValue('#search-input'), 'Rasipuram, Tamil Nadu, India', 'the search box shows the place that is chosen now');
+    assert.equal(await page.inputValue('#search-input'), named, 'the search box shows the place that is chosen now');
+    if ((await mapState(page)) === 'ready') await assertLanded(page, 11.46, 78.19, frontend.map.fly.zoom_by_source.location);
     assert.equal(new URL(page.url()).search, '', 'the position is not written into the address');
     if (!realSearch) {
       const sent = new URL(asked[0]);
@@ -90,8 +109,28 @@ const scenarios = {
     await page.fill('#search-input', 'rasipuram'); // an earlier search is still typed in the box: using the location must replace it
     await page.fill('#search-input', 'some earlier search');
     await page.click('#use-location');
-    await page.waitForFunction(() => document.getElementById('search-input').value === 'Rasipuram, Tamil Nadu, India', null, { timeout });
+    await page.waitForFunction((name) => document.getElementById('search-input').value === name, named, { timeout });
     await shot(page, 'location-allowed');
+    return log;
+  },
+  async 'my place button'(browser) {
+    const { page, log } = await open(browser);
+    await page.goto(base + ADDRESS);
+    if ((await mapState(page)) !== 'ready') return log; // no WebGL here (Firefox and WebKit in Docker): the message path is tested elsewhere
+    await assertLanded(page, 13.08, 80.27, frontend.map.fly.zoom_by_source.address);
+    const box = await page.locator('#map').boundingBox();
+    const cx = box.x + box.width / 2;
+    const cy = box.y + box.height / 2;
+    await page.mouse.move(cx, cy);
+    await page.mouse.down();
+    await page.mouse.move(cx - 300, cy - 150, { steps: 8 });
+    await page.mouse.up();
+    await page.waitForTimeout(600);
+    const moved = (await page.evaluate(() => document.getElementById('map').dataset.center)).split(',').map(Number);
+    assert.ok(Math.abs(moved[0] - 80.27) > 0.05, 'dragging moved the map away from the place');
+    await page.click('.my-place');
+    await assertLanded(page, 13.08, 80.27, frontend.map.fly.zoom_by_source.address);
+    await shot(page, 'my-place');
     return log;
   },
   async 'location refused'(browser) {

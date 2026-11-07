@@ -16,6 +16,7 @@ export function createMapView({ container, cfg, manifest, onClick, onProblem }) 
   const state = { mode: 'auto', marker: null };
   const map = new MapLibreMap({
     container, center: mapCfg.start.center, zoom: mapCfg.start.zoom, minZoom: mapCfg.min_zoom, maxZoom: mapCfg.max_zoom, renderWorldCopies: false,
+    dragRotate: false, pitchWithRotate: false, maxPitch: 0, touchPitch: false, // a weather map stays north-up and flat on the screen
     attributionControl: { compact: true, customAttribution: `Forecast: ${escapeHtml(source.name)}, ${escapeHtml(source.licence)}. Outlines: Natural Earth.` },
     style: { version: 8, projection: projectionSpec('auto', mapCfg), sources: {}, layers: [{ id: 'sea', type: 'background', paint: { 'background-color': mapCfg.sea_colour } }] },
   });
@@ -28,6 +29,8 @@ export function createMapView({ container, cfg, manifest, onClick, onProblem }) 
     data.center = `${c.lng.toFixed(4)},${c.lat.toFixed(4)}`;
     data.effective = effectiveView(state.mode, map.getZoom(), mapCfg);
   };
+  map.touchZoomRotate.disableRotation();
+  map.keyboard.disableRotation();
   map.on('move', reflect);
   map.on('error', (e) => onProblem(e.error ?? e));
   map.on('click', (e) => onClick(e.lngLat.lat, e.lngLat.lng));
@@ -79,6 +82,7 @@ export function createMapView({ container, cfg, manifest, onClick, onProblem }) 
 
   /** Fly to the place (or jump, with reduced motion); `plan` is from flightPlan(). data-flying says when the move is over. */
   function fly(lat, lon, plan) {
+    map.stop(); // end any drag inertia or earlier flight first, so its 'moveend' cannot mark THIS flight as finished
     data.flying = 'true';
     map.once('moveend', () => { data.flying = 'false'; reflect(); });
     const target = { center: [lon, lat], zoom: plan.zoom };

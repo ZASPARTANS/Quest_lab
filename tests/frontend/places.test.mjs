@@ -149,6 +149,10 @@ test('the reverse lookup names a device position: most local name, region, count
   assert.deepEqual([...url.searchParams.keys()].sort(), ['latitude', 'localityLanguage', 'longitude']);
   assert.equal(parseReverse({ locality: 'Rasipuram', city: 'Rasipuram', principalSubdivision: 'Tamil Nadu', countryName: 'India' }), 'Rasipuram, Tamil Nadu, India');
   assert.equal(parseReverse({ locality: '', city: 'London', principalSubdivision: 'England', countryName: 'United Kingdom' }), 'London, England, United Kingdom');
+  // the real answer for central London (checked today): a long country name becomes its code, the local name and the city both stay
+  assert.equal(parseReverse({ locality: 'City of Westminster', city: 'London', principalSubdivision: 'England', countryName: 'United Kingdom of Great Britain and Northern Ireland', countryCode: 'GB' }),
+    'City of Westminster, London, England, GB');
+  assert.equal(parseReverse({ city: 'X', countryName: 'A very long country name indeed', countryCode: '<b>' }), 'X, A very long country name indeed'); // a bad code is not used
   assert.equal(parseReverse({ city: 'Singapore', principalSubdivision: 'singapore', countryName: 'Singapore' }), 'Singapore'); // same name three times
   assert.equal(parseReverse({ locality: '  A B  ', countryName: 'X' }), 'A B, X');
   assert.equal(parseReverse({ locality: '<img src=x onerror=1>' }), '<img src=x onerror=1>'); // stays text; the page uses textContent / input.value

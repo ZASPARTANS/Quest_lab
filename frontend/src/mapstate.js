@@ -68,9 +68,9 @@ export function effectiveView(mode, zoom, cfg) {
   return zoom >= cfg.fly.zoom ? 'flat' : 'morph';
 }
 
-/** How to move to a chosen place: animated flight, or an instant jump when the system asks for reduced motion. */
-export function flightPlan(reducedMotion, cfg) {
-  return { zoom: cfg.fly.zoom, duration: reducedMotion ? 0 : cfg.fly.duration_ms, animate: !reducedMotion };
+/** How to move to a chosen place: animated flight to the zoom for that kind of place, or an instant jump when the system asks for reduced motion. */
+export function flightPlan(reducedMotion, cfg, source) {
+  return { zoom: cfg.fly.zoom_by_source?.[source] ?? cfg.fly.zoom, duration: reducedMotion ? 0 : cfg.fly.duration_ms, animate: !reducedMotion };
 }
 
 export function prefersReducedMotion(matchMedia) {

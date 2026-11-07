@@ -47,12 +47,15 @@ function swatch(colour) {
 }
 
 /**
- * Build the tools inside `root`. `handlers` = { onMode(id), onModel(id), onStep(step) }.
- * Returns { update({ model, mode, steps, step, when, note, legendKind }) }.
+ * Build the tools inside `root`. `handlers` = { onMode(id), onModel(id), onStep(step), onMyPlace() }.
+ * Returns { update({ model, mode, steps, step, when, note, legendKind, hasPlace }) }.
  */
 export function createControls({ root, cfg, manifest, options, selectedModel, handlers }) {
   const view = segmented('map-mode', 'Map view', MODES, 'auto', handlers.onMode);
   const model = segmented('map-model', 'Model shown on the map', options, selectedModel, handlers.onModel);
+  const myPlace = el('button', { class: 'my-place', text: 'My place', attrs: { type: 'button', 'aria-label': 'Fly back to the chosen place' } });
+  myPlace.disabled = true;
+  myPlace.addEventListener('click', () => handlers.onMyPlace());
   const note = el('p', { class: 'map-note', attrs: { role: 'status' } });
   const legend = el('ul', { class: 'legend', attrs: { 'aria-label': 'Map legend' } });
   const prev = el('button', { text: '◀', attrs: { type: 'button', 'aria-label': 'Previous 6-hour block' } });
@@ -67,7 +70,7 @@ export function createControls({ root, cfg, manifest, options, selectedModel, ha
   prev.addEventListener('click', () => move(-1));
   next.addEventListener('click', () => move(1));
   range.addEventListener('input', () => handlers.onStep(steps[Number(range.value)]));
-  fill(root, [el('div', { class: 'map-top' }, [view.node, model.node]),
+  fill(root, [el('div', { class: 'map-top' }, [view.node, model.node, myPlace]),
     el('div', { class: 'map-bottom' }, [note, legend, el('div', { class: 'timebar' }, [prev, range, next]), when])]);
 
   return {
@@ -78,6 +81,7 @@ export function createControls({ root, cfg, manifest, options, selectedModel, ha
       range.value = String(i);
       range.dataset.step = String(s.step);
       range.setAttribute('aria-valuetext', s.when);
+      myPlace.disabled = !s.hasPlace;
       prev.disabled = i === 0;
       next.disabled = i === steps.length - 1;
       when.textContent = s.when;

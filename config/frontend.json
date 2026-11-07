@@ -32,11 +32,11 @@
   "cache_dir_env": "VITE_CACHE_DIR",
   "dev_badge": { "enabled": true, "text": "DEV" },
   "map": {
-    "_comment": "Plan PLAN-007 (decisions D29, D31). start = the globe the page opens with; fly = where a chosen place is shown: the globe flies there and flattens (the projection morphs from a globe at morph_from_zoom to a flat map at fly.zoom). With 'reduce motion' set in the system the view jumps. start_model = which model the map shows first (ifs, aifs-single or both).",
+    "_comment": "Plan PLAN-007 (decisions D29, D31). start = the globe the page opens with; fly = where a chosen place is shown: the globe flies there and flattens (the projection morphs from a globe at morph_from_zoom to a flat map at fly.zoom, then the flight goes on to zoom_by_source: the device location lands closest, D35). With 'reduce motion' set in the system the view jumps. start_model = which model the map shows first (ifs, aifs-single or both).",
     "start": { "center": [20, 20], "zoom": 1.3 },
     "min_zoom": 0.8,
-    "max_zoom": 7,
-    "fly": { "zoom": 4.5, "duration_ms": 2500, "morph_from_zoom": 2.5 },
+    "max_zoom": 10,
+    "fly": { "zoom": 4.5, "duration_ms": 2500, "morph_from_zoom": 2.5, "zoom_by_source": { "location": 8, "search": 7, "saved": 7, "address": 7 } },
     "start_model": "ifs",
     "sea_colour": "#12304f",
     "resampling": "linear"
@@ -56,8 +56,8 @@
     "max_reply_chars": 100000
   },
   "reverse_geocoder": {
-    "_comment": "Names the DEVICE position (decision D32): BigDataCloud free client-side reverse geocoding, made for calls from the visitor's browser with the device's own location. Only the position and the visitor's IP address go to this host; its origin is the second and last outside host in connect-src of config/headers.conf (a test keeps the two in step). Not used for clicks on the map.",
-    "url": "https://api.bigdatacloud.net/data/reverse-geocode-client",
+    "_comment": "Names the DEVICE position (decision D32): BigDataCloud free client-side reverse geocoding (the documented host api.bigdatacloud.net answers 307 to api-bdc.io, which is the host used here, E030), made for calls from the visitor's browser with the device's own location. Only the position and the visitor's IP address go to this host; its origin is the second and last outside host in connect-src of config/headers.conf (a test keeps the two in step). Not used for clicks on the map.",
+    "url": "https://api-bdc.io/data/reverse-geocode-client",
     "language": "en",
     "timeout_ms": 6000,
     "max_reply_chars": 50000

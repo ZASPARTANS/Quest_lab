@@ -45,8 +45,12 @@
 | 2026-11-07 00:42 | Checkpoint requested by the user after their feedback; all markdown files updated (commit time in `git log`) | 6.39 h | 65.61 h |
 | 2026-11-07 10:41 | The user was away about 10 hours; they replied with the layout (1/4 plan + 3/4 globe) and approved PLAN-007; clock read with `date -u` | 16.37 h | 55.63 h |
 | 2026-11-07 12:11 | PLAN-008 approved (sharper pictures); 17.87 h used | 17.87 h | 54.13 h |
+| 2026-11-07 13:12 | PLAN-009 approved (browser-side drawing, close fly-in, name fix); 18.88 h used | 18.88 h | 53.12 h |
 
 ## Current plan
+**`docs/plans/PLAN-009.md`** - approved by the user 2026-11-07 13:12 UTC: the rain is drawn in the browser at screen sharpness from the exact tile values (live layer above zoom 4.5), the fly-in goes close (zoom 8 for the device location), the place name is fixed (E030) and a "My place" button is added (steps 9.3c-0 to 9.3c-4). It supersedes PLAN-008 assumption A19 and its step 9.3b-3 (the sharper pictures did not pass the user's look, E031); PLAN-007 steps 9.4 and 9.5 follow.
+
+`docs/plans/PLAN-008.md` (steps 9.3b-1 and 9.3b-2 done; A19 and 9.3b-3 superseded by PLAN-009):
 **`docs/plans/PLAN-008.md`** - approved by the user 2026-11-07 12:11 UTC: sharper rain pictures (step 9.3b: measure, then smooth higher-resolution frames) after the user's feedback "the image does not look good at all"; it supersedes PLAN-007 assumption A17 (E027) and adds step 9.3b; PLAN-007 steps 9.4 and 9.5 remain in force.
 
 `docs/plans/PLAN-007.md` (still the plan for the map and the design pass; its A17 is superseded by PLAN-008):
@@ -88,7 +92,12 @@
 | 9.3 | Map module, controls, 1/4 + 3/4 layout, spike removed (PLAN-007) | **in progress** (11:07 UTC): built and working in Chromium; open: frame quality (E027), real-service check of D32 |
 | 9.3b-1 | Gate Q1: measure and look at four ways to make the rain pictures sharper (PLAN-008) | **done** 2026-11-07 12:27 UTC (commit "Step 9.3b-1: ..."); D34 |
 | 9.3b-2 | Build the sharper frames: smooth up-sampling, agreement per pixel, config, tests, re-export (PLAN-008) | **done** 2026-11-07 12:39 UTC (commit "Step 9.3b-2: ..."); D34 results |
-| 9.3b-3 | Look and confirm (Chromium, Edge, the user), records (PLAN-008) | **waiting for the user's look** at http://localhost:8080 (Edge and Chromium pictures done) |
+| 9.3b-3 | Look and confirm (Chromium, Edge, the user), records (PLAN-008) | **failed the user's look** (blocky when zoomed in, E031); superseded by PLAN-009 |
+| 9.3c-0 | Quick fixes: reverse-geocoder host and name, fly-in zoom by source, rotation off, "My place" button (PLAN-009) | **done** 2026-11-07 13:18 UTC (commit "Step 9.3c-0: ..."); D32 corrected, D35, E030 closed |
+| 9.3c-1 | Drawing core: smooth sampling, continuous colours, soft agreement (pure, tested) (PLAN-009) | not started |
+| 9.3c-2 | Data window: tiles for the view and a layer accessor (PLAN-009) | not started |
+| 9.3c-3 | Map integration: live layer above zoom 4.5, fallback picture (PLAN-009) | not started |
+| 9.3c-4 | Browser checks in the engines, Edge look, records (PLAN-009) | not started |
 | 9.4 | Browser checks in three engines, real GPU in Edge, records (PLAN-007) | not started |
 | 9.5 | Design pass with the frontend-design skill, user review (PLAN-007) | not started |
 | 10 | Provenance + honesty strip, final policy (PLAN-006) | not started |
@@ -98,7 +107,7 @@
 Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
 
 ## Status (live, rewritten in the housekeeping at ~23:03 UTC)
-- **Done:** steps 1-8, 9.1, 9.2 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is the user's verdict on the pictures (9.3b-3), then step 9.4** (browser checks in three engines incl. the map scenarios).
+- **Done:** steps 1-8, 9.1, 9.2 and the security steps S1-S5 (step 8: the plan page runs on localhost:8080 and was checked in Chromium, Firefox and WebKit); the pipeline (fetch, process, validate, export) runs in Docker; the front end is still a one-page spike on two local sites, now reading an exported frame; **next is step 9.3c-1** (PLAN-009: the drawing core), then 9.3c-2..4, then PLAN-007 steps 9.4 and 9.5.
 - **Tests (step 9.3b-2):** Python 105 passed, Node 53 passed. Earlier: official command `docker compose -f docker/compose.yaml run --rm tests` = 99 passed; `... run --rm frontend-tests` = 41 passed (at step 8); `... run --rm frontend-check` = 8 places x 8 activities match; `BROWSER_NAME=<engine> ... run --rm browser-checks` = 8 of 8 scenarios in chromium, firefox and webkit.
 - **Git:** branch `main`, 25 commits, no remote (GitHub login and repo creation are plan step 11 and need the user's approval and link).
 - **Records:** this housekeeping checked every markdown file against the others; its findings and fixes are listed in the last section of this file.
@@ -378,3 +387,10 @@ Files: `backend/frames.py` (rewritten: palette PNG writer with per-row filters, 
 - "when i zoom in it still is showing in blocks not smooth"; "the 2d (flat) is not working, because when i use the location it has to be accurate and zoom to that location"; "do u think people will like it? NOPE". The screenshot (Flat + both models + the UK) also shows: **the map draws in the user's Firefox** (D23 bet held: WebGL works there; the user runs an ad blocker, extensions icons visible), the name box still says "Your location" (E030), the time bar at Fri 6 Nov 12:00-18:00 (not reproduced, see E031), the marker off-centre (caused by scroll-zooming around the mouse).
 - Checked before answering (Edge, real GPU): zoom 7 pictures `docs/evidence/edge/step9-3b-zoom-{ifs,both}.png`; real BigDataCloud call (E030); default block (`ifs_30`, correct).
 - Consequence: PLAN-008's step 9.3b-3 did not pass the user's look. A revised plan (PLAN-009) is needed; E027 stays open and E031 is added.
+
+## Step 9.3c-0 done-check results (run 2026-11-07 13:18 UTC; 18.99 h used)
+Files: `config/frontend.json` (reverse host, `map.fly.zoom_by_source`, `max_zoom` 10), `config/headers.conf`, `frontend/src/{reverse,mapstate,mapview,mapcontrols,mapapp,style}`, `frontend/tools/browser_checks.mjs`, `tests/frontend/{places,mapstate}.test.mjs`. Decisions D32 corrected, D35; E030 closed.
+- **Tests:** Node 53 passed (the changed tests: the real London answer, a bad country code, the zoom by source, the zoom limits), Python 105 passed.
+- **Real browsers:** Chromium in Docker (MOCK geocoders): 9 of 9 scenarios, including "location allowed" (name, search box, the map landing at zoom 8 on 11.46 N 78.19 E within 0.01 degrees, flat view) and the new "my place button" (drag away, press the button, back within 0.01 degrees). Edge with the real GPU and the REAL Open-Meteo and BigDataCloud services: 9 of 9, the device position was named "Rasipuram, Tamil Nadu, India".
+- **Found on the way:** the preview must be restarted after a policy change (ENVIRONMENT); a stale `moveend` after drag inertia (fixed with `map.stop()`).
+- **Not verified:** the user's Firefox with these changes; the visual sharpness at zoom 7-8 (still the pre-made picture: that is steps 9.3c-1 to 9.3c-3).
