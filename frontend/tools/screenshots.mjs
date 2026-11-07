@@ -40,8 +40,10 @@ for (const item of cfg.pages) {
   await page.goto(base + item.path, { waitUntil: 'load' });
   let state = { ready: true, error: null };
   if (item.wait_for_ready) {
-    await page.waitForFunction(() => window.__ready === true || window.__error, null, { timeout: cfg.ready_timeout_seconds * 1000 }).catch(() => {});
-    state = await page.evaluate(() => ({ ready: window.__ready === true, error: window.__error ?? null }));
+    // the page says how the map ended: ready, unavailable (no WebGL2: a plain message, the plan still works) or failed
+    await page.waitForFunction(() => ['ready', 'unavailable', 'failed'].includes(document.body.dataset.map), null, { timeout: cfg.ready_timeout_seconds * 1000 }).catch(() => {});
+    const map = await page.evaluate(() => document.body.dataset.map);
+    state = { ready: map === 'ready' || map === 'unavailable', error: map === 'failed' ? 'the map failed to start' : null };
   }
   await page.waitForTimeout(1500); // let the last frame settle
   const seconds = ((Date.now() - started) / 1000).toFixed(1);

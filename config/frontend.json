@@ -3,7 +3,7 @@
   "data_url_path": "/data/",
   "dev_data_dir": "data/site",
   "dev_server": { "host": "localhost", "port": 5173 },
-  "build_pages": ["index.html", "spikes/maplibre.html", "spikes/flyin.html"],
+  "build_pages": ["index.html"],
   "screenshots": {
     "_comment": "Read by frontend/tools/screenshots.mjs (a real browser in Docker). The base URL and the output folder come from the environment variables named here.",
     "base_url_env": "SCREENSHOT_BASE_URL",
@@ -11,11 +11,10 @@
     "browser_channel_env": "SCREENSHOT_BROWSER_CHANNEL",
     "viewport": { "width": 1280, "height": 720 },
     "ready_timeout_seconds": 90,
-    "file_prefix": "step6-",
+    "file_prefix": "step9-",
     "pages": [
-      { "name": "home", "path": "/" },
-      { "name": "maplibre-flat", "path": "/spikes/maplibre.html?mode=2d", "wait_for_ready": true },
-      { "name": "maplibre-globe", "path": "/spikes/maplibre.html?mode=3d", "wait_for_ready": true }
+      { "name": "home", "path": "/", "wait_for_ready": true },
+      { "name": "home-chennai", "path": "/?lat=13.08&lon=80.27&name=Chennai&tz=Asia/Kolkata&activity=outdoor", "wait_for_ready": true }
     ]
   },
   "browser_checks": {
@@ -55,6 +54,13 @@
     "timeout_ms": 8000,
     "max_reply_chars": 100000
   },
+  "reverse_geocoder": {
+    "_comment": "Names the DEVICE position (decision D32): BigDataCloud free client-side reverse geocoding, made for calls from the visitor's browser with the device's own location. Only the position and the visitor's IP address go to this host; its origin is the second and last outside host in connect-src of config/headers.conf (a test keeps the two in step). Not used for clicks on the map.",
+    "url": "https://api.bigdatacloud.net/data/reverse-geocode-client",
+    "language": "en",
+    "timeout_ms": 6000,
+    "max_reply_chars": 50000
+  },
   "saved_places": { "storage_key": "rain-plan.saved-places.v1", "settings_key": "rain-plan.settings.v1", "max": 5 },
   "geolocation": { "timeout_ms": 10000, "max_age_ms": 600000 },
   "check": {
@@ -77,11 +83,5 @@
       [40.0, "#8a1fa8"]
     ],
     "opacity": 0.85
-  },
-  "spike": {
-    "_comment": "The spike page (frontend/spikes/maplibre.js) shows one exported frame (file names: config/backend.toml [frames]); replaced by the real map in plan step 9.",
-    "folder": "frames",
-    "mercator_file": "ifs_24.png",
-    "mercator_max_latitude": 85.0511287798
   }
 }

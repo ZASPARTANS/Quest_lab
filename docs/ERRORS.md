@@ -30,6 +30,9 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 | E024 | I wrote a guessed time ("~00:50 UTC") into DECISIONS; the clock said 00:20. Same slip class as the earlier guessed times (E021 note, step 4/6 headings) | 3 | 3/3 (corrected after `date -u`, three times; rule: read `date -u` first, then write the time) |
 | E025 | Step 8 browser checks: three flaws in MY checks (Firefox refusal read an interim message; an empty `referer` header counted as a referrer; an apostrophe broke a test title); no defect in the page | 1 | 3/3 (checks corrected, rerun green) |
 | E026 | I replaced the home page with the plan page and left the map and globe only as small spike links without clearly telling the user the map had left the main page (communication gap against the user's own D3; user asked "y did u remove the 2d view and 3d view?") | 1 | 0/0 (proposal D29 waits for the user) |
+| E027 | PLAN-007 assumption A17 ("720 px frames are enough") was wrong: at the fly-in zoom each frame pixel is a visible 0.5 degree block (the user's screenshot: "it does not look good at all"); I had already noticed the blockiness in step 9.1 and treated it as a design-pass item | 1 | 0/0 (revised plan needed) |
+| E028 | Two CSS bugs found only by looking at the screenshot of the new layout: MapLibre's own stylesheet overrides `position: absolute` on the map element (map had zero height), and `display: grid` on the message overrode the `hidden` attribute ("Loading the map" stayed up) | 1 | 2/2 (more specific selector; `[hidden] {display:none !important}`) |
+| E029 | The preview container kept serving a deleted `data/site` folder after a re-export recreated it: manifest 404 and an empty map in the screenshot run (found because the run reported ok:false) | 1 | 1/1 (restart the preview after every export) |
 
 ---
 
@@ -251,3 +254,20 @@ Summary (update with every change). `fix worked / fix tried` counts only what ac
 - Changed lines: none in code yet.
 - **Repeat (seen 2), 2026-11-07 00:42 UTC:** while writing the checkpoint records I again wrote "~00:45 UTC" three minutes ahead of `date -u` (00:42) in six files. Caught by comparing with the clock output printed by the test command, corrected with one `sed` before the commit (fix tried 2, worked 2). The prevention rule above was not followed because the time was written in a script before the clock was read; next time the time is read first and passed in.
 - **Repeat (seen 3), 2026-11-07 10:41 UTC:** the plan text I wrote during plan mode said "drafted ~00:55 UTC", "~01:00 UTC" and "about 6.6 h used" without reading the clock. The clock read 10:41 UTC when the user replied (they had been away about 10 hours), so the real elapsed time was 16.4 h and the time estimates in the plan were 9.8 h too early. Corrected in `docs/plans/PLAN-007.md` by a time-correction block (the plan body is otherwise unchanged, as the rules require), in PROGRESS and in D29/D30. Fix tried 3, worked 3. The prevention rule is still "read `date -u` first, then write"; plan files are the new place where I must apply it (run it when the plan is drafted, not when it is approved).
+
+## E027 — A17 was wrong: the map frames are too coarse (planning mistake)
+- 2026-11-07 11:07 UTC. seen: 1. fix worked / fix tried: 0/0.
+- What happened: PLAN-007 assumption A17 said the existing 720 x 720 frames were enough for globe and flat. In step 9.1 my own screenshots showed blocky pixels at zoom 4.5 and I wrote it down in D31 as "a design-pass finding" instead of questioning A17. The user's screenshot of the finished map ("if you use the image it does not look good at all, we need to update the image quality") shows the same blocks across the whole globe.
+- Root cause: 720 px over 360 degrees is 0.5 degree per pixel, while the data grid is 0.25 degree; the frames are also magnified with `raster-resampling: nearest`, so each frame pixel becomes a square of 7-25 screen pixels.
+- Fix: a revised plan (PLAN-008: higher-resolution frames made by smooth interpolation of the values, smooth resampling in the browser, size measured against the host limits). Fix result is recorded when done.
+
+## E028 — Two CSS bugs found by looking at the new layout
+- 2026-11-07 11:07 UTC. seen: 1. fix worked / fix tried: 2/2.
+- (a) The map did not draw (screenshot: dark panel, "Loading the map..." text). Cause: `maplibre-gl.css` sets `.maplibregl-map { position: relative }` and loads later than my `.map { position: absolute; inset: 0 }`, so the map element had height 0. Fix: `.stage > .map { ... }` (more specific). Result: the globe and the flat map draw (screenshots `step9-home*.png`).
+- (b) The message "Loading the map" stayed on screen after the map was ready: `.map-message { display: grid }` beats the browser's `[hidden]` rule. Fix: `[hidden] { display: none !important }`. Result: gone in the next screenshot.
+- Lesson: the unit tests and the page state said "ready"; only the picture showed the problem.
+
+## E029 — A running preview container serves a deleted folder after a re-export
+- 2026-11-07 11:07 UTC. seen: 1. fix worked / fix tried: 1/1.
+- What happened: the export removes and recreates `data/site`; the preview container, started before, kept its bind mount on the old (deleted) folder, so `/data/manifest.json` gave 404 and the page showed nothing (`screenshots` reported ok:false with "manifest answered 404").
+- Fix: `docker compose -f docker/compose.yaml up -d --force-recreate preview` after every export; manifest 200. Rule from now on: restart the preview after each export (also in the step 11 smoke test: the host serves the files it has, not an old mount).

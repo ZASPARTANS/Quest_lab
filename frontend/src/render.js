@@ -36,20 +36,31 @@ export function renderWindows(node, view, activity) {
   }));
 }
 
-function blockCell(block, zone) {
+/** One 6-hour block. With a map (`pick`), the block is a button that shows this block on the map; `step` is its forecast step. */
+function blockCell(block, zone, pick, selected) {
   const flags = [block.past ? 'over' : null, block.inHours ? null : 'outside your hours', block.single && !block.past ? 'one model only' : null].filter(Boolean);
-  return el('li', { class: `block state-${block.state}${block.past ? ' past' : ''}${block.inHours ? '' : ' off'}` }, [
+  const inner = [
     el('span', { class: 'time', text: blockText(block, zone) }),
     el('span', { class: 'word', text: STATE_WORD[block.state] }),
     flags.length ? el('span', { class: 'flag', text: flags.join(', ') }) : null,
-  ]);
+  ];
+  const step = pick ? pick.stepOf(block) : null;
+  const chosen = step !== null && step === selected;
+  let content = inner;
+  if (step !== null) {
+    const button = el('button', { class: 'block-hit', attrs: { type: 'button', 'aria-pressed': String(chosen), 'aria-label': `Show ${blockText(block, zone)} on the map` } }, inner);
+    button.addEventListener('click', () => pick.onPick(step));
+    content = button;
+  }
+  return el('li', { class: `block state-${block.state}${block.past ? ' past' : ''}${block.inHours ? '' : ' off'}${chosen ? ' chosen' : ''}` }, content);
 }
 
-export function renderDays(node, view) {
+/** `pick` = { stepOf(block) -> step or null, onPick(step) } or null when there is no map; `selected` = the step shown on the map. */
+export function renderDays(node, view, pick = null, selected = null) {
   fill(node, view.days.map((d, i) => el('article', { class: 'day' }, [
     el('h4', { text: i === 0 ? `${d.label} (today)` : d.label }),
     el('p', { class: 'verdict', text: d.verdict }),
-    el('ol', { class: 'blocks', attrs: { 'aria-label': `Blocks of ${d.label}` } }, d.blocks.map((b) => blockCell(b, view.zone))),
+    el('ol', { class: 'blocks', attrs: { 'aria-label': `Blocks of ${d.label}` } }, d.blocks.map((b) => blockCell(b, view.zone, pick, selected))),
   ])));
 }
 

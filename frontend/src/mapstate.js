@@ -60,6 +60,14 @@ export function projectionSpec(mode, cfg) {
   return { type: ['interpolate', ['linear'], ['zoom'], cfg.fly.morph_from_zoom, 'vertical-perspective', cfg.fly.zoom, 'mercator'] };
 }
 
+/** What the map looks like now: 'globe', 'morph' (flattening) or 'flat', from the mode and the zoom (used for test hooks and the page state). */
+export function effectiveView(mode, zoom, cfg) {
+  if (mode === 'globe') return 'globe';
+  if (mode === 'flat') return 'flat';
+  if (zoom <= cfg.fly.morph_from_zoom) return 'globe';
+  return zoom >= cfg.fly.zoom ? 'flat' : 'morph';
+}
+
 /** How to move to a chosen place: animated flight, or an instant jump when the system asks for reduced motion. */
 export function flightPlan(reducedMotion, cfg) {
   return { zoom: cfg.fly.zoom, duration: reducedMotion ? 0 : cfg.fly.duration_ms, animate: !reducedMotion };

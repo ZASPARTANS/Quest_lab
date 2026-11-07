@@ -20,14 +20,14 @@ def test_the_front_end_check_tool_reads_the_files_the_python_side_writes():
     assert frontend["check"]["reference_file"] == pipeline["paths"]["plan_reference_file"]
 
 
-def test_the_geocoder_is_the_only_outside_host_the_policy_allows():
+def test_the_two_geocoders_are_the_only_outside_hosts_the_policy_allows():
     frontend = json.loads((ROOT / "config" / "frontend.json").read_text(encoding="utf-8"))
-    origin = "https://" + frontend["geocoder"]["url"].split("/")[2]
+    origins = ["https://" + frontend[key]["url"].split("/")[2] for key in ("geocoder", "reverse_geocoder")]
     policy = next(line for line in (ROOT / "config" / "headers.conf").read_text(encoding="utf-8").splitlines() if "Content-Security-Policy" in line and "add_header" in line)
     outside = re.findall(r"https?://[^\s;\"']+", policy)
-    assert outside == [origin]  # no other host anywhere in the policy
+    assert outside == origins  # no other host anywhere in the policy
     connect = next(part for part in policy.split(";") if part.strip().startswith("connect-src"))
-    assert origin in connect
+    assert all(origin in connect for origin in origins)
 
 
 def test_the_config_files_named_in_the_paths_table_exist():

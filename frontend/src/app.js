@@ -10,6 +10,9 @@ import { addPlace, cleanCoordinates, loadSaved, readAddress, removePlace, samePl
 import { buildBlocks } from './plan.js';
 import { activityNote, renderAbout, renderActivities, renderDays, renderResults, renderSaved, renderTotals, renderWindows } from './render.js';
 import { clock, dayKey, dayLabel, deviceZone, offsetLabel } from './time.js';
+import { mapPointName } from './mapstate.js';
+import * as pageMap from './pagemap.js';
+import { nameOfPosition } from './reverse.js';
 import { loadSeries } from './tiles.js';
 import { buildView } from './view.js';
 
@@ -21,7 +24,8 @@ const MESSAGES = {
   unsupported: 'This browser cannot share its location. Search for a place instead.',
 };
 const state = { manifest: null, getter: null, place: null, fromDevice: false, activityId: activities.default_activity,
-  customWet: activities.custom.default_wet_mm, saved: [], blocks: new Map(), tiles: new Map(), token: 0 };
+  customWet: activities.custom.default_wet_mm, saved: [], blocks: new Map(), tiles: new Map(), token: 0,
+  map: null, hasMap: false, step: null, lastView: null };
 const ui = {};
 
 const storage = (() => {
@@ -74,6 +78,19 @@ function viewOptions(place) {
     totalsDays: activities.totals_days };
 }
 
+const withMap = (fn) => pageMap.withMap(state, fn);
+const cardPick = () => pageMap.cardPick(state, withMap);
+
+function mapStep(step) {
+  state.step = step;
+  if (state.lastView) renderDays(ui.days, state.lastView, cardPick(), step);
+}
+
+function pickOnMap(lat, lon) {
+  const where = cleanCoordinates(lat, lon);
+  if (where) showPlace({ name: mapPointName(where.lat, where.lon), ...where, zone: null }, false, 'map'); // device time zone, labelled (D30)
+}
+
 function draw(place, act, view) {
   const now = Date.now();
   ui.plan.hidden = false;
@@ -83,7 +100,9 @@ function draw(place, act, view) {
   ui.note.textContent = activityNote(act, act.wet_mm);
   ui.customBox.hidden = state.activityId !== 'custom';
   renderWindows(ui.windows, view, act);
-  renderDays(ui.days, view);
+  state.lastView = view;
+  renderDays(ui.days, view, cardPick(), state.step);
+  withMap((m) => m.setZone(view.zone));
   renderTotals(ui.totals, view, cfg.model_labels);
   renderAbout(ui.about, state.manifest, view.zone, !place.zone);
 }
@@ -122,11 +141,13 @@ async function renderSavedList() {
 }
 
 function showSaved(place) {
-  showPlace(place, false);
+  showPlace(place, false, 'saved');
 }
 
-function showPlace(place, fromDevice) {
+function showPlace(place, fromDevice, source) {
   state.place = place;
+  ui.input.value = place.name; // the box always shows the place that is chosen now, never an earlier search
+  withMap((m) => m.setPlace(place, source));
   state.fromDevice = fromDevice;
   fill(ui.results, []);
   setStatus('');
@@ -141,9 +162,26 @@ async function useLocation() {
     const where = cleanCoordinates(position.lat, position.lon);
     if (!where) throw new Error('the browser gave no usable position');
     // shortcut: a place found by the device has no known time zone, so the device's own zone is used and labelled (decision D24, A8)
-    showPlace({ name: 'Your location', ...where, zone: null }, true);
+    const place = { name: 'Your location', ...where, zone: null };
+    showPlace(place, true, 'location');
+    nameDevicePlace(place);
   } catch (error) {
     setStatus(MESSAGES[error?.code] ?? MESSAGES.unavailable);
+  }
+}
+
+/** Replace "Your location" by the place name when the reverse lookup answers (decision D32); on any failure the name stays. */
+async function nameDevicePlace(place) {
+  try {
+    const name = await nameOfPosition(cfg.reverse_geocoder, place.lat, place.lon, (url, init) => fetch(url, init));
+    if (!name) return;
+    place.name = name;
+    if (state.place === place) {
+      ui.input.value = name;
+      ui.title.textContent = name;
+    }
+  } catch (error) {
+    console.error('the name of the position could not be looked up:', error); // developers only; the page keeps "Your location"
   }
 }
 
@@ -155,7 +193,7 @@ async function search(event) {
     const places = await searchPlaces(cfg.geocoder, ui.input.value, (url, init) => fetch(url, init));
     if (!places.length) return setStatus('No place found. Check the spelling, or try a larger town nearby.');
     setStatus('');
-    return places.length === 1 ? showPlace(places[0], false) : renderResults(ui.results, places, (p) => showPlace(p, false));
+    return places.length === 1 ? showPlace(places[0], false, 'search') : renderResults(ui.results, places, (p) => showPlace(p, false, 'search'));
   } catch (error) {
     console.error('place search failed:', error);
     return setStatus('Place search is not available right now. You can still use your location or a saved place.');
@@ -205,15 +243,15 @@ async function chooseStart() {
   if (fromAddress.activity) state.activityId = fromAddress.activity;
   if (fromAddress.wet !== null) state.customWet = fromAddress.wet;
   renderActivities(ui.activities, LIST, state.activityId, chooseActivity);
-  if (fromAddress.place) return showPlace(fromAddress.place, false);
+  if (fromAddress.place) return showPlace(fromAddress.place, false, 'address');
   if (await locationAlreadyAllowed()) return useLocation();
-  if (state.saved.length) return showPlace(state.saved[0], false);
+  if (state.saved.length) return showPlace(state.saved[0], false, 'saved');
   return render();
 }
 
 function collect() {
   for (const id of ['status', 'welcome', 'plan', 'title', 'meta', 'save', 'note', 'windows', 'days', 'totals', 'about', 'saved', 'results',
-    'activities', 'custom-box', 'custom-wet', 'search-form', 'search-input', 'use-location']) {
+    'activities', 'custom-box', 'custom-wet', 'search-form', 'search-input', 'use-location', 'map', 'map-message', 'map-tools']) {
     ui[id.replace(/-(.)/g, (_, c) => c.toUpperCase())] = byId(id);
   }
   ui.input = ui.searchInput;
@@ -221,11 +259,13 @@ function collect() {
 }
 
 async function main() {
+  pageMap.preloadMap(); // the map code downloads while the manifest loads
   collect();
   loadSettings();
   state.saved = loadSaved(storage, cfg.saved_places.storage_key, cfg.saved_places.max);
   ui.customWet.value = String(state.customWet);
   ui.useLocation.addEventListener('click', useLocation);
+  ui.input.addEventListener('focus', () => ui.input.select()); // typing replaces the shown place name
   ui.searchForm.addEventListener('submit', search);
   ui.save.addEventListener('click', toggleSave);
   ui.customWet.addEventListener('change', chooseWet);
@@ -236,6 +276,7 @@ async function main() {
     return setStatus('The forecast could not be loaded. Please try again in a few minutes.');
   }
   state.getter = bufferGetter(maxTileBytes(state.manifest));
+  state.map = pageMap.startMap({ state, ui, cfg, onPick: pickOnMap, onStep: mapStep, redrawBlocks: () => state.lastView && renderDays(ui.days, state.lastView, null, null) });
   setInterval(() => { if (!document.hidden) render(); }, cfg.refresh_seconds * 1000);
   return chooseStart();
 }

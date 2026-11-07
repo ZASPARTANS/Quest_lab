@@ -10,73 +10,82 @@
 </head>
 <body>
   <div id="env-badge" hidden></div>
-  <header class="top">
-    <h1>Rain plan</h1>
-    <p class="lead">Choose a place and what you want to do. You get the dry windows of the next days, and how sure two forecast models are.</p>
-  </header>
+  <div class="layout">
+    <div class="side">
+      <header class="top">
+        <h1>Rain plan</h1>
+        <p class="lead">Choose a place and what you want to do. You get the dry windows of the next days, and how sure two forecast models are.</p>
+      </header>
 
-  <main>
-    <section class="panel" aria-labelledby="where-h">
-      <h2 id="where-h">1. Where</h2>
-      <div class="row">
-        <button id="use-location" type="button" class="primary">Use my location</button>
-        <form id="search-form" class="search" autocomplete="off">
-          <label for="search-input" class="sr-only">Search for a place</label>
-          <input id="search-input" type="search" maxlength="60" placeholder="Or search for a place, e.g. Chennai" enterkeyhint="search">
-          <button type="submit">Search</button>
-        </form>
-      </div>
-      <p class="note" id="privacy">Your location and saved places stay in this browser. Searching sends the text you type, and your IP address, to Open-Meteo (open-meteo.com) and nobody else.</p>
-      <p id="status" class="status" role="status" aria-live="polite"></p>
-      <ul id="results" class="results" aria-label="Search results"></ul>
-      <h3>Saved places</h3>
-      <ul id="saved" class="saved-list"></ul>
+      <main>
+        <section class="panel" aria-labelledby="where-h">
+          <h2 id="where-h">1. Where</h2>
+          <div class="row">
+            <button id="use-location" type="button" class="primary">Use my location</button>
+            <form id="search-form" class="search" autocomplete="off">
+              <label for="search-input" class="sr-only">Search for a place</label>
+              <input id="search-input" type="search" maxlength="60" placeholder="Or search, e.g. Chennai" enterkeyhint="search">
+              <button type="submit">Search</button>
+            </form>
+          </div>
+          <p class="note" id="privacy">Your location and saved places stay in this browser. Searching sends the text you type, and your IP address, to Open-Meteo (open-meteo.com). Using your location sends your position and IP address to BigDataCloud (bigdatacloud.com) to get the place name. Nobody else gets anything. You can also click the map.</p>
+          <p id="status" class="status" role="status" aria-live="polite"></p>
+          <ul id="results" class="results" aria-label="Search results"></ul>
+          <h3>Saved places</h3>
+          <ul id="saved" class="saved-list"></ul>
+        </section>
+
+        <p id="welcome" class="welcome">Choose where you are, search for a place, or click the map, to see your plan.</p>
+
+        <section id="plan" hidden>
+          <div class="place-head">
+            <div>
+              <h2 id="title"></h2>
+              <p id="meta" class="note"></p>
+            </div>
+            <button id="save" type="button"></button>
+          </div>
+
+          <fieldset class="panel">
+            <legend>2. What do you want to do?</legend>
+            <div id="activities" class="chips"></div>
+            <div id="custom-box" class="custom" hidden>
+              <label for="custom-wet">Count a 6-hour block as wet from</label>
+              <select id="custom-wet"></select>
+            </div>
+            <p id="note" class="note"></p>
+          </fieldset>
+
+          <section class="panel" aria-labelledby="win-h">
+            <h2 id="win-h">3. Best dry windows</h2>
+            <ol id="windows" class="windows"></ol>
+          </section>
+
+          <section class="panel" aria-labelledby="days-h">
+            <h2 id="days-h">Day by day</h2>
+            <p class="note">Each block is 6 hours. Dry and wet are what <em>both</em> models say; a hatched block means one says wet and the other dry. Press a block to see it on the map.</p>
+            <div id="days" class="days"></div>
+          </section>
+
+          <section class="panel" aria-labelledby="tot-h">
+            <h2 id="tot-h">Rain totals</h2>
+            <p class="note">From the 6-hour block now under way. The range is the lowest and highest of the two models.</p>
+            <div id="totals" class="totals"></div>
+          </section>
+        </section>
+      </main>
+
+      <footer>
+        <div id="about" class="about"></div>
+      </footer>
+    </div>
+
+    <section class="stage" aria-label="Rain map">
+      <div id="map" class="map" role="region" aria-label="Rain forecast map. Click the map to choose a place."></div>
+      <div id="map-message" class="map-message" role="status" hidden></div>
+      <div id="map-tools" class="map-tools" hidden></div>
     </section>
-
-    <p id="welcome" class="welcome">Choose where you are, or search for a place, to see your plan.</p>
-
-    <section id="plan" hidden>
-      <div class="place-head">
-        <div>
-          <h2 id="title"></h2>
-          <p id="meta" class="note"></p>
-        </div>
-        <button id="save" type="button"></button>
-      </div>
-
-      <fieldset class="panel">
-        <legend>2. What do you want to do?</legend>
-        <div id="activities" class="chips"></div>
-        <div id="custom-box" class="custom" hidden>
-          <label for="custom-wet">Count a 6-hour block as wet from</label>
-          <select id="custom-wet"></select>
-        </div>
-        <p id="note" class="note"></p>
-      </fieldset>
-
-      <section class="panel" aria-labelledby="win-h">
-        <h2 id="win-h">3. Best dry windows</h2>
-        <ol id="windows" class="windows"></ol>
-      </section>
-
-      <section class="panel" aria-labelledby="days-h">
-        <h2 id="days-h">Day by day</h2>
-        <p class="note">Each block is 6 hours. Dry and wet are what <em>both</em> models say; a hatched block means one says wet and the other dry.</p>
-        <div id="days" class="days"></div>
-      </section>
-
-      <section class="panel" aria-labelledby="tot-h">
-        <h2 id="tot-h">Rain totals</h2>
-        <p class="note">From the 6-hour block now under way. The range is the lowest and highest of the two models.</p>
-        <div id="totals" class="totals"></div>
-      </section>
-    </section>
-  </main>
-
-  <footer>
-    <div id="about" class="about"></div>
-    <p class="note dev">Work in progress: <a href="/spikes/maplibre.html?mode=2d">flat map preview</a> | <a href="/spikes/maplibre.html?mode=3d">globe preview</a></p>
-  </footer>
+  </div>
   <noscript><p class="status">This page needs JavaScript to show the forecast.</p></noscript>
   <script type="module" src="/src/app.js"></script>
 </body>

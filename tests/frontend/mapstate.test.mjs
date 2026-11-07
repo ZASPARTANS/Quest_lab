@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { manifestProblems } from '../../frontend/src/manifest.js';
-import { allSteps, chooseFrame, firstUpcomingStep, flightPlan, frameStep, frameUrl, mapPointName, modelOptions, prefersReducedMotion, projectionSpec,
+import { allSteps, chooseFrame, effectiveView, firstUpcomingStep, flightPlan, frameStep, frameUrl, mapPointName, modelOptions, prefersReducedMotion, projectionSpec,
   shouldFly, webgl2Available } from '../../frontend/src/mapstate.js';
 
 const FRONTEND = JSON.parse(readFileSync(new URL('../../config/frontend.json', import.meta.url), 'utf8'));
@@ -117,4 +117,14 @@ test('WebGL2 detection and the name of a map point', () => {
   assert.equal(webgl2Available(() => { throw new Error('no canvas'); }), false);
   assert.equal(mapPointName(13.0827, 80.2707), 'Map point (13.08, 80.27)');
   assert.equal(mapPointName(-33.8688, -0.5), 'Map point (-33.87, -0.50)');
+});
+
+test('the effective view follows the mode and, in the automatic mode, the zoom', () => {
+  const cfg = FRONTEND.map;
+  assert.equal(effectiveView('auto', cfg.start.zoom, cfg), 'globe');
+  assert.equal(effectiveView('auto', cfg.fly.morph_from_zoom, cfg), 'globe');
+  assert.equal(effectiveView('auto', (cfg.fly.morph_from_zoom + cfg.fly.zoom) / 2, cfg), 'morph');
+  assert.equal(effectiveView('auto', cfg.fly.zoom, cfg), 'flat');
+  assert.equal(effectiveView('flat', 1, cfg), 'flat');
+  assert.equal(effectiveView('globe', 6, cfg), 'globe');
 });
