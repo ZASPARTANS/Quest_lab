@@ -66,6 +66,10 @@
 | 2026-11-07 14:02 | Commit `cf82d26`: Step 9.3d-2: stored OpenStreetMap base map (Protomaps, zoom 0-7) under the rain, bright names and borders, Now button | 19.73 h | 52.27 h |
 | 2026-11-07 14:09 | Resume after compaction, same session ID; the markdown records re-read first; clock read with `date -u` | 19.83 h | 52.17 h |
 | 2026-11-07 14:17 | Housekeeping review of all markdown files (this edit; its commit time is in `git log`; rows after 00:43 on 2026-11-07 were added here, they were missing) | 19.98 h | 52.02 h |
+| 2026-11-07 14:18 | Commit `d998a3e`: Housekeeping: bring all markdown records up to date | 19.98 h | 52.02 h |
+| 2026-11-07 14:20 | Commit `f27e29d`: Record the user's answers (time bar moved by them, live layer fast in their Firefox) | 20.03 h | 51.97 h |
+| 2026-11-07 14:25 | Commit `df04244`: Record D40: step 9.3d-3 dropped (scope cut); E024 seen again | 20.10 h | 51.90 h |
+| 2026-11-07 14:32 | Commit `232f75b`: Step 9.3d-4: browser scenarios for the stored base map, records, hosting requirement | 20.22 h | 51.78 h |
 
 ## Current plan
 **`docs/plans/PLAN-010.md`** (approved by the user 2026-11-07 13:41 UTC) is the plan in progress: a stored vector base map (OpenStreetMap through Protomaps, dark style, self-hosted fonts and sprites, English labels) under the rain; nothing paid (D37). Steps 9.3d-1, 9.3d-2 and 9.3d-4 are done; 9.3d-3 was dropped by the user (D40); **PLAN-010 is complete.** Next in force: PLAN-009 step 9.3c-4. After it: PLAN-009 step 9.3c-4, PLAN-007 steps 9.4 and 9.5 and PLAN-006 steps 10-12 (all still in force).
