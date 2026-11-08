@@ -127,6 +127,8 @@ services:
       - ../config:/work/config:ro
       - ../frontend/src:/work/frontend/src:ro
       - ../frontend/index.html:/work/frontend/index.html:ro   # one test reads the page's fixed text (no "wet" or "dry", D41)
+      - ../frontend/tools:/work/frontend/tools:ro             # the function size test (50 lines, D47) measures the browser tools too
+      - ../frontend/vite.config.js:/work/frontend/vite.config.js:ro   # and the Vite settings
       - ../tests/frontend:/work/tests/frontend:ro
     command: ["node", "--test", "tests/frontend/*.test.mjs"]
 
