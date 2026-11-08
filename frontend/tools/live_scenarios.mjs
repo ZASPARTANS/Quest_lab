@@ -4,25 +4,32 @@
 // 2. a tile that cannot be fetched: the live layer gives way to the pre-made picture and the page keeps working.
 // 3. rotation and tilt are off (right-button drag, shift+arrow keys).
 // Not proven here: that the live picture equals the exact tile values (tests/frontend/live.test.mjs against the Python reference); the look (screenshots).
+// The three scenarios are in small groups (each function at most 50 lines, D47) that share the tools of liveTools().
 import assert from 'node:assert/strict';
 
-/** `h` = { open, mapState, assertLanded, checkPlanShown, shot, base, frontend, ADDRESS, timeout }. */
-export function liveScenarios(h) {
-  const { open, mapState, assertLanded, checkPlanShown, shot, base, frontend, ADDRESS, timeout } = h;
-  const minZoom = frontend.map.live.min_zoom;
-  const live = (page, want) => page.waitForFunction((w) => document.getElementById('map').dataset.live === w, want, { timeout });
-  const zoomNow = (page) => page.evaluate(() => Number(document.getElementById('map').dataset.zoom));
-  const centreOfMap = async (page) => { const b = await page.locator('#map').boundingBox(); return { x: b.x + b.width / 2, y: b.y + b.height / 2 }; };
+/** `h` = { open, mapState, assertLanded, checkPlanShown, shot, base, frontend, ADDRESS, timeout }: what the groups share. */
+function liveTools(h) {
+  const { open, mapState, assertLanded, base, frontend, ADDRESS, timeout } = h;
+  return {
+    ...h,
+    minZoom: frontend.map.live.min_zoom,
+    live: (page, want) => page.waitForFunction((w) => document.getElementById('map').dataset.live === w, want, { timeout }),
+    zoomNow: (page) => page.evaluate(() => Number(document.getElementById('map').dataset.zoom)),
+    centreOfMap: async (page) => { const b = await page.locator('#map').boundingBox(); return { x: b.x + b.width / 2, y: b.y + b.height / 2 }; },
+    /** Open the page on Chennai; ready is false when this engine has no WebGL2 (the plain message path is tested by 'no webgl, no canvas'). */
+    async openOnMap(browser, options) {
+      const opened = await open(browser, options);
+      await opened.page.goto(base + ADDRESS);
+      if ((await mapState(opened.page)) !== 'ready') return { ...opened, ready: false };
+      await assertLanded(opened.page, 13.08, 80.27, frontend.map.fly.zoom_by_source.address);
+      return { ...opened, ready: true };
+    },
+  };
+}
 
-  /** Open the page on Chennai; returns null when this engine has no WebGL2 (the plain message path is tested by 'no webgl, no canvas'). */
-  async function openOnMap(browser, options) {
-    const opened = await open(browser, options);
-    await opened.page.goto(base + ADDRESS);
-    if ((await mapState(opened.page)) !== 'ready') return { ...opened, ready: false };
-    await assertLanded(opened.page, 13.08, 80.27, frontend.map.fly.zoom_by_source.address);
-    return { ...opened, ready: true };
-  }
-
+/** The live layer follows zoom, mode and model. */
+function liveFollowScenarios(h) {
+  const { shot, minZoom, live, zoomNow, centreOfMap, openOnMap } = liveTools(h);
   return {
     async 'live layer follows zoom, mode and model'(browser) {
       const { page, log, ready } = await openOnMap(browser);
@@ -48,6 +55,13 @@ export function liveScenarios(h) {
       await live(page, 'off');
       return log;
     },
+  };
+}
+
+/** A tile that cannot be fetched. */
+function liveFaultScenarios(h) {
+  const { checkPlanShown, shot, live, centreOfMap, openOnMap } = liveTools(h);
+  return {
     async 'live layer gives way when a tile fails'(browser) {
       const { context, page, log, ready } = await openOnMap(browser);
       if (!ready) return log;
@@ -71,6 +85,13 @@ export function liveScenarios(h) {
       await shot(page, 'live-tile-fault');
       return log;
     },
+  };
+}
+
+/** Rotation and tilt are off. */
+function liveNorthUpScenarios(h) {
+  const { centreOfMap, openOnMap } = liveTools(h);
+  return {
     async 'map stays north-up and flat'(browser) {
       const { page, log, ready } = await openOnMap(browser);
       if (!ready) return log;
@@ -90,4 +111,9 @@ export function liveScenarios(h) {
       return log;
     },
   };
+}
+
+/** `h` = { open, mapState, assertLanded, checkPlanShown, shot, base, frontend, ADDRESS, timeout }. */
+export function liveScenarios(h) {
+  return { ...liveFollowScenarios(h), ...liveFaultScenarios(h), ...liveNorthUpScenarios(h) };
 }

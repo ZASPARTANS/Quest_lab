@@ -2,24 +2,32 @@
 // the model switch and a day-card click change what the map shows, Flat/Globe keeps the place and the block, a map click chooses a "Map point", the plain message
 // without WebGL2, reduced motion (the view jumps), and the layout (a quarter plan + three quarters map on a wide window, stacked on a phone-sized one).
 // The page tells the checks its state through data- attributes of #map (frame, effective, flying, zoom, center) and of body (map).
+// The scenarios are in four small groups (each function at most 50 lines, D47) that share the tools of mapTools().
 import assert from 'node:assert/strict';
 
-/** `h` = { open, mapState, assertLanded, shot, base, frontend, ADDRESS, timeout }. */
-export function mapScenarios(h) {
-  const { open, mapState, assertLanded, shot, base, frontend, ADDRESS, timeout, sitePath } = h;
+/** `h` = { open, mapState, assertLanded, shot, base, frontend, ADDRESS, timeout, sitePath }: what the groups share. */
+function mapTools(h) {
+  const { open, mapState, base, ADDRESS, timeout } = h;
   const data = (page, key) => page.evaluate((k) => document.getElementById('map').dataset[k], key);
-  const frame = async (page) => { const [kind, step] = (await data(page, 'frame')).split('_'); return { kind, step: Number(step) }; };
-  const title = (page) => page.locator('#title').first().innerText();
-  const planShown = (page) => page.waitForSelector('#plan:not([hidden]) .day', { timeout });
-  const stateReady = (page) => page.waitForFunction(() => document.getElementById('map').dataset.ready === 'true', null, { timeout });
+  return {
+    ...h,
+    data,
+    frame: async (page) => { const [kind, step] = (await data(page, 'frame')).split('_'); return { kind, step: Number(step) }; },
+    title: (page) => page.locator('#title').first().innerText(),
+    planShown: (page) => page.waitForSelector('#plan:not([hidden]) .day', { timeout }),
+    stateReady: (page) => page.waitForFunction(() => document.getElementById('map').dataset.ready === 'true', null, { timeout }),
+    async onMap(browser, options, address = ADDRESS) {
+      const opened = await open(browser, options);
+      await opened.page.goto(base + address);
+      const ready = (await mapState(opened.page)) === 'ready';
+      return { ...opened, ready };
+    },
+  };
+}
 
-  async function onMap(browser, options, address = ADDRESS) {
-    const opened = await open(browser, options);
-    await opened.page.goto(base + address);
-    const ready = (await mapState(opened.page)) === 'ready';
-    return { ...opened, ready };
-  }
-
+/** The globe, the fly-in and the switch between Flat and Globe. */
+function mapFlightScenarios(h) {
+  const { assertLanded, shot, frontend, timeout, data, title, stateReady, onMap } = mapTools(h);
   return {
     async 'globe at start'(browser) {
       const { page, log, ready } = await onMap(browser, {}, '/');
@@ -41,6 +49,28 @@ export function mapScenarios(h) {
       await shot(page, 'flight-flat');
       return log;
     },
+    async 'flat and globe switch keep the place and the block'(browser) {
+      const { page, log, ready } = await onMap(browser);
+      if (!ready) return log;
+      await assertLanded(page, 13.08, 80.27, frontend.map.fly.zoom_by_source.address);
+      const before = await data(page, 'frame');
+      await page.click('label[for="map-mode-globe"]');
+      await page.waitForFunction(() => document.getElementById('map').dataset.effective === 'globe', null, { timeout });
+      assert.equal(await data(page, 'frame'), before, 'the block and model stay on the globe');
+      assert.equal(await page.locator('.place-marker').count(), 1, 'the place marker stays');
+      await page.click('label[for="map-mode-flat"]');
+      await page.waitForFunction(() => document.getElementById('map').dataset.effective === 'flat', null, { timeout });
+      assert.equal(await data(page, 'frame'), before);
+      assert.equal(await title(page), 'Chennai');
+      return log;
+    },
+  };
+}
+
+/** What the visitor chooses: the model, a day block, a point on the map. */
+function mapChoiceScenarios(h) {
+  const { assertLanded, frontend, timeout, frame, onMap } = mapTools(h);
+  return {
     async 'model switch and a day card change the frame'(browser) {
       const { page, log, ready } = await onMap(browser);
       if (!ready) return log;
@@ -61,21 +91,6 @@ export function mapScenarios(h) {
       assert.equal(await blocks.nth(pick).getAttribute('aria-pressed'), 'true', 'the pressed block is marked');
       return log;
     },
-    async 'flat and globe switch keep the place and the block'(browser) {
-      const { page, log, ready } = await onMap(browser);
-      if (!ready) return log;
-      await assertLanded(page, 13.08, 80.27, frontend.map.fly.zoom_by_source.address);
-      const before = await data(page, 'frame');
-      await page.click('label[for="map-mode-globe"]');
-      await page.waitForFunction(() => document.getElementById('map').dataset.effective === 'globe', null, { timeout });
-      assert.equal(await data(page, 'frame'), before, 'the block and model stay on the globe');
-      assert.equal(await page.locator('.place-marker').count(), 1, 'the place marker stays');
-      await page.click('label[for="map-mode-flat"]');
-      await page.waitForFunction(() => document.getElementById('map').dataset.effective === 'flat', null, { timeout });
-      assert.equal(await data(page, 'frame'), before);
-      assert.equal(await title(page), 'Chennai');
-      return log;
-    },
     async 'a map click chooses a map point'(browser) {
       const { page, log, ready } = await onMap(browser);
       if (!ready) return log;
@@ -89,6 +104,14 @@ export function mapScenarios(h) {
       assert.ok(Math.abs(Number(query.get('lon')) - 80.27) > 0.001 && Math.abs(Number(query.get('lon')) - 80.27) < 3, `the address has the clicked longitude: ${query.get('lon')}`);
       return log;
     },
+  };
+}
+
+/** The colour key, the page without WebGL2 and reduced motion. */
+function mapKeyScenarios(h) {
+  const { open, assertLanded, shot, base, frontend, ADDRESS, timeout, sitePath, planShown, onMap } = mapTools(h);
+  const { mapState } = h;
+  return {
     async 'the colour key explains every colour (PLAN-012)'(browser) {
       const { page, log, ready } = await onMap(browser);
       if (!ready) return log;
@@ -129,6 +152,13 @@ export function mapScenarios(h) {
       assert.ok(Date.now() - started < frontend.map.fly.duration_ms * 0.6, `landed after ${Date.now() - started} ms: the view should jump, not fly (${frontend.map.fly.duration_ms} ms)`);
       return log;
     },
+  };
+}
+
+/** The layout: a quarter plan and three quarters map on a wide window, stacked on a phone-sized one. */
+function mapLayoutScenarios(h) {
+  const { shot, planShown, onMap } = mapTools(h);
+  return {
     async 'layout: a quarter plan and three quarters map, stacked on a phone'(browser) {
       const wide = await onMap(browser, { viewport: { width: 1280, height: 800 } });
       await planShown(wide.page);
@@ -149,4 +179,9 @@ export function mapScenarios(h) {
       return wide.log;
     },
   };
+}
+
+/** `h` = { open, mapState, assertLanded, shot, base, frontend, ADDRESS, timeout, sitePath }. */
+export function mapScenarios(h) {
+  return { ...mapFlightScenarios(h), ...mapChoiceScenarios(h), ...mapKeyScenarios(h), ...mapLayoutScenarios(h) };
 }
