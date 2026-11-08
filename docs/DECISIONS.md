@@ -538,5 +538,5 @@ Four marker lines in three files, each recorded here and in the README's known l
 - **Guard:** `tests/frontend/mapstate.test.mjs` keeps `max_zoom` at most one above `extract.maxzoom` and every landing zoom at most `extract.maxzoom`, so a bigger zoom cannot be set again by mistake.
 - **Bet:** the user finds the phone map less rough. **Result:** pending (the change is not live until a push; the user's verdict on their phone is needed).
 
-### D45 results (2026-11-08 16:00 UTC)
+### D45 results (2026-11-08 15:57 UTC)
 - Bet (a) **yes**: the second real run restored the cache ("Cache hit", "Cache restored successfully", 181 MB in 3 s) and `fetch-release` printed "already there and matches"; the save step was skipped; the fonts and sprites were installed from the repository (1029 files, all matching the lock). Bet (b) **no**: not faster, the download is about 3 s either way; the value is resilience, and that is not proven (the cache service might also have timed out in the incident). The first run after a cache eviction (7 days unused, my assumption A45, not verified) downloads as before, with the retry.

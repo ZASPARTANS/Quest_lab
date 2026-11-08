@@ -170,7 +170,7 @@ What exists now: the pipeline and the static export, the page live on GitHub Pag
 | New | the **scheduled workflow keeps running** every 6 hours until it is disabled | decide at the end whether it stays on |
 | New | **traffic tests** (D43): GET only, capped, refusing a non-local site without an approval note; about 21 MB sent to GitHub in the live part so far | none; rules and numbers in PLAN-014 and PROGRESS |
 
-## Update 2026-11-08 16:00 UTC (PLAN-015, D45, E039)
+## Update 2026-11-08 15:57 UTC (PLAN-015, D45, E039)
 | ID | Status | Note |
 |---|---|---|
 | S15 | **new, closed**: the workflow now uses `actions/cache/restore` and `actions/cache/save` | GitHub-owned, pinned to the commit `55cc8345863c7cc4c66a329aec7e433d2d1c52a9` (v6.1.0), no new permission, no secret; `scripts/check_workflow.py` accepts an action sub-folder but still refuses tags, other owners and `..` segments (tests with 3 deliberate breakages). The cache is only a place to keep data: `fetch-release` checks size and sha256 after the restore, so a poisoned or damaged cache entry cannot change what is published |
