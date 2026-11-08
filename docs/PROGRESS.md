@@ -180,7 +180,7 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 | 14.3 | ONE tiny test of the live site, only after the user's explicit go with the printed plan (PLAN-014) | **partly done**: part 1 (replay) stopped itself at 8.8 MB on my own too-strict check, 2026-11-07 23:32-23:33 UTC, no host errors; part 2 (3 real browsers) done 2026-11-08 00:09 UTC; the rest of the ladder (levels 3 and 5, about 26 MB) can go from 00:35 UTC on and needs the user's go again |
 | 14.4 | Records, README line, D43 results, push (PLAN-014) | not started |
 | 15.0 | Records: PLAN-015, D45 (PLAN-015) | **done** 2026-11-08 12:10 UTC |
-| 15.1 | A retry for the base-map download (PLAN-015) | not started |
+| 15.1 | A retry for the base-map download (PLAN-015) | **done** 2026-11-08 12:13 UTC: `pipeline/release.py` (new; `fetch_release` moved out of `basemap.py`, 266 to 225 lines), `[release] attempts = 3` and `retry_wait_seconds = 30` in `config/basemap.toml`; retried: network error, timeout, a break in the body, HTTP 5xx and 429; never retried: 404 and other answers, a wrong size or hash, a non-https address; Python **164 passed** (4 new); negative controls: with the retry removed 2 tests fail, with 404 counted as transient 1 test fails |
 | 15.2 | Fonts and sprites committed to `frontend/basemap_assets/`, `install-assets` (PLAN-015) | not started |
 | 15.3 | A cache for the map file in the workflow, `check_workflow.py` allows sub-paths (PLAN-015) | not started |
 | 15.4 | Push and prove the cache on GitHub in two runs (PLAN-015; needs the user's go) | not started |

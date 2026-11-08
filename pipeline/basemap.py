@@ -27,6 +27,7 @@ import tomllib
 
 from pipeline.fetch import _TimeoutSession, load_config
 from pipeline.paths import ROOT
+from pipeline.release import fetch_release
 
 
 def load_basemap(cfg):
@@ -166,48 +167,6 @@ def fetch_assets(bm, session, lock_path, assets_dir):
             downloaded += 1
         total += entry["bytes"]
     return downloaded, kept, total
-
-
-def _sha256_of_file(path):
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1 << 20), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
-def fetch_release(bm, session, target, partial_suffix):
-    """Download the stored base-map file from its GitHub Release asset (step 13.3) and check size and sha256 before it is used.
-    Returns True if it was downloaded, False if the file already there matches. A wrong size or hash deletes the partial file and raises."""
-    r = bm["release"]
-    if not r["url"].startswith("https://"):
-        raise ValueError("the base-map release address must be https")
-    if target.is_file() and target.stat().st_size == r["bytes"] and _sha256_of_file(target) == r["sha256"]:
-        return False
-    target.parent.mkdir(parents=True, exist_ok=True)
-    part = target.with_name(target.name + partial_suffix)
-    response = session.get(r["url"], stream=True)
-    try:
-        if response.status_code != 200:
-            raise RuntimeError(f"{r['url']} answered {response.status_code}")
-        digest, size = hashlib.sha256(), 0
-        with part.open("wb") as out:
-            for chunk in response.iter_content(1 << 20):
-                size += len(chunk)
-                if size > r["bytes"]:
-                    raise ValueError("the downloaded base-map file is larger than config/basemap.toml says; it was not used")
-                digest.update(chunk)
-                out.write(chunk)
-    except BaseException:
-        part.unlink(missing_ok=True)
-        raise
-    finally:
-        response.close()
-    if size != r["bytes"] or digest.hexdigest() != r["sha256"]:
-        part.unlink(missing_ok=True)
-        raise ValueError("the downloaded base-map file does not match the size and sha256 in config/basemap.toml; it was not used")
-    part.replace(target)
-    return True
 
 
 def measure(cfg, bm, session):

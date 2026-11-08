@@ -46,3 +46,6 @@ lock_file = "config/basemap_assets.lock.json"
 url = "https://github.com/ZASPARTANS/Quest_lab/releases/download/basemap-v1/world.pmtiles"
 bytes = 189610941
 sha256 = "1857567474198b95c08e091a4fb6e8465509173a4aa875c070ba472ded888be2"
+# A download that fails in a way that may pass by itself (network error, timeout, HTTP 5xx or 429) is tried again; a wrong size, a wrong hash or any other answer is never retried (PLAN-015, D45).
+attempts = 3
+retry_wait_seconds = 30

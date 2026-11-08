@@ -7,6 +7,7 @@ import json
 import tarfile
 
 import pytest
+import requests
 
 from pipeline import basemap
 from pipeline.fetch import load_config
@@ -184,9 +185,9 @@ class StreamResponse:
         self.closed = True
 
 
-def _release(bm, content, url="https://example.org/basemap-v1/world.pmtiles"):
+def _release(bm, content, url="https://example.org/basemap-v1/world.pmtiles", attempts=1):
     release = copy.deepcopy(bm)
-    release["release"] = {"url": url, "bytes": len(content), "sha256": hashlib.sha256(content).hexdigest()}
+    release["release"] = {"url": url, "bytes": len(content), "sha256": hashlib.sha256(content).hexdigest(), "attempts": attempts, "retry_wait_seconds": 30}
     return release
 
 
@@ -233,3 +234,67 @@ def test_the_real_release_settings_are_https_and_have_a_sha256_of_the_right_shap
     assert release["url"].startswith("https://github.com/") and release["url"].endswith("/" + load_config()["paths"]["basemap_file"])
     assert len(release["sha256"]) == 64 and set(release["sha256"]) <= set("0123456789abcdef")
     assert release["bytes"] > 100_000_000
+
+
+class ScriptedSession:
+    """Each GET does the next thing of the script: an exception object is raised, anything else is returned."""
+
+    def __init__(self, script):
+        self.script, self.requests = list(script), []
+
+    def get(self, url, **kwargs):
+        self.requests.append(url)
+        step = self.script.pop(0)
+        if isinstance(step, Exception):
+            raise step
+        return step
+
+
+class BrokenBody(StreamResponse):
+    """A download whose connection breaks after the first chunk (the error comes in the middle of the body)."""
+
+    def iter_content(self, size):
+        yield self._content[: self._chunk]
+        raise requests.exceptions.ChunkedEncodingError("connection broken")
+
+
+def _retry_case(bm, tmp_path, script, attempts=3):
+    content = b"invented base map bytes " * 10
+    release = _release(bm, content, attempts=attempts)
+    session = ScriptedSession([step(content) if callable(step) else step for step in script])
+    waits = []
+    target = tmp_path / "world.pmtiles"
+    return release, session, waits, target, content
+
+
+def test_fetch_release_tries_again_after_a_timeout_and_after_5xx_and_429_and_a_break_in_the_body(bm, tmp_path):
+    ok = lambda c: StreamResponse(200, c)  # noqa: E731
+    script = [requests.exceptions.ReadTimeout("read timed out"), StreamResponse(503), StreamResponse(429), lambda c: BrokenBody(200, c), ok]
+    release, session, waits, target, content = _retry_case(bm, tmp_path, script, attempts=5)
+    assert basemap.fetch_release(release, session, target, PART, sleep=waits.append) is True
+    assert target.read_bytes() == content and not (tmp_path / ("world.pmtiles" + PART)).exists()
+    assert len(session.requests) == 5 and waits == [30, 30, 30, 30]  # a pause before every new try, none after the last
+
+
+def test_fetch_release_gives_up_after_exactly_the_configured_tries_and_leaves_nothing_behind(bm, tmp_path):
+    script = [requests.exceptions.ReadTimeout("read timed out")] * 3
+    release, session, waits, target, _ = _retry_case(bm, tmp_path, script, attempts=3)
+    with pytest.raises(RuntimeError, match="3 tries"):
+        basemap.fetch_release(release, session, target, PART, sleep=waits.append)
+    assert len(session.requests) == 3 and waits == [30, 30]
+    assert not target.exists() and not (tmp_path / ("world.pmtiles" + PART)).exists()
+
+
+def test_fetch_release_never_retries_a_final_answer_or_a_failed_check(bm, tmp_path):
+    for first, error, match in ((StreamResponse(404), RuntimeError, "404"), (StreamResponse(200, b"y" * 240), ValueError, "does not match"),
+                                (StreamResponse(200, b"z" * 500), ValueError, "larger")):
+        release, session, waits, target, _ = _retry_case(bm, tmp_path, [first, lambda c: StreamResponse(200, c)])
+        with pytest.raises(error, match=match):
+            basemap.fetch_release(release, session, target, PART, sleep=waits.append)
+        assert len(session.requests) == 1 and waits == [], f"{match}: it was tried again"
+
+
+def test_the_real_retry_settings_are_small_whole_numbers(bm):
+    release = bm["release"]
+    assert isinstance(release["attempts"], int) and 1 <= release["attempts"] <= 5
+    assert isinstance(release["retry_wait_seconds"], int) and 0 <= release["retry_wait_seconds"] <= 120
