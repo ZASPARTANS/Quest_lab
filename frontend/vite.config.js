@@ -12,6 +12,63 @@ const cfg = JSON.parse(readFileSync(join(repoDir, 'config', 'frontend.json'), 'u
 const MIME = { '.pbf': 'application/x-protobuf', '.png': 'image/png', '.jpg': 'image/jpeg', '.json': 'application/json', '.js': 'text/javascript', '.css': 'text/css',
   '.xml': 'application/xml', '.svg': 'image/svg+xml', '.wasm': 'application/wasm' };
 
+// The dev-server middleware below is in three small functions (PLAN-016, decision D47); their answers were compared request by request with the earlier one-piece version.
+
+/** The file for a request address below `base`: { target, size }, or { status, text } when the request is refused (400 bad address, 403 outside `base`, 404 not a file). */
+function safeTarget(base, rawUrl) {
+  let target;
+  try {
+    target = resolve(base, '.' + decodeURIComponent((rawUrl ?? '/').split('?')[0]));
+  } catch {
+    return { status: 400, text: 'bad request' };
+  }
+  if (target.includes('\0') || !target.startsWith(base + sep)) return { status: 403, text: 'forbidden' };
+  let info;
+  try {
+    info = statSync(target);
+  } catch {
+    return { status: 404, text: 'not found' };
+  }
+  return info.isFile() ? { target, size: info.size } : { status: 404, text: 'not found' };
+}
+
+/** The bytes to send for a Range header on a file of `size` bytes: { start, end, partial }, or { invalid: true } (416). One range only: bytes=a-b, bytes=a- or bytes=-n (the last n bytes). */
+function byteRange(header, size) {
+  let start = 0;
+  let end = size - 1;
+  if (!header) return { start, end, partial: false };
+  const m = /^bytes=(\d*)-(\d*)$/.exec(header);
+  if (m && (m[1] !== '' || m[2] !== '')) {
+    if (m[1] === '') start = Math.max(0, size - Number(m[2]));
+    else {
+      start = Number(m[1]);
+      if (m[2] !== '') end = Math.min(Number(m[2]), size - 1);
+    }
+  }
+  if (!m || start > end || start >= size) return { invalid: true };
+  return { start, end, partial: true };
+}
+
+/** Answer a GET or HEAD for the file `target` of `size` bytes, with the type, the range support and nosniff headers. */
+function sendFile(req, res, target, size) {
+  res.setHeader('Content-Type', MIME[extname(target).toLowerCase()] ?? 'application/octet-stream');
+  res.setHeader('Accept-Ranges', 'bytes');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  const range = byteRange(req.headers.range, size);
+  if (range.invalid) {
+    res.statusCode = 416;
+    res.setHeader('Content-Range', `bytes */${size}`);
+    return res.end();
+  }
+  if (range.partial) {
+    res.statusCode = 206;
+    res.setHeader('Content-Range', `bytes ${range.start}-${range.end}/${size}`);
+  }
+  res.setHeader('Content-Length', range.end - range.start + 1);
+  if (req.method === 'HEAD') return res.end();
+  return createReadStream(target, { start: range.start, end: range.end }).pipe(res);
+}
+
 /** Dev-server middleware: GET/HEAD files below `dir` at `urlPath`. Anything outside `dir` is refused (path traversal). */
 function serveFolder(urlPath, dir) {
   const base = resolve(dir);
@@ -20,55 +77,12 @@ function serveFolder(urlPath, dir) {
     configureServer(server) {
       server.middlewares.use(urlPath, (req, res, next) => {
         if (req.method !== 'GET' && req.method !== 'HEAD') return next();
-        let target;
-        try {
-          target = resolve(base, '.' + decodeURIComponent((req.url ?? '/').split('?')[0]));
-        } catch {
-          res.statusCode = 400;
-          return res.end('bad request');
+        const found = safeTarget(base, req.url);
+        if (found.status) {
+          res.statusCode = found.status;
+          return res.end(found.text);
         }
-        if (target.includes('\0') || !target.startsWith(base + sep)) {
-          res.statusCode = 403;
-          return res.end('forbidden');
-        }
-        let info;
-        try {
-          info = statSync(target);
-        } catch {
-          res.statusCode = 404;
-          return res.end('not found');
-        }
-        if (!info.isFile()) {
-          res.statusCode = 404;
-          return res.end('not found');
-        }
-        res.setHeader('Content-Type', MIME[extname(target).toLowerCase()] ?? 'application/octet-stream');
-        res.setHeader('Accept-Ranges', 'bytes');
-        res.setHeader('X-Content-Type-Options', 'nosniff');
-        let start = 0;
-        let end = info.size - 1;
-        const range = req.headers.range;
-        if (range) {
-          // one range only: bytes=a-b, bytes=a- or bytes=-n (the last n bytes); anything else is refused
-          const m = /^bytes=(\d*)-(\d*)$/.exec(range);
-          if (m && (m[1] !== '' || m[2] !== '')) {
-            if (m[1] === '') start = Math.max(0, info.size - Number(m[2]));
-            else {
-              start = Number(m[1]);
-              if (m[2] !== '') end = Math.min(Number(m[2]), info.size - 1);
-            }
-          }
-          if (!m || start > end || start >= info.size) {
-            res.statusCode = 416;
-            res.setHeader('Content-Range', `bytes */${info.size}`);
-            return res.end();
-          }
-          res.statusCode = 206;
-          res.setHeader('Content-Range', `bytes ${start}-${end}/${info.size}`);
-        }
-        res.setHeader('Content-Length', end - start + 1);
-        if (req.method === 'HEAD') return res.end();
-        createReadStream(target, { start, end }).pipe(res);
+        return sendFile(req, res, found.target, found.size);
       });
     },
   };

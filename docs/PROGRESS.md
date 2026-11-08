@@ -210,7 +210,7 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 | 16.2 | The scenario factories split (`map_scenarios.mjs`, `live_scenarios.mjs`) | **done**: `mapScenarios` 145 lines became `mapTools` plus four groups (flight, choice, key and fallbacks, layout), `liveScenarios` 84 lines became `liveTools` plus three groups; names and bodies unchanged; the Node size test no longer names them; **Chromium: all scenarios pass, and the set of scenario names is identical to the run before the split**. **Count correction:** the run lists **33** scenarios, not 32 (I had added 26 + 2 + 4 instead of counting the `ok` lines; the earlier "28 of 28" was the same slip); the records and the README are corrected in step 16.6 |
 | 16.3 | `maplive.js` and `mapapp.js` split | **done**: `createLive` (71 lines) now 40 lines with `pictureFor`, `pictureRgba` and `fieldOf` as top-level functions (same order of checks and the same three outcomes: picture, null = pre-made picture stays, undefined = a newer drawing is wanted); `createMapApp` (70 lines) now about 45 with `whenText` moved to `mapstate.js` (new Node test: local times, UTC without a place, "already over", a block that ends exactly now) and `setPlace` to the new `mapplace.js`; Node 112 passed and 1 failed (the size test, now naming only `createMapView` and `serveFolder`); Chromium: 33 of 33 scenarios pass on the rebuilt page |
 | 16.4 | `mapview.js` split into `maprain.js` and `mapmove.js` | **done**: `createMapView` 130 lines is now about 40 (82-line file) with `newMap` and `reflect` as top-level helpers and `maprain.js` (`setFrame`, `setLive`, `clearLive`, 54 lines) and `mapmove.js` (`showPlace`, `fly`, `getView`, `recentre`, 42 lines) as top-level functions that take one shared context; the returned API is exactly the old one; a mechanical check found every old map call line verbatim in the new files (only declarations and signatures differ); **33 of 33 scenarios in Chromium, Firefox, WebKit and Edge (real GPU)**; phone checks pass with the same numbers (overflow 0 px, controls cover 23 % and 42 %, 0 small tap targets, tile tap moves the map, location names the place); Pixel 7 probe: landing zoom 7.000 and a big pinch stops at 8.000 as before; Node 112 passed, 1 failed (the size test, now naming only `serveFolder` and its inner `configureServer`) |
-| 16.5 | The dev-server middleware in `vite.config.js` split; before/after requests identical | not started |
+| 16.5 | The dev-server middleware in `vite.config.js` split; before/after requests identical | **done** 2026-11-08 19:59 UTC: `serveFolder` 60 lines (inner functions 54 and 52) is now `safeTarget` (the path-traversal guard: 400, 403, 404), `byteRange` (one range, 206 or 416) and `sendFile` plus a 12-line `serveFolder`; **25 requests to the real dev server before and after: the status, the headers (type, accept-ranges, content-range, content-length, nosniff) and the bodies are identical for all 25** (table below); Node **113 passed, 0 failed** (the size test is green); Python **178 passed** (3 new size tests); `vite build` works for the page and for the sub-folder build |
 | 16.6 | Final checks (four engines, phones, tests), records, push on the user's go | not started |
 | 12.4 | `docs/SUBMISSION.md` finished: each item ticked only with the command and its result | not started |
 | 12.5 | The last pass on the final commit: Docker tests, the secret scan of the session log again, `npm audit`, push, the live site checked, first and final commit times recorded | not started |
@@ -775,3 +775,37 @@ Verification of this pass: `docker compose -f docker/compose.yaml run --rm tests
 ## PLAN-016 started (2026-11-08 19:34 UTC; 49.26 h used) and a correction of my own count
 - The user said "push and tgen step 12". Step 12.1 to 12.3 are done (SUBMISSION, clean clone, README). While ticking the line-count item I measured every JavaScript function with a real parser (`rolldown`'s `parseAst`, already installed with Vite; declarations, arrow functions and methods; 61 files): **6 functions are over 50 lines**: `createMapView` 130, `mapScenarios` 145, `liveScenarios` 84, `createLive` 71, `createMapApp` 70, `serveFolder` 60 (its inner `configureServer` 54 and 52). **My earlier statement of 7 was wrong**: `smallTargets` is 15 lines; my crude scan of 2026-11-08 00:47 UTC (and the housekeeping of 17:39 UTC, which repeated it) counted it wrongly and no one re-measured. The living documents (README, SUBMISSION, the status and open items here, the register in DECISIONS) now say 6; the earlier history sections keep their text and are corrected by this note.
 - The user was asked twice whether to refactor or to list the long functions and did not choose; the rule (50 lines, hard) is theirs, so the plan follows it: PLAN-016, approved 2026-11-08 19:34 UTC.
+
+## Step 16.5 request comparison (2026-11-08 19:59 UTC): the dev-server middleware before and after the split
+Method: the Vite dev server of this computer (`node node_modules/vite/bin/vite.js`, port 5173, as the user runs it), 25 requests sent with `http.client` so that `..` and encoded paths arrive exactly as written (script `dev_requests.py`, kept outside the repository); the answers (status, `Content-Type`, `Accept-Ranges`, `Content-Range`, `Content-Length`, `X-Content-Type-Options`, body size, and the body text of error answers) were saved before the change and after it (the server restarted by itself on the config change, as its log says) and compared field by field: **0 differences in 25**. Existing behaviour that looks odd was kept on purpose: `bytes=-` answers 206 with the whole file; a request for the folder itself is 403; OPTIONS passes to Vite (204).
+
+| # | Request | Status (before = after) | Content-Range |
+|---|---|---|---|
+| 1 | file: a json file | 200 |  |
+| 2 | HEAD of the same file | 200 |  |
+| 3 | range 0-9 of the map file | 206 | bytes 0-9/189610941 |
+| 4 | range last 10 bytes | 206 | bytes 189610931-189610940/189610941 |
+| 5 | range from 5 on (open end) | 206 | bytes 5-189610940/189610941 |
+| 6 | range 0-0 | 206 | bytes 0-0/189610941 |
+| 7 | range end past the file | 206 | bytes 0-4373/4374 |
+| 8 | range start past the file | 416 | bytes */4374 |
+| 9 | range start after end | 416 | bytes */189610941 |
+| 10 | range not a range | 416 | bytes */189610941 |
+| 11 | range two ranges | 416 | bytes */189610941 |
+| 12 | range empty both sides | 206 | bytes 0-189610940/189610941 |
+| 13 | range other unit | 416 | bytes */189610941 |
+| 14 | mime of a font file (.pbf) | 200 |  |
+| 15 | mime of an unknown type (.txt) | 200 |  |
+| 16 | traversal with .. | 403 |  |
+| 17 | traversal encoded %2e%2e%2f | 403 |  |
+| 18 | traversal encoded %2e%2e/ | 403 |  |
+| 19 | traversal deep | 403 |  |
+| 20 | bad percent escape | 400 |  |
+| 21 | null byte | 403 |  |
+| 22 | missing file | 404 |  |
+| 23 | a directory | 403 |  |
+| 24 | POST is not served by the middleware | 404 |  |
+| 25 | OPTIONS is not served by the middleware | 204 |  |
+
+- The four traversal attempts (`/data/../config/frontend.json`, `%2e%2e%2f`, `%2e%2e/` below the base-map folder, a deep `../../../frontend/vite.config.js`) are all refused with 403; a bad percent escape is 400; a null byte is 403: the guard was not relaxed.
+- **A slip to record:** I started the dev server in the background for this comparison and could not stop it afterwards: the permission check refused the process stop (it counts as interfering with a workload) and I did not work around it. It is still listening on `localhost:5173` (`::1`), started 2026-11-08 19:54 UTC from this session; harmless (loopback only, serves files of `data/`), to be stopped by the user (see the final message), recorded as E042.
