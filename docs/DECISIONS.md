@@ -561,3 +561,6 @@ Four marker lines in three files, each recorded here and in the README's known l
 
 ### D47 result (2026-11-08 20:00 UTC)
 - Bet "behaviour does not change": **held** by every check listed in PROGRESS (33 of 33 scenarios in Chromium, Firefox, WebKit and Edge after the map split; phone checks and the Pixel 7 zoom probe unchanged; `frontend-check` 8x8; 25 of 25 dev-server answers identical, including the four path-traversal attempts). The register above no longer lists deviations without a marker; the only `shortcut:` markers are the four in `pipeline/process.py`, `config/headers.conf` (stale), and `frontend/src/app.js`.
+
+## Shortcut register (final, rebuilt from `git grep "shortcut:"`, 2026-11-08 21:15 UTC)
+- **3 markers in 2 files:** `pipeline/process.py` (two: 3 h detail dropped; negative packing differences set to 0; D14) and `frontend/src/app.js` (device zone for a place found by the device; D24, D30). The fourth marker, `config/headers.conf`, was stale and was removed (comment corrected). **No deviation without a marker remains:** no function is over 50 lines (D47) and no file over 300. One test file is exactly 300 lines.

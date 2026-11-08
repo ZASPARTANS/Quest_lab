@@ -194,3 +194,12 @@ What exists now: the pipeline and the static export, the page live on GitHub Pag
 | S14 | `curl -I` of the live page re-read: HSTS and `Cache-Control: max-age=600` only; the CSP is a `<meta>` tag in the page | as documented (D42) |
 | S08 | re-checked 2026-11-08 19:19 UTC: three of the four pinned base images equal the registry's current digest; **`python:3.11-slim` has a newer digest** (`07d48240...`) than the pin (`65bd3d9f...`) | not updated (rebuild and full re-test needed); decide after the submission |
 | S06 | re-checked 2026-11-08 19:19 UTC: tracked files, author identities (one, public by D16) and the places of the Windows user name (4 times in 3 docs files) are unchanged | none |
+
+## Final update 2026-11-08 21:15 UTC (step 12.5)
+| ID | Status | Note |
+|---|---|---|
+| S02, S12 | `pip-audit` no known vulnerabilities, `npm audit` 0 vulnerabilities, both repeated 2026-11-08 21:15 UTC on the final files | none |
+| S05 | final secret scan: no real secret (tree 1,351 files, 106 commits, the session log); hits explained in `docs/SUBMISSION.md` | the log grows after the scan; the messages after 21:14 UTC were not scanned |
+| S14 | the live headers (HSTS, `Cache-Control: max-age=600`) and the CSP meta tag re-read | as documented (D42) |
+| New | E042: a development server started by me is still running on loopback (`localhost:5173`) | the user ends the process |
+| Open | the scheduled workflow, S08 (`python:3.11-slim` digest moved) | owner tasks, listed in `docs/SUBMISSION.md` |
