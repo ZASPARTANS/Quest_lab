@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { manifestProblems } from '../../frontend/src/manifest.js';
 import { allSteps, chooseFrame, effectiveView, firstUpcomingStep, flightPlan, frameStep, frameUrl, mapPointName, modelOptions, prefersReducedMotion, projectionSpec,
-  shouldFly, webgl2Available } from '../../frontend/src/mapstate.js';
+  shouldFly, webgl2Available, whenText } from '../../frontend/src/mapstate.js';
 
 const FRONTEND = JSON.parse(readFileSync(new URL('../../config/frontend.json', import.meta.url), 'utf8'));
 const LABELS = FRONTEND.model_labels;
@@ -138,4 +138,14 @@ test('the map cannot be zoomed, and no place is shown, closer than one level pas
   const cfg = FRONTEND.map;
   assert.ok(cfg.max_zoom <= stored + 1, `max_zoom ${cfg.max_zoom} is more than one level above the stored zoom ${stored}`);
   for (const [source, zoom] of Object.entries(cfg.fly.zoom_by_source)) assert.ok(zoom <= stored, `${source} lands at zoom ${zoom}, above the stored zoom ${stored}`);
+});
+
+test('whenText: the words under the time bar (local times of the place, UTC without a place, "already over" for a past block)', () => {
+  const manifest = { run: '2026-11-06T12:00:00Z', interval_hours: 6 };
+  const end = Date.parse(manifest.run) + 18 * HOUR; // the block 2026-11-07 00:00-06:00 UTC
+  assert.equal(whenText(manifest, 18, 'Asia/Kolkata', true, end - HOUR), 'Sat 7 Nov 05:30–11:30 (Asia/Kolkata)');
+  assert.equal(whenText(manifest, 18, 'Asia/Kolkata', true, end + HOUR), 'Sat 7 Nov 05:30–11:30 (Asia/Kolkata) – already over');
+  assert.equal(whenText(manifest, 18, 'UTC', false, end - HOUR), 'Sat 7 Nov 00:00–06:00 (UTC)', 'without a place the label says UTC');
+  assert.equal(whenText(manifest, 18, 'UTC', false, end), 'Sat 7 Nov 00:00–06:00 (UTC) – already over', 'a block that ends exactly now is over');
+  assert.equal(whenText(manifest, 6, 'Europe/London', true, 0), 'Fri 6 Nov 12:00–18:00 (Europe/London)', 'London is on UTC in November');
 });

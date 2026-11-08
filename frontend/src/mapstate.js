@@ -1,5 +1,6 @@
 // Map decisions as pure functions (no DOM, no MapLibre): which frame to show, when to fly, the projection, WebGL2 and reduced motion.
 // Tested in tests/frontend/mapstate.test.mjs. Frames are untrusted input; the manifest check (manifest.js) has already validated their paths.
+import { clock, dayKey, dayLabel } from './time.js';
 
 const HOUR_MS = 3600 * 1000;
 const FLY_SOURCES = new Set(['location', 'search', 'saved', 'address']); // a place chosen outside the map; a click ON the map does not fly
@@ -22,6 +23,18 @@ export function firstUpcomingStep(manifest, nowMs) {
   const steps = allSteps(manifest);
   const runMs = Date.parse(manifest.run);
   return steps.find((s) => runMs + s * HOUR_MS > nowMs) ?? steps[steps.length - 1];
+}
+
+/**
+ * The words under the time bar for the block that ends `step` hours after the run: 'Sun 8 Nov 05:30–11:30 (Asia/Kolkata)'. A block that is already over says so
+ * (never shown as if it were current); without a chosen place the label says UTC. `zone` is the zone of the times; `nowMs` is the clock.
+ */
+export function whenText(manifest, step, zone, hasPlace, nowMs) {
+  const end = Date.parse(manifest.run) + step * HOUR_MS;
+  const start = end - manifest.interval_hours * HOUR_MS;
+  const day = dayLabel(dayKey((start + end) / 2, zone));
+  const over = end <= nowMs ? ' – already over' : '';
+  return `${day} ${clock(start, zone)}–${clock(end, zone)} (${hasPlace ? zone : 'UTC'})${over}`;
 }
 
 /** Model choices for the map: each model that has frames, and 'both' when agreement frames exist. */

@@ -2,10 +2,8 @@
 import { createControls } from './mapcontrols.js';
 import { createLive } from './maplive.js';
 import { createMapView } from './mapview.js';
-import { allSteps, chooseFrame, firstUpcomingStep, flightPlan, frameUrl, modelOptions, prefersReducedMotion, shouldFly } from './mapstate.js';
-import { clock, dayKey, dayLabel } from './time.js';
-
-const HOUR_MS = 3600 * 1000;
+import { placeSetter } from './mapplace.js';
+import { allSteps, chooseFrame, firstUpcomingStep, flightPlan, frameUrl, modelOptions, prefersReducedMotion, whenText } from './mapstate.js';
 
 /**
  * `o` = { cfg, manifest, base, labels, container, toolsRoot, getTile, tileCache, onPickPlace(lat, lon), onStep(step), onProblem(error) }.
@@ -21,14 +19,6 @@ export async function createMapApp(o) {
   const live = createLive({ cfg, manifest, base, labels, getTile: o.getTile, tileCache: o.tileCache, view, container, onProblem: o.onProblem,
     current: () => ({ model: state.model, step: state.step, mode: state.mode }) });
   view.onMoveEnd(() => live.soon());
-
-  const whenText = () => {
-    const end = Date.parse(manifest.run) + state.step * HOUR_MS;
-    const start = end - manifest.interval_hours * HOUR_MS;
-    const day = dayLabel(dayKey((start + end) / 2, state.zone));
-    const over = end <= Date.now() ? ' \u2013 already over' : ''; // a block that has passed is said so, never shown as if it were current
-    return `${day} ${clock(start, state.zone)}\u2013${clock(end, state.zone)} (${state.hasPlace ? state.zone : 'UTC'})${over}`;
-  };
 
   const controls = createControls({ root: o.toolsRoot, cfg, manifest, options, selectedModel: state.model, handlers: {
     onMode: (mode) => { state.mode = mode; view.setMode(mode); refresh(); live.update(); },
@@ -46,7 +36,7 @@ export async function createMapApp(o) {
     const choice = chooseFrame(manifest, state.model, state.step, labels);
     container.dataset.model = state.model ?? '';
     container.dataset.frame = choice.kind ? `${choice.kind}_${state.step}` : 'none';
-    controls.update({ steps, step: state.step, model: state.model, mode: state.mode, when: whenText(), note: choice.note, legendKind: choice.kind === 'agreement' ? 'agreement' : choice.kind ? 'rain' : null, hasPlace: state.hasPlace });
+    controls.update({ steps, step: state.step, model: state.model, mode: state.mode, when: whenText(manifest, state.step, state.zone, state.hasPlace, Date.now()), note: choice.note, legendKind: choice.kind === 'agreement' ? 'agreement' : choice.kind ? 'rain' : null, hasPlace: state.hasPlace });
     const url = choice.kind ? frameUrl(base, manifest, choice.kind, state.step) : null;
     if (url === state.url) return; // the picture is already there: do not load it again
     state.url = url;
@@ -61,19 +51,7 @@ export async function createMapApp(o) {
     live.update();
   }
 
-  function setPlace(place, source) {
-    state.hasPlace = true;
-    view.showPlace(place.lat, place.lon);
-    const reduced = prefersReducedMotion((q) => window.matchMedia(q));
-    if (shouldFly(source)) {
-      state.place = { ...place, source };
-      view.fly(place.lat, place.lon, flightPlan(reduced, cfg.map, source));
-    } else {
-      state.place = { ...place, source: state.place?.source ?? 'search' };
-      view.recentre(place.lat, place.lon, !reduced);
-    }
-    refresh();
-  }
+  const setPlace = placeSetter({ view, cfg, state, refresh });
 
   await view.ready;
   await refresh();
