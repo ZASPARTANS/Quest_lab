@@ -97,7 +97,6 @@ test('a place chosen outside the map flies there; a click on the map does not; r
   assert.deepEqual(flightPlan(false, cfg, 'location'), { zoom: cfg.fly.zoom_by_source.location, duration: cfg.fly.duration_ms, animate: true });
   assert.deepEqual(flightPlan(true, cfg, 'search'), { zoom: cfg.fly.zoom_by_source.search, duration: 0, animate: false });
   assert.equal(flightPlan(false, cfg, 'something-else').zoom, cfg.fly.zoom); // an unknown source gets the default zoom
-  assert.ok(cfg.fly.zoom_by_source.location > cfg.fly.zoom_by_source.search); // the device position lands closest
   for (const zoom of Object.values(cfg.fly.zoom_by_source)) assert.ok(zoom >= cfg.fly.zoom && zoom <= cfg.max_zoom);
   assert.equal(prefersReducedMotion(() => ({ matches: true })), true);
   assert.equal(prefersReducedMotion(() => ({ matches: false })), false);
@@ -131,4 +130,12 @@ test('the effective view follows the mode and, in the automatic mode, the zoom',
   assert.equal(effectiveView('auto', cfg.fly.zoom, cfg), 'flat');
   assert.equal(effectiveView('flat', 1, cfg), 'flat');
   assert.equal(effectiveView('globe', 6, cfg), 'globe');
+});
+
+test('the map cannot be zoomed, and no place is shown, closer than one level past the detail of the stored base map (phone report of 2026-11-08, D46)', () => {
+  const basemapToml = readFileSync(new URL('../../config/basemap.toml', import.meta.url), 'utf8');
+  const stored = Number(basemapToml.match(/^maxzoom = (\d+)/m)[1]); // the stored world extract ends at this zoom (D38); above it the page only enlarges it
+  const cfg = FRONTEND.map;
+  assert.ok(cfg.max_zoom <= stored + 1, `max_zoom ${cfg.max_zoom} is more than one level above the stored zoom ${stored}`);
+  for (const [source, zoom] of Object.entries(cfg.fly.zoom_by_source)) assert.ok(zoom <= stored, `${source} lands at zoom ${zoom}, above the stored zoom ${stored}`);
 });
