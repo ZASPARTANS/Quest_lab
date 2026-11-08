@@ -79,7 +79,9 @@ function blockCell(block, zone, view, pick, selected) {
 
 /** `pick` = { stepOf(block) -> step or null, onPick(step) } or null when there is no map; `selected` = the step shown on the map. */
 export function renderDays(node, view, pick = null, selected = null) {
-  fill(node, view.days.map((d, i) => el('article', { class: 'day' }, [
+  // A day with no rain in any block and no disagreement between the models says so in one quiet row (class `calm`): the page used to repeat ten tall tiles for nothing to report.
+  const calm = (d) => d.blocks.every((b) => b.level === 0 && !b.differ && !b.single);
+  fill(node, view.days.map((d, i) => el('article', { class: calm(d) ? 'day calm' : 'day' }, [
     el('h4', { text: i === 0 ? `${d.label} (today)` : d.label }),
     el('p', { class: 'verdict', text: d.verdict }),
     el('ol', { class: 'blocks', attrs: { 'aria-label': `Blocks of ${d.label}` } }, d.blocks.map((b) => blockCell(b, view.zone, view, pick, selected))),

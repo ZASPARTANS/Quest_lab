@@ -18,6 +18,18 @@
       { "name": "home-chennai", "path": "/?lat=13.08&lon=80.27&name=Chennai&tz=Asia/Kolkata&activity=outdoor", "wait_for_ready": true }
     ]
   },
+  "design_shots": {
+    "_comment": "Read by frontend/tools/design_shots.mjs (PLAN-007 step 9.5): screenshots of the finished page at these window widths (px) with one place chosen, for the user's look. Same environment variables as the screenshots block. 'tall' = a second shot of the whole plan column.",
+    "base_url_env": "SCREENSHOT_BASE_URL",
+    "out_dir_env": "SCREENSHOT_OUT_DIR",
+    "channel_env": "SCREENSHOT_BROWSER_CHANNEL",
+    "widths": [390, 768, 1280, 1920],
+    "height": 900,
+    "tall_max_height": 3600,
+    "path": "/?lat=13.08&lon=80.27&name=Chennai&tz=Asia/Kolkata&activity=outdoor",
+    "ready_timeout_seconds": 90,
+    "file_prefix": "step9-5-"
+  },
   "browser_checks": {
     "_comment": "Read by frontend/tools/browser_checks.mjs (step 8 done-check: the plan page in real browsers). Environment variables name the site, the screenshot folder, the engine (chromium, firefox or webkit) and an optional computer-installed browser (msedge).",
     "base_url_env": "SCREENSHOT_BASE_URL",

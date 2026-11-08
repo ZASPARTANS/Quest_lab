@@ -56,32 +56,34 @@
             <button id="save" class="save-button" type="button" aria-pressed="false"></button>
           </div>
 
-          <fieldset class="panel">
-            <legend>2. What do you want to do?</legend>
+          <section class="section" aria-labelledby="what-h">
+            <h2 id="what-h">2. What do you want to do?</h2>
             <div id="activities" class="chips"></div>
             <div id="custom-box" class="custom" hidden>
               <label for="custom-accept">The most rain you accept</label>
               <select id="custom-accept"></select>
             </div>
             <p id="note" class="note"></p>
-          </fieldset>
+          </section>
 
-          <section class="panel" aria-labelledby="win-h">
+          <section class="section" aria-labelledby="win-h">
             <h2 id="win-h">3. Best times</h2>
             <ol id="windows" class="windows"></ol>
           </section>
 
-          <section class="panel" aria-labelledby="days-h">
-            <h2 id="days-h">Day by day</h2>
-            <p class="note">Each block is 6 hours long and starts at the time shown. The word and the drops are the rain level of the <em>wetter</em> of the two models; "models differ" means they are in different levels. A tick means the block fits what you want to do. Faded blocks are over or outside your hours. Press a block to see it on the map.</p>
-            <p id="level-legend" class="note"></p>
-            <div id="days" class="days"></div>
-          </section>
-
-          <section class="panel" aria-labelledby="tot-h">
+          <section class="section" aria-labelledby="tot-h">
             <h2 id="tot-h">Rain totals</h2>
             <p class="note">From the 6-hour block now under way. The range is the lowest and highest of the two models.</p>
             <div id="totals" class="totals"></div>
+          </section>
+
+          <section class="section" aria-labelledby="days-h">
+            <h2 id="days-h">Day by day</h2>
+            <p id="level-legend" class="note"></p>
+            <details class="note how-to"><summary>How to read the blocks</summary>
+              <p>Each block is 6 hours long and starts at the time shown. The word and the drops are the rain level of the <em>wetter</em> of the two models; "models differ" means they are in different levels. A tick means the block fits what you want to do. Faded blocks are over or outside your hours. Press a block to see it on the map.</p>
+            </details>
+            <div id="days" class="days"></div>
           </section>
         </section>
       </main>

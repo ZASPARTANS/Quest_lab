@@ -57,7 +57,7 @@ The site as GitHub Pages serves it (from a sub-folder, with no security headers:
 ## Tests and checks (the official way is Docker)
 ```
 docker compose -f docker/compose.yaml run --rm tests            # Python: 160 passed (2026-11-08 00:11 UTC); no network, project read-only
-docker compose -f docker/compose.yaml run --rm frontend-tests   # Node: 98 passed
+docker compose -f docker/compose.yaml run --rm frontend-tests   # Node: 103 passed
 docker compose -f docker/compose.yaml run --rm process python -m scripts.plan_reference   # independent Python plan from the raw GRIB
 docker compose -f docker/compose.yaml run --rm frontend-check   # the browser code on the real tiles equals it: 8 places x 8 activities (all match, 2026-11-07 19:02 UTC)
 BROWSER_NAME=chromium docker compose -f docker/compose.yaml run --rm browser-checks   # 26 scenarios in a real engine (chromium | firefox | webkit); SCREENSHOT_BASE_URL points it at another site
@@ -66,7 +66,7 @@ python scripts/smoke_site.py https://zaspartans.github.io/Quest_lab/   # the liv
 python scripts/check_workflow.py                                  # the workflow's safety rules
 python scripts/load_test.py <site> --levels 1,5 --dry-run         # concurrent visitors replay (caps, stop rules; a site off this computer needs --approved)
 ```
-Measurements with the computer's own GPU (Edge): `frontend/tools/load_timing.mjs`, `live_look.mjs`, `concurrent_visitors.mjs`. The Windows `.venv` (`py -3.11`) is for quick trying only; its result is not the proof.
+Measurements with the computer's own GPU (Edge): `frontend/tools/load_timing.mjs`, `live_look.mjs`, `concurrent_visitors.mjs`; `design_shots.mjs` takes screenshots of the page at four window widths for a design review. The Windows `.venv` (`py -3.11`) is for quick trying only; its result is not the proof.
 
 ## What leaves the browser (privacy)
 Typed place searches (to Open-Meteo), and the device position (to BigDataCloud) when "Use my location" is used, each with the visitor's IP address. No cookies, no analytics. Saved places and settings stay in the browser (`localStorage`). GitHub itself sees the visitors' requests for the site's files, like any host.
