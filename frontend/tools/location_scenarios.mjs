@@ -9,29 +9,29 @@ export function locationScenarios(h) {
   const MOCK_NAME = { locality: 'Rasipuram', city: 'Rasipuram', principalSubdivision: 'Tamil Nadu', countryName: 'India' };
 
   /** `answers` = what the fake position call does on its 1st, 2nd, ... call: 'timeout' (code 3 after 1 s) or 'fix' (a position after 1 s). */
-  async function openSlow(browser, answers) {
+  async function openSlow(browser, answers, pressDuringFirst = false) {
     const opened = await open(browser, { timezoneId: 'Asia/Kolkata' }, [siteHost, reverseHost]);
     await opened.context.route(`https://${reverseHost}/**`, (route) => route.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(MOCK_NAME) }));
-    await opened.page.addInitScript((list) => {
+    await opened.page.addInitScript(({ list, press }) => {
       window.__calls = 0;
       window.__statuses = [];
       navigator.permissions.query = async () => ({ state: 'granted' }); // allowed earlier: the page starts the search by itself
       navigator.geolocation.getCurrentPosition = (ok, fail) => {
         const answer = list[window.__calls] ?? list[list.length - 1];
         window.__calls += 1;
+        // the visitor presses the button while the search the page started by itself is still running (done inside the page: a slow test machine cannot make it late)
+        if (press && window.__calls === 1) setTimeout(() => document.getElementById('use-location').click(), 300);
         setTimeout(() => (answer === 'fix' ? ok({ coords: { latitude: 11.46, longitude: 78.19 } }) : fail({ code: 3, message: 'timeout' })), 1000);
       };
       new MutationObserver(() => { const t = document.getElementById('status')?.textContent; if (t) window.__statuses.push(t); }).observe(document, { subtree: true, childList: true, characterData: true });
-    }, answers);
+    }, { list: answers, press: pressDuringFirst });
     await opened.page.goto(base + '/');
     return opened;
   }
 
   return {
     async 'location: a slow first search and a press of the button never show a failure, and the position arrives'(browser) {
-      const { page, log } = await openSlow(browser, ['timeout', 'fix']);
-      await page.waitForFunction(() => document.getElementById('status')?.textContent.startsWith('Looking') || window.__calls > 0, null, { timeout });
-      await page.click('#use-location'); // while the search that the page started by itself is still running
+      const { page, log } = await openSlow(browser, ['timeout', 'fix'], true);
       await page.waitForSelector('#plan:not([hidden]) .day', { timeout });
       const seen = await page.evaluate(() => ({ statuses: window.__statuses, calls: window.__calls }));
       assert.ok(!seen.statuses.some((t) => /could not be found|taking too long|search for a place instead/i.test(t)), `a failure was shown: ${seen.statuses.join(' | ')}`);
