@@ -168,7 +168,7 @@ What exists now: the pipeline and the static export, the page live on GitHub Pag
 | S13 | ok | none |
 | S14 | **closed with evidence** (step 13.5): real Pages headers measured; the policy as meta tags works in four engines; range requests answer 206 | the four protections that cannot be set from a meta tag are lost on this host (`nosniff`, `Permissions-Policy`, COOP, `frame-ancestors`): accepted (D42) |
 | New | the **scheduled workflow keeps running** every 6 hours until it is disabled | decide at the end whether it stays on |
-| New | **traffic tests** (D43): GET only, capped, refusing a non-local site without an approval note; about 21 MB sent to GitHub in the live part so far | none; rules and numbers in PLAN-014 and PROGRESS |
+| New | **traffic tests** (D43): GET only, capped, refusing a non-local site without an approval note; **final: about 21 MB sent to GitHub in total** (part 1 stopped itself at 8.8 MB, 3 real browsers 12.3 MB, a few HEAD requests; the approved cap was 60 MB); the rest of the live ladder was not run | none; rules and numbers in PLAN-014 and PROGRESS |
 
 ## Update 2026-11-08 15:57 UTC (PLAN-015, D45, E039)
 | ID | Status | Note |
