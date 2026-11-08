@@ -119,6 +119,7 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 | PLAN-011 | 2026-11-07 17:37 | rain levels and the day view: thresholds 0.5 / 3 / 10 mm per 6 h, the wetter model + "models differ"; its decision 3 and the map-legend part of 11.2 superseded by PLAN-012; **11.0-11.3 done; 11.4 (browser scenarios for the levels) was never written as a step: open** |
 | PLAN-012 | 2026-11-07 17:42 | amends PLAN-011: one blue colour for the map's agreement view (re-export) and a titled colour key; **12.1-12.2 done** (the user: "ok ;i like it.") |
 | PLAN-013 | 2026-11-07 19:37 | public hosting on GitHub Pages (public repo ZASPARTANS/Quest_lab, 6-hourly refresh), honesty strip first, mobile checks; supersedes PLAN-006 steps 10 and 11; **complete** (13.0-13.7; the user's Android phone verdict: good) |
+| PLAN-015 | 2026-11-08 12:09 | stop downloading what the build already has: a cache for the 190 MB map file, fonts and sprites committed to our repo (13 MB), a retry; 15.0 done, 15.1-15.5 not started; prompted by E039 and the user's "y download something we dont need and already have ?" (chose options 1 and 2) |
 | PLAN-014 | 2026-11-07 23:01 | concurrent-visitor testing: a full test on this computer, ONE tiny capped test of the live site (60 MB, 3 min, stop at the first error); **14.0-14.2 done, 14.3 partly done, 14.4 not started** |
 
 | Step | What | Status |
@@ -178,6 +179,12 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 | 14.2 | The full concurrent test on this computer: 1-100 simultaneous visitors and 5-20 real browsers (PLAN-014) | **done** 2026-11-07 23:28 UTC; results below |
 | 14.3 | ONE tiny test of the live site, only after the user's explicit go with the printed plan (PLAN-014) | **partly done**: part 1 (replay) stopped itself at 8.8 MB on my own too-strict check, 2026-11-07 23:32-23:33 UTC, no host errors; part 2 (3 real browsers) done 2026-11-08 00:09 UTC; the rest of the ladder (levels 3 and 5, about 26 MB) can go from 00:35 UTC on and needs the user's go again |
 | 14.4 | Records, README line, D43 results, push (PLAN-014) | not started |
+| 15.0 | Records: PLAN-015, D45 (PLAN-015) | **done** 2026-11-08 12:10 UTC |
+| 15.1 | A retry for the base-map download (PLAN-015) | not started |
+| 15.2 | Fonts and sprites committed to `frontend/basemap_assets/`, `install-assets` (PLAN-015) | not started |
+| 15.3 | A cache for the map file in the workflow, `check_workflow.py` allows sub-paths (PLAN-015) | not started |
+| 15.4 | Push and prove the cache on GitHub in two runs (PLAN-015; needs the user's go) | not started |
+| 15.5 | Records, README, SECURITY, E039 final (PLAN-015) | not started |
 | 12 | README + submission (final README, `docs/SUBMISSION.md`, secret scan of the session log, `npm audit` and `pip-audit` repeats) | not started |
 
 Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
@@ -698,3 +705,8 @@ Verification of this pass: `docker compose -f docker/compose.yaml run --rm tests
 - **New bug from the same message, E038:** "when i use my location it says me to search it instead but then later takes the location from the device". Reproduced as a symptom (two overlapping searches), fixed and tested; details in ERRORS E038. **The user must check on their phone after the next push**; until then the live site still has the old behaviour.
 - **The scheduled refresh (D8 bet) was checked at 10:13 UTC with `gh run list` (our own repository only):** the 02:20 UTC run did NOT happen (no run between the push of 23:04 on 11-07 and 09:10 on 11-08); the 08:20 run started at 09:10 UTC (about 50 minutes late), finished green in 7 minutes 24 seconds, and `scripts/smoke_site.py` passes on the live site (10:15 UTC). GitHub documents that scheduled runs can be delayed or dropped at busy times; I did not look that up in this session, so this is an observation and not a documented claim. Consequence: the page's forecast can be older than the plan says; the 30-hour warning on the page (D9) covers that case.
 - **Tests now:** Node 109 passed, Python 160 passed, browser scenarios 28 of 28 in Chromium, Firefox and WebKit, phone checks pass (2026-11-08 10:20-10:26 UTC). Local commits not pushed: 7 (the 5 earlier ones, step 9.5 round 1, and the location fix once committed).
+
+## The push of 2026-11-08 11:35 UTC and PLAN-015 (written 12:10 UTC; 41.8 h used)
+- **The user said "Yes do the commit i will check on my mobile"** (about 11:30 UTC); I pushed 8 commits (`196b8a9..c9c2ce9`, only `ZASPARTANS/Quest_lab`). The run (42476458856) failed in the step that downloads the map file (`ReadTimeout`, 60 s) and so did its re-run (attempt 2); deploy and smoke were skipped, **the live site still has the previous deploy: the new design and the location fix (E038) are NOT live, so the user's phone cannot test them yet.** GitHub's status page listed an open incident "Increase in timeouts for some unauthenticated users" from 10:36 UTC (E039). At 12:10 UTC the status page shows all components operational but the incident entry still "investigating".
+- **The user's instruction:** "re-run it when the incident is resolved". A monitor polls GitHub's status page; the re-run (`gh run rerun --failed`) happens when the incident is resolved.
+- **The user's question** "y download something we dont need and already have ?" led to PLAN-015 (options 1 and 2 of my answer: a cache between runs plus a retry, and fonts and sprites committed to our own repo).
