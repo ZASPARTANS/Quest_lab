@@ -90,7 +90,7 @@ services:
     # Builds the web app. No network. Only specific project folders are mounted (read-only): mounting the whole project would show the
     # host's Windows node_modules folder instead of the Linux one inside the image (/node_modules).
     <<: *security
-    build:
+    build: &frontend-image-build  # the same image is used by frontend-tests and frontend-check, which build it too when it is missing (a fresh clone: step 12.2)
       context: ..
       dockerfile: docker/Dockerfile.node
       args:
@@ -117,6 +117,7 @@ services:
   frontend-tests:
     # Node tests of the front-end helper code (node --test). No network, read-only mounts of only what the tests need.
     <<: *security
+    build: *frontend-image-build
     image: precip-frontend:local
     working_dir: /work
     network_mode: none
@@ -133,6 +134,7 @@ services:
     # Runs the browser plan code on the real exported tiles and compares it with the independent Python reference
     # (made first by: ... run --rm process python -m scripts.plan_reference). No network; the data folders are read-only.
     <<: *security
+    build: *frontend-image-build
     image: precip-frontend:local
     working_dir: /work
     network_mode: none
@@ -197,7 +199,7 @@ services:
     # A real browser (Playwright image) opens the preview and saves screenshots plus a report of what the page loaded.
     # Chromium runs with its own sandbox off (--no-sandbox: the container is the sandbox) and only talks to the preview.
     <<: *security
-    build:
+    build: &playwright-image-build  # the same image is used by browser-checks, which builds it too when it is missing (a fresh clone)
       context: ..
       dockerfile: docker/Dockerfile.node
       args:
@@ -222,6 +224,7 @@ services:
     # the site is http://localhost:8080 - a secure context for every engine, like the HTTPS public site. The geocoder is a MOCK unless
     # BROWSER_CHECK_REAL_SEARCH=1 (then one real request is sent to Open-Meteo, which needs the container to have internet).
     <<: *security
+    build: *playwright-image-build
     image: precip-playwright:local
     working_dir: /work/frontend
     shm_size: 1gb
