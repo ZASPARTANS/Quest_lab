@@ -148,3 +148,24 @@ Step 11 notes, labelled as knowledge I have NOT checked in this session: GitHub 
 - **S14 closed with evidence:** (a) the worker is a `.js` file (no `.mjs` mapping needed); (b) the real Pages response headers are listed in PROGRESS: no security headers except HSTS, so the policy comes from the meta tags (the 26 browser scenarios pass on the real site, so the meta policy does not break the page); (c) `worker-src blob:` is in the meta policy and works; (d) `connect-src` lists only the two geocoder hosts (tests); (e) range requests for the 190 MB file answer 206 on the real host. **Still lost on this host (no meta equivalent): `nosniff`, `Permissions-Policy`, COOP and `frame-ancestors`** (accepted, D42).
 - **S06 realised:** the repository is public with the author name and e-mail; a scan of all commits for key and token patterns found none before the push; the Windows user name appears 4 times in 3 docs files (kept, shown to the user before the push).
 - **Outward actions, all with the user's go and only on `ZASPARTANS/Quest_lab`:** login (`gh`), push, release with the map file, Pages, workflow runs. **To do at the end:** the user may revoke the token (`gh auth logout` or GitHub settings) and disable the scheduled workflow after the submission.
+
+## Status summary (housekeeping, 2026-11-08 00:47 UTC; state at commit `be39e9f`)
+What exists now: the pipeline and the static export, the page live on GitHub Pages (https://zaspartans.github.io/Quest_lab/, public repository `ZASPARTANS/Quest_lab`), a scheduled and push-triggered workflow, two local test sites. Outside hosts the page may contact (a test keeps `connect-src` equal to the config): `geocoding-api.open-meteo.com` (typed searches) and `api-bdc.io` (the device position, only when "Use my location" is used). Everything else is same-origin.
+
+| ID | Status now | What remains |
+|---|---|---|
+| S01 | fixed (step S2) | none |
+| S02 | fixed (hashes on all Python packages, scan clean, D18) | repeat `pip-audit` on the final file before submission (not repeated since step S4) |
+| S03 | fixed (non-root, no capabilities, read-only root, `process` without network); the same compose files ran on the GitHub runner on 2026-11-07 | none known |
+| S04 | **done**: `status.json` (only ok, run and build time) is written by the export and checked by the smoke test (D26) | none |
+| S05 | fixed; a scan of all revisions for key and token patterns before the push found none | final secret scan of the repository and the session log at submission |
+| S06 | **realised**: the repository is public with the author name and e-mail in every commit (accepted, D16); the Windows user name appears 4 times in 3 docs files (shown to the user before the push) | none |
+| S07 | kept: the environment is never printed; the workflow uses no secrets (only the built-in token) | none |
+| S08 | documented | re-check the pinned image digests before submission |
+| S09 | **enforced**: `scripts/check_workflow.py` and 14 tests (12 deliberate breakages) keep the workflow to GitHub-owned pinned actions, least privilege, no pull-request trigger, no environment dump, no `${{ }}` in shell code | none |
+| S10, S11 | avoided (Cesium gone) / accepted | none |
+| S12 | `npm audit` 0 vulnerabilities (2026-11-08 00:45 UTC, lock file only) | repeat before submission |
+| S13 | ok | none |
+| S14 | **closed with evidence** (step 13.5): real Pages headers measured; the policy as meta tags works in four engines; range requests answer 206 | the four protections that cannot be set from a meta tag are lost on this host (`nosniff`, `Permissions-Policy`, COOP, `frame-ancestors`): accepted (D42) |
+| New | the **scheduled workflow keeps running** every 6 hours until it is disabled | decide at the end whether it stays on |
+| New | **traffic tests** (D43): GET only, capped, refusing a non-local site without an approval note; about 21 MB sent to GitHub in the live part so far | none; rules and numbers in PLAN-014 and PROGRESS |

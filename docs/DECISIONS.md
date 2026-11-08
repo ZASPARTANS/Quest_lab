@@ -502,3 +502,23 @@ Gone since the earlier register: `scripts/spike_frame.py` (deleted at step 7), t
 
 ### D43 note (2026-11-08 00:10 UTC): what the live test showed so far
 - On the live site, everything answered in the first minutes of replay was correct (statuses and sizes), and 3 real browsers at once all drew the page and the map in about 13 seconds without errors; no 403, 429 or 5xx was seen. The 5 %-failure stop that ended part 1 early was a false alarm of my own check (a blank line), not a host problem. Bet "10 simultaneous visitors without a 429 or 5xx": **not tested** (the approved top level was lowered to 5 to fit the byte cap with the real visit sizes, and the higher levels have not been sent). Honest limit: the live evidence is for 1 to 3 simultaneous visitors; more is covered only by the local test, which measures this PC.
+
+## Results of checkable bets and register update (housekeeping, 2026-11-08 00:47 UTC)
+Appended because evidence now exists; the original entries above are unchanged.
+- **D2/A6 and D4 (size on the host):** met: the assembled site is **267.3 MB** in 5319 files against GitHub Pages' 1 GB limit; the deploy of 267 MB took 17 to 21 seconds.
+- **D8 (the scheduled refresh):** **not yet proven**: the workflow ran on push and by hand (three green runs, 7 minutes each); the first scheduled run is 2026-11-08 02:20 UTC.
+- **D9 (an out-of-date forecast shows a plain warning only):** **held**: the page warns in plain words above 30 hours (tested in Node and in three browser scenarios; the real local page showed it honestly while its data was 32 hours old), technical detail only in the console.
+- **D11 and D19 (the finished page works on both local sites):** **held**: the root preview, the sub-folder test site and the live site pass 26 browser scenarios in four engines.
+- **D13 and D41 (rain levels):** the 0.5 mm bound is the user's D13 value; the shares of blocks per level on the first real run (IFS 71.3 / 21.6 / 6.1 / 1.0 %) are reproduced by `scripts/level_shares.py`. The bet that users find the cut-offs sensible is open (the only real-device verdict so far: "androde looks good the the site works").
+- **D23 (the app shows the map in Firefox on the user's PC):** held on 2026-11-07; a real Android phone also drew it (the user's verdict); an iPhone with Safari is untested by a person.
+- **D37 (nothing paid):** so far held: GitHub Pages and the Actions minutes of a public repository are free; no bill, no card.
+- **D42 (public hosting):** bets held: range requests (206), deploy size and time, phones on Android. **D43 (concurrency):** local results recorded (100 replayed visitors, 20 real browsers); the live bet for 10 simultaneous visitors is untested (the top level was lowered to fit the cap).
+- **D12 (IFS to 240 h, E007) and D14:** unchanged.
+
+## Shortcut register (rebuilt from `git grep "shortcut:"`, 2026-11-08 00:47 UTC)
+Four marker lines in three files, each recorded here and in the README's known limits:
+1. `pipeline/process.py`: IFS 3-hourly detail dropped, 6 h common axis (D14, shortcut 1).
+2. `pipeline/process.py`: negative differences from packing rounding set to 0, not carried to the next interval (D14, shortcut 2).
+3. `config/headers.conf`: the marker comment is STALE: it says one copy of the headers exists "for now" and that a converter "is added at step 10/11 (nothing is hosted yet)"; the converter exists (`backend/pages.py` writes the policy as meta tags) and the site is hosted. The shortcut itself is resolved; fix the comment the next time the config is touched (this housekeeping may not change config).
+4. `frontend/src/app.js`: a place found by the device has no known time zone, so the device's own zone is used and labelled (D24, A8, D30).
+**Deviations that have NO marker in the code (found by this housekeeping):** seven JavaScript functions are longer than 50 lines (`createMapView` 130, `mapScenarios` 145, `liveScenarios` 84, `createLive` 71, `smallTargets` 72, `createMapApp` 70, `serveFolder` 60); they are factories with small inner functions, but the size rule is broken; they go to the user as an open item and, if accepted, must be marked and listed in the README. Known limits with no marker: the lone one-cell peak on the smoothed pictures (D34), the 10-minute page cache and the lost headers on GitHub Pages (D42).
