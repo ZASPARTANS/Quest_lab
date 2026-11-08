@@ -176,3 +176,12 @@ What exists now: the pipeline and the static export, the page live on GitHub Pag
 | S15 | **new, closed**: the workflow now uses `actions/cache/restore` and `actions/cache/save` | GitHub-owned, pinned to the commit `55cc8345863c7cc4c66a329aec7e433d2d1c52a9` (v6.1.0), no new permission, no secret; `scripts/check_workflow.py` accepts an action sub-folder but still refuses tags, other owners and `..` segments (tests with 3 deliberate breakages). The cache is only a place to keep data: `fetch-release` checks size and sha256 after the restore, so a poisoned or damaged cache entry cannot change what is published |
 | S16 | **new, closed**: the fonts and sprites are part of the repository (`frontend/basemap_assets`, 1029 files) | a build no longer downloads anything from the Protomaps repository (one third-party host less); `install-assets` runs in the `export` service (no network) and refuses a missing, extra or changed file against `config/basemap_assets.lock.json`; `.gitattributes` `-text` keeps the bytes; a test checks the committed folder against the lock |
 | New | the download of the map file is retried (3 tries, 30 s) only for network errors, timeouts, 5xx and 429; never for a wrong size or hash | bounded by config; tests |
+
+## Update 2026-11-08 17:39 UTC (housekeeping)
+| ID | Status | Note |
+|---|---|---|
+| S12 | `npm audit` 0 vulnerabilities (2026-11-08 17:39 UTC, lock file only, throwaway container, `npm audit --package-lock-only`) | repeat once more on the final lock file at step 12 |
+| S02 | `pip-audit` NOT repeated since step S4 | repeat in step 12 (standing approval for scans) |
+| S15, S16 | closed (cache action pinned; fonts and sprites in the repository), see the update of 2026-11-08 15:57 UTC | none |
+| New | **availability, not security:** the C: drive of the user's computer is full (0 GB free): Docker Desktop's disk file is 34.3 GB there and WSL crash dumps (317 MB) were written in `%TEMP%` as late as 17:07 UTC | the user decides what to free; no secret is involved |
+| New | the scheduled workflow keeps running (the scheduler skipped runs) | decide on the schedule at the end |
