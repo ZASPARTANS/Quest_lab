@@ -58,8 +58,25 @@ jobs:
           docker compose -f docker/compose.yaml run --rm export
           docker compose -f docker/compose.yaml run --rm export python -m scripts.validate_site
 
-      - name: Get the stored base map (checked by size and sha256)
+      # The 190 MB base-map file is the same on every run: keep it in the cache and download it only when it is not there (PLAN-015, decision D45).
+      # The cache is only a place to keep data: the next step checks the file by size and sha256 whether it came from the cache or not, so a wrong file is never used.
+      # The key follows config/basemap.toml, where the release address, size and sha256 are: a new file makes a new key.
+      - name: Restore the stored base map from the cache
+        id: basemap_cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: data/basemap/world.pmtiles
+          key: basemap-world-${{ hashFiles('config/basemap.toml') }}
+
+      - name: Get the stored base map (checked by size and sha256; downloaded only if the cache did not have it)
         run: docker compose -f docker/compose.yaml run --rm basemap python -u -m pipeline.basemap fetch-release
+
+      - name: Keep the stored base map in the cache for the next run
+        if: steps.basemap_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: data/basemap/world.pmtiles
+          key: ${{ steps.basemap_cache.outputs.cache-primary-key }}
 
       - name: Install the fonts and sprites kept in this repository (every file checked against the lock file; no network)
         run: docker compose -f docker/compose.yaml run --rm export python -u -m pipeline.basemap install-assets

@@ -1,7 +1,7 @@
 """Rules for the GitHub Actions workflow file (plan PLAN-013 step 13.3, finding S09): a text check, no extra library.
     python scripts/check_workflow.py .github/workflows/build.yml
 The rules are the project's safety rules for a public, unattended, scheduled job:
-  1. every `uses:` is a GitHub-owned action (`actions/...`) pinned to a full 40-character commit, not to a tag or branch;
+  1. every `uses:` is a GitHub-owned action (`actions/<name>`, or a sub-folder such as `actions/cache/restore`) pinned to a full 40-character commit, not to a tag or branch;
   2. the workflow-level `permissions:` gives only `contents: read`; `pages: write` and `id-token: write` appear only in the job called `deploy`;
   3. no `pull_request` or `pull_request_target` trigger (nobody else's code runs with our token), and no `secrets.` anywhere (the job needs none);
   4. nothing prints the environment (`printenv`, `env`, `set -x`, step debug, `toJSON(`);
@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 
 USES = re.compile(r"^\s*-?\s*uses:\s*(\S+)")
-PINNED = re.compile(r"^actions/[A-Za-z0-9_.-]+@[0-9a-f]{40}$")
+PINNED = re.compile(r"^actions/[A-Za-z0-9_-][A-Za-z0-9_.-]*(/[A-Za-z0-9_-][A-Za-z0-9_.-]*)*@[0-9a-f]{40}$")  # a sub-folder of the action is allowed (actions/cache/restore), a segment starting with a dot (..) is not
 FORBIDDEN_LINE = [(re.compile(r"\bprintenv\b"), "prints the environment (printenv)"), (re.compile(r"(^|\s|;|\|)env(\s*$|\s*\|)"), "prints the environment (env)"),
                   (re.compile(r"\bset\s+-[a-z]*x"), "shell tracing (set -x) can print secrets"), (re.compile(r"ACTIONS_(STEP|RUNNER)_DEBUG"), "step debug logging"),
                   (re.compile(r"toJSON\("), "toJSON() can dump whole contexts")]
