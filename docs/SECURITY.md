@@ -185,3 +185,10 @@ What exists now: the pipeline and the static export, the page live on GitHub Pag
 | S15, S16 | closed (cache action pinned; fonts and sprites in the repository), see the update of 2026-11-08 15:57 UTC | none |
 | New | **availability, not security:** the C: drive of the user's computer is full (0 GB free): Docker Desktop's disk file is 34.3 GB there and WSL crash dumps (317 MB) were written in `%TEMP%` as late as 17:07 UTC | the user decides what to free; no secret is involved |
 | New | the scheduled workflow keeps running (the scheduler skipped runs) | decide on the schedule at the end |
+
+## Update 2026-11-08 18:51 UTC (step 12.1, the submission checks)
+| ID | Status | Note |
+|---|---|---|
+| S05 | secret scan repeated: **no real secret** in 1,344 tracked files, the diff text of 96 commits and the session log | (1) the project's own pattern list `config/security.toml` line 12 matches a generic "key = '...'" rule: not a key; (2) **session log line 15125 holds a JWT inside a signed download address** of `release-assets.githubusercontent.com` (our public release file, from a check on 2026-11-07): its claims say it expired at 2026-11-07 23:04 UTC; harmless now, disclosed; the log itself is not edited. Repeat on the final log in step 12.5 |
+| S02 | `pip-audit` 2.10.1 repeated 2026-11-08 18:50 UTC: no known vulnerabilities found (with a warning about full hashing) | none |
+| S14 | `curl -I` of the live page re-read: HSTS and `Cache-Control: max-age=600` only; the CSP is a `<meta>` tag in the page | as documented (D42) |
