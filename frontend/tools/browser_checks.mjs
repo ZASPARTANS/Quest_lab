@@ -12,6 +12,7 @@ import { liveScenarios } from './live_scenarios.mjs';
 import { mapScenarios } from './map_scenarios.mjs';
 import { provenanceScenarios } from './provenance_scenarios.mjs';
 import { locationScenarios } from './location_scenarios.mjs';
+import { levelCustomScenarios, levelWordScenarios } from './level_scenarios.mjs';
 
 const frontend = JSON.parse(readFileSync(new URL('../../config/frontend.json', import.meta.url), 'utf8'));
 const cfg = frontend.browser_checks;
@@ -267,7 +268,7 @@ const scenarios = {
 };
 
 const helpers = { open, mapState, assertLanded, checkPlanShown, shot, base, frontend, ADDRESS, siteHost, reverseHost, timeout, sitePath };
-Object.assign(scenarios, basemapScenarios(helpers), liveScenarios(helpers), mapScenarios(helpers), provenanceScenarios(helpers), locationScenarios(helpers));
+Object.assign(scenarios, basemapScenarios(helpers), liveScenarios(helpers), mapScenarios(helpers), provenanceScenarios(helpers), locationScenarios(helpers), levelWordScenarios(helpers), levelCustomScenarios(helpers));
 
 const engines = { chromium, firefox, webkit };
 const launchOptions = engineName === 'chromium' ? (channel ? { channel } : { args: ['--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] }) : {};

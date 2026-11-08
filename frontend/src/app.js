@@ -243,6 +243,7 @@ function chooseAccept() {
   if (!activities.custom.level_choices.includes(value)) return;
   state.customLevel = value;
   storeSettings();
+  if (state.place && !state.fromDevice) history.replaceState(null, '', location.pathname + writeAddress(state.place, state.activityId, state.customLevel)); // else a reload would bring back the old accept= (E040)
   render();
 }
 
