@@ -1,0 +1,23 @@
+PLAN: 9 visitors in levels [1, 3, 5], 401 requests, about 35.0 MB; caps 40 MB, 180 s, 40 requests/s; site https://zaspartans.github.io/Quest_lab
+preflight: every recorded address exists on this site
+level 1: 49 requests, 3.8 MB, 3.3 s, statuses {200: 23, 206: 26}, problems 1
+    asset     median     349 ms   p95    1566 ms   max    1566 ms
+    basemap   median     311 ms   p95     720 ms   max     809 ms
+    font      median     428 ms   p95     517 ms   max     517 ms
+    manifest  median     165 ms   p95     165 ms   max     165 ms
+    page      median      42 ms   p95      42 ms   max      42 ms
+    picture   median     907 ms   p95     907 ms   max     907 ms
+    sprite    median     396 ms   p95     432 ms   max     432 ms
+    tile      median     182 ms   p95     224 ms   max     224 ms
+    PROBLEM /?lat=13.08&lon=80.27&name=Chennai&tz=Asia/Kolkata&activity=outdoor: 5331 bytes, recorded 5333
+level 3: 28 requests, 5.0 MB, 2.1 s, statuses {200: 25, 206: 3}, problems 3
+    asset     median     636 ms   p95    1630 ms   max    1630 ms
+    basemap   median     501 ms   p95     516 ms   max     516 ms
+    manifest  median     306 ms   p95     449 ms   max     449 ms
+    page      median     198 ms   p95     345 ms   max     345 ms
+    sprite    median     438 ms   p95     458 ms   max     458 ms
+    tile      median     409 ms   p95     434 ms   max     434 ms
+    PROBLEM /?lat=13.08&lon=80.27&name=Chennai&tz=Asia/Kolkata&activity=outdoor: 5331 bytes, recorded 5333
+    PROBLEM /?lat=51.5&lon=-0.12&name=London&tz=Europe/London&activity=commute: 5331 bytes, recorded 5333
+    PROBLEM /: 5331 bytes, recorded 5333
+STOPPED: 5 % of the requests failed; sent 77 requests, 8.8 MB; PROBLEMS found

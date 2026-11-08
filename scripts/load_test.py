@@ -25,7 +25,7 @@ from pathlib import Path
 LOCAL = {"localhost", "127.0.0.1", "::1"}
 WORKERS_PER_VISITOR = 6
 STOP_STATUSES = (403, 429)
-LOOSE_KINDS = {"tile", "picture", "manifest", "status", "font", "sprite"}   # their size may differ a little between two exports of the data
+LOOSE_KINDS = {"page", "tile", "picture", "manifest", "status", "font", "sprite"}   # their size may differ a little between two builds or exports (the page by a blank line)
 LOOSE_FRACTION = 0.25
 MAX_FAILED_SHARE = 0.05
 

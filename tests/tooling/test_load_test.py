@@ -206,3 +206,14 @@ def test_a_range_request_is_judged_by_its_header_not_by_a_recorded_size_that_a_c
     assert load_test.plan(odd["visitors"], [1]) == (1, 2, 4000 + 10)
     assert run(base, str(path), "--levels", "1") == 0
     assert "every answer was correct" in capsys.readouterr().out
+
+
+def test_a_page_that_differs_by_a_blank_line_between_two_builds_is_fine_but_a_wrong_page_is_not(site, tmp_path, capsys):
+    """Found by the first live-site run (step 14.3): the live page was 2 bytes shorter than the local recording (a blank line); that is not a failure."""
+    server, base, visits = site
+    for recorded, expected_exit in ((302, 0), (600, 1)):   # the fake page is 300 bytes: 302 is within the tolerance, 600 is not
+        doc = {"visitors": [{"name": "P", "requests": [{"path": "/", "range": None, "status": 200, "bytes": recorded, "kind": "page"}]}]}
+        path = tmp_path / f"page{recorded}.json"
+        path.write_text(json.dumps(doc), encoding="utf-8")
+        assert run(base, str(path), "--levels", "1") == expected_exit
+        capsys.readouterr()

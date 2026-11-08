@@ -1,0 +1,8 @@
+3 real browser visitor(s) at once on https://zaspartans.github.io/Quest_lab (approved: the user's go (run the 3 real browsers now), 2026-11-07 about 23:37 UTC)
+all done in 22.0 s
+  plan shown (ms):       median 3082  max 3282
+  map ready (ms):        median 9354  max 9412
+  live rain drawn (ms):  median 12785  max 12838
+  downloaded per visitor (MB): median 4  max 4   total 12.3 MB
+  JS memory (MB):        median 26  max 34
+every visitor got the plan, the map and the live rain picture, with no console error
