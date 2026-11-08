@@ -58,10 +58,11 @@ jobs:
           docker compose -f docker/compose.yaml run --rm export
           docker compose -f docker/compose.yaml run --rm export python -m scripts.validate_site
 
-      - name: Get the stored base map (checked by size and sha256) and its fonts and sprites
-        run: |
-          docker compose -f docker/compose.yaml run --rm basemap python -u -m pipeline.basemap fetch-release
-          docker compose -f docker/compose.yaml run --rm basemap python -u -m pipeline.basemap fetch-assets
+      - name: Get the stored base map (checked by size and sha256)
+        run: docker compose -f docker/compose.yaml run --rm basemap python -u -m pipeline.basemap fetch-release
+
+      - name: Install the fonts and sprites kept in this repository (every file checked against the lock file; no network)
+        run: docker compose -f docker/compose.yaml run --rm export python -u -m pipeline.basemap install-assets
 
       - name: Build the page for the site's own base path
         env:

@@ -55,6 +55,7 @@ basemap_file = "world.pmtiles"    # the extract the site uses, inside basemap_di
 basemap_measure_file = "world_z{zoom}.pmtiles"  # the extracts of the measuring gate, inside basemap_dir
 basemap_tool_dir = "bin"          # inside basemap_dir: the checked pmtiles tool
 basemap_assets_dir = "assets"     # inside basemap_dir: fonts/<name>/<range>.pbf, sprites and the font licence
+basemap_assets_source = "frontend/basemap_assets"  # in the repository (committed, not ignored): the same fonts and sprites; a build copies them to basemap_dir/basemap_assets_dir with `install-assets`
 basemap_lock_draft = "assets.lock.json"  # inside basemap_dir: where `lock-assets` writes the draft lock; it is reviewed and copied to config/ by hand
 
 # Grid every GRIB message must have (checked by pipeline/grid.py; verified on real files 2026-11-06,

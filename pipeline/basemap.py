@@ -11,7 +11,8 @@ Every name, folder, URL and number comes from config/basemap.toml and config/pip
 Run (the `basemap` container has network access, runs as a normal user, and can write only under data/):
   python -m pipeline.basemap measure       tool + assets + the extracts of the gate zooms, prints sizes and times (step 9.3d-1)
   python -m pipeline.basemap lock-assets   write a DRAFT assets lock (reviewed and copied to config/ by hand: the project folder is read-only here)
-  python -m pipeline.basemap fetch-assets  fonts and sprites only
+  python -m pipeline.basemap fetch-assets  fonts and sprites only, downloaded (the maintainer's way to refresh the folder kept in the repository)
+  python -m pipeline.basemap install-assets  fonts and sprites from the folder kept in the repository (offline, every file checked against the lock; what a build uses)
   python -m pipeline.basemap fetch-release  the stored base-map file from its release asset (checked)
   python -m pipeline.basemap build         the extract the site uses (extract.maxzoom)
 """
@@ -146,13 +147,40 @@ def lock_assets(bm, session, lock_path):
     return files
 
 
-def fetch_assets(bm, session, lock_path, assets_dir):
-    """Download the assets listed in the lock file into assets_dir (paths below it follow the repository); returns (downloaded, kept, total bytes)."""
+def _load_lock(bm, lock_path):
+    """The assets lock file, refused if it belongs to another commit or lists other files than the config asks for."""
     lock = json.loads(lock_path.read_text(encoding="utf-8"))
     if lock["commit"] != bm["style_assets"]["commit"]:
         raise ValueError("the lock file belongs to another commit than config/basemap.toml")
     if set(lock["files"]) != set(asset_paths(bm)):
         raise ValueError("the lock file lists other files than the config asks for; run lock-assets")
+    return lock
+
+
+def install_assets(bm, lock_path, source_dir, assets_dir):
+    """Copy the fonts and sprites from the folder kept in our own repository into assets_dir, offline (PLAN-015 step 15.2, decision D45).
+    Every file is checked against the lock file first: a missing, an extra or a changed file raises and nothing is copied. Returns (files, total bytes)."""
+    lock = _load_lock(bm, lock_path)
+    present = {p.relative_to(source_dir).as_posix() for p in source_dir.rglob("*") if p.is_file()} if source_dir.is_dir() else set()
+    if present != set(lock["files"]):
+        raise ValueError(f"the assets folder {source_dir.name} and the lock file list different files: missing {sorted(set(lock['files']) - present)[:3]}, extra {sorted(present - set(lock['files']))[:3]}")
+    contents = {}
+    for path, entry in lock["files"].items():
+        contents[path] = (source_dir / path).read_bytes()
+        if sha256_of(contents[path]) != entry["sha256"]:
+            raise ValueError(f"{path} does not match the lock file; nothing was copied")
+    for path, data in contents.items():
+        target = assets_dir / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if not (target.is_file() and target.read_bytes() == data):
+            target.write_bytes(data)
+    return len(contents), sum(len(d) for d in contents.values())
+
+
+def fetch_assets(bm, session, lock_path, assets_dir):
+    """Download the assets listed in the lock file into assets_dir (paths below it follow the repository); returns (downloaded, kept, total bytes).
+    A build does not use this any more (it uses install-assets): it is the maintainer's way to refresh the folder kept in the repository."""
+    lock = _load_lock(bm, lock_path)
     downloaded = kept = total = 0
     for path, entry in lock["files"].items():
         target = assets_dir / path
@@ -206,6 +234,9 @@ def main(argv):
     elif command == "fetch-assets":
         downloaded, kept, total = fetch_assets(bm, session, lock, f["assets_dir"])
         print(f"assets: {downloaded} downloaded, {kept} kept, {total / 1e6:.2f} MB")
+    elif command == "install-assets":
+        files, total = install_assets(bm, lock, ROOT / cfg["paths"]["basemap_assets_source"], f["assets_dir"])
+        print(f"assets: {files} files, {total / 1e6:.2f} MB installed from {cfg['paths']['basemap_assets_source']}, all matching the lock file")
     elif command == "fetch-release":
         target = f["root"] / cfg["paths"]["basemap_file"]
         done = fetch_release(bm, session, target, cfg["paths"]["partial_suffix"])
@@ -217,7 +248,7 @@ def main(argv):
         seconds, nbytes = run_extract(bm, tool, url, out, bm["extract"]["maxzoom"])
         print(f"built {out.relative_to(ROOT)}: zoom 0-{bm['extract']['maxzoom']}, {nbytes / 1e6:.1f} MB in {seconds:.0f} s from {url}")
     else:
-        raise SystemExit(f"unknown command {command!r}; use measure, lock-assets, fetch-assets, fetch-release or build")
+        raise SystemExit(f"unknown command {command!r}; use measure, lock-assets, fetch-assets, install-assets, fetch-release or build")
     return 0
 
 

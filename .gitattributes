@@ -1,0 +1,2 @@
+# The fonts and sprites kept in the repository must stay byte for byte as they are: a changed line end would break their sha256 in config/basemap_assets.lock.json.
+frontend/basemap_assets/** -text

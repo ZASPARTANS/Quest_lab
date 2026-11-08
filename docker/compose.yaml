@@ -59,7 +59,8 @@ services:
 
   basemap:
     # The stored base map (plan PLAN-010): downloads the checked pmtiles tool, the fonts and sprites and a world extract of OpenStreetMap data.
-    # Network access (like fetch); only data/ is writable. Commands: measure (the gate), lock-assets, fetch-assets, build:
+    # Network access (like fetch); only data/ is writable. Commands: measure (the gate), lock-assets, fetch-assets (refreshes the fonts and sprites; the committed copy is
+    # frontend/basemap_assets, installed offline by `install-assets`, which a build runs in the no-network `export` service), fetch-release, build:
     #   docker compose -f docker/compose.yaml run --rm basemap python -m pipeline.basemap measure
     <<: *python
     volumes:
