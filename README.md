@@ -57,10 +57,10 @@ The site as GitHub Pages serves it (from a sub-folder, with no security headers:
 ## Tests and checks (the official way is Docker)
 ```
 docker compose -f docker/compose.yaml run --rm tests            # Python: 160 passed (2026-11-08 00:11 UTC); no network, project read-only
-docker compose -f docker/compose.yaml run --rm frontend-tests   # Node: 103 passed
+docker compose -f docker/compose.yaml run --rm frontend-tests   # Node: 109 passed
 docker compose -f docker/compose.yaml run --rm process python -m scripts.plan_reference   # independent Python plan from the raw GRIB
 docker compose -f docker/compose.yaml run --rm frontend-check   # the browser code on the real tiles equals it: 8 places x 8 activities (all match, 2026-11-07 19:02 UTC)
-BROWSER_NAME=chromium docker compose -f docker/compose.yaml run --rm browser-checks   # 26 scenarios in a real engine (chromium | firefox | webkit); SCREENSHOT_BASE_URL points it at another site
+BROWSER_NAME=chromium docker compose -f docker/compose.yaml run --rm browser-checks   # 28 scenarios in a real engine (chromium | firefox | webkit); SCREENSHOT_BASE_URL points it at another site
 docker compose -f docker/compose.yaml run --rm browser-checks node tools/phone_checks.mjs   # Pixel 7 and iPhone 15 emulation: overflow, 44 px tap targets, map cover, location flow
 python scripts/smoke_site.py https://zaspartans.github.io/Quest_lab/   # the live site: page, forecast age, status, tile, range request
 python scripts/check_workflow.py                                  # the workflow's safety rules
@@ -83,6 +83,8 @@ There is **no GPU on the server side** (static hosting serves files only); the m
 | WebKit 27 (the engine of Safari, not Safari) | Docker | 26 of 26 (3 runs after a test fix); iPhone 15 emulation passes |
 | Firefox 159 | Docker | 26 of 26, but the container has no WebGL2 for Firefox, so its map scenarios return early there |
 | Safari on an iPhone | | **not tried by a person** (only the WebKit emulation above) |
+
+The counts in the rows above (26 of 26) were measured on 2026-11-07 on three sites. On 2026-11-08, after the design pass and the location fix, the scenario list grew to 28 and passed 28 of 28 in Chromium, Firefox and WebKit on the root test site only (the sub-folder test site, Edge and the live site were not re-run). The user's Android check of the new design (2026-11-08): Firefox, Chrome and Samsung Internet on Android all work and look good (their words, no measurements).
 
 ## Known limits (full list: `docs/PROGRESS.md` and the shortcut register in `docs/DECISIONS.md`)
 IFS 3-hourly detail is not used (6-hour blocks, D14); tiny negative differences from GRIB packing are set to zero (D14, at most about 0.06 % of the rain mass); IFS stops at 240 h (D12); the plan uses a device time zone for a place found by the device or the map (D24, D30); a lone one-cell peak looks lighter on the smoothed pictures (D34); the rain levels use our own cut-offs (D41); **GitHub Pages sends no security headers except HSTS, so `nosniff`, `Permissions-Policy`, `Cross-Origin-Opener-Policy` and `frame-ancestors` are lost and the rest of the policy is in `<meta>` tags (D42)**; Pages caches for 10 minutes, so a new forecast can take that long to reach a browser; the forecast on the page is normally 8 to 21 hours old; a first visit loads 2.7 to 4.7 MB; concurrency was tested up to 100 replayed visitors and 20 real browsers on this computer (numbers for this machine, not GitHub) and 1 to 3 visitors on the live site (D43); the security headers file still carries a stale marker comment (see the register); **seven JavaScript functions are longer than the 50-line rule** (listed in `docs/DECISIONS.md`, open for decision). The scheduled workflow keeps running every 6 hours until the owner disables it.

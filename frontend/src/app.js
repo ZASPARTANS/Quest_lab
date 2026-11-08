@@ -3,7 +3,7 @@
 import activities from '../../config/activities.json';
 import config from '../../config/frontend.json';
 import './badge.js';
-import { bufferGetter, devicePosition, loadManifest, locationAlreadyAllowed, maxTileBytes } from './data.js';
+import { bufferGetter, loadManifest, locationAlreadyAllowed, maxTileBytes } from './data.js';
 import { byId, el, fill } from './dom.js';
 import { searchPlaces, searchText } from './geocode.js';
 import { addPlace, cleanCoordinates, loadSaved, readAddress, removePlace, samePlace, storeSaved, writeAddress } from './places.js';
@@ -15,6 +15,7 @@ import { clock, dayKey, dayLabel, deviceZone, offsetLabel } from './time.js';
 import { mapPointName } from './mapstate.js';
 import * as pageMap from './pagemap.js';
 import { nameOfPosition } from './reverse.js';
+import { findPosition, onePerTime } from './locate.js';
 import { loadSeries } from './tiles.js';
 import { buildView } from './view.js';
 import { dataPath } from './sitepath.js';
@@ -26,6 +27,7 @@ const IDS = LIST.map((a) => a.id);
 const MESSAGES = {
   denied: 'Location is switched off for this site. Search for a place instead.',
   unavailable: 'Your location could not be found. Search for a place instead.',
+  timeout: 'Finding your location is taking too long. Press "Use my location" to try again, or search for a place instead.',
   unsupported: 'This browser cannot share its location. Search for a place instead.',
 };
 const state = { manifest: null, getter: null, place: null, fromDevice: false, activityId: activities.default_activity,
@@ -164,12 +166,9 @@ function showPlace(place, fromDevice, source) {
   render();
 }
 
-async function useLocation() {
-  setStatus('Looking for your location…');
+const useLocation = onePerTime(async () => {
   try {
-    const position = await devicePosition(cfg.geolocation);
-    const where = cleanCoordinates(position.lat, position.lon);
-    if (!where) throw new Error('the browser gave no usable position');
+    const where = await findPosition(cfg.geolocation, setStatus);
     // shortcut: a place found by the device has no known time zone, so the device's own zone is used and labelled (decision D24, A8)
     const place = { name: 'Your location', ...where, zone: null };
     showPlace(place, true, 'location');
@@ -177,7 +176,7 @@ async function useLocation() {
   } catch (error) {
     setStatus(MESSAGES[error?.code] ?? MESSAGES.unavailable);
   }
-}
+});
 
 /** Replace "Your location" by the place name when the reverse lookup answers (decision D32); on any failure the name stays. */
 async function nameDevicePlace(place) {

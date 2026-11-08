@@ -29,13 +29,13 @@ export function maxTileBytes(manifest) {
   return 10 + 2 * manifest.tiles.size * manifest.tiles.size * manifest.tiles.layers + 1024;
 }
 
-/** Ask the browser for the device position. Resolves { lat, lon } or rejects with { code: 'denied' | 'unavailable' | 'unsupported' }. */
+/** Ask the browser for the device position. Resolves { lat, lon } or rejects with { code: 'denied' | 'timeout' | 'unavailable' | 'unsupported' }. */
 export function devicePosition(options) {
   return new Promise((resolve, reject) => {
     if (!('geolocation' in navigator)) return reject({ code: 'unsupported' });
     navigator.geolocation.getCurrentPosition(
       (p) => resolve({ lat: p.coords.latitude, lon: p.coords.longitude }),
-      (e) => reject({ code: e.code === 1 ? 'denied' : 'unavailable' }),
+      (e) => reject({ code: e.code === 1 ? 'denied' : e.code === 3 ? 'timeout' : 'unavailable' }), // 1 = refused, 3 = too slow, anything else = no position
       { timeout: options.timeout_ms, maximumAge: options.max_age_ms, enableHighAccuracy: false },
     );
   });

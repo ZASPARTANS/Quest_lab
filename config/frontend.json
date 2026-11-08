@@ -125,7 +125,7 @@
     "max_reply_chars": 50000
   },
   "saved_places": { "storage_key": "rain-plan.saved-places.v1", "settings_key": "rain-plan.settings.v1", "max": 5 },
-  "geolocation": { "timeout_ms": 10000, "max_age_ms": 600000 },
+  "geolocation": { "timeout_ms": 10000, "retry_timeout_ms": 30000, "max_age_ms": 600000 },
   "freshness": {
     "_comment": "The honesty strip (PLAN-013 step 13.1, D9): the page warns in plain words when the forecast run is older than max_age_hours. ECMWF's 00z and 12z runs (the only ones with the 240 h IFS files) appear about 7.5 h after their time and a new one comes every 12 h, so the run shown is normally 8 to 21 hours old; 30 h means a whole run was missed. A test keeps it at 24 or more.",
     "max_age_hours": 30,
