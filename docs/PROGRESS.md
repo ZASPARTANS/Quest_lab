@@ -862,3 +862,6 @@ Method: the Vite dev server of this computer (`node node_modules/vite/bin/vite.j
 ## Housekeeping 2026-11-09 16:27 UTC (70.14 h used, 1.86 h left)
 - Status, Open items and Known issues rewritten for the current state; plan table rows 17, 17.4 and 17.5; README and SUBMISSION counts and run figures; SECURITY S17; ENVIRONMENT and SOURCES checked (no new package, host or source; nothing added).
 - Checks run for this pass: Python 178 passed; Node 121 passed; `npm audit --package-lock-only` 0 vulnerabilities; secret scan (tree, 114 commits, the session log up to now): only the project's own pattern text matched; `git grep "shortcut:"` 3 markers in 2 files; no function over 50 lines.
+
+## Last pass (2026-11-09 16:35 UTC; 70.26 h used)
+- The housekeeping commit `c98b894` was pushed at 16:28 UTC; its run was green (build, deploy, smoke) and the live smoke test passed at 16:34 UTC. The owner's question about updating only the data was answered with measured step times and recorded as an idea (README "Possible next steps", DECISIONS); no code was changed. SUBMISSION's commit-time item refreshed (115 commits, latest `c98b894 2026-11-09T16:27:57Z`).
