@@ -29,7 +29,7 @@ Everything below was found by running commands in this session. Times are UTC.
 - Installed 4 direct packages, 23 packages in total; `pip check`: "No broken requirements found". Versions are pinned in `requirements.txt`.
 - Rebuilding a throwaway venv from `requirements.txt` gave an identical `pip freeze`. During that install pip printed two retries with `getaddrinfo failed` (transient DNS failure); pip recovered and the install completed. No action taken.
 - `pytest -q` with no `tests/` folder exits with code 5 ("no tests collected") and a `PytestConfigWarning: No files were found in testpaths`. Expected until step 4 adds tests.
-- Shell note: Git Bash `mktemp -d` returns a short-name temp path (`NISHAA~1`); Windows warns that the venv location "may have moved due to redirects". Harmless.
+- Shell note: Git Bash `mktemp -d` returns a short-name temp path (`<short temp path>`); Windows warns that the venv location "may have moved due to redirects". Harmless.
 
 ## 2026-11-06 ~19:13 UTC â€” step 3
 - Local clock vs servers: local `date -u` agreed with the PyPI `Date` header within about 8 seconds, so the clock used for the time budget is sound.
