@@ -104,6 +104,18 @@ function mapChoiceScenarios(h) {
       assert.ok(Math.abs(Number(query.get('lon')) - 80.27) > 0.001 && Math.abs(Number(query.get('lon')) - 80.27) < 3, `the address has the clicked longitude: ${query.get('lon')}`);
       return log;
     },
+    async 'Search on the "Map point" label explains it and sends nothing to the place search (E045)'(browser) {
+      const { page, log, ready } = await onMap(browser);
+      if (!ready) return log;
+      await assertLanded(page, 13.08, 80.27, frontend.map.fly.zoom_by_source.address);
+      const box = await page.locator('#map').boundingBox();
+      await page.mouse.click(box.x + box.width / 2 + 120, box.y + box.height / 2 + 70);
+      await page.waitForFunction(() => /^Map point \(/.test(document.getElementById('title').textContent), null, { timeout });
+      await page.click('#search-form button[type=submit]');
+      await page.waitForFunction(() => /point you clicked/.test(document.getElementById('status').textContent), null, { timeout });
+      assert.equal(log.geocoder.length, 0, 'nothing was sent to the place search');
+      return log;
+    },
   };
 }
 

@@ -197,6 +197,7 @@ async function nameDevicePlace(place) {
 async function search(event) {
   event.preventDefault();
   if (!searchText(ui.input.value, cfg.geocoder)) return setStatus(`Type at least ${cfg.geocoder.min_chars} letters of a place name.`);
+  if (state.place && ui.input.value === mapPointName(state.place.lat, state.place.lon)) return setStatus('That is the point you clicked on the map. Type a place name to search for another place.'); // not a name the search service knows (E045)
   setStatus('Searching…');
   try {
     const places = await searchPlaces(cfg.geocoder, ui.input.value, (url, init) => fetch(url, init));
