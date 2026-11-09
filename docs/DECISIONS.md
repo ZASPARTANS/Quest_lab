@@ -588,3 +588,6 @@ Four marker lines in three files, each recorded here and in the README's known l
 
 ### D49 first result (2026-11-09 17:02 UTC)
 - The push that carried the change (`de4f0fc`, which also changed `scripts/` and the workflow, so it was NOT ignorable) started a run as expected; it was green (build, deploy, smoke) and the live smoke test passed: the workflow file with `paths-ignore` is valid on GitHub. The bet itself (a docs-only push starts no run) is checked by the push of this very record, a docs-only commit; the result follows.
+
+### D49 result (2026-11-09 17:03 UTC)
+- **Bet held:** the docs-only push `89ff772` (pushed 17:02:37 UTC, only `docs/DECISIONS.md` changed) started **no workflow run**: 53 seconds later the newest run was still the one of `de4f0fc` (16:55:37 UTC), while earlier pushes had started theirs within about 5 seconds. A change of `scripts/` and the workflow file (`de4f0fc`) did start a run, so the ignore list does not hide code. The push of this record is a second docs-only test.
