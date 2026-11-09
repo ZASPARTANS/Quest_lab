@@ -3,13 +3,13 @@
 - Drafted: 2026-11-06 (approx. 20:05-20:13 UTC, in plan mode)
 - Written to this file: 2026-11-06 20:13 UTC
 - Session: `3e56a452-e5f8-4bb9-b353-63bad43748f4`; first prompt 2026-11-06T18:19:13Z; deadline 2026-11-09T18:19:13Z
-- Approval: approved by the user (Nishaanth Senthilkumar) through the plan-mode approval prompt, 2026-11-06 ~20:13 UTC. Plan text below is unchanged from what was approved.
+- Approval: approved by the user (the owner) through the plan-mode approval prompt, 2026-11-06 ~20:13 UTC. Plan text below is unchanged from what was approved.
 - **Replaces: PLAN-003** (approved 2026-11-06 ~19:20 UTC). Steps 1, 1b, 2 and 3 are done and carried over as done.
 
 ## Why PLAN-003 is replaced
 - **Changed scope (user request, 2026-11-06 ~20:05 UTC):** (1) a localhost preview of the site for checking it locally; (2) "we will use the docker to do all the testing". PLAN-003 had neither; its tests ran from the Windows `.venv` and Docker was a one-off hand-typed check.
 - **User decisions given while planning:** Docker is the official test run (the Windows `.venv` stays only for quick trying, never as proof). Localhost = Vite dev server on the host **plus** a Docker preview of the built site. IFS stays at 240 h for now (E007 stays open; the "AIFS only past 240 h" case stays in the plan).
-- **Evidence the setup is feasible:** `docker compose` 5.6.1 and buildx 0.38.1 are installed, Docker is running (29.9.2, Linux/WSL2, 16 CPUs, ~16.6 GB), `python:3.11-slim` is already pulled, a read-only bind mount of this project worked in the earlier Linux check, and ports 5173 and 8080 are free (checked with `netstat`).
+- **Evidence the setup is feasible:** `docker compose` 5.6.1 and buildx 0.38.1 are installed, Docker is running (29.9.2, Linux/WSL2), `python:3.11-slim` is already pulled, a read-only bind mount of this project worked in the earlier Linux check, and ports 5173 and 8080 are free (checked with `netstat`).
 - **What changes:**
   1. **New folder `docker/`** (layout change to D5, raised here and recorded as D10): `docker/Dockerfile`, `docker/Dockerfile.dockerignore`, `docker/compose.yaml`. No new file in the repo root.
   2. **New step 3b** builds the Docker test environment before step 4. After it, "tests pass" means the Docker command passes.

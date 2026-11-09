@@ -111,7 +111,7 @@ There is **no GPU on the server side** (static hosting serves files only); the m
 |---|---|---|
 | Android phones: Firefox, Chrome, Samsung Internet | the user's own phones, the live site | work and look good (the user's words, 2026-11-08; no measurements) |
 | Firefox | the user's own PC | the base map, the rain, the credit line and the device place name drew (user's screenshots, 2026-11-07) |
-| Microsoft Edge | the developer's Windows PC, real GPU | 42 of 42 scenarios (local test site); 26 of 26 earlier on the live site; 20 real Edge browsers at once finished correctly on the local site (slowly) |
+| Microsoft Edge | the developer's machine, real GPU | 42 of 42 scenarios (local test site); 26 of 26 earlier on the live site; 20 real Edge browsers at once finished correctly on the local site (slowly) |
 | Chromium 158, WebKit 27 (the engine of Safari, not Safari), Firefox 159 | Docker, software WebGL | 42 of 42 on the local test site; Firefox in Docker has no WebGL2, so its map scenarios return early there |
 | Safari on an iPhone | the user's own iPhone, the live site | **works** (the user's words, 2026-11-08: "iphone works"; the model and iOS version were not given; no measurements) |
 | Safari on a Mac | the user's own Mac, the live site | **works** (the user's words, 2026-11-09: "Mac works"; the Safari and macOS versions were not given; no measurements; it is not stated whether this was before or after the guide was added) |

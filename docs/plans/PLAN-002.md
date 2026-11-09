@@ -3,7 +3,7 @@
 - Drafted: 2026-11-06 (approx. 18:46–18:49 UTC, in plan mode)
 - Written to this file: 2026-11-06 18:49 UTC
 - Session: `3e56a452-e5f8-4bb9-b353-63bad43748f4`; first prompt 2026-11-06T18:19:13Z; deadline 2026-11-09T18:19:13Z
-- Approval: approved by the user (Nishaanth Senthilkumar) through the plan-mode approval prompt, 2026-11-06 ~18:49 UTC. Plan text below is unchanged from what was approved.
+- Approval: approved by the user (the owner) through the plan-mode approval prompt, 2026-11-06 ~18:49 UTC. Plan text below is unchanged from what was approved.
 - **Replaces: PLAN-001** (approved 2026-11-06 ~18:42 UTC). PLAN-001 step 1 is done (commits `ccb24df`, `591a24c`) and is carried over as done.
 
 ## Why PLAN-001 is replaced

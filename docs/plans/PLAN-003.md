@@ -3,7 +3,7 @@
 - Drafted: 2026-11-06 (approx. 19:17-19:20 UTC, in plan mode)
 - Written to this file: 2026-11-06 19:20 UTC
 - Session: `3e56a452-e5f8-4bb9-b353-63bad43748f4`; first prompt 2026-11-06T18:19:13Z; deadline 2026-11-09T18:19:13Z
-- Approval: approved by the user (Nishaanth Senthilkumar) through the plan-mode approval prompt, 2026-11-06 ~19:20 UTC. Plan text below is unchanged from what was approved.
+- Approval: approved by the user (the owner) through the plan-mode approval prompt, 2026-11-06 ~19:20 UTC. Plan text below is unchanged from what was approved.
 - **Replaces: PLAN-002** (approved 2026-11-06 ~18:49 UTC). Steps 1, 1b, 2 and 3 of PLAN-002 are done and carried over as done.
 
 ## Why PLAN-002 is replaced

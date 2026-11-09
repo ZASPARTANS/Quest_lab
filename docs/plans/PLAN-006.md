@@ -2,7 +2,7 @@
 
 - Drafted and approved: 2026-11-06 ~23:24 UTC (plan-mode draft written ~23:15 UTC; time of this file taken with `date -u`)
 - Session: `3e56a452-e5f8-4bb9-b353-63bad43748f4`; first prompt 2026-11-06T18:19:13Z; deadline 2026-11-09T18:19:13Z; about 5 h used
-- Approval: **approved by the user (Nishaanth Senthilkumar) through the plan-mode approval prompt, 2026-11-06 ~23:24 UTC.** Plan text below is unchanged from the approved draft; only the Drafted and Approval lines were filled in.
+- Approval: **approved by the user (the owner) through the plan-mode approval prompt, 2026-11-06 ~23:24 UTC.** Plan text below is unchanged from the approved draft; only the Drafted and Approval lines were filled in.
 - **Replaces: PLAN-005 for steps 7-12** (PLAN-005's security steps S1-S5 and steps 1-6 are done and carried over unchanged; PLAN-004's step text for 7-12 is superseded by this plan).
 
 ## Why this plan (Context)

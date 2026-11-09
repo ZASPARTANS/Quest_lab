@@ -701,7 +701,7 @@ Verification of this pass: `docker compose -f docker/compose.yaml run --rm tests
 - **Not done:** the local test levels (14.2), the real-browser runs, the public test (14.3).
 
 ## Step 14.2 done-check results (PLAN-014; run 2026-11-07 23:17-23:29 UTC; about 29.2 h used)
-- **Where:** the local Pages-like test site (nginx with ONE worker in Docker Desktop on this Windows PC, http://127.0.0.1:8081/Quest_lab), no outside traffic. **These numbers measure this machine, not GitHub, and do not transfer.**
+- **Where:** the local Pages-like test site (nginx with ONE worker in Docker Desktop on the test machine, http://127.0.0.1:8081/Quest_lab), no outside traffic. **These numbers measure this machine, not GitHub, and do not transfer.**
 - **Visits re-recorded** after the first local run exposed two flaws of mine (below): Chennai from a link **49 requests, 3.71 MB**; London **55 requests, 4.68 MB**; Globe then a click on the map **20 requests, 2.72 MB** (mean 3.70 MB, 41 requests; the number of ranged map reads varies a little between recordings).
 - **HTTP-level replay (`scripts/load_test.py`, 7,740 requests, 701.5 MB in total): every answer was correct at every level** (status and size as recorded, every ranged read a 206 with the exact Content-Range), preflight found every recorded address on the site:
 
@@ -886,3 +886,5 @@ Method: the Vite dev server of this computer (`node node_modules/vite/bin/vite.j
 
 ## Privacy clean-up of the Markdown files (2026-11-09 17:35 UTC)
 - At the owner's request, machine details and local paths were removed from the Markdown files (ENVIRONMENT.md rewritten without them; the session log path is now given as a relative form with its session ID; lines about the owner's computer were removed from README, SUBMISSION, SECURITY, ERRORS and PROGRESS). The two older versions stay in the git history on GitHub. The approved plan files were not edited (they carry the owner's name, no paths). **Committed locally only: the owner said no more pushes, so GitHub still shows the previous text.**
+
+- Addition (2026-11-09 17:35 UTC): the owner clarified "errors related to this project are fine, but no personal path and information". Done: the full name in the approved plan files was replaced by "the owner" (PLAN-001 to PLAN-006) and hardware figures in PLAN-004 and ENVIRONMENT were removed; error records stay (E046 rewritten without any machine details); no personal path, machine name, drive size, address or full name remains in the tracked files (checked by search). Still local, not pushed. The git history on GitHub keeps the older text, and the commits carry the author name and e-mail (decision D16/S06).

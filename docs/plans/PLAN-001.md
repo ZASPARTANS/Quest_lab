@@ -3,7 +3,7 @@
 - Drafted: 2026-11-06 (approx. 18:30–18:42 UTC, in plan mode)
 - Written to this file: 2026-11-06 18:42 UTC
 - Session: `3e56a452-e5f8-4bb9-b353-63bad43748f4`; first prompt 2026-11-06T18:19:13Z; deadline 2026-11-09T18:19:13Z
-- Approval: approved by the user (Nishaanth Senthilkumar) through the plan-mode approval prompt, 2026-11-06 ~18:42 UTC. Plan text below is unchanged from what was approved.
+- Approval: approved by the user (the owner) through the plan-mode approval prompt, 2026-11-06 ~18:42 UTC. Plan text below is unchanged from what was approved.
 
 ## Context / Goal
 Project 1 of the QUEST Lab application: fetch precipitation forecasts from ECMWF Open Data, process them, and deploy a **public** web app with an innovative front end. Outcome: a static web app, refreshed automatically from every 00z/12z run, that shows global precipitation from **IFS and AIFS**, with:
