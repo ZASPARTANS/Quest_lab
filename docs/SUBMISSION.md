@@ -43,3 +43,7 @@ Status: first finished 2026-11-08 21:15 UTC (step 12.4 and 12.5, 50.9 h after th
 - **Final secret scan and commit times (2026-11-09 17:07 UTC):** repeated with `secret_scan.py` (tree 1,367 files, 120 commits, the session log up to this time): only the project's own pattern text matched, no real secret. First prompt 2026-11-06T18:19:13Z; first commit `5f0060b` 2026-11-06T18:43:21Z; the last commit before this record is `09476bc` at 2026-11-09T17:03:42Z (70.74 h after the first prompt); this record's commit follows within minutes, still before the deadline 2026-11-09T18:19:13Z. No `subagents/` directory in the session folder (only `tool-results/`).
 
 - **Last code change live (2026-11-09 17:29 UTC):** `86e8bb3` (the "Recentre" button, D50), green on GitHub, live smoke test and a live Edge check passed. Last commit before this record: `86e8bb3 2026-11-09T17:23:32Z`. Deadline 2026-11-09T18:19:13Z; 0:49:41 left when this was written.
+
+## End of the session (2026-11-09 17:57:13 UTC)
+- **Total session length:** 71.63 h from the first prompt (2026-11-06T18:19:13Z) to this record, inside the 72 hours; 0:21:59 before the deadline 2026-11-09T18:19:13Z. First commit 2026-11-06T18:43:21Z. **Final commit:** this record, pushed right after it was written; the commit before it is `6dff068 2026-11-09T17:48:43Z` (130 commits before this one). The exact final commit ID and time are `git log -1 --format='%h %cI'` on `main`.
+- The session log is submitted unedited; it ends with the last messages after this record.
