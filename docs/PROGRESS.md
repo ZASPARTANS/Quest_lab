@@ -883,3 +883,6 @@ Method: the Vite dev server of this computer (`node node_modules/vite/bin/vite.j
 
 ## Step 17.6: the "My place" button becomes "Recentre" (2026-11-09 17:23 UTC; 71.07 h used)
 - **User:** what is this button for, and which saved place would it use. **Done:** label "Recentre" plus a hint (D50); the saved-places choice on the map is future work (README, D50). **Checked:** Node 121 passed; 42 of 42 scenarios in Chromium, Firefox, WebKit and Edge (the "my place button" scenario now also checks the label and the hint); phone checks the same as before (Pixel 7 23 %, iPhone 15 42 %, overflow 0, 0 small tap targets); `browser_checks.mjs` still exactly 300 lines. Pushed with the standing permission; the live check follows.
+
+## Step 17.6 live check (2026-11-09 17:29 UTC; 71.17 h used, 0:49:41 left)
+- Pushed 17:23:35 UTC (`c98de3e`); the run was green (build, deploy, smoke) by 17:28 UTC; live smoke test passed. A fresh real Edge visit to the live site: the button reads "Recentre", its hint is the new text, it is enabled with a place chosen; after dragging the map away (centre 84.22, 11.15) a click on it flew back toward the place (centre 80.56, 12.94 when sampled 1.5 s into the flight, place 80.27, 13.08); no console error. The work is finished; the next commit is records only, so no rebuild follows.
