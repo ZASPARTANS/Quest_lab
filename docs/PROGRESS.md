@@ -115,7 +115,7 @@
 | 2026-11-08 17:39 | Housekeeping review of all markdown files (this edit; its commit time is in `git log`) | 47.33 h | 24.67 h |
 
 ## Current plan
-**No plan is in progress.** `docs/plans/PLAN-015.md` (stop downloading what the build already has: retry, repo-held fonts and sprites, cache; 15.0-15.5) is complete, as are PLAN-014 (concurrency testing), PLAN-013 (public hosting), PLAN-012, PLAN-011 (rain levels, 11.0-11.4) and the plans before them. What is left comes from older plans: **PLAN-007 step 9.5** (design pass: round 1 is built and live, the user liked it on Android; a second round is only on request) and **step 12** (final README, `docs/SUBMISSION.md`, the checks of the submission list). The live site is https://zaspartans.github.io/Quest_lab/.
+**PLAN-017 (a guide on the page, 17.0-17.3, `docs/plans/PLAN-017.md`) is in progress** (approved 2026-11-09 13:14 UTC); before it, no plan was in progress. `docs/plans/PLAN-015.md` (stop downloading what the build already has: retry, repo-held fonts and sprites, cache; 15.0-15.5) is complete, as are PLAN-014 (concurrency testing), PLAN-013 (public hosting), PLAN-012, PLAN-011 (rain levels, 11.0-11.4) and the plans before them. What is left comes from older plans: **PLAN-007 step 9.5** (design pass: round 1 is built and live, the user liked it on Android; a second round is only on request) and **step 12** (final README, `docs/SUBMISSION.md`, the checks of the submission list). The live site is https://zaspartans.github.io/Quest_lab/.
 
 Plan files, oldest first (approved plan files are never edited, so their status is kept only here):
 
@@ -214,6 +214,11 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 | 16.6 | Final checks (four engines, phones, tests), records, push on the user's go | **done** 2026-11-08 20:00 UTC (the push waits for the user's go): size scans find no function over 50 lines (Python `ast`, JavaScript parser) and the largest file is 300 lines; Node **113 passed**, Python **178 passed**, `frontend-check` 8 places x 8 activities match; 33 of 33 scenarios in Chromium, Firefox, WebKit and Edge after step 16.4, the phone checks and the Pixel 7 probe unchanged, 25 dev-server requests identical after 16.5, both `vite build`s work; D47 result below; README and SUBMISSION updated (33 scenarios, not 32) |
 | 12.4 | `docs/SUBMISSION.md` finished: each item ticked only with the command and its result | **done** 2026-11-08 21:15 UTC: see `docs/SUBMISSION.md` (every item ticked with its command and result) |
 | 12.5 | The last pass on the final commit: Docker tests, the secret scan of the session log again, `npm audit`, push, the live site checked, first and final commit times recorded | **done** 2026-11-08 21:15 UTC: see `docs/SUBMISSION.md` (every item ticked with its command and result) |
+| 17 | PLAN-017: a "What this page does and how to use it" guide on the site, with "Don't show again" (approved by the user 2026-11-09 13:14 UTC; past hour 64 by the user's decision, D48) | **in progress** (17.0 done) |
+| 17.0 | Records: PLAN-017, these rows, D48 | **done** 2026-11-09 13:14 UTC |
+| 17.1 | `guide.js`, the dialog in `index.html`, styles, config key, Node tests | not started |
+| 17.2 | Guide scenarios and skip helper for the other checks; four engines, phones, shots | not started |
+| 17.3 | README, records, push on the user's go, live check | not started |
 
 Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
 
@@ -823,3 +828,8 @@ Method: the Vite dev server of this computer (`node node_modules/vite/bin/vite.j
 - **User:** "iphone works but need to check the mac". So Safari on a real iPhone works (their words; no model, iOS version or measurements) and a check on a Mac is still to be done by them. I cannot run real Safari: the WebKit of the Docker checks (WebKit 27, 33 of 33 scenarios) and the iPhone 15 emulation are the only Apple-engine evidence I have; they are not Safari.
 - **What a Mac check should look at (given to the user):** the page loads (plan on the left, map on the right at a 1280 px wide window), the globe flies to the place and flattens, the rain colours and the colour key, the time bar, "Use my location" (Safari asks for permission and may name the place), the day tiles, the second view (IFS / AIFS / both models), no blank map. If something fails: Safari version, macOS version, what was seen (a screenshot), and Develop > Show JavaScript Console text.
 - README, SUBMISSION and this file say so; documentation only, not yet pushed (to be pushed together with the Mac result).
+
+## Resume after compaction (2026-11-09 12:56 UTC; 66.62 h used, 5.38 h left)
+- Session ID unchanged (3e56a452-...). Re-read PROGRESS, DECISIONS and the ERRORS table first. Working tree clean; `dfa71d2` (iPhone result, Mac still open) is local only.
+- **Missed warning, stated plainly:** the 60 h warning was due at 2026-11-09 06:19 UTC and the 64 h line (no new features) passed at 10:19 UTC; the session was idle in between, so I could not give either. Now past hour 64 with 5.4 h left: only the README, the submission and fixes are allowed by the rule unless the user decides otherwise.
+- **User feedback (after the compaction):** "mostly everything works, only thing is that people are confused for what this is used and what it does and how to use it." The page's first words are `Rain plan` and a one-sentence lead that uses the word "models"; no plain statement of the purpose and no first-use steps. Handled as a scope question for the user (past hour 64), see below.

@@ -564,3 +564,10 @@ Four marker lines in three files, each recorded here and in the README's known l
 
 ## Shortcut register (final, rebuilt from `git grep "shortcut:"`, 2026-11-08 21:15 UTC)
 - **3 markers in 2 files:** `pipeline/process.py` (two: 3 h detail dropped; negative packing differences set to 0; D14) and `frontend/src/app.js` (device zone for a place found by the device; D24, D30). The fourth marker, `config/headers.conf`, was stale and was removed (comment corrected). **No deviation without a marker remains:** no function is over 50 lines (D47) and no file over 300. One test file is exactly 300 lines.
+
+## D48 - Add a "what this page does and how to use it" guide with "Don't show again", after hour 64 (PLAN-017, 2026-11-09 13:14 UTC; the user's decision)
+- **Prompted by:** the user's feedback that people are confused about what the site is for, what it does and how to use it.
+- **Chosen by the user:** option 3 of three ("Intro plus first-visit tour"), plus "an option that says DON'T SHOW AGAIN, this needs to be in the site". I had recommended option 1 (words only) and advised against option 3 because of the little time left; the user chose it with that advice in front of them.
+- **Design (the AI's, approved with the plan):** a native modal `<dialog>` with static text (purpose, three steps that match the page's own headings, where the forecast comes from), two buttons ("Close" for this visit, "Don't show again" stored in this browser as a fixed value), and a "How to use" button in the header to open it again. Alternatives not taken: a tour pointing at page elements (more code, more risk); a README-only fix (the live page would stay unclear).
+- **Past hour 64:** the rule "no new features after hour 64" was passed at 2026-11-09 10:19 UTC; the user knowingly chose to add this (I had also missed the 60 h and 64 h warnings while idle: see PROGRESS).
+- **Bet (can be checked later):** a first-time visitor understands what the page is for without being told. Only the user can check it by asking people; I have no measurement of it. Result: _not known yet_.
