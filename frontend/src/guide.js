@@ -34,6 +34,11 @@ export function startGuide(doc, storage, key) {
     dialog.scrollTop = 0; // a small phone must start at the first line, not at the buttons
   };
   opener.addEventListener('click', open);
+  dialog.addEventListener('click', (event) => { // a click on the dimmed page (the dialog's backdrop) closes it for this visit, so it never swallows a click meant for the map
+    if (event.target !== dialog) return; // a button or text inside the guide: not an outside click (a key press on a button also reports the position 0,0)
+    const box = dialog.getBoundingClientRect();
+    if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) dialog.close();
+  });
   doc.getElementById('guide-close').addEventListener('click', () => dialog.close());
   doc.getElementById('guide-hide').addEventListener('click', () => {
     hideGuide(storage, key);

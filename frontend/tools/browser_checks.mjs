@@ -35,10 +35,12 @@ const MOCK = { results: [
   { name: 'Chennai', latitude: 13.08784, longitude: 80.27847, timezone: 'Asia/Kolkata', country: 'India', admin1: 'Tamil Nadu' },
   { name: 'Chennai International Airport', latitude: 12.98833, longitude: 80.16578, timezone: 'Asia/Kolkata', country: 'India', admin1: 'Tamil Nadu' }] };
 
+const contexts = []; // closed when each scenario ends: dozens of open software-rendered maps at once starved WebKit in Docker
 async function open(browser, options = {}, allowedHosts = [siteHost]) {
   const { showGuide, ...contextOptions } = options; // only the guide scenarios look at a first visit; every other scenario is a returning visitor who has hidden the guide
   const context = await browser.newContext({ viewport: cfg.viewport, ...contextOptions });
   if (!showGuide) await skipGuide(context);
+  contexts.push(context);
   const page = await context.newPage();
   const log = { problems: [], tiles: 0, geocoder: [], dialogs: 0 };
   page.on('request', (r) => {
@@ -289,6 +291,8 @@ for (const [name, run] of Object.entries(scenarios)) {
   } catch (error) {
     failed += 1;
     console.log(`FAIL ${name}: ${String(error.message).split('\n')[0].slice(0, 300)}`);
+  } finally {
+    await Promise.all(contexts.splice(0).map((context) => context.close().catch(() => {})));
   }
 }
 await browser.close();

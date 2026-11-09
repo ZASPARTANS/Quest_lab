@@ -16,10 +16,11 @@ function fakePage({ dialogSupported = true } = {}) {
   const handlers = {};
   const make = (id) => ({ id, hidden: false, addEventListener: (type, fn) => { handlers[`${id}:${type}`] = fn; } });
   const dialog = { ...make('guide'), open: false, scrollTop: 5, closed: 0 };
+  dialog.getBoundingClientRect = () => ({ left: 100, right: 500, top: 50, bottom: 450 });
   if (dialogSupported) dialog.showModal = () => { dialog.open = true; };
   dialog.close = () => { dialog.open = false; dialog.closed += 1; };
   const parts = { guide: dialog, 'guide-open': make('guide-open'), 'guide-close': make('guide-close'), 'guide-hide': make('guide-hide') };
-  return { doc: { getElementById: (id) => parts[id] ?? null }, parts, press: (id) => handlers[`${id}:click`]() };
+  return { doc: { getElementById: (id) => parts[id] ?? null }, parts, press: (id, event) => handlers[`${id}:click`](event) };
 }
 
 test('the storage key is its own config value, not one of the other keys', () => {
@@ -81,4 +82,17 @@ test('a browser without <dialog> keeps the page as it was: no guide, no opener b
   startGuide(doc, memory(), KEY);
   assert.equal(parts.guide.open, false);
   assert.equal(parts['guide-open'].hidden, true);
+});
+
+test('a click on the dimmed page closes the guide for this visit; a click inside it, or a key press on a button, does not', () => {
+  const { doc, parts, press } = fakePage();
+  const store = memory();
+  startGuide(doc, store, KEY);
+  press('guide', { target: parts.guide, clientX: 300, clientY: 200 }); // the dialog's own padding, inside its box
+  assert.equal(parts.guide.open, true);
+  press('guide', { target: { id: 'guide-close' }, clientX: 0, clientY: 0 }); // a key press on a button reports 0,0 but its target is the button
+  assert.equal(parts.guide.open, true);
+  press('guide', { target: parts.guide, clientX: 900, clientY: 200 }); // the backdrop, over the map
+  assert.equal(parts.guide.open, false);
+  assert.deepEqual(store.data, {}, 'closing by a click outside remembers nothing');
 });

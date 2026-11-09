@@ -2,7 +2,7 @@
 // (open(..., { showGuide: true }): no "hide" mark is planted); all other scenarios open it as a returning visitor (guide_skip.mjs).
 import assert from 'node:assert/strict';
 
-const PARTS = ['What this page does', 'next 10 days', 'Where.', 'What.', 'Best times.', 'IFS is', 'AIFS is', 'Both models (agreement)', 'which to pick', 'Close', "Don't show again"];
+const PARTS = ['What this page does', 'next 10 days', 'Where.', 'What.', 'Best times.', 'Which model?', 'IFS:', 'AIFS:', 'Both models (agreement):', 'Close', "Don't show again"];
 
 /** The small tools the groups share. `h` = { open, mapState, shot, base, frontend, ADDRESS, timeout }. */
 function guideTools(h) {
@@ -103,7 +103,44 @@ function edgeScenarios(t) {
   };
 }
 
+/** What the visitor does right after the guide: pick a point on the map (reported by the user on 2026-11-09: "after I close the guide the map point does not work"). */
+function afterGuideScenarios(t) {
+  const { open, mapState, isOpen, waitOpen, visit } = t;
+  async function pickAfter(browser, buttonId) {
+    const { page, log } = await open(browser, { showGuide: true });
+    await visit(page);
+    if ((await mapState(page)) !== 'ready') return log; // no WebGL2 in this engine: the page shows its plain message (covered by another scenario)
+    await page.click(buttonId);
+    await waitOpen(page, false);
+    assert.equal(await isOpen(page), false);
+    const box = await page.locator('#map').boundingBox();
+    await page.mouse.click(box.x + box.width * 0.62, box.y + box.height * 0.45);
+    await page.waitForFunction(() => /^Map point/.test(document.getElementById('title').textContent), null, { timeout: t.timeout });
+    assert.equal(await page.locator('.place-marker').count(), 1, 'one marker on the chosen point');
+    assert.equal(await page.locator('.place-marker').first().isVisible(), true, 'the marker is visible');
+    return log;
+  }
+  async function clickBehind(browser) {
+    const { page, log } = await open(browser, { showGuide: true });
+    await visit(page);
+    if ((await mapState(page)) !== 'ready') return log;
+    const box = await page.locator('#map').boundingBox();
+    const [x, y] = [box.x + box.width * 0.92, box.y + box.height * 0.45]; // on the map, outside the guide window
+    await page.mouse.click(x, y);
+    await waitOpen(page, false);
+    assert.equal(await page.evaluate((k) => localStorage.getItem(k), t.KEY), null, 'a click outside remembers nothing');
+    await page.mouse.click(x, y);
+    await page.waitForFunction(() => /^Map point/.test(document.getElementById('title').textContent), null, { timeout: t.timeout });
+    return log;
+  }
+  return {
+    'guide: after "Close" a click on the map chooses a map point and shows its marker': (browser) => pickAfter(browser, '#guide-close'),
+    'guide: a click on the map behind the guide closes it, and the next click chooses a map point': clickBehind,
+    [`guide: after "Don't show again" a click on the map chooses a map point and shows its marker`]: (browser) => pickAfter(browser, '#guide-hide'),
+  };
+}
+
 export function guideScenarios(h) {
   const tools = guideTools(h);
-  return { ...choiceScenarios(tools), ...edgeScenarios(tools) };
+  return { ...choiceScenarios(tools), ...edgeScenarios(tools), ...afterGuideScenarios(tools) };
 }

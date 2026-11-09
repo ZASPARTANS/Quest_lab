@@ -20,7 +20,7 @@ The same text opens as a guide on a first visit (a "What this page does" window 
 - A web app with **Plan-my-day** (place + activity -> best times, day tiles with a rain level per 6-hour block, rain totals as a range between two models), a **globe that flies to the place and flattens into a flat map** with the stored OpenStreetMap base map, IFS / AIFS / both-models views and a colour key, and an honesty strip (which run, how old, ECMWF's attribution, a plain warning when the run is older than 30 hours).
 - Checked in Edge, Chromium, Firefox and WebKit (Docker), phone emulation, and by the user on real Android phones (Firefox, Chrome, Samsung Internet).
 
-**Does not / limits (the full list is at the end):** the rain is on a 0.25-degree grid (about 28 km), so it cannot show street-level detail; the stored base map ends at zoom 7; IFS stops at 240 h; GitHub's scheduler skipped scheduled runs on 2026-11-08, so the forecast can be older than every 6 hours (pushes also refresh it); GitHub Pages sends no security headers except HSTS; behaviour for many simultaneous visitors on GitHub is untested; Safari on a Mac was not tried by a person yet (an iPhone works, the user's word).
+**Does not / limits (the full list is at the end):** the rain is on a 0.25-degree grid (about 28 km), so it cannot show street-level detail; the stored base map ends at zoom 7; IFS stops at 240 h; GitHub's scheduler skipped scheduled runs on 2026-11-08, so the forecast can be older than every 6 hours (pushes also refresh it); GitHub Pages sends no security headers except HSTS; behaviour for many simultaneous visitors on GitHub is untested; Safari on an iPhone and on a Mac both work by the user's word (no versions or measurements).
 
 ## What it does
 - **The page:** on the left (about a quarter of the width; below the map on a phone) **Plan-my-day**: choose a place (device location, search, saved place, map click) and an activity; it shows the best times, **day tiles with the rain level of each 6-hour block** (No rain, Light, Moderate, Heavy; a day with nothing to report is one quiet row) and rain totals as a range between two models. On the right a **globe that flies to the chosen place and flattens into a flat map** (zoom 0.8 to 8), with an IFS / AIFS / both-models switch (in the both-models view bright blue means both models say rain, dim blue that only one does), a time bar, the stored base map under the rain, and a colour key. Above zoom 4.5 the browser draws the rain itself from the exact forecast values.
@@ -78,10 +78,10 @@ The site as GitHub Pages serves it (from a sub-folder, with no security headers:
 ## Tests and checks (the official way is Docker)
 ```
 docker compose -f docker/compose.yaml run --rm tests            # Python: 178 passed; no network, project read-only
-docker compose -f docker/compose.yaml run --rm frontend-tests   # Node: 120 passed
+docker compose -f docker/compose.yaml run --rm frontend-tests   # Node: 121 passed
 docker compose -f docker/compose.yaml run --rm process python -m scripts.plan_reference   # independent Python plan from the raw GRIB
 docker compose -f docker/compose.yaml run --rm frontend-check   # the browser code on the real tiles equals it: 8 places x 8 activities
-BROWSER_NAME=chromium docker compose -f docker/compose.yaml run --rm browser-checks   # 38 scenarios in a real engine (chromium | firefox | webkit); SCREENSHOT_BASE_URL points it at another site
+BROWSER_NAME=chromium docker compose -f docker/compose.yaml run --rm browser-checks   # 41 scenarios in a real engine (chromium | firefox | webkit); SCREENSHOT_BASE_URL points it at another site
 docker compose -f docker/compose.yaml run --rm browser-checks node tools/phone_checks.mjs   # Pixel 7 and iPhone 15 emulation: overflow, 44 px tap targets, map cover, location flow
 python scripts/smoke_site.py https://zaspartans.github.io/Quest_lab/   # the live site: page, forecast age, status, tile, range request
 python scripts/check_workflow.py                                  # the workflow's safety rules
@@ -94,8 +94,8 @@ Measurements with the computer's own GPU (Edge): `frontend/tools/load_timing.mjs
 |---|---|---|
 | Rain amounts | `validate_points` and `validate_site` compare the processed and exported data with the raw GRIB files at 8 places across time zones; units are handled per model (AIFS is in mm, IFS in metres) | all match; 6-hour amounts carry up to about 0.24 mm of GRIB packing rounding (D14) |
 | Plan logic | the page's own code on the real tiles against an independent Python version written from the same rules (`plan_reference`, `frontend-check`), 8 places x 8 activities | all match |
-| Python and Node code | Docker tests (178 and 120) incl. a repo secret scan, config consistency, workflow rules, deliberate-breakage tests ("negative controls") for the checks added late | pass |
-| Page in browsers | 38 scenarios (address, search, saved places, hostile input, base map, live layer, map flights, colour key, honesty strip, credits, rain levels, location, the first-visit guide) in Edge (real GPU), Chromium, Firefox and WebKit | 38 of 38 on the local test site; the 28 scenarios before the level scenarios also passed on the sub-folder test site; 26 of 26 on the live site on 2026-11-07 |
+| Python and Node code | Docker tests (178 and 121) incl. a repo secret scan, config consistency, workflow rules, deliberate-breakage tests ("negative controls") for the checks added late | pass |
+| Page in browsers | 41 scenarios (address, search, saved places, hostile input, base map, live layer, map flights, colour key, honesty strip, credits, rain levels, location, the first-visit guide) in Edge (real GPU), Chromium, Firefox and WebKit | 41 of 41 on the local test site; the 28 scenarios before the level scenarios also passed on the sub-folder test site; 26 of 26 on the live site on 2026-11-07 |
 | Phones | Pixel 7 and iPhone 15 emulation (no sideways scroll, 44 px tap targets, map visible on the first screen, location flow); the user's own Android phones | emulation passes; Firefox, Chrome and Samsung Internet on Android "work and look good" (the user's words) |
 | Live site | `smoke_site.py` after every deploy; a fresh request for page, manifest, status and headers; the public map file against the local checked file by size and four sampled ranges | pass (`docs/SUBMISSION.md`) |
 | Concurrency | replay of 1 to 100 visitors and 5 to 20 real browsers on this computer; 1 to 3 visitors on the live site (about 21 MB) | every answer correct; local numbers describe this machine, not GitHub |
@@ -111,10 +111,10 @@ There is **no GPU on the server side** (static hosting serves files only); the m
 |---|---|---|
 | Android phones: Firefox, Chrome, Samsung Internet | the user's own phones, the live site | work and look good (the user's words, 2026-11-08; no measurements) |
 | Firefox | the user's own PC | the base map, the rain, the credit line and the device place name drew (user's screenshots, 2026-11-07) |
-| Microsoft Edge | the developer's Windows PC, real GPU | 38 of 38 scenarios (local test site); 26 of 26 earlier on the live site; 20 real Edge browsers at once finished correctly on the local site (slowly) |
-| Chromium 158, WebKit 27 (the engine of Safari, not Safari), Firefox 159 | Docker, software WebGL | 38 of 38 on the local test site; Firefox in Docker has no WebGL2, so its map scenarios return early there |
+| Microsoft Edge | the developer's Windows PC, real GPU | 41 of 41 scenarios (local test site); 26 of 26 earlier on the live site; 20 real Edge browsers at once finished correctly on the local site (slowly) |
+| Chromium 158, WebKit 27 (the engine of Safari, not Safari), Firefox 159 | Docker, software WebGL | 41 of 41 on the local test site; Firefox in Docker has no WebGL2, so its map scenarios return early there |
 | Safari on an iPhone | the user's own iPhone, the live site | **works** (the user's words, 2026-11-08: "iphone works"; the model and iOS version were not given; no measurements) |
-| Safari on a Mac | | **not tried yet by a person** (only the WebKit emulation above); the user plans to check |
+| Safari on a Mac | the user's own Mac, the live site | **works** (the user's words, 2026-11-09: "Mac works"; the Safari and macOS versions were not given; no measurements; it is not stated whether this was before or after the guide was added) |
 
 ## Known limits and shortcuts (full list: `docs/PROGRESS.md` and the shortcut register in `docs/DECISIONS.md`)
 **Every `shortcut:` marker in the code (3, in 2 files):** (1) `pipeline/process.py`: IFS has 3-hourly steps to 144 h but only 6-hourly blocks are used (D14); (2) `pipeline/process.py`: tiny negative differences from GRIB packing are set to zero, at most about 0.06 % of the rain mass (D14); (3) `frontend/src/app.js`: a place found by the device or by a map click has no known time zone, so the device's zone is used and labelled (D24, D30). A fourth marker, in `config/headers.conf`, was stale and was removed on 2026-11-08 (the converter it announced exists).
