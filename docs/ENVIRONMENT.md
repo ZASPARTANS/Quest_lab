@@ -100,3 +100,5 @@ Everything below was found by running commands in this session. Times are UTC.
 
 ## Update 2026-11-09 16:27 UTC
 - Host: C: has 252 MB free (it was 0 GB on 2026-11-08 before the Docker build cache was pruned); E: 601 GB free. Edge 157 (real GPU) is used for the browser checks on the host; the Docker engines are Chromium 158, Firefox 159 and WebKit 27.2. A development server started by me on 2026-11-08 19:54 UTC still answers on `localhost:5173` (E042, the user ends it). The standing rule for the shell on this machine: `export MSYS_NO_PATHCONV=1` in Git Bash, and heredoc scripts must not rely on backslash escapes (a `'` was lost twice this session; use the Edit tool).
+
+- 2026-11-09 16:55 UTC: C: has 0 bytes free (E046). `df` and `Get-PSDrive C` agree. Work that needs temporary files on C: (Docker runs, Playwright browsers, some pytest temp files) can fail until space is freed; git, the editor tools and `gh` write to E: and kept working.

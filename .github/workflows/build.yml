@@ -1,5 +1,5 @@
 # Build the forecast site and publish it on GitHub Pages (plan PLAN-013 step 13.3, decision D42).
-# Every 6 hours (and on every push to main, and by hand): fetch the newest complete ECMWF IFS + AIFS run, process and export it, put it together with the page and
+# Every 6 hours (and on every push to main that changes more than notes, tests and check tools, and by hand): fetch the newest complete ECMWF IFS + AIFS run, process and export it, put it together with the page and
 # the stored base map, deploy it, and then check the PUBLIC site with a smoke test. The page, the pipeline and the checks are the ones tested in Docker locally;
 # this file only runs them in order. Rules kept by scripts/check_workflow.py (a test): only GitHub-owned actions, each pinned to a commit; least-privilege
 # permissions (write access only in the deploy job); no secrets; no environment dump; no ${{ }} inside shell code.
@@ -12,6 +12,15 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+    # A push that changes only the notes, the tests or the browser-check tools cannot change the site, so it does not rebuild or redeploy (the schedule and
+    # "Run workflow" always do). scripts/check_workflow.py allows only these paths here: everything the build reads must stay out of this list.
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+      - "tests/**"
+      - "frontend/tools/**"
+      - ".gitignore"
+      - ".gitattributes"
 
 permissions:
   contents: read

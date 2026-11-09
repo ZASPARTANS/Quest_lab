@@ -7,6 +7,7 @@ The rules are the project's safety rules for a public, unattended, scheduled job
   4. nothing prints the environment (`printenv`, `env`, `set -x`, step debug, `toJSON(`);
   5. no `${{ ... }}` inside a shell `run:` block (a value goes in through `env:` and is used as "$NAME"): no script injection;
   6. every job has a `timeout-minutes`, and there is a `concurrency:` block and at least one `schedule` with a `cron:`.
+  7. a push that changes only notes, tests or check tools may skip the build (`paths-ignore`), but only for those paths: nothing the build reads may be listed.
 Exit code 0 only if every rule holds.
 """
 import re
@@ -14,6 +15,7 @@ import sys
 from pathlib import Path
 
 USES = re.compile(r"^\s*-?\s*uses:\s*(\S+)")
+IGNORABLE = {"docs/**", "**/*.md", "tests/**", "frontend/tools/**", ".gitignore", ".gitattributes"}  # not read by the build (checked: the build copies only requirements.txt and package files into images)
 PINNED = re.compile(r"^actions/[A-Za-z0-9_-][A-Za-z0-9_.-]*(/[A-Za-z0-9_-][A-Za-z0-9_.-]*)*@[0-9a-f]{40}$")  # a sub-folder of the action is allowed (actions/cache/restore), a segment starting with a dot (..) is not
 FORBIDDEN_LINE = [(re.compile(r"\bprintenv\b"), "prints the environment (printenv)"), (re.compile(r"(^|\s|;|\|)env(\s*$|\s*\|)"), "prints the environment (env)"),
                   (re.compile(r"\bset\s+-[a-z]*x"), "shell tracing (set -x) can print secrets"), (re.compile(r"ACTIONS_(STEP|RUNNER)_DEBUG"), "step debug logging"),
@@ -61,6 +63,19 @@ def _run_blocks(lines):
     return code
 
 
+def _ignored_paths(lines):
+    """The entries listed under `paths-ignore:` (the push trigger)."""
+    found, inside = [], False
+    for line in lines:
+        if re.match(r"^\s+paths-ignore:\s*$", line):
+            inside = True
+        elif inside and re.match(r"^\s+- ", line):
+            found.append(line.strip()[2:].strip().strip('"'))
+        elif inside:
+            inside = False
+    return found
+
+
 def problems(text):
     lines = [l.rstrip("\n") for l in text.split("\n")]
     live = [l for l in lines if not l.lstrip().startswith("#")]
@@ -93,6 +108,9 @@ def problems(text):
     for code in _run_blocks(live):
         if "${{" in code:
             found.append(f"a ${{{{ }}}} value inside shell code (use env: and \"$NAME\"): {code.strip()!r}")
+    for item in _ignored_paths(live):
+        if item not in IGNORABLE:
+            found.append(f"paths-ignore lists {item!r}, which the build may read (only {sorted(IGNORABLE)} may be ignored)")
     if not re.search(r"^concurrency:", text, re.MULTILINE):
         found.append("no concurrency block (two builds could overlap)")
     if not re.search(r"^\s*-\s*cron:\s*\"[^\"]+\"", text, re.MULTILINE):

@@ -77,3 +77,18 @@ def test_the_build_installs_the_fonts_and_sprites_from_the_repository_and_downlo
     assert all("fetch-assets" not in line for line in REAL.splitlines() if not line.lstrip().startswith("#")), "a build must not download the fonts and sprites any more"
     install = next(step for step in _steps(REAL) if "install-assets" in step["text"])
     assert "run --rm export " in install["text"], "it runs in the service that has no network"
+
+
+def test_a_push_of_only_notes_tests_or_check_tools_does_not_rebuild_the_site():
+    """The owner's request (2026-11-09): no redeploy unless something the site is made from changed. The schedule and a manual run still rebuild."""
+    assert check_workflow._ignored_paths(REAL.split("\n")) == ["docs/**", "**/*.md", "tests/**", "frontend/tools/**", ".gitignore", ".gitattributes"]
+    assert set(check_workflow._ignored_paths(REAL.split("\n"))) == check_workflow.IGNORABLE
+    assert 'cron: "20 2,8,14,20 * * *"' in REAL and "workflow_dispatch:" in REAL
+
+
+@pytest.mark.parametrize("path", ["config/**", "pipeline/**", "backend/**", "scripts/**", "docker/**", "frontend/**", "frontend/src/**", ".github/**", "requirements.txt", "**"])
+def test_a_path_the_build_reads_can_never_be_ignored(path):
+    """Negative control: listing any input of the build in paths-ignore is a broken rule (a change there would silently not deploy)."""
+    changed = REAL.replace('      - ".gitattributes"\n', '      - ".gitattributes"\n      - "' + path + '"\n', 1)
+    assert changed != REAL
+    assert any("paths-ignore lists" in item and path in item for item in check_workflow.problems(changed))
