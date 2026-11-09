@@ -574,3 +574,8 @@ Four marker lines in three files, each recorded here and in the README's known l
 
 ### D48 addition (2026-11-09 14:26 UTC)
 - **Asked by the user while PLAN-017 step 17.1 ran:** "Add the model information as well here" and "Like what each of that model does and so people know which to select". Added to the guide (what IFS, AIFS and "Both models (agreement)" are, and which to start with) and to the README. **Choice of advice (the AI's):** start with "Both models (agreement)", because it shows where the two agree; IFS or AIFS for one model's own rain. No claim that one model is better: not measured here.
+
+## Results of checkable bets (housekeeping, 2026-11-09 16:27 UTC)
+- **D8** (a scheduled run must happen): **partly**: 4 scheduled runs so far, all green (2026-11-08 09:10, 18:53, 23:48; 2026-11-09 09:56 UTC); several of the 6-hourly slots had no run and the ones that ran were 50 minutes to 3.5 hours late. Pushes also refresh the forecast; the page warns above 30 hours. I have not looked up GitHub's reason.
+- **D44 / D46** (design, zoom limit): the user's iPhone ("iphone works") and Mac ("Mac works") checks add to the Android ones; no measurements. **D48** (the guide makes the page clear): open, nobody was asked. **D37** (nothing paid): no charge seen, I have not looked at a bill.
+- **Shortcut register:** unchanged, 3 markers in 2 files (`pipeline/process.py` twice, `frontend/src/app.js:173`).

@@ -203,3 +203,11 @@ What exists now: the pipeline and the static export, the page live on GitHub Pag
 | S14 | the live headers (HSTS, `Cache-Control: max-age=600`) and the CSP meta tag re-read | as documented (D42) |
 | New | E042: a development server started by me is still running on loopback (`localhost:5173`) | the user ends the process |
 | Open | the scheduled workflow, S08 (`python:3.11-slim` digest moved) | owner tasks, listed in `docs/SUBMISSION.md` |
+
+## Update 2026-11-09 16:27 UTC (PLAN-017, the guide; standing permission)
+| ID | Status | Note |
+|---|---|---|
+| S17 | **new, closed**: the guide window stores one fixed value (`"1"` under `rain-plan.guide-hidden.v1`) in the browser's own storage; the value is only compared, never shown; the text is static HTML (no `innerHTML`); no new host, script, permission or dependency; the Content-Security-Policy is unchanged | blocked or damaged storage is handled (tests); the guide never sends anything |
+| S05 | secret scan repeated 2026-11-09 16:27 UTC: tree 1,358 files, 114 commits, the session log; only the project's own pattern text matched | messages after the scan were not scanned |
+| S02, S12 | `npm audit --package-lock-only` 0 vulnerabilities (2026-11-09 16:27 UTC); `requirements.txt` and the npm lock files unchanged since the last `pip-audit` (2026-11-08 21:14 UTC) | none |
+| Process | the user gave a standing permission (16:14 UTC) to push to `ZASPARTANS/Quest_lab` and live-test their own site without asking each time; it does not cover other repositories, other third parties, paid services, deleting files or printing secrets | the live place-search tests send one or two real searches to Open-Meteo, the page's own normal use |
