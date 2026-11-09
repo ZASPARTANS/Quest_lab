@@ -12,106 +12,106 @@
 |---|---|---|---|
 | 2026-11-06 18:19 | First prompt (from the session log) | 0.00 h | 72.00 h |
 | 2026-11-06 18:19 | `date -u` at the first turn, same session ID | ~0.0 h | ~72.0 h |
-| 2026-11-06 18:43 | Commit `ccb24df`: Start project: repo, problem statement, approved plan and records | 0.40 h | 71.60 h |
-| 2026-11-06 18:43 | Commit `591a24c`: Record step 1 done-check results in PROGRESS and ENVIRONMENT | 0.41 h | 71.59 h |
-| 2026-11-06 18:50 | Commit `7a83bb9`: Adopt PLAN-002: fixed folder layout, config-file rule and Python 3.11 | 0.52 h | 71.48 h |
-| 2026-11-06 18:51 | Commit `ba581ee`: Record step 1b done-check results; mark step 1b done | 0.53 h | 71.47 h |
-| 2026-11-06 19:07 | Commit `785e774`: Step 2: Python 3.11 virtual environment and pinned requirements | 0.80 h | 71.20 h |
-| 2026-11-06 19:14 | Commit `fc08c94`: Step 3: fetch IFS and AIFS precipitation for the latest complete run | 0.92 h | 71.08 h |
-| 2026-11-06 19:21 | Commit `1c495fc`: Adopt PLAN-003: units are handled per model (fixes wrong assumption A1) | 1.03 h | 70.97 h |
-| 2026-11-06 19:42 | Commit `ca6cd60`: Record step 3 follow-up verification: Linux ok, IFS goes to 360 h, two fetch problems | 1.38 h | 70.62 h |
-| 2026-11-06 19:52 | Commit `d3a75eb`: Fix E008 and E009 in the fetch step: safe downloads and a fail-fast run search | 1.56 h | 70.44 h |
-| 2026-11-06 20:03 | Commit `5b69d20`: Record decision D9: out-of-date forecast shows a plain warning only | 1.73 h | 70.27 h |
-| 2026-11-06 20:04 | Commit `806bfa9`: Record D9 addendum: technical error detail stays available to developers | 1.75 h | 70.25 h |
-| 2026-11-06 20:14 | Commit `a9c1f0c`: Adopt PLAN-004: Docker as the official test run and a localhost preview | 1.92 h | 70.08 h |
-| 2026-11-06 20:18 | Commit `e61441d`: Step 3b: Docker test environment (official test run) and Linux-complete pins | 1.99 h | 70.01 h |
+| 2026-11-06 18:43 | Commit `5f0060b`: Start project: repo, problem statement, approved plan and records | 0.40 h | 71.60 h |
+| 2026-11-06 18:43 | Commit `74ccb75`: Record step 1 done-check results in PROGRESS and ENVIRONMENT | 0.41 h | 71.59 h |
+| 2026-11-06 18:50 | Commit `b58d122`: Adopt PLAN-002: fixed folder layout, config-file rule and Python 3.11 | 0.52 h | 71.48 h |
+| 2026-11-06 18:51 | Commit `0178f43`: Record step 1b done-check results; mark step 1b done | 0.53 h | 71.47 h |
+| 2026-11-06 19:07 | Commit `508093a`: Step 2: Python 3.11 virtual environment and pinned requirements | 0.80 h | 71.20 h |
+| 2026-11-06 19:14 | Commit `e4a17f7`: Step 3: fetch IFS and AIFS precipitation for the latest complete run | 0.92 h | 71.08 h |
+| 2026-11-06 19:21 | Commit `08c8c94`: Adopt PLAN-003: units are handled per model (fixes wrong assumption A1) | 1.03 h | 70.97 h |
+| 2026-11-06 19:42 | Commit `331494a`: Record step 3 follow-up verification: Linux ok, IFS goes to 360 h, two fetch problems | 1.38 h | 70.62 h |
+| 2026-11-06 19:52 | Commit `3ae1303`: Fix E008 and E009 in the fetch step: safe downloads and a fail-fast run search | 1.56 h | 70.44 h |
+| 2026-11-06 20:03 | Commit `0144388`: Record decision D9: out-of-date forecast shows a plain warning only | 1.73 h | 70.27 h |
+| 2026-11-06 20:04 | Commit `fe4e270`: Record D9 addendum: technical error detail stays available to developers | 1.75 h | 70.25 h |
+| 2026-11-06 20:14 | Commit `1656ddf`: Adopt PLAN-004: Docker as the official test run and a localhost preview | 1.92 h | 70.08 h |
+| 2026-11-06 20:18 | Commit `7b0f1e8`: Step 3b: Docker test environment (official test run) and Linux-complete pins | 1.99 h | 70.01 h |
 | 2026-11-06 20:22 | Resume after /compact, same session ID; PROGRESS, DECISIONS and the ERRORS table re-read first | 2.06 h | 69.94 h |
-| 2026-11-06 20:33 | Commit `dc2535c`: Step 4: processing core (units per model, 6 h intervals, model agreement) | 2.24 h | 69.76 h |
-| 2026-11-06 20:44 | Commit `ec0c104`: Security audit report and draft PLAN-005 (awaiting approval) | 2.41 h | 69.59 h |
-| 2026-11-06 20:55 | Commit `4dafae8`: Step S1: repo hygiene (secret patterns in .gitignore, secret-scan test); PLAN-005 approved | 2.60 h | 69.40 h |
-| 2026-11-06 20:59 | Commit `aeb3a92`: Step S2: network timeouts on every request (finding S01) | 2.67 h | 69.33 h |
-| 2026-11-06 21:05 | Commit `79b0d1e`: Step S3: Docker hardening, fetch/process split (finding S03); fix E015 | 2.77 h | 69.23 h |
-| 2026-11-06 21:10 | Commit `21c9d46`: Fix E016: no hardcoded paths (user rule, decision D17) | 2.86 h | 69.14 h |
-| 2026-11-06 21:29 | Commit `76d4d49`: Step S4: dependency vetting, vulnerability scan, hashes on all packages (finding S02) | 3.17 h | 68.83 h |
-| 2026-11-06 21:36 | Commit `8008a9c`: Step 5: independent validation of the processed data against the raw GRIB | 3.29 h | 68.71 h |
-| 2026-11-06 21:39 | Commit `c9fbe00`: Record D19: testing on localhost, public-like preview, one hosted site deployed automatically | 3.34 h | 68.66 h |
-| 2026-11-06 22:14 | Commit `c7baf2d`: Step 6 (part 1): front-end spike, two local sites, Docker build/tests/screenshots | 3.93 h | 68.07 h |
-| 2026-11-06 22:21 | Commit `ba46ed2`: Step 6 (part 2): adopt MapLibre GL JS and Natural Earth outlines, remove Cesium (D22) | 4.04 h | 67.96 h |
-| 2026-11-06 22:21 | Commit `fb92a96`: Correct a guessed time in ERRORS E021 (found by checking the clock) | 4.04 h | 67.96 h |
+| 2026-11-06 20:33 | Commit `e778827`: Step 4: processing core (units per model, 6 h intervals, model agreement) | 2.24 h | 69.76 h |
+| 2026-11-06 20:44 | Commit `839033f`: Security audit report and draft PLAN-005 (awaiting approval) | 2.41 h | 69.59 h |
+| 2026-11-06 20:55 | Commit `92eb5a7`: Step S1: repo hygiene (secret patterns in .gitignore, secret-scan test); PLAN-005 approved | 2.60 h | 69.40 h |
+| 2026-11-06 20:59 | Commit `cf92705`: Step S2: network timeouts on every request (finding S01) | 2.67 h | 69.33 h |
+| 2026-11-06 21:05 | Commit `9e4586b`: Step S3: Docker hardening, fetch/process split (finding S03); fix E015 | 2.77 h | 69.23 h |
+| 2026-11-06 21:10 | Commit `49b7cdf`: Fix E016: no hardcoded paths (user rule, decision D17) | 2.86 h | 69.14 h |
+| 2026-11-06 21:29 | Commit `97d266e`: Step S4: dependency vetting, vulnerability scan, hashes on all packages (finding S02) | 3.17 h | 68.83 h |
+| 2026-11-06 21:36 | Commit `dcfa383`: Step 5: independent validation of the processed data against the raw GRIB | 3.29 h | 68.71 h |
+| 2026-11-06 21:39 | Commit `216401c`: Record D19: testing on localhost, public-like preview, one hosted site deployed automatically | 3.34 h | 68.66 h |
+| 2026-11-06 22:14 | Commit `fe22ec5`: Step 6 (part 1): front-end spike, two local sites, Docker build/tests/screenshots | 3.93 h | 68.07 h |
+| 2026-11-06 22:21 | Commit `b065424`: Step 6 (part 2): adopt MapLibre GL JS and Natural Earth outlines, remove Cesium (D22) | 4.04 h | 67.96 h |
+| 2026-11-06 22:21 | Commit `5b0916b`: Correct a guessed time in ERRORS E021 (found by checking the clock) | 4.04 h | 67.96 h |
 | 2026-11-06 23:03 | Housekeeping review of all markdown files (this edit; its commit time is in `git log`) | 4.74 h | 67.26 h |
 | 2026-11-07 00:00 | Resume after /compact, same session ID; PROGRESS, DECISIONS and the ERRORS table re-read first (I said "about 6.7 h used" in my first message after it; the correct figure was 5.7 h) | 5.68 h | 66.32 h |
 | 2026-11-07 00:26 | Step 8 verified (see its results section); commit time in `git log` | 6.12 h | 65.88 h |
-| 2026-11-07 00:27 | Commit `1e15254`: Step 8: Plan-my-day page (plan engine, place search, saved places) checked against an independent Python calculation | 6.13 h | 65.87 h |
+| 2026-11-07 00:27 | Commit `1d1fc74`: Step 8: Plan-my-day page (plan engine, place search, saved places) checked against an independent Python calculation | 6.13 h | 65.87 h |
 | 2026-11-07 00:42 | Checkpoint requested by the user after their feedback; all markdown files updated (commit time in `git log`) | 6.39 h | 65.61 h |
-| 2026-11-07 00:42 | Commit `394d64f`: Checkpoint after step 8: update all markdown records, record the user's feedback and proposal D29 | 6.40 h | 65.60 h |
-| 2026-11-07 00:43 | Commit `3a3ec86`: ERRORS: E024 seen 2 (a time guessed ahead again while writing the checkpoint) | 6.40 h | 65.60 h |
+| 2026-11-07 00:42 | Commit `480981b`: Checkpoint after step 8: update all markdown records, record the user's feedback and proposal D29 | 6.40 h | 65.60 h |
+| 2026-11-07 00:43 | Commit `1011ae7`: ERRORS: E024 seen 2 (a time guessed ahead again while writing the checkpoint) | 6.40 h | 65.60 h |
 | 2026-11-07 10:41 | The user was away about 10 hours; they replied with the layout (1/4 plan + 3/4 globe) and approved PLAN-007; clock read with `date -u` | 16.37 h | 55.63 h |
-| 2026-11-07 10:42 | Commit `a9ca4bf`: Adopt PLAN-007: globe-first map (1/4 plan + 3/4 globe), then a design pass; record D29 decided and D30 | 16.38 h | 55.62 h |
-| 2026-11-07 10:45 | Commit `4cd80ed`: Step 9.1: spike gate for the globe fly-in; the zoom-driven projection morph is chosen (D31) | 16.44 h | 55.56 h |
-| 2026-11-07 10:52 | Commit `5a10456`: Step 9.2: map data contract (agreement colours in the manifest, checked frames) and pure map helpers | 16.55 h | 55.45 h |
-| 2026-11-07 11:07 | Commit `4f2c67e`: Step 9.3 (part 1): globe-first map in a 3/4 area next to the plan (1/4), device position named, cache rules | 16.80 h | 55.20 h |
+| 2026-11-07 10:42 | Commit `252c567`: Adopt PLAN-007: globe-first map (1/4 plan + 3/4 globe), then a design pass; record D29 decided and D30 | 16.38 h | 55.62 h |
+| 2026-11-07 10:45 | Commit `9d7511e`: Step 9.1: spike gate for the globe fly-in; the zoom-driven projection morph is chosen (D31) | 16.44 h | 55.56 h |
+| 2026-11-07 10:52 | Commit `e646463`: Step 9.2: map data contract (agreement colours in the manifest, checked frames) and pure map helpers | 16.55 h | 55.45 h |
+| 2026-11-07 11:07 | Commit `c8e5bee`: Step 9.3 (part 1): globe-first map in a 3/4 area next to the plan (1/4), device position named, cache rules | 16.80 h | 55.20 h |
 | 2026-11-07 12:11 | PLAN-008 approved (sharper pictures); 17.87 h used | 17.87 h | 54.13 h |
-| 2026-11-07 12:27 | Commit `c124285`: Step 9.3b-1: gate for sharper rain pictures: measured four ways, 1440 px gradient palette PNG chosen (D34) | 18.14 h | 53.86 h |
-| 2026-11-07 12:39 | Commit `0d9a3f7`: Step 9.3b-2: sharper rain pictures (1440 px smooth gradient palette PNGs, per-pixel agreement) and 50 m coastlines | 18.34 h | 53.66 h |
-| 2026-11-07 13:08 | Commit `b6ec64d`: Record user feedback after the sharper pictures: E030 (reverse geocoder redirect), E031 (still blocky at city zoom) | 18.82 h | 53.17 h |
+| 2026-11-07 12:27 | Commit `3b0f78b`: Step 9.3b-1: gate for sharper rain pictures: measured four ways, 1440 px gradient palette PNG chosen (D34) | 18.14 h | 53.86 h |
+| 2026-11-07 12:39 | Commit `39ce583`: Step 9.3b-2: sharper rain pictures (1440 px smooth gradient palette PNGs, per-pixel agreement) and 50 m coastlines | 18.34 h | 53.66 h |
+| 2026-11-07 13:08 | Commit `626cb27`: Record user feedback after the sharper pictures: E030 (reverse geocoder redirect), E031 (still blocky at city zoom) | 18.82 h | 53.17 h |
 | 2026-11-07 13:12 | PLAN-009 approved (browser-side drawing, close fly-in, name fix); 18.88 h used | 18.88 h | 53.12 h |
-| 2026-11-07 13:18 | Commit `131b60e`: Step 9.3c-0: place name works with the real service, close fly-in by place kind, My place button, rotation off | 18.99 h | 53.01 h |
-| 2026-11-07 13:22 | Commit `9430f99`: Step 9.3c-1: browser-side drawing core (smooth sampling, continuous colours, soft agreement), tested against Python | 19.05 h | 52.95 h |
-| 2026-11-07 13:24 | Commit `a576824`: Step 9.3c-2: data window for the browser-side drawing (tiles for the view, shared cache, layer accessor) | 19.08 h | 52.92 h |
-| 2026-11-07 13:29 | Commit `1390501`: Step 9.3c-3: the rain is drawn in the browser at screen sharpness above zoom 4.5 (monotone cubic from the exact tile values) | 19.17 h | 52.83 h |
-| 2026-11-07 13:37 | Commit `880a710`: Record D37: nothing paid, no credit-metered services (user constraint); base-map options researched | 19.30 h | 52.70 h |
+| 2026-11-07 13:18 | Commit `1e4e2df`: Step 9.3c-0: place name works with the real service, close fly-in by place kind, My place button, rotation off | 18.99 h | 53.01 h |
+| 2026-11-07 13:22 | Commit `9457517`: Step 9.3c-1: browser-side drawing core (smooth sampling, continuous colours, soft agreement), tested against Python | 19.05 h | 52.95 h |
+| 2026-11-07 13:24 | Commit `3a7c057`: Step 9.3c-2: data window for the browser-side drawing (tiles for the view, shared cache, layer accessor) | 19.08 h | 52.92 h |
+| 2026-11-07 13:29 | Commit `0bb13a8`: Step 9.3c-3: the rain is drawn in the browser at screen sharpness above zoom 4.5 (monotone cubic from the exact tile values) | 19.17 h | 52.83 h |
+| 2026-11-07 13:37 | Commit `f98dfab`: Record D37: nothing paid, no credit-metered services (user constraint); base-map options researched | 19.30 h | 52.70 h |
 | 2026-11-07 13:41 | PLAN-010 approved (stored vector base map); 19.37 h used | 19.37 h | 52.63 h |
-| 2026-11-07 13:41 | Commit `b94d35d`: Adopt PLAN-010: a stored vector base map under the rain (user's choice); D38 started, sources read | 19.37 h | 52.63 h |
-| 2026-11-07 13:49 | Commit `f9708f4`: Step 9.3d-1: gate for the stored base map: checked downloads, real sizes measured (zoom 0-7 = 189.6 MB), zoom 7 chosen | 19.50 h | 52.50 h |
-| 2026-11-07 14:02 | Commit `cf82d26`: Step 9.3d-2: stored OpenStreetMap base map (Protomaps, zoom 0-7) under the rain, bright names and borders, Now button | 19.73 h | 52.27 h |
+| 2026-11-07 13:41 | Commit `a347a5a`: Adopt PLAN-010: a stored vector base map under the rain (user's choice); D38 started, sources read | 19.37 h | 52.63 h |
+| 2026-11-07 13:49 | Commit `1ae628a`: Step 9.3d-1: gate for the stored base map: checked downloads, real sizes measured (zoom 0-7 = 189.6 MB), zoom 7 chosen | 19.50 h | 52.50 h |
+| 2026-11-07 14:02 | Commit `cd469e3`: Step 9.3d-2: stored OpenStreetMap base map (Protomaps, zoom 0-7) under the rain, bright names and borders, Now button | 19.73 h | 52.27 h |
 | 2026-11-07 14:09 | Resume after compaction, same session ID; the markdown records re-read first; clock read with `date -u` | 19.83 h | 52.17 h |
 | 2026-11-07 14:17 | Housekeeping review of all markdown files (this edit; its commit time is in `git log`; rows after 00:43 on 2026-11-07 were added here, they were missing) | 19.98 h | 52.02 h |
-| 2026-11-07 14:18 | Commit `d998a3e`: Housekeeping: bring all markdown records up to date | 19.98 h | 52.02 h |
-| 2026-11-07 14:20 | Commit `f27e29d`: Record the user's answers (time bar moved by them, live layer fast in their Firefox) | 20.03 h | 51.97 h |
-| 2026-11-07 14:25 | Commit `df04244`: Record D40: step 9.3d-3 dropped (scope cut); E024 seen again | 20.10 h | 51.90 h |
-| 2026-11-07 14:32 | Commit `232f75b`: Step 9.3d-4: browser scenarios for the stored base map, records, hosting requirement | 20.22 h | 51.78 h |
-| 2026-11-07 15:48 | Commit `759e186`: Step 9.3c-4: live-layer, north-up and early-choice scenarios; Devanagari font, start-up race and WebKit noise fixed (E032-E034) | 21.48 h | 50.52 h |
-| 2026-11-07 16:26 | Commit `807224a`: Record frontend-check re-run: all 8 places x 8 activities match | 22.12 h | 49.88 h |
-| 2026-11-07 16:31 | Commit `0669af8`: Record user feedback: the Save this place button is hard to find | 22.20 h | 49.80 h |
-| 2026-11-07 16:40 | Commit `2ff400b`: Make saved places findable (star button, saved above the search, short privacy text) | 22.35 h | 49.65 h |
-| 2026-11-07 16:58 | Commit `736f90e`: Step 9.4: seven map-page browser scenarios; 22 of 22 in four engines | 22.65 h | 49.35 h |
-| 2026-11-07 17:42 | Commit `166745a`: Step 11.0: PLAN-011 and PLAN-012 written, D41, sources read | 23.38 h | 48.62 h |
-| 2026-11-07 17:51 | Commit `6cbb4d4`: Step 12.1: the map's Both models view in one blue family; colour test; re-export | 23.53 h | 48.47 h |
-| 2026-11-07 18:06 | Commit `b55bba0`: Step 12.2: a titled colour key for both map views; E035 | 23.78 h | 48.22 h |
+| 2026-11-07 14:18 | Commit `5479255`: Housekeeping: bring all markdown records up to date | 19.98 h | 52.02 h |
+| 2026-11-07 14:20 | Commit `ac46dfd`: Record the user's answers (time bar moved by them, live layer fast in their Firefox) | 20.03 h | 51.97 h |
+| 2026-11-07 14:25 | Commit `4673074`: Record D40: step 9.3d-3 dropped (scope cut); E024 seen again | 20.10 h | 51.90 h |
+| 2026-11-07 14:32 | Commit `62da947`: Step 9.3d-4: browser scenarios for the stored base map, records, hosting requirement | 20.22 h | 51.78 h |
+| 2026-11-07 15:48 | Commit `a5227a4`: Step 9.3c-4: live-layer, north-up and early-choice scenarios; Devanagari font, start-up race and WebKit noise fixed (E032-E034) | 21.48 h | 50.52 h |
+| 2026-11-07 16:26 | Commit `1dc1e4f`: Record frontend-check re-run: all 8 places x 8 activities match | 22.12 h | 49.88 h |
+| 2026-11-07 16:31 | Commit `c7b72bc`: Record user feedback: the Save this place button is hard to find | 22.20 h | 49.80 h |
+| 2026-11-07 16:40 | Commit `869ea81`: Make saved places findable (star button, saved above the search, short privacy text) | 22.35 h | 49.65 h |
+| 2026-11-07 16:58 | Commit `24e4302`: Step 9.4: seven map-page browser scenarios; 22 of 22 in four engines | 22.65 h | 49.35 h |
+| 2026-11-07 17:42 | Commit `44fe89c`: Step 11.0: PLAN-011 and PLAN-012 written, D41, sources read | 23.38 h | 48.62 h |
+| 2026-11-07 17:51 | Commit `0d01b69`: Step 12.1: the map's Both models view in one blue family; colour test; re-export | 23.53 h | 48.47 h |
+| 2026-11-07 18:06 | Commit `d96f526`: Step 12.2: a titled colour key for both map views; E035 | 23.78 h | 48.22 h |
 | 2026-11-07 18:59 | **24 h warning given to the user** (clock read with `date -u`; the user's verdict on the map colours and key: "ok ;i like it."); next: PLAN-011 step 11.1 | 24.67 h | 47.33 h |
-| 2026-11-07 19:15 | Commit `2577b1d`: Step 11.1: rain levels (no rain / light / moderate / heavy) in the plan engine, config, wording and the independent Python reference; Custom as a leve | 24.93 h | 47.07 h |
-| 2026-11-07 19:19 | Commit `66d56f2`: Step 11.2: the plan speaks in rain levels everywhere (headings, notes, window sentences, a level legend line from the config); test that no plan text  | 25.00 h | 47.00 h |
-| 2026-11-07 19:31 | Commit `4617a12`: Step 11.3: the day view as four tiles per day (drops, level word, start time, tick, 'models differ'); level colours from config with a contrast test;  | 25.20 h | 46.80 h |
-| 2026-11-07 19:38 | Commit `471d15b`: Step 13.0: PLAN-013 (public hosting on GitHub Pages, 6-hourly refresh, honesty strip first, mobile checks) written; D42 and the hosting sources record | 25.31 h | 46.69 h |
-| 2026-11-07 20:07 | Commit `f98713c`: Step 13.1: the honesty strip (forecast run and age, ECMWF attribution word for word, plain warning when older than 30 hours), verified credits, status | 25.80 h | 46.20 h |
-| 2026-11-07 21:08 | Commit `ff46de3`: Step 13.2: base path for the sub-folder site, the security policy as meta tags built from headers.conf, an assembler for the public folder, and a test | 26.81 h | 45.19 h |
-| 2026-11-07 21:39 | Commit `89dd25e`: Step 13.3: the scheduled workflow (build, deploy, smoke test) with pinned GitHub-owned actions and least-privilege permissions; checked base-map downl | 27.33 h | 44.67 h |
-| 2026-11-07 21:53 | Commit `d035d00`: Record step 13.4 so far: login by the user, push of 73 commits to ZASPARTANS/Quest_lab (only that repository), first run failed as expected at the Pag | 27.56 h | 44.44 h |
-| 2026-11-07 22:45 | Commit `6e74b4e`: Steps 13.4-13.6: the site is live on GitHub Pages; phone fixes (map no longer covered by its controls, 44 px tap targets, collapsible colour key below | 28.43 h | 43.57 h |
-| 2026-11-07 22:53 | Commit `faea733`: Record the live re-check after the phone fixes (smoke test and phone checks pass on the public site) | 28.56 h | 43.44 h |
-| 2026-11-07 22:57 | Commit `196b8a9`: Record the user's real Android phone verdict and close PLAN-013 (hosting): the site is live, refreshing every 6 hours, checked in four engines, two em | 28.63 h | 43.37 h |
-| 2026-11-07 23:02 | Commit `19df0be`: Step 14.0: PLAN-014 (concurrent-visitor testing: full local test, one tiny capped test of the live site) written; D43 with the correction of my unveri | 28.71 h | 43.29 h |
-| 2026-11-07 23:16 | Commit `44b1749`: Step 14.1: load test tool with hard caps and stop rules (tested offline against a fault-injecting fake server) and a recorder for real visits | 28.95 h | 43.05 h |
-| 2026-11-07 23:30 | Commit `5032499`: Step 14.2: concurrent-visitor test on this computer: 100 simultaneous replayed visitors (7740 requests, every answer correct) and 20 real browsers (al | 29.18 h | 42.82 h |
-| 2026-11-08 00:11 | Commit `be39e9f`: Step 14.3 (partly): first live-site test: part 1 stopped itself at 8.8 MB on my own too-strict page-size check (no host errors); 3 real browsers at on | 29.86 h | 42.14 h |
+| 2026-11-07 19:15 | Commit `095ce4a`: Step 11.1: rain levels (no rain / light / moderate / heavy) in the plan engine, config, wording and the independent Python reference; Custom as a leve | 24.93 h | 47.07 h |
+| 2026-11-07 19:19 | Commit `5946cb7`: Step 11.2: the plan speaks in rain levels everywhere (headings, notes, window sentences, a level legend line from the config); test that no plan text  | 25.00 h | 47.00 h |
+| 2026-11-07 19:31 | Commit `82042f7`: Step 11.3: the day view as four tiles per day (drops, level word, start time, tick, 'models differ'); level colours from config with a contrast test;  | 25.20 h | 46.80 h |
+| 2026-11-07 19:38 | Commit `4b7e775`: Step 13.0: PLAN-013 (public hosting on GitHub Pages, 6-hourly refresh, honesty strip first, mobile checks) written; D42 and the hosting sources record | 25.31 h | 46.69 h |
+| 2026-11-07 20:07 | Commit `7e731df`: Step 13.1: the honesty strip (forecast run and age, ECMWF attribution word for word, plain warning when older than 30 hours), verified credits, status | 25.80 h | 46.20 h |
+| 2026-11-07 21:08 | Commit `ff0916d`: Step 13.2: base path for the sub-folder site, the security policy as meta tags built from headers.conf, an assembler for the public folder, and a test | 26.81 h | 45.19 h |
+| 2026-11-07 21:39 | Commit `79e5733`: Step 13.3: the scheduled workflow (build, deploy, smoke test) with pinned GitHub-owned actions and least-privilege permissions; checked base-map downl | 27.33 h | 44.67 h |
+| 2026-11-07 21:53 | Commit `54e5565`: Record step 13.4 so far: login by the user, push of 73 commits to ZASPARTANS/Quest_lab (only that repository), first run failed as expected at the Pag | 27.56 h | 44.44 h |
+| 2026-11-07 22:45 | Commit `afc52a5`: Steps 13.4-13.6: the site is live on GitHub Pages; phone fixes (map no longer covered by its controls, 44 px tap targets, collapsible colour key below | 28.43 h | 43.57 h |
+| 2026-11-07 22:53 | Commit `3d40d5b`: Record the live re-check after the phone fixes (smoke test and phone checks pass on the public site) | 28.56 h | 43.44 h |
+| 2026-11-07 22:57 | Commit `b7dd3e5`: Record the user's real Android phone verdict and close PLAN-013 (hosting): the site is live, refreshing every 6 hours, checked in four engines, two em | 28.63 h | 43.37 h |
+| 2026-11-07 23:02 | Commit `826b917`: Step 14.0: PLAN-014 (concurrent-visitor testing: full local test, one tiny capped test of the live site) written; D43 with the correction of my unveri | 28.71 h | 43.29 h |
+| 2026-11-07 23:16 | Commit `fa8c27f`: Step 14.1: load test tool with hard caps and stop rules (tested offline against a fault-injecting fake server) and a recorder for real visits | 28.95 h | 43.05 h |
+| 2026-11-07 23:30 | Commit `382d6be`: Step 14.2: concurrent-visitor test on this computer: 100 simultaneous replayed visitors (7740 requests, every answer correct) and 20 real browsers (al | 29.18 h | 42.82 h |
+| 2026-11-08 00:11 | Commit `01166e4`: Step 14.3 (partly): first live-site test: part 1 stopped itself at 8.8 MB on my own too-strict page-size check (no host errors); 3 real browsers at on | 29.86 h | 42.14 h |
 | 2026-11-08 00:47 | Housekeeping review of all markdown files (this edit; its commit time is in `git log`; the rows above were missing) | 30.46 h | 41.54 h |
 | 2026-11-08 01:10 | Resume after /compact, same session ID; PROGRESS, DECISIONS and the ERRORS table re-read first; the user said "Step 9.5 (the design pass)" | 30.86 h | 41.14 h |
-| 2026-11-08 01:25 | Commit `804e2e6`: Step 9.5 round 1: design pass of the plan column | 31.1 h | 40.9 h |
+| 2026-11-08 01:25 | Commit `23a7325`: Step 9.5 round 1: design pass of the plan column | 31.1 h | 40.9 h |
 | 2026-11-08 10:13 | The user was away about 9 hours; clock read with `date -u` when they replied (Android feedback and the location bug) | 39.9 h | 32.1 h |
-| 2026-11-08 10:27 | Commit `4259be4`: Fix E038: "Use my location" no longer shows "search instead" and then finds the position | 40.13 h | 31.87 h |
-| 2026-11-08 11:15 | Commit `c9c2ce9`: Pre-push check: the location scenario's button press made deterministic; two slips of my own checks recorded (E025) | 40.93 h | 31.07 h |
-| 2026-11-08 11:35 | Push of 8 commits (`196b8a9..c9c2ce9`, only `ZASPARTANS/Quest_lab`) after the user's "Yes do the commit i will check on my mobile"; run 42476458856 failed at 11:41 and again at 11:47 in the map-file download (GitHub timeout incident, E039); the live site kept the previous deploy | 41.26 h | 30.74 h |
-| 2026-11-08 12:09 | PLAN-015 approved in plan mode (the user had chosen options 1 and 2); commit `a68c56a`: Step 15.0 | 41.83 h | 30.17 h |
-| 2026-11-08 12:12 | Commit `03dc0a6`: Step 15.1: a retry (3 tries, 30 s) for the base-map download | 41.88 h | 30.12 h |
-| 2026-11-08 12:25 | Commit `5a3e713`: Step 15.2: fonts and sprites kept in our own repository (1029 files), installed offline | 42.10 h | 29.90 h |
-| 2026-11-08 12:29 | Commit `f8ac627`: Step 15.3: the 190 MB map file in the Actions cache (pinned `actions/cache`) | 42.16 h | 29.84 h |
+| 2026-11-08 10:27 | Commit `e1a9531`: Fix E038: "Use my location" no longer shows "search instead" and then finds the position | 40.13 h | 31.87 h |
+| 2026-11-08 11:15 | Commit `bb7dc52`: Pre-push check: the location scenario's button press made deterministic; two slips of my own checks recorded (E025) | 40.93 h | 31.07 h |
+| 2026-11-08 11:35 | Push of 8 commits (`b7dd3e5..bb7dc52`, only `ZASPARTANS/Quest_lab`) after the user's "Yes do the commit i will check on my mobile"; run 42476458856 failed at 11:41 and again at 11:47 in the map-file download (GitHub timeout incident, E039); the live site kept the previous deploy | 41.26 h | 30.74 h |
+| 2026-11-08 12:09 | PLAN-015 approved in plan mode (the user had chosen options 1 and 2); commit `7a86216`: Step 15.0 | 41.83 h | 30.17 h |
+| 2026-11-08 12:12 | Commit `2c41e75`: Step 15.1: a retry (3 tries, 30 s) for the base-map download | 41.88 h | 30.12 h |
+| 2026-11-08 12:25 | Commit `43caf08`: Step 15.2: fonts and sprites kept in our own repository (1029 files), installed offline | 42.10 h | 29.90 h |
+| 2026-11-08 12:29 | Commit `ee2578c`: Step 15.3: the 190 MB map file in the Actions cache (pinned `actions/cache`) | 42.16 h | 29.84 h |
 | 2026-11-08 12:32 | GitHub resolved its incident "Increase in timeouts for some unauthenticated users" (status page; started 10:36) | 42.21 h | 29.79 h |
-| 2026-11-08 12:33 | Push `c9c2ce9..f8ac627`; run 42480794011 green (build, deploy, smoke): **live at 12:38 UTC** with the design pass and the location fix | 42.23 h | 29.77 h |
-| 2026-11-08 14:19 | Commit `d45abff`: D46: maximum zoom 10 to 8, the device location lands at zoom 7 (after the user's phone feedback; clock read with `date -u`) | 44.00 h | 28.00 h |
-| 2026-11-08 15:48 | Push `f8ac627..d45abff` after the user's "YES PLEASE"; run 42496644698 green, live 15:55 UTC; the cache was restored (hit) in 3 s | 45.48 h | 26.52 h |
-| 2026-11-08 15:57 | Commits `e580ca3` and `88ebae9`: Steps 15.4 and 15.5 records; times corrected (E024 seen 8) | 45.63 h | 26.37 h |
-| 2026-11-08 16:29 | Commit `1ca3ab9`: Step 14.4 records; pushed (documentation only), build green at 16:36; E024 seen 9 | 46.16 h | 25.84 h |
-| 2026-11-08 17:08 | Commit `bc99221`: Step 11.4: browser scenarios for the rain levels; E040 fixed (local, not pushed) | 46.81 h | 25.19 h |
+| 2026-11-08 12:33 | Push `bb7dc52..ee2578c`; run 42480794011 green (build, deploy, smoke): **live at 12:38 UTC** with the design pass and the location fix | 42.23 h | 29.77 h |
+| 2026-11-08 14:19 | Commit `f75f47a`: D46: maximum zoom 10 to 8, the device location lands at zoom 7 (after the user's phone feedback; clock read with `date -u`) | 44.00 h | 28.00 h |
+| 2026-11-08 15:48 | Push `ee2578c..f75f47a` after the user's "YES PLEASE"; run 42496644698 green, live 15:55 UTC; the cache was restored (hit) in 3 s | 45.48 h | 26.52 h |
+| 2026-11-08 15:57 | Commits `414d4da` and `095cc0e`: Steps 15.4 and 15.5 records; times corrected (E024 seen 8) | 45.63 h | 26.37 h |
+| 2026-11-08 16:29 | Commit `e150013`: Step 14.4 records; pushed (documentation only), build green at 16:36; E024 seen 9 | 46.16 h | 25.84 h |
+| 2026-11-08 17:08 | Commit `b9171f2`: Step 11.4: browser scenarios for the rain levels; E040 fixed (local, not pushed) | 46.81 h | 25.19 h |
 | 2026-11-08 17:39 | Housekeeping review of all markdown files (this edit; its commit time is in `git log`) | 47.33 h | 24.67 h |
 
 ## Current plan
@@ -139,10 +139,10 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 
 | Step | What | Status |
 |---|---|---|
-| 1 | Repo + records (git init, .gitignore, PROBLEM.md, DECISIONS, ERRORS, first commit) | **done** 2026-11-06 18:43 UTC, commit `ccb24df` |
-| 1b | Apply folder layout (PLAN-002: D5, E002, README, .gitignore) | **done** 2026-11-06 18:50 UTC, commit `7a83bb9` |
+| 1 | Repo + records (git init, .gitignore, PROBLEM.md, DECISIONS, ERRORS, first commit) | **done** 2026-11-06 18:43 UTC, commit `5f0060b` |
+| 1b | Apply folder layout (PLAN-002: D5, E002, README, .gitignore) | **done** 2026-11-06 18:50 UTC, commit `b58d122` |
 | 2 | Python environment + pinned packages | **done** 2026-11-06 19:06 UTC (commit "Step 2: Python 3.11 virtual environment...") |
-| 3 | Fetch (IFS + AIFS `tp`) | **done** 2026-11-06 19:16 UTC (commit `fc08c94`) |
+| 3 | Fetch (IFS + AIFS `tp`) | **done** 2026-11-06 19:16 UTC (commit `e4a17f7`) |
 | 3b | Docker test environment (PLAN-004) | **done** 2026-11-06 20:18 UTC (commit "Step 3b: Docker test environment...") |
 | 4 | Processing core + tests (units per model) | **done** 2026-11-06 (commit "Step 4: processing core...", time in `git log`) |
 | S1 | Repo hygiene: ignore patterns + secret-scan test | **done** 2026-11-06 (commit "Step S1...", time in `git log`) |
@@ -151,13 +151,13 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 | S4 | Dependency vetting + scan (scan approved) | **done** 2026-11-06 (commit "Step S4...", time in `git log`) |
 | S5 | Identity decision | **done** (D16: keep e-mail as is, no code) |
 | 5 | Independent validation | **done** 2026-11-06 (commit "Step 5...", time in `git log`) |
-| 6 | Front-end spike + decision gate + localhost | **done** 2026-11-06 (commits `c7baf2d`, `ba46ed2`); library MapLibre (D22) |
+| 6 | Front-end spike + decision gate + localhost | **done** 2026-11-06 (commits `fe22ec5`, `b065424`); library MapLibre (D22) |
 | 7 | Static data export: point tiles, optional lower-resolution frames, manifest; size gate (PLAN-006) | **done** 2026-11-06 (commit "Step 7: ...", time in `git log`); D25, E023 |
 | 8 | Plan engine + place panel: activities, day cards, best windows, rain totals with a range, saved places, text first (PLAN-006) | **done** 2026-11-07 (commit "Step 8: ...", time in `git log`); D27, D28, E024, E025 |
 | 9 | Map and globe as supporting views (PLAN-006) | **superseded by PLAN-007** (rows 9.1-9.5) |
 | 9.1 | Spike gate: fly-in from globe and flatten, two ways, screenshots (PLAN-007) | **done** 2026-11-07 ~10:45 UTC (commit "Step 9.1: ..."); D31 |
 | 9.2 | Data contract (frames in the manifest, agreement colours) and pure map helpers (PLAN-007) | **done** 2026-11-07 ~10:53 UTC (commit "Step 9.2: ...") |
-| 9.3 | Map module, controls, 1/4 + 3/4 layout, spike removed (PLAN-007) | **done** 2026-11-07 11:07 UTC (commit `4f2c67e`); the points open then (frame quality E027, real-service check of D32) were closed by 9.3b and 9.3c-0 |
+| 9.3 | Map module, controls, 1/4 + 3/4 layout, spike removed (PLAN-007) | **done** 2026-11-07 11:07 UTC (commit `c8e5bee`); the points open then (frame quality E027, real-service check of D32) were closed by 9.3b and 9.3c-0 |
 | 9.3b-1 | Gate Q1: measure and look at four ways to make the rain pictures sharper (PLAN-008) | **done** 2026-11-07 12:27 UTC (commit "Step 9.3b-1: ..."); D34 |
 | 9.3b-2 | Build the sharper frames: smooth up-sampling, agreement per pixel, config, tests, re-export (PLAN-008) | **done** 2026-11-07 12:39 UTC (commit "Step 9.3b-2: ..."); D34 results |
 | 9.3b-3 | Look and confirm (Chromium, Edge, the user), records (PLAN-008) | **failed the user's look** (blocky when zoomed in, E031); superseded by PLAN-009 |
@@ -165,7 +165,7 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 | 9.3c-1 | Drawing core: smooth sampling, continuous colours, soft agreement (pure, tested) (PLAN-009) | **done** 2026-11-07 13:21 UTC (commit "Step 9.3c-1: ...") |
 | 9.3c-2 | Data window: tiles for the view and a layer accessor (PLAN-009) | **done** 2026-11-07 13:23 UTC (commit "Step 9.3c-2: ...") |
 | 9.3c-3 | Map integration: live layer above zoom 4.5, fallback picture (PLAN-009) | **done** 2026-11-07 13:29 UTC (commit "Step 9.3c-3: ..."); D36 |
-| 9.3c-4 | Browser checks in the engines, Edge look, records (PLAN-009) | **done** 2026-11-07 15:48 UTC (commit `759e186`); results section below; E032 seen again, E033, E034 |
+| 9.3c-4 | Browser checks in the engines, Edge look, records (PLAN-009) | **done** 2026-11-07 15:48 UTC (commit `a5227a4`); results section below; E032 seen again, E033, E034 |
 | 9.3d-1 | Gate: measure the stored base map (extract sizes z4-z7, fonts and sprites) and show the user (PLAN-010) | **done** 2026-11-07 13:48 UTC (commit "Step 9.3d-1: ..."); D38 gate results |
 | 9.3d-2 | Serve and style: nginx, the two packages, the dark style, rain below labels, outlines removed (PLAN-010) | **done** 2026-11-07 14:02 UTC (commit "Step 9.3d-2: ..."); D38 results, D39, E032 |
 | 9.3d-3 | Fit the rain to the map: opacity, legibility, looks at several zooms (PLAN-010) | **dropped** 2026-11-07 14:24 UTC by the user (scope cut, D40); a look at the rain over the map at zoom 3, 5, 7 moves into step 9.5 |
@@ -174,17 +174,17 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 | 9.5 | Design pass with the frontend-design skill, user review (PLAN-007) | **round 1 built; the user's first verdict (2026-11-08 ~10:00 UTC): "i like how it shows in the android" (Firefox, Chrome and Samsung Internet on Android); iPhone not yet**; results section at the end of this file; D44 |
 | 11.0 | Records and sources (PLAN-011) | **done** (commit "Step 11.0: ..."; time in `git log`): PLAN-011 and PLAN-012 files, D41, SOURCES (AMS and yr.no read; IMD and BoM marked as not verified), DOMAIN |
 | 12.1 | One blue for the agreement view: config colour, colour test, re-export, validate_site, restart preview (PLAN-012) | **done** (commit "Step 12.1: ..."; time in `git log`); results section below |
-| 12.2 | A titled colour key for both map views, texts from config, tests, user's look (PLAN-012) | **done** (commit `b55bba0`); the user's look: "ok ;i like it." (2026-11-07 ~18:59 UTC); results section below; E035 |
+| 12.2 | A titled colour key for both map views, texts from config, tests, user's look (PLAN-012) | **done** (commit `d96f526`); the user's look: "ok ;i like it." (2026-11-07 ~18:59 UTC); results section below; E035 |
 | 11.1 | Engine, config and tests for rain levels; Python reference and frontend-check (PLAN-011) | **done** (commit "Step 11.1: ..."; time in `git log`); results section below |
 | 11.2 | Words everywhere: blocks, windows, activity note, legend line, saved line, Custom, map legend (PLAN-011) | **done** (commit "Step 11.2: ..."; time in `git log`); the map legend part was done in PLAN-012 |
-| 11.3 | The day view: one row of four coloured tiles per day, level colours, contrast test (PLAN-011) | **done** 2026-11-07 19:31 UTC (commit `4617a12`); the user has not reported on the day view by itself, only "androde looks good the the site works" on their Android phone (22:57 UTC) |
+| 11.3 | The day view: one row of four coloured tiles per day, level colours, contrast test (PLAN-011) | **done** 2026-11-07 19:31 UTC (commit `82042f7`); the user has not reported on the day view by itself, only "androde looks good the the site works" on their Android phone (22:57 UTC) |
 | 11.4 | Browser checks in four engines and records (PLAN-011) | **done** 2026-11-08 17:08 UTC: `frontend/tools/level_scenarios.mjs` (4 scenarios: the four level words and the cut-offs in the legend and none of the old words; what fits follows the activity (Outdoor no rain, Commute up to light, Custom what is chosen); Custom has three choices and keeps the choice after a reload; a hostile or unknown `accept=` is ignored): **32 of 32 scenarios pass in Edge (real GPU), Chromium, Firefox and WebKit** on the root test site; they found a real bug, E040 (Custom's accept level was not written into the address), fixed; `frontend-check` 8 places x 8 activities all match; Node 110 passed; line counts under 300 (`app.js` 297) |
 | 10 | Provenance + honesty strip, final policy (PLAN-006) | **superseded by PLAN-013 step 13.1** |
 | 11 | Hosting gate + deploy (free host only, D37; the 190 MB base-map file leaves only GitHub Pages) | **superseded by PLAN-013 steps 13.2-13.7** |
-| 13.0 | Records: PLAN-013, PROGRESS, D42, SOURCES (PLAN-013) | **done** 2026-11-07 19:38 UTC (commit `471d15b`) |
+| 13.0 | Records: PLAN-013, PROGRESS, D42, SOURCES (PLAN-013) | **done** 2026-11-07 19:38 UTC (commit `4b7e775`) |
 | 13.1 | The honesty strip: run time and age, verified credits, age warning, status file (PLAN-013) | **done** (commit "Step 13.1: ..."; time in `git log`); results section below; E036 |
 | 13.2 | Base path for the sub-folder site, the security policy as a meta tag, a sub-folder test site (PLAN-013) | **done** (commit "Step 13.2: ..."; time in `git log`); results section below; E037 |
-| 13.3 | The workflow: build, deploy, smoke test; pinned actions; local dry run (PLAN-013) | **done** 2026-11-07 21:39 UTC (commit `89dd25e`); results section below |
+| 13.3 | The workflow: build, deploy, smoke test; pinned actions; local dry run (PLAN-013) | **done** 2026-11-07 21:39 UTC (commit `79e5733`); results section below |
 | 13.4 | GitHub setup (the user logs in), push, release with the base map, Pages, first deploy (PLAN-013) | **done** 2026-11-07 22:12 UTC: the site is live at https://zaspartans.github.io/Quest_lab/ (first run 7 minutes, build, deploy and smoke green); results below |
 | 13.5 | Check the public site and phones: curl, four engines, phone emulation, the user's real phone (PLAN-013) | **done** 2026-11-07 (a)-(c) 22:13 UTC; (d) the user's real Android phone 22:57 UTC: "androde looks good the the site works"; an iPhone (Safari) has NOT been tried by a person |
 | 13.6 | Phone fixes from the evidence (PLAN-013) | **done** 2026-11-07 22:53 UTC: deployed (run 42422129073), re-checked on the live site, and the user's Android phone verdict is good |
@@ -198,7 +198,7 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 | 15.1 | A retry for the base-map download (PLAN-015) | **done** 2026-11-08 12:13 UTC: `pipeline/release.py` (new; `fetch_release` moved out of `basemap.py`, 266 to 225 lines), `[release] attempts = 3` and `retry_wait_seconds = 30` in `config/basemap.toml`; retried: network error, timeout, a break in the body, HTTP 5xx and 429; never retried: 404 and other answers, a wrong size or hash, a non-https address; Python **164 passed** (4 new); negative controls: with the retry removed 2 tests fail, with 404 counted as transient 1 test fails |
 | 15.2 | Fonts and sprites committed to `frontend/basemap_assets/`, `install-assets` (PLAN-015) | **done** (commit "Step 15.2: ..."; time in `git log`): 1029 files, 13 MB, `.gitattributes` `-text`; `install-assets` (offline, every file checked against the lock; a missing, extra or changed file raises and copies nothing) rebuilt a byte-identical folder from an empty one (`diff -r` clean); the CI step now runs it in the no-network `export` service; nothing from raw.githubusercontent.com is fetched by a build any more; Python **170 passed** (6 new); negative controls: one damaged committed file fails the real-folder test, a removed `.gitattributes` rule fails the guard; browser scenarios (chromium, root site) all pass; `check_workflow.py` passes |
 | 15.3 | A cache for the map file in the workflow, `check_workflow.py` allows sub-paths (PLAN-015) | **done** 2026-11-08 12:29 UTC (not yet proven on GitHub: that is step 15.4): `actions/cache/restore` and `actions/cache/save` pinned to `55cc8345863c7cc4c66a329aec7e433d2d1c52a9` (v6.1.0), path `data/basemap/world.pmtiles`, key `basemap-world-` + `hashFiles('config/basemap.toml')`, save only after a miss and right after the checked download; the checker now accepts an action sub-folder (a segment starting with a dot is refused); Python **175 passed** (5 new); `check_workflow.py` passes; negative controls: save without the miss condition, another cache path and the old `fetch-assets` step each make a test fail |
-| 15.4 | Push and prove the cache on GitHub in two runs (PLAN-015; needs the user's go) | **done** 2026-11-08: push `f8ac627` (the user: "Push the 4 commits now"), run 42480794011 (12:33-12:38 UTC, 5 min 21 s, cache miss, downloaded in 3 s, cache saved) and, after the user's "YES PLEASE" for the zoom commit, push `d45abff`, run 42496644698 (15:48-15:55 UTC, 7 min): "Cache hit for: basemap-world-8b33b465...", "Cache restored successfully" (181 MB in 3 s), `data/basemap/world.pmtiles: already there and matches (189.6 MB)`, the save step skipped, `assets: 1029 files, 11.54 MB installed from frontend/basemap_assets, all matching the lock file`; both runs green, smoke green on the live site |
+| 15.4 | Push and prove the cache on GitHub in two runs (PLAN-015; needs the user's go) | **done** 2026-11-08: push `ee2578c` (the user: "Push the 4 commits now"), run 42480794011 (12:33-12:38 UTC, 5 min 21 s, cache miss, downloaded in 3 s, cache saved) and, after the user's "YES PLEASE" for the zoom commit, push `f75f47a`, run 42496644698 (15:48-15:55 UTC, 7 min): "Cache hit for: basemap-world-8b33b465...", "Cache restored successfully" (181 MB in 3 s), `data/basemap/world.pmtiles: already there and matches (189.6 MB)`, the save step skipped, `assets: 1029 files, 11.54 MB installed from frontend/basemap_assets, all matching the lock file`; both runs green, smoke green on the live site |
 | 15.5 | Records, README, SECURITY, E039 final (PLAN-015) | **done** 2026-11-08 15:57 UTC (README build text and commands, SECURITY S15 and S16, D45 results, E039, this table); local commit, not yet pushed |
 | 12 | README + submission (PLAN-006 step 12, in force; split into 12.1-12.5 below; the user: "push and tgen step 12", 2026-11-08 18:48 UTC, 48.5 h used) | **done** 2026-11-08 21:15 UTC: sub-steps 12.1-12.5, PLAN-015 and PLAN-016 were done inside it |
 | 12.1 | Checks of the submission list that can be run now: live URL by a fresh request, headers, public base-map file, session facts (log, no `subagents/`), commit times, secret scans (tree, every commit, session log), pip-audit and npm audit, line counts, `shortcut:` list, plan security notes, SECURITY statuses (results into `docs/SUBMISSION.md`) | **done** 2026-11-08 18:51 UTC: results in `docs/SUBMISSION.md`; live page, manifest, status and headers by fresh requests; public base-map file equal by size and four sampled ranges; session folder has no `subagents/`; secret scan of 1,344 tracked files, 96 commits and the session log: no real secret, two explained findings (the project's own pattern list; an expired signed download address in the log); `pip-audit` no known vulnerabilities; plan security notes present in PLAN-005 to PLAN-015 |
@@ -225,12 +225,12 @@ Plan files, oldest first (approved plan files are never edited, so their status 
 Note: the built-in todo/task-list tool is not available in this session's tool set, so this table is the only live step list.
 
 ## Status (live, rewritten in the housekeeping of 2026-11-09 16:27 UTC; 70.14 h used of 72, 1.86 h left)
-- **The project is deployed and up to date.** https://zaspartans.github.io/Quest_lab/ (GitHub Pages, repository https://github.com/ZASPARTANS/Quest_lab, public) runs commit `e5f13da` (workflow run 42652634248: build, deploy and smoke green at 16:23 UTC). It has the design pass, the location fix (E038), the zoom limit (D46), the cache and retry (PLAN-015), the first-visit guide with "Don't show again" and the model explanation (PLAN-017, D48), the Search fix for the "Map point" label (E045), and the 50-line rule enforced by tests (PLAN-016). Records written after `e5f13da` are pushed with this housekeeping commit (the user's standing permission of 16:14 UTC).
+- **The project is deployed and up to date.** https://zaspartans.github.io/Quest_lab/ (GitHub Pages, repository https://github.com/ZASPARTANS/Quest_lab, public) runs commit `0cc1797` (workflow run 42652634248: build, deploy and smoke green at 16:23 UTC). It has the design pass, the location fix (E038), the zoom limit (D46), the cache and retry (PLAN-015), the first-visit guide with "Don't show again" and the model explanation (PLAN-017, D48), the Search fix for the "Map point" label (E045), and the 50-line rule enforced by tests (PLAN-016). Records written after `0cc1797` are pushed with this housekeeping commit (the user's standing permission of 16:14 UTC).
 - **The page** (live, and at http://localhost:8080 and http://localhost:8081/Quest_lab/): a guide window on a first visit (what the page does, 3 steps, which model to pick; "Close", "Don't show again", a "How to use" button); Plan-my-day on the left (below the map on a phone): place, activity, best times, rain totals, day tiles with a rain level per 6-hour block (No rain, Light, Moderate, Heavy: 0.5 / 3 / 10 mm per 6 h, D41), saved places; the globe that flies to the place and flattens (zoom 0.8 to 8, D46) with the stored OpenStreetMap base map, the rain drawn in the browser above zoom 4.5, IFS / AIFS / both-models view and a colour key; the honesty strip; the credits.
 - **The user's own checks:** Android (Firefox, Chrome, Samsung Internet), an iPhone ("iphone works", 2026-11-08) and a Mac ("Mac works", 2026-11-09), all with the live site; no versions or measurements given. The user's reports of 2026-11-09 (people confused about the purpose; the map point "not working") led to the guide (D48), E043 (the guide window blocked clicks on the map while open) and E045 (Search on the "Map point (...)" label said "No place found"; the map point itself worked). The user has not yet confirmed that E045's fix cures what they saw; E044 (my first guess) is closed by E045.
 - **Done:** steps 1-8, 9.1-9.5 (round 1), 9.3b-9.3d, PLAN-011 to PLAN-017, the security steps S1-S5, step 12 (README, `docs/SUBMISSION.md`, clean-clone run, security checks). **Open:** nothing to build; owner tasks below; 9.5 round 2 only on request.
 - **Tests (this housekeeping, 2026-11-09):** Python `docker compose -f docker/compose.yaml run --rm tests` = **178 passed**; Node `... run --rm frontend-tests` = **121 passed** (16:0x UTC, after the last code change); browser scenarios **42 of 42** in Edge (real GPU), Chromium, Firefox and WebKit on the root test site (about 16:00 UTC, after the last code change; the Pages-like sub-folder site was last run with 38 scenarios in Chromium at about 14:20 UTC, before the shorter guide and the Search fix: the live site was checked instead, below); `frontend-check` all 8 places x 8 activities match (about 14:10 UTC); phone checks pass (about 15:45 UTC, Pixel 7 and iPhone 15 emulation); `scripts/check_workflow.py` passes; `scripts/smoke_site.py` passes on the live site (16:2x UTC); a fresh real Edge visit to the live site (16:2x UTC): the guide opens with the short text, a click outside it closes it, a click on the map chooses a point with a dot, Search on the label explains itself and sends nothing, a real search for "Cardiff" returns 5 places (1 request to Open-Meteo), no console error; `npm audit --package-lock-only` 0 vulnerabilities (2026-11-09); `pip-audit` last run 2026-11-08 21:14 UTC (`requirements.txt` has not changed since); secret scan 2026-11-09 16:1x UTC: only the project's own pattern text matched (`config/security.toml` and the text of SUBMISSION), no real secret.
-- **Git:** branch `main`, 115 commits after this housekeeping; the first commit is `ccb24df` (2026-11-06 18:43 UTC). Each push starts a 5 to 7 minute workflow run. GitHub's scheduler: 4 scheduled runs so far, all green (see the README for the run counts).
+- **Git:** branch `main`, 115 commits after this housekeeping; the first commit is `5f0060b` (2026-11-06 18:43 UTC). Each push starts a 5 to 7 minute workflow run. GitHub's scheduler: 4 scheduled runs so far, all green (see the README for the run counts).
 - **Size limits (checked 2026-11-09 16:27 UTC):** no function over 50 lines (tests: `tests/frontend/function_sizes.test.mjs`, `tests/hygiene/test_function_sizes.py`); three files are exactly 300 lines: `tests/pipeline/test_basemap.py`, `frontend/src/app.js`, `frontend/tools/browser_checks.mjs`; none is over 300. `git grep "shortcut:"` finds 3 markers in 2 files (`pipeline/process.py` twice, `frontend/src/app.js:173`), all listed in the README.
 - **Records:** every file of `docs/` was brought up to date in this housekeeping; ERRORS E043-E045, DECISIONS D48, SECURITY S17, PROGRESS rows 17.0-17.5.
 
@@ -241,7 +241,7 @@ Note: the built-in todo/task-list tool is not available in this session's tool s
 - **Warnings to give the user:** the 24 h warning was given late, the 48 h warning was given at 18:27 on 2026-11-08, and **the 60 h and 64 h warnings were missed** (the session was idle; stated to the user at 12:56 UTC). The deadline is 2026-11-09 18:19 UTC; 1.86 h left at this housekeeping.
 - **E007:** IFS to 360 h is still deferred (D12). **E037:** the rare "map problem: Error" is not reproduced (watch). **E039:** GitHub's root-cause analysis of the 2026-11-08 incident was not published when last looked (12:33 UTC on 2026-11-08). **E042:** the dev server above. **E044/E045:** see Status.
 - **Pending results of bets:** D8 (a scheduled run must happen: partly, GitHub's scheduler is late or skips), D12/D14 (unchanged), D37 (no bill seen; I have not looked at a GitHub bill), D43 (a large live load test was never run; small ones were), D44 and D46 (liked / works on the user's phones), **D48 (the guide makes the page clear: no measurement, only the user can ask people)**.
-- **Throwaway code:** none left in the repository. Tools kept on purpose: `frontend/tools/` (browser, phone, level, location, provenance, guide scenarios, recorder, concurrent visitors, design shots, timing, guide skip helper), `scripts/`. My temporary scripts live in `%TEMP%`, outside the repository. The repository root holds only README, config and dependency files, `.gitattributes`, `.gitignore` and the top-level folders (ignored local folders: `.venv`, `.pytest_cache`, `.claude`, `data`). The phone-check and the Firefox and WebKit guide screenshots (12 files in `docs/evidence`) were committed with the housekeeping commit `c98b894`; the working tree is clean (checked 2026-11-09 17:07 UTC).
+- **Throwaway code:** none left in the repository. Tools kept on purpose: `frontend/tools/` (browser, phone, level, location, provenance, guide scenarios, recorder, concurrent visitors, design shots, timing, guide skip helper), `scripts/`. My temporary scripts live in `%TEMP%`, outside the repository. The repository root holds only README, config and dependency files, `.gitattributes`, `.gitignore` and the top-level folders (ignored local folders: `.venv`, `.pytest_cache`, `.claude`, `data`). The phone-check and the Firefox and WebKit guide screenshots (12 files in `docs/evidence`) were committed with the housekeeping commit `8d68560`; the working tree is clean (checked 2026-11-09 17:07 UTC).
 
 ## Known issues
 - Python 3.10's pip is broken (E001); use `py -3.11` (the project `.venv` is 3.11.9).
@@ -282,8 +282,8 @@ Each item is ticked in `docs/SUBMISSION.md` only after running the check. These 
 ## Step 1b done-check results (run 2026-11-06 ~18:51 UTC)
 - Root check `git ls-files | cut -d/ -f1 | sort -u` printed only `.gitignore`, `README.md`, `docs`. `ls -A` shows also `.claude` and `.git`, both untracked/internal (`.claude/` is ignored).
 - `git check-ignore -v data/site/x data/raw/x .claude/settings.local.json`: all three matched (`.gitignore:20:/data/` twice, `.gitignore:2:.claude/`). `docs/PROGRESS.md` is not ignored.
-- `git status --short | wc -l` after commit `7a83bb9`: `0`.
-- `git diff ccb24df HEAD -- docs/plans/PLAN-001.md`: empty, so the superseded plan file is untouched.
+- `git status --short | wc -l` after commit `b58d122`: `0`.
+- `git diff 5f0060b HEAD -- docs/plans/PLAN-001.md`: empty, so the superseded plan file is untouched.
 - Diff of the approved plan text against committed `docs/plans/PLAN-002.md`: only the header lines (Drafted, Written, Approval) differ; the body is identical.
 - Global `CLAUDE.md`: the new "File structure — MANDATORY" section was the only change (8 added lines, 0 removed, diff run before deleting the backup). Heading count is now 14 (was 13).
 - No git remote exists (`git remote -v` prints nothing). Nothing has been pushed. The GitHub repo link will be given by the user later; repo creation and push still need the user's approval (plan step 11).
@@ -356,7 +356,7 @@ Code: `pipeline/grid.py` (58 lines), `pipeline/process.py` (116), `pipeline/proc
 - Small slip, corrected at once: I wrote guessed times into three record headings before checking `date -u`; they now carry the real "~" times.
 
 ## Security audit (user request, run 2026-11-06 ~20:35-20:43 UTC)
-- State when paused: step 4 finished and committed (`dc2535c`); `git status` clean on `main`; no remote; step 5 not started.
+- State when paused: step 4 finished and committed (`e778827`); `git status` clean on `main`; no remote; step 5 not started.
 - Result: `docs/SECURITY.md` (findings S01-S09: no Critical or High; 5 Medium/Low items need code or setup changes, 2 need the user's decision). Not checkable yet: live-site items (HTTPS, headers, CORS, rate limiting), the front end, GitHub settings, a dependency vulnerability scan.
 - Errors recorded: E013 (no security in earlier plans), E014 (`requests` used directly without vetting). Decision: D15.
 - Fixes: `docs/plans/PLAN-005.md` (steps S1-S5, then steps 5-12 with security notes), **approved by the user ~20:51 UTC**; work in progress, see the step table.
@@ -429,7 +429,7 @@ Checked: README, PROBLEM, PLAN-001..005, PROGRESS, DECISIONS, ERRORS, SOURCES, D
 Gaps found and fixed:
 - **README:** status line, folder list and a stale sentence ("no front end or localhost preview yet") were out of date; added a "Browser support and what was tested" section (Chromium Docker, Edge host, Firefox user-reported, Safari and phones later, no GPU, WebGL2 requirement).
 - **ENVIRONMENT:** stopped at step 3b; added the facts of steps 4-6 (images and digests, no-GPU constraint, Firefox in the container, IPv6 loopback and PowerShell quirk, netstat limits, process-stopping lessons, Windows versus Linux `node_modules`, tmpfs `noexec`, Node 22 `--test`, tool-shell limits).
-- **SECURITY:** header and scope now say it was extended through `fb92a96`; S06 status updated to accepted (D16); three "could not check" items that were no longer true (vulnerability scan, front end, npm) were replaced; public/private table and the controls section updated for the front end, the self-hosted base map and the online geocoder.
+- **SECURITY:** header and scope now say it was extended through `5b0916b`; S06 status updated to accepted (D16); three "could not check" items that were no longer true (vulnerability scan, front end, npm) were replaced; public/private table and the controls section updated for the front end, the self-hosted base map and the online geocoder.
 - **DECISIONS:** results appended for bets that were still "pending" although the evidence exists (D1, D3, D5, D6, D7, D11, D19, D20); a shortcut register (4 markers in code, where each is recorded; the headers-file shortcut was missing); new D23.
 - **ERRORS:** E010 and E013 counters and fix records brought up to date; E022 added.
 - **DOMAIN / SOURCES:** front-end rendering facts and the browser builds of the Playwright image added.
@@ -471,7 +471,7 @@ Files: `frontend/src/` time.js, plan.js, windows.js, wording.js, view.js, tiles.
 - **Not verified:** the user's own Firefox and any Safari or phone; the real geolocation prompt with a person answering; behaviour on the public HTTPS host (step 11); the wording "rounded to 0.1 mm" with a user; whether the windows match a place the user knows (D24 bet); two scheduled exports in a row.
 
 ## Checkpoint (2026-11-07 ~00:42 UTC; requested by the user)
-- State: steps 1-8 done and committed (`1e15254`); the working tree held only the markdown updates of this checkpoint, which are committed with it. Tests at the checkpoint: Python 99 passed, Node 41 passed, `frontend-check` 8 x 8 match, `browser-checks` 8 of 8 in chromium, firefox and webkit (run at ~00:25 UTC, before the markdown edits; no code changed since).
+- State: steps 1-8 done and committed (`1d1fc74`); the working tree held only the markdown updates of this checkpoint, which are committed with it. Tests at the checkpoint: Python 99 passed, Node 41 passed, `frontend-check` 8 x 8 match, `browser-checks` 8 of 8 in chromium, firefox and webkit (run at ~00:25 UTC, before the markdown edits; no code changed since).
 - Running: the Docker preview on http://localhost:8080 (left on for the user). Nothing was pushed; no remote exists.
 - Not started: step 9 and later; the design pass; the age warning (step 10); hosting (step 11).
 - Time: about 6.4 h of 72 h used; the 24 h warning is due 2026-11-07 18:19 UTC.
@@ -687,7 +687,7 @@ Verification of this pass: `docker compose -f docker/compose.yaml run --rm tests
 - **Not done yet:** the user's report from a real phone (13.5 d); the push that deploys the phone fixes to the public site and its re-check (this commit); 13.7 (final README and the records of the live state).
 
 ### Live re-check after the phone fixes were deployed (2026-11-07 22:53 UTC)
-- The push of `6e74b4e` redeployed the site (run `42422129073`, 22:45:58-22:52:32 UTC, build 6 min, deploy 17 s, smoke 13 s, all green). On the LIVE site: `scripts/smoke_site.py` passed; `phone_checks.mjs` passed for both emulated phones: Pixel 7 (Chromium) controls cover **23 %** of the map, iPhone 15 (WebKit) **42 %**, **0** tap targets under 44 px, no sideways scroll, a tap on a day tile moves the map, "Use my location" names the place. The user's own phone verdict (13.5 d) is still to come.
+- The push of `afc52a5` redeployed the site (run `42422129073`, 22:45:58-22:52:32 UTC, build 6 min, deploy 17 s, smoke 13 s, all green). On the LIVE site: `scripts/smoke_site.py` passed; `phone_checks.mjs` passed for both emulated phones: Pixel 7 (Chromium) controls cover **23 %** of the map, iPhone 15 (WebKit) **42 %**, **0** tap targets under 44 px, no sideways scroll, a tap on a day tile moves the map, "Use my location" names the place. The user's own phone verdict (13.5 d) is still to come.
 
 ### The user's real-phone verdict (2026-11-07 22:57 UTC)
 - The user, after opening https://zaspartans.github.io/Quest_lab/ on their Android phone: "ok so androde looks good the the site works". Their words, not measured; no screenshots were sent. **Not tested by a person: an iPhone (Safari).** The iPhone is covered only by the WebKit emulation (the engine of Safari, not Safari itself): layout, tap sizes, tap on a day tile and location flow pass there.
@@ -744,7 +744,7 @@ Verification of this pass: `docker compose -f docker/compose.yaml run --rm tests
 - **Tests now:** Node 109 passed, Python 160 passed, browser scenarios 28 of 28 in Chromium, Firefox and WebKit, phone checks pass (2026-11-08 10:20-10:26 UTC). Local commits not pushed: 7 (the 5 earlier ones, step 9.5 round 1, and the location fix once committed).
 
 ## The push of 2026-11-08 11:35 UTC and PLAN-015 (written 12:10 UTC; 41.8 h used)
-- **The user said "Yes do the commit i will check on my mobile"** (about 11:30 UTC); I pushed 8 commits (`196b8a9..c9c2ce9`, only `ZASPARTANS/Quest_lab`). The run (42476458856) failed in the step that downloads the map file (`ReadTimeout`, 60 s) and so did its re-run (attempt 2); deploy and smoke were skipped, **the live site still has the previous deploy: the new design and the location fix (E038) are NOT live, so the user's phone cannot test them yet.** GitHub's status page listed an open incident "Increase in timeouts for some unauthenticated users" from 10:36 UTC (E039). At 12:10 UTC the status page shows all components operational but the incident entry still "investigating".
+- **The user said "Yes do the commit i will check on my mobile"** (about 11:30 UTC); I pushed 8 commits (`b7dd3e5..bb7dc52`, only `ZASPARTANS/Quest_lab`). The run (42476458856) failed in the step that downloads the map file (`ReadTimeout`, 60 s) and so did its re-run (attempt 2); deploy and smoke were skipped, **the live site still has the previous deploy: the new design and the location fix (E038) are NOT live, so the user's phone cannot test them yet.** GitHub's status page listed an open incident "Increase in timeouts for some unauthenticated users" from 10:36 UTC (E039). At 12:10 UTC the status page shows all components operational but the incident entry still "investigating".
 - **The user's instruction:** "re-run it when the incident is resolved". A monitor polls GitHub's status page; the re-run (`gh run rerun --failed`) happens when the incident is resolved.
 - **The user's question** "y download something we dont need and already have ?" led to PLAN-015 (options 1 and 2 of my answer: a cache between runs plus a retry, and fonts and sprites committed to our own repo).
 
@@ -771,7 +771,7 @@ Verification of this pass: `docker compose -f docker/compose.yaml run --rm tests
 
 
 ## Step 12.2 done-check results (a clean clone run from the README; 2026-11-08 19:18 UTC; 48.99 h used)
-- **Where and how:** `git clone https://github.com/ZASPARTANS/Quest_lab.git` into `<throwaway folder>/Quest_lab` (outside the project; commit `472a3b1`, 96 commits, 1,344 tracked files, no `data/`); our own three Docker images were removed first so the clone had to build them from the files in the repository (the Docker build cache had also been emptied); then the README's commands in README order, one log per command (`clean_clone_check/logs/`, script `run_readme.sh`, summary `readme_run_summary.txt`), 18:52-19:15 UTC.
+- **Where and how:** `git clone https://github.com/ZASPARTANS/Quest_lab.git` into `<throwaway folder>/Quest_lab` (outside the project; commit `72fd981`, 96 commits, 1,344 tracked files, no `data/`); our own three Docker images were removed first so the clone had to build them from the files in the repository (the Docker build cache had also been emptied); then the README's commands in README order, one log per command (`clean_clone_check/logs/`, script `run_readme.sh`, summary `readme_run_summary.txt`), 18:52-19:15 UTC.
 - **Results:** `tests` 175 passed (95 s including the image build); **`frontend-tests` FAILED on a fresh machine** (`pull access denied for precip-frontend`, E041; fixed, see below); `fetch` 60.19 MB (57 s); `process` (15 s); `validate_points` "ok 16 of 16 rows within tolerance" (46 s); `export` 63.8 MB in 4,281 files (202 s); `validate_site` "all rows passed; manifest problems: none" (48 s); `fetch-release` "downloaded and checked (189.6 MB)" (14 s); `install-assets` 1029 files all matching the lock (80 s); `frontend-build` (20 s); `plan_reference` and `frontend-check` "all 8 places x 8 activities match" (52 s and 2 s); `check_workflow` all rules hold; `vite build --base=/Quest_lab/` (3 s); `assemble_site` 5,319 files, 266.7 MB, limit 1000 MB (768 s, slow on this Windows machine). About 23 minutes in all. The forecast used was the 2026-11-08 00:00 UTC run.
 - **E041 found and fixed:** `frontend-tests`, `frontend-check` and `browser-checks` named an image (`precip-frontend:local`, `precip-playwright:local`) that only another service (`frontend-build`, `screenshots`) builds, so on a machine without those images the README's second command failed. Fix: `docker/compose.yaml` gives the three services the same `build:` block through YAML anchors (5 lines). Proof: in the clone, with the image removed and the fixed file copied in, `run --rm frontend-tests` built the image and **110 passed**; the rendered config shows a build block for all five services; Python 175 passed and the workflow rules hold after the change. `browser-checks` was checked by its rendered config only: building the 3.9 GB Playwright image again was not worth it.
 - **Not run in the clone:** the browser checks and phone checks, the local preview sites (their ports are used by the main working copy), the live smoke test and the load test. They were run in the main working copy.
@@ -821,7 +821,7 @@ Method: the Vite dev server of this computer (`node node_modules/vite/bin/vite.j
 
 ## Steps 12.4 and 12.5 done (2026-11-08 21:15 UTC; 50.94 h used)
 - `docs/SUBMISSION.md` is finished: every item ticked with the command and its result (live URL by a fresh request and by a fresh Edge visit, session log without `subagents/`, secret scans, commit times, size limits, shortcut list, public/private check, tests, `pip-audit`, `npm audit`, headers, base-map file, plan security notes, SECURITY statuses) and a list of what is left to the owner.
-- **Last pass run on the code as pushed (`d72a15f`) and the corrected `config/headers.conf` comment:** Python 178 passed, Node 113 passed, workflow rules hold; `npm audit` 0 vulnerabilities and `pip-audit` no known vulnerabilities (21:14 UTC); secret scan of 1,351 tracked files, 106 commits and the session log: no real secret; live smoke test and one fresh Edge visit green (21:10 UTC); the workflow run for the push of `d72a15f` was green (5 min 35 s).
+- **Last pass run on the code as pushed (`8854720`) and the corrected `config/headers.conf` comment:** Python 178 passed, Node 113 passed, workflow rules hold; `npm audit` 0 vulnerabilities and `pip-audit` no known vulnerabilities (21:14 UTC); secret scan of 1,351 tracked files, 106 commits and the session log: no real secret; live smoke test and one fresh Edge visit green (21:10 UTC); the workflow run for the push of `8854720` was green (5 min 35 s).
 - **Workflow record for the README:** 12 runs, 10 green, 2 failed (the first run before Pages was enabled; the push of 11:35 UTC on 2026-11-08 during the GitHub incident); scheduled runs at 09:10 and 18:53 UTC.
 
 ## The user's iPhone check and the Mac (2026-11-08 21:46 UTC; 51.45 h used)
@@ -830,7 +830,7 @@ Method: the Vite dev server of this computer (`node node_modules/vite/bin/vite.j
 - README, SUBMISSION and this file say so; documentation only, not yet pushed (to be pushed together with the Mac result).
 
 ## Resume after compaction (2026-11-09 12:56 UTC; 66.62 h used, 5.38 h left)
-- Session ID unchanged (3e56a452-...). Re-read PROGRESS, DECISIONS and the ERRORS table first. Working tree clean; `dfa71d2` (iPhone result, Mac still open) is local only.
+- Session ID unchanged (3e56a452-...). Re-read PROGRESS, DECISIONS and the ERRORS table first. Working tree clean; `4fe75fa` (iPhone result, Mac still open) is local only.
 - **Missed warning, stated plainly:** the 60 h warning was due at 2026-11-09 06:19 UTC and the 64 h line (no new features) passed at 10:19 UTC; the session was idle in between, so I could not give either. Now past hour 64 with 5.4 h left: only the README, the submission and fixes are allowed by the rule unless the user decides otherwise.
 - **User feedback (after the compaction):** "mostly everything works, only thing is that people are confused for what this is used and what it does and how to use it." The page's first words are `Rain plan` and a one-sentence lead that uses the word "models"; no plain statement of the purpose and no first-use steps. Handled as a scope question for the user (past hour 64), see below.
 
@@ -840,7 +840,7 @@ Method: the Vite dev server of this computer (`node node_modules/vite/bin/vite.j
 - **Honest limits:** I have not shown the guide to a real person, so whether it removes the confusion is unknown (the D48 bet). Real Safari on a Mac and a real iPhone have not seen it. The guide opens on every first visit, including shared links.
 
 ## Step 17.3: pushed and live (2026-11-09 14:38 UTC; 68.31 h used)
-- **Pushed with the user's go** ("Push it, I want to test it live") at 2026-11-09 14:29 UTC: `9d3ffcf..685d0a7` to `ZASPARTANS/Quest_lab` only. Workflow run 42635221412 (push): build, deploy and smoke all green (done by 14:36 UTC, about 7 minutes).
+- **Pushed with the user's go** ("Push it, I want to test it live") at 2026-11-09 14:29 UTC: `21f32dc..fce27ba` to `ZASPARTANS/Quest_lab` only. Workflow run 42635221412 (push): build, deploy and smoke all green (done by 14:36 UTC, about 7 minutes).
 - **Live checks (my own, one visit each, on the user's own site):** `scripts/smoke_site.py` passed (page, forecast manifest and age, status file, a tile, base-map range request, fonts and sprites); a fresh real Edge visit: the guide was open on the first visit with the heading "What this page does" and the model section; "Don't show again" then a reload: the guide stayed closed; "How to use" opened it again; no console error; screenshot looked at (buttons pinned and in view). **Not checked:** Safari on a Mac or an iPhone, and any real person's reaction (D48 bet still open).
 - **README run count refreshed from `gh run list`:** 16 runs, 14 green, 2 failed (the same two as before), by push 11 (9 green), by schedule 4 (4 green), by hand 1 (green). Documentation only; local commit, not pushed (waits for the user's go, together with the Mac result).
 
@@ -855,14 +855,14 @@ Method: the Vite dev server of this computer (`node node_modules/vite/bin/vite.j
 - **Live evidence (2 real requests to Open-Meteo through the live page):** a search for "Cardiff" returned 5 places; the label text returned no place: the search service works. Not yet pushed: the user said to wait until the map point problem is solved; this fix is the answer to their screenshots, awaiting their go.
 
 ## Standing permission from the user (2026-11-09 16:14 UTC)
-- **User:** "DONT ASK EACH TIME FOR PUSHIN AND LIVE TESTING." From now on I push finished, tested commits to `ZASPARTANS/Quest_lab` and run live tests of the user's own site (smoke test, fresh browser visits, the page's own place search) without asking first. **Limits that stay:** no other repository (the user's earlier "DONT TOUCH ANY OTHER REPO"), no other third party, no paid service, no deletion of the user's files, no printing of secrets; key choices and scope changes are still asked. I still run the tests before every push and report the results. First use: the push of e5f13da at 16:13 UTC.
+- **User:** "DONT ASK EACH TIME FOR PUSHIN AND LIVE TESTING." From now on I push finished, tested commits to `ZASPARTANS/Quest_lab` and run live tests of the user's own site (smoke test, fresh browser visits, the page's own place search) without asking first. **Limits that stay:** no other repository (the user's earlier "DONT TOUCH ANY OTHER REPO"), no other third party, no paid service, no deletion of the user's files, no printing of secrets; key choices and scope changes are still asked. I still run the tests before every push and report the results. First use: the push of 0cc1797 at 16:13 UTC.
 
 ## Housekeeping 2026-11-09 16:27 UTC (70.14 h used, 1.86 h left)
 - Status, Open items and Known issues rewritten for the current state; plan table rows 17, 17.4 and 17.5; README and SUBMISSION counts and run figures; SECURITY S17; ENVIRONMENT and SOURCES checked (no new package, host or source; nothing added).
 - Checks run for this pass: Python 178 passed; Node 121 passed; `npm audit --package-lock-only` 0 vulnerabilities; secret scan (tree, 114 commits, the session log up to now): only the project's own pattern text matched; `git grep "shortcut:"` 3 markers in 2 files; no function over 50 lines.
 
 ## Last pass (2026-11-09 16:35 UTC; 70.26 h used)
-- The housekeeping commit `c98b894` was pushed at 16:28 UTC; its run was green (build, deploy, smoke) and the live smoke test passed at 16:34 UTC. The owner's question about updating only the data was answered with measured step times and recorded as an idea (README "Possible next steps", DECISIONS); no code was changed. SUBMISSION's commit-time item refreshed (115 commits, latest `c98b894 2026-11-09T16:27:57Z`).
+- The housekeeping commit `8d68560` was pushed at 16:28 UTC; its run was green (build, deploy, smoke) and the live smoke test passed at 16:34 UTC. The owner's question about updating only the data was answered with measured step times and recorded as an idea (README "Possible next steps", DECISIONS); no code was changed. SUBMISSION's commit-time item refreshed (115 commits, latest `8d68560 2026-11-09T16:27:57Z`).
 
 ## The owner's rules file added to the repository (2026-11-09 16:43 UTC; 70.40 h used)
 - **User:** "i have added the claude.md copy ... i want you to push it, it contains the rules i created before my first prompt." The file is `docs/CLAUDE.md` (untracked until now; the user wrote "docx" but the file is Markdown).
@@ -872,19 +872,22 @@ Method: the Vite dev server of this computer (`node node_modules/vite/bin/vite.j
 - **User (three requests):** double-check every Markdown file for stale data; make the workflow ignore some folders so it does not redeploy unless the code changed; make sure the map and fonts are in the repository "as we spoke". **Done:** README (Mac and iPhone, run counts, scheduler facts, the not-tested list, scenario counts, next steps, owner tasks), SUBMISSION (status line, owner list, update section), SOURCES and DOMAIN (old 'not yet' lines now point to their later answers), PROGRESS Status and Open items, ERRORS (the E035 sighting), DECISIONS D49, ENVIRONMENT. **Workflow:** `paths-ignore` (D49) with a checker rule and tests (Python: tests/tooling 30 passed in the workflow file). **Fonts and map:** the 1029 font and sprite files ARE tracked in the repository (`frontend/basemap_assets`); the 190 MB map file is NOT, by D45 (the 100 MB file limit of GitHub; it is a release asset of the same repository plus the Actions cache): the user has been asked whether to split it into two files under 100 MB and commit them.
 
 ## D49 checked live (2026-11-09 17:03 UTC; 70.74 h used)
-- A docs-only push (`89ff772`) started no workflow run; the push before it (`de4f0fc`, workflow and scripts changed) did, and was green (build, deploy, smoke; live smoke test passed). So from now on the records can be pushed without a rebuild; the live site stays as built by `de4f0fc`.
+- A docs-only push (`a285022`) started no workflow run; the push before it (`2cbf1ba`, workflow and scripts changed) did, and was green (build, deploy, smoke; live smoke test passed). So from now on the records can be pushed without a rebuild; the live site stays as built by `2cbf1ba`.
 
 ## Completeness check (2026-11-09 17:07 UTC; 70.80 h used)
-- Asked by the user ("no other steps are left right, did we miss anything?"). Checked by running: working tree clean and local `main` = GitHub `main` (`34304cb`); the session folder next to the log holds only `tool-results/` (no `subagents/` directory); no unticked box in `docs/SUBMISSION.md`; 3 `shortcut:` markers (`frontend/src/app.js` 1, `pipeline/process.py` 2); last commit `34304cb` at 2026-11-09T17:03:42Z, 70.80 h after the first prompt, inside the 72 hours; live smoke test passed at 17:02 UTC; secret scan repeated: only the project's own pattern text (the hits are the line of the scan rules in `config/security.toml` and `docs/SUBMISSION.md` and context lines around it), no real secret, the session log scanned up to now.
+- Asked by the user ("no other steps are left right, did we miss anything?"). Checked by running: working tree clean and local `main` = GitHub `main` (`09476bc`); the session folder next to the log holds only `tool-results/` (no `subagents/` directory); no unticked box in `docs/SUBMISSION.md`; 3 `shortcut:` markers (`frontend/src/app.js` 1, `pipeline/process.py` 2); last commit `09476bc` at 2026-11-09T17:03:42Z, 70.80 h after the first prompt, inside the 72 hours; live smoke test passed at 17:02 UTC; secret scan repeated: only the project's own pattern text (the hits are the line of the scan rules in `config/security.toml` and `docs/SUBMISSION.md` and context lines around it), no real secret, the session log scanned up to now.
 - **Not re-run on the final code (stated, not hidden):** the clean-clone run of the README (done on 2026-11-08 on an older commit); `pip-audit` (2026-11-08 21:14 UTC; `requirements.txt` unchanged); the sub-folder test site with the last two changes (the live site was checked instead).
 
 ## Step 17.6: the "My place" button becomes "Recentre" (2026-11-09 17:23 UTC; 71.07 h used)
 - **User:** what is this button for, and which saved place would it use. **Done:** label "Recentre" plus a hint (D50); the saved-places choice on the map is future work (README, D50). **Checked:** Node 121 passed; 42 of 42 scenarios in Chromium, Firefox, WebKit and Edge (the "my place button" scenario now also checks the label and the hint); phone checks the same as before (Pixel 7 23 %, iPhone 15 42 %, overflow 0, 0 small tap targets); `browser_checks.mjs` still exactly 300 lines. Pushed with the standing permission; the live check follows.
 
 ## Step 17.6 live check (2026-11-09 17:29 UTC; 71.17 h used, 0:49:41 left)
-- Pushed 17:23:35 UTC (`c98de3e`); the run was green (build, deploy, smoke) by 17:28 UTC; live smoke test passed. A fresh real Edge visit to the live site: the button reads "Recentre", its hint is the new text, it is enabled with a place chosen; after dragging the map away (centre 84.22, 11.15) a click on it flew back toward the place (centre 80.56, 12.94 when sampled 1.5 s into the flight, place 80.27, 13.08); no console error. The work is finished; the next commit is records only, so no rebuild follows.
+- Pushed 17:23:35 UTC (`86e8bb3`); the run was green (build, deploy, smoke) by 17:28 UTC; live smoke test passed. A fresh real Edge visit to the live site: the button reads "Recentre", its hint is the new text, it is enabled with a place chosen; after dragging the map away (centre 84.22, 11.15) a click on it flew back toward the place (centre 80.56, 12.94 when sampled 1.5 s into the flight, place 80.27, 13.08); no console error. The work is finished; the next commit is records only, so no rebuild follows.
 
 ## Privacy clean-up of the Markdown files (2026-11-09 17:35 UTC)
 - At the owner's request, machine details and local paths were removed from the Markdown files (ENVIRONMENT.md rewritten without them; the session log path is now given as a relative form with its session ID; lines about the owner's computer were removed from README, SUBMISSION, SECURITY, ERRORS and PROGRESS). The two older versions stay in the git history on GitHub. The approved plan files were not edited (they carry the owner's name, no paths). **Committed locally only: the owner said no more pushes, so GitHub still shows the previous text.**
 
 - Addition (2026-11-09 17:35 UTC): the owner clarified "errors related to this project are fine, but no personal path and information". Done: the full name in the approved plan files was replaced by "the owner" (PLAN-001 to PLAN-006) and hardware figures in PLAN-004 and ENVIRONMENT were removed; error records stay (E046 rewritten without any machine details); no personal path, machine name, drive size, address or full name remains in the tracked files (checked by search). Still local, not pushed. The git history on GitHub keeps the older text, and the commits carry the author name and e-mail (decision D16/S06).
+
+## History clean-up (2026-11-09 17:46 UTC)
+- At the owner's request the git history was rewritten once. **What changed:** every commit has a new hash (the 128 commits keep their order, dates and authors; the first commit is still 2026-11-06T18:43:21Z); in the Markdown files of old commits the personal paths, the machine name, the LAN address, the environment-variable names and the mentions of the owner's GitHub login credential were removed; the co-author and session trailer lines of the commit messages were removed (the README now says the project was built using Claude). **What did not change:** no code file (the tree of the new tip differs from the old one in one documentation line), the live site (the push changes documentation only, so the workflow does not rebuild), the release file and its tag. **Checked:** a search of all 128 rewritten commits finds none of those terms (only the owner's name in the plan files, which the owner said is fine) and no trailer lines. The hashes quoted in the documents were updated through an old-to-new map (170 references); the approved plan files were left as they were, so a few hashes there are the old ones. A backup of the old history was kept outside the repository.

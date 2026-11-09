@@ -1,6 +1,6 @@
 # SECURITY
 
-Audit of everything built up to commit `dc2535c` (steps 1-4 and 3b). Written 2026-11-06 ~20:41 UTC at the user's request, before step 5. **Extended since, in dated sections below, through commit `cf82d26` (steps S1-S4, 5 to 9.3d-2); housekeeping reviews ~23:02 UTC on 2026-11-06 and 2026-11-07 14:17 UTC.** A status summary of S01-S14 is at the end of this file. The first sections describe the state at the audit, not today.
+Audit of everything built up to commit `e778827` (steps 1-4 and 3b). Written 2026-11-06 ~20:41 UTC at the user's request, before step 5. **Extended since, in dated sections below, through commit `cd469e3` (steps S1-S4, 5 to 9.3d-2); housekeeping reviews ~23:02 UTC on 2026-11-06 and 2026-11-07 14:17 UTC.** A status summary of S01-S14 is at the end of this file. The first sections describe the state at the audit, not today.
 Severity is the AI's own judgement (Critical / High / Medium / Low / Info). **No Critical or High finding was found, but several areas could not be checked yet because they do not exist** (see "Could not check").
 
 ## What exists today (so you know what the audit could cover)
@@ -113,7 +113,7 @@ Could not check in step 6: how the policy behaves with an online geocoder (not a
 - **New packages:** `pmtiles` (+ `fflate`) and `@protomaps/basemaps`, exact versions, no install scripts, lock file committed, 0 vulnerabilities reported by npm's audit at install.
 - **Not checked:** the behaviour of the public host with large range requests (step 11); a tile file that is damaged or hostile (it is data read by the `pmtiles` library and MapLibre; if it is invalid the map shows no base map and the page keeps working).
 
-## Status summary (housekeeping, 2026-11-07 14:17 UTC; state at commit `cf82d26`)
+## Status summary (housekeeping, 2026-11-07 14:17 UTC; state at commit `cd469e3`)
 What exists: the pipeline, the static export, and the page on two local sites (testing site on :5173, public-like preview on :8080); no hosting, no GitHub repo, no remote. Outside hosts the page may contact (one test keeps `connect-src` equal to the config): `geocoding-api.open-meteo.com` (typed searches) and `api-bdc.io` (the device position, only when "Use my location" is used). Everything else is same-origin: data, base map, fonts, sprites, workers and `blob:` pictures. The older line in "Step 9.3" that says the real BigDataCloud service was not checked is superseded by step 9.3c-0 (real call in Edge).
 
 | ID | Status now | What remains |
@@ -149,7 +149,7 @@ Step 11 notes, labelled as knowledge I have NOT checked in this session: GitHub 
 - **S06 realised:** the repository is public with the author name and e-mail; a scan of all commits for key and token patterns found none before the push; the Windows user name appears 4 times in 3 docs files (kept, shown to the user before the push).
 - **Outward actions, all with the user's go and only on `ZASPARTANS/Quest_lab`:** login (`gh`), push, release with the map file, Pages, workflow runs. **To do at the end:** the user may revoke the token (`gh auth logout` or GitHub settings) and disable the scheduled workflow after the submission.
 
-## Status summary (housekeeping, 2026-11-08 00:47 UTC; state at commit `be39e9f`)
+## Status summary (housekeeping, 2026-11-08 00:47 UTC; state at commit `01166e4`)
 What exists now: the pipeline and the static export, the page live on GitHub Pages (https://zaspartans.github.io/Quest_lab/, public repository `ZASPARTANS/Quest_lab`), a scheduled and push-triggered workflow, two local test sites. Outside hosts the page may contact (a test keeps `connect-src` equal to the config): `geocoding-api.open-meteo.com` (typed searches) and `api-bdc.io` (the device position, only when "Use my location" is used). Everything else is same-origin.
 
 | ID | Status now | What remains |
