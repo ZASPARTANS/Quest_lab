@@ -2,7 +2,7 @@
 
 QUEST Lab application, Project 1: fetch precipitation forecasts from ECMWF Open Data (IFS and AIFS), process them, and deploy a public web app that presents the forecast through an innovative front end. The problem statement is in `docs/PROBLEM.md`.
 
-**Live site: https://zaspartans.github.io/Quest_lab/** (GitHub Pages; repository https://github.com/ZASPARTANS/Quest_lab, public). Built in one 72-hour session with an AI coding assistant; everything it decided, got wrong and checked is recorded in `docs/` (see "Where to look" at the end), and `docs/SUBMISSION.md` is the checklist with the command and result of every check.
+**Live site: https://zaspartans.github.io/Quest_lab/** (GitHub Pages; repository https://github.com/ZASPARTANS/Quest_lab, public). **Built in one 72-hour session using Claude (Anthropic's Claude Code, an AI coding assistant), with the owner deciding the key choices;** everything it decided, got wrong and checked is recorded in `docs/` (see "Where to look" at the end), and `docs/SUBMISSION.md` is the checklist with the command and result of every check.
 
 ## What it is and how to use it
 **What it is:** a rain forecast for the next 10 days at any place, turned into a plan: it picks the 6-hour times when the rain stays under the limit of what you want to do (laundry, a commute, a picnic, cricket, field work, a road trip, or your own limit). It uses two free forecasts from ECMWF, the European weather centre.
