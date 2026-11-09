@@ -5,6 +5,7 @@
 // Only requests to the site's own host are recorded; the two geocoder hosts are never contacted by these visitors. No personal data is involved.
 import { writeFileSync } from 'node:fs';
 import { chromium } from 'playwright';
+import { skipGuide } from './guide_skip.mjs';
 
 const [base, out] = process.argv.slice(2);
 if (!base || !out) throw new Error('usage: node tools/record_visit.mjs <site address> <output file>');
@@ -17,6 +18,7 @@ const kindOf = (path) => (KIND.find(([re]) => re.test(path)) ?? [null, 'page'])[
 
 async function record(browser, name, start, act) {
   const context = await browser.newContext({ viewport: { width: 1100, height: 900 } });
+  await skipGuide(context);
   const page = await context.newPage();
   const seen = [];
   page.on('response', async (r) => {

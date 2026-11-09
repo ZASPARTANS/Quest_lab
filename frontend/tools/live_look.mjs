@@ -5,6 +5,7 @@
 import { mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { chromium } from 'playwright';
+import { skipGuide } from './guide_skip.mjs';
 
 const cfg = JSON.parse(readFileSync(new URL('../../config/frontend.json', import.meta.url), 'utf8')).screenshots;
 const base = process.env[cfg.base_url_env];
@@ -20,7 +21,9 @@ const live = (page) => page.waitForFunction(() => { const m = document.getElemen
 let failed = false;
 
 for (const [name, lat, lon, tz] of PLACES) {
-  const page = await (await browser.newContext({ viewport: { width: 1400, height: 800 } })).newPage();
+  const context = await browser.newContext({ viewport: { width: 1400, height: 800 } });
+  await skipGuide(context);
+  const page = await context.newPage();
   const problems = [];
   page.on('console', (m) => { if (m.type() === 'error') problems.push(m.text().slice(0, 160)); });
   page.on('pageerror', (e) => problems.push(e.message.slice(0, 160)));

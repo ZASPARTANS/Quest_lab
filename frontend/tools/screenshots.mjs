@@ -4,6 +4,7 @@
 import { mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { chromium } from 'playwright';
+import { skipGuide } from './guide_skip.mjs';
 
 const cfg = JSON.parse(readFileSync(new URL('../../config/frontend.json', import.meta.url), 'utf8')).screenshots;
 const base = process.env[cfg.base_url_env];
@@ -23,6 +24,7 @@ const browser = await chromium.launch(channel ? { channel } : {
 let failed = false;
 for (const item of cfg.pages) {
   const context = await browser.newContext({ viewport: cfg.viewport });
+  await skipGuide(context);
   const page = await context.newPage();
   const hosts = new Set();
   const problems = [];

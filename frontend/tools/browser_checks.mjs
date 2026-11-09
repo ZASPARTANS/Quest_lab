@@ -13,6 +13,8 @@ import { mapScenarios } from './map_scenarios.mjs';
 import { provenanceScenarios } from './provenance_scenarios.mjs';
 import { locationScenarios } from './location_scenarios.mjs';
 import { levelCustomScenarios, levelWordScenarios } from './level_scenarios.mjs';
+import { guideScenarios } from './guide_scenarios.mjs';
+import { skipGuide } from './guide_skip.mjs';
 
 const frontend = JSON.parse(readFileSync(new URL('../../config/frontend.json', import.meta.url), 'utf8'));
 const cfg = frontend.browser_checks;
@@ -34,7 +36,9 @@ const MOCK = { results: [
   { name: 'Chennai International Airport', latitude: 12.98833, longitude: 80.16578, timezone: 'Asia/Kolkata', country: 'India', admin1: 'Tamil Nadu' }] };
 
 async function open(browser, options = {}, allowedHosts = [siteHost]) {
-  const context = await browser.newContext({ viewport: cfg.viewport, ...options });
+  const { showGuide, ...contextOptions } = options; // only the guide scenarios look at a first visit; every other scenario is a returning visitor who has hidden the guide
+  const context = await browser.newContext({ viewport: cfg.viewport, ...contextOptions });
+  if (!showGuide) await skipGuide(context);
   const page = await context.newPage();
   const log = { problems: [], tiles: 0, geocoder: [], dialogs: 0 };
   page.on('request', (r) => {
@@ -268,7 +272,7 @@ const scenarios = {
 };
 
 const helpers = { open, mapState, assertLanded, checkPlanShown, shot, base, frontend, ADDRESS, siteHost, reverseHost, timeout, sitePath };
-Object.assign(scenarios, basemapScenarios(helpers), liveScenarios(helpers), mapScenarios(helpers), provenanceScenarios(helpers), locationScenarios(helpers), levelWordScenarios(helpers), levelCustomScenarios(helpers));
+Object.assign(scenarios, basemapScenarios(helpers), liveScenarios(helpers), mapScenarios(helpers), provenanceScenarios(helpers), locationScenarios(helpers), levelWordScenarios(helpers), levelCustomScenarios(helpers), guideScenarios(helpers));
 
 const engines = { chromium, firefox, webkit };
 const launchOptions = engineName === 'chromium' ? (channel ? { channel } : { args: ['--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] }) : {};

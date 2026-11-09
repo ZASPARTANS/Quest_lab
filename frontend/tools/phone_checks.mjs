@@ -7,6 +7,7 @@
 import { mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { chromium, devices, webkit } from 'playwright';
+import { skipGuide } from './guide_skip.mjs';
 
 const frontend = JSON.parse(readFileSync(new URL('../../config/frontend.json', import.meta.url), 'utf8'));
 const cfg = frontend.browser_checks;
@@ -55,6 +56,7 @@ const coverage = (page) => page.evaluate(() => {
 async function check(profile) {
   const browser = await profile.engine.launch(profile.launch);
   const context = await browser.newContext({ ...profile.device, permissions: ['geolocation'], geolocation: { latitude: 11.46, longitude: 78.19 }, timezoneId: 'Asia/Kolkata' });
+  await skipGuide(context);
   await context.route(`https://${reverseHost}/**`, (route) => route.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' },
     body: JSON.stringify({ locality: 'Rasipuram', principalSubdivision: 'Tamil Nadu', countryName: 'India' }) }));
   const page = await context.newPage();
@@ -85,6 +87,7 @@ async function check(profile) {
   }
   // the device position names the place: a NEW visitor (no permission yet) opens the page, allows the position and taps the button
   const fresh = await browser.newContext({ ...profile.device, geolocation: { latitude: 11.46, longitude: 78.19 }, timezoneId: 'Asia/Kolkata' });
+  await skipGuide(fresh);
   await fresh.route(`https://${reverseHost}/**`, (route) => route.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' },
     body: JSON.stringify({ locality: 'Rasipuram', principalSubdivision: 'Tamil Nadu', countryName: 'India' }) }));
   const second = await fresh.newPage();

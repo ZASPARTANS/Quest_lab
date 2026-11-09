@@ -4,6 +4,16 @@ QUEST Lab application, Project 1: fetch precipitation forecasts from ECMWF Open 
 
 **Live site: https://zaspartans.github.io/Quest_lab/** (GitHub Pages; repository https://github.com/ZASPARTANS/Quest_lab, public). Built in one 72-hour session with an AI coding assistant; everything it decided, got wrong and checked is recorded in `docs/` (see "Where to look" at the end), and `docs/SUBMISSION.md` is the checklist with the command and result of every check.
 
+## What it is and how to use it
+**What it is:** a rain forecast for the next 10 days at any place, turned into a plan: it picks the 6-hour times when the rain stays under the limit of what you want to do (laundry, a commute, a picnic, cricket, field work, a road trip, or your own limit). It uses two free forecasts from ECMWF, the European weather centre.
+1. **Where:** press "Use my location", search for a town, or click the map.
+2. **What:** choose what you want to do; each activity has its own rain limit ("Custom" lets you set it).
+3. **Best times:** the page lists the blocks that stay under the limit; "Day by day" shows every block (tap one to see it on the map); the time bar on the map moves the rain map through the days.
+
+**Which model to pick on the map:** IFS is ECMWF's main forecast (calculated from the physics of the atmosphere); AIFS is its machine-learning forecast (trained on past weather). "Both models (agreement)" shows where they agree (bright blue: both say rain; dim blue: only one does) and is the one to start with. The plan on the left always uses both and takes the wetter of the two. Where the page says "models differ", treat the forecast as less certain.
+
+The same text opens as a guide on a first visit (a "What this page does" window with "Close" and "Don't show again"; the "How to use" button at the top opens it again). Added on 2026-11-09 after feedback that visitors did not know what the page was for (PLAN-017, D48).
+
 ## What works, and what does not (short version)
 **Works (each part was run and checked, see "How it was verified"):**
 - A scheduled and push-triggered pipeline (Docker, plain Python) that fetches the newest complete ECMWF IFS and AIFS run, converts it to 6-hour rain amounts, checks it against the raw GRIB files, exports static data and deploys it to GitHub Pages.
@@ -68,10 +78,10 @@ The site as GitHub Pages serves it (from a sub-folder, with no security headers:
 ## Tests and checks (the official way is Docker)
 ```
 docker compose -f docker/compose.yaml run --rm tests            # Python: 178 passed; no network, project read-only
-docker compose -f docker/compose.yaml run --rm frontend-tests   # Node: 113 passed
+docker compose -f docker/compose.yaml run --rm frontend-tests   # Node: 120 passed
 docker compose -f docker/compose.yaml run --rm process python -m scripts.plan_reference   # independent Python plan from the raw GRIB
 docker compose -f docker/compose.yaml run --rm frontend-check   # the browser code on the real tiles equals it: 8 places x 8 activities
-BROWSER_NAME=chromium docker compose -f docker/compose.yaml run --rm browser-checks   # 33 scenarios in a real engine (chromium | firefox | webkit); SCREENSHOT_BASE_URL points it at another site
+BROWSER_NAME=chromium docker compose -f docker/compose.yaml run --rm browser-checks   # 38 scenarios in a real engine (chromium | firefox | webkit); SCREENSHOT_BASE_URL points it at another site
 docker compose -f docker/compose.yaml run --rm browser-checks node tools/phone_checks.mjs   # Pixel 7 and iPhone 15 emulation: overflow, 44 px tap targets, map cover, location flow
 python scripts/smoke_site.py https://zaspartans.github.io/Quest_lab/   # the live site: page, forecast age, status, tile, range request
 python scripts/check_workflow.py                                  # the workflow's safety rules
@@ -84,8 +94,8 @@ Measurements with the computer's own GPU (Edge): `frontend/tools/load_timing.mjs
 |---|---|---|
 | Rain amounts | `validate_points` and `validate_site` compare the processed and exported data with the raw GRIB files at 8 places across time zones; units are handled per model (AIFS is in mm, IFS in metres) | all match; 6-hour amounts carry up to about 0.24 mm of GRIB packing rounding (D14) |
 | Plan logic | the page's own code on the real tiles against an independent Python version written from the same rules (`plan_reference`, `frontend-check`), 8 places x 8 activities | all match |
-| Python and Node code | Docker tests (178 and 113) incl. a repo secret scan, config consistency, workflow rules, deliberate-breakage tests ("negative controls") for the checks added late | pass |
-| Page in browsers | 33 scenarios (address, search, saved places, hostile input, base map, live layer, map flights, colour key, honesty strip, credits, rain levels, location) in Edge (real GPU), Chromium, Firefox and WebKit | 33 of 33 on the local test site; the 28 scenarios before the level scenarios also passed on the sub-folder test site; 26 of 26 on the live site on 2026-11-07 |
+| Python and Node code | Docker tests (178 and 120) incl. a repo secret scan, config consistency, workflow rules, deliberate-breakage tests ("negative controls") for the checks added late | pass |
+| Page in browsers | 38 scenarios (address, search, saved places, hostile input, base map, live layer, map flights, colour key, honesty strip, credits, rain levels, location, the first-visit guide) in Edge (real GPU), Chromium, Firefox and WebKit | 38 of 38 on the local test site; the 28 scenarios before the level scenarios also passed on the sub-folder test site; 26 of 26 on the live site on 2026-11-07 |
 | Phones | Pixel 7 and iPhone 15 emulation (no sideways scroll, 44 px tap targets, map visible on the first screen, location flow); the user's own Android phones | emulation passes; Firefox, Chrome and Samsung Internet on Android "work and look good" (the user's words) |
 | Live site | `smoke_site.py` after every deploy; a fresh request for page, manifest, status and headers; the public map file against the local checked file by size and four sampled ranges | pass (`docs/SUBMISSION.md`) |
 | Concurrency | replay of 1 to 100 visitors and 5 to 20 real browsers on this computer; 1 to 3 visitors on the live site (about 21 MB) | every answer correct; local numbers describe this machine, not GitHub |
@@ -101,14 +111,14 @@ There is **no GPU on the server side** (static hosting serves files only); the m
 |---|---|---|
 | Android phones: Firefox, Chrome, Samsung Internet | the user's own phones, the live site | work and look good (the user's words, 2026-11-08; no measurements) |
 | Firefox | the user's own PC | the base map, the rain, the credit line and the device place name drew (user's screenshots, 2026-11-07) |
-| Microsoft Edge | the developer's Windows PC, real GPU | 33 of 33 scenarios (local test site); 26 of 26 earlier on the live site; 20 real Edge browsers at once finished correctly on the local site (slowly) |
-| Chromium 158, WebKit 27 (the engine of Safari, not Safari), Firefox 159 | Docker, software WebGL | 33 of 33 on the local test site; Firefox in Docker has no WebGL2, so its map scenarios return early there |
+| Microsoft Edge | the developer's Windows PC, real GPU | 38 of 38 scenarios (local test site); 26 of 26 earlier on the live site; 20 real Edge browsers at once finished correctly on the local site (slowly) |
+| Chromium 158, WebKit 27 (the engine of Safari, not Safari), Firefox 159 | Docker, software WebGL | 38 of 38 on the local test site; Firefox in Docker has no WebGL2, so its map scenarios return early there |
 | Safari on an iPhone | the user's own iPhone, the live site | **works** (the user's words, 2026-11-08: "iphone works"; the model and iOS version were not given; no measurements) |
 | Safari on a Mac | | **not tried yet by a person** (only the WebKit emulation above); the user plans to check |
 
 ## Known limits and shortcuts (full list: `docs/PROGRESS.md` and the shortcut register in `docs/DECISIONS.md`)
 **Every `shortcut:` marker in the code (3, in 2 files):** (1) `pipeline/process.py`: IFS has 3-hourly steps to 144 h but only 6-hourly blocks are used (D14); (2) `pipeline/process.py`: tiny negative differences from GRIB packing are set to zero, at most about 0.06 % of the rain mass (D14); (3) `frontend/src/app.js`: a place found by the device or by a map click has no known time zone, so the device's zone is used and labelled (D24, D30). A fourth marker, in `config/headers.conf`, was stale and was removed on 2026-11-08 (the converter it announced exists).
-**Code size rule:** no function is longer than 50 lines and no file longer than 300; this is enforced by tests (`tests/frontend/function_sizes.test.mjs` with a real parser, `tests/hygiene/test_function_sizes.py`). Six JavaScript functions were over the limit until 2026-11-08 and were split in PLAN-016 (D47); `tests/pipeline/test_basemap.py` is exactly 300 lines and `frontend/src/app.js` 297.
+**Code size rule:** no function is longer than 50 lines and no file longer than 300; this is enforced by tests (`tests/frontend/function_sizes.test.mjs` with a real parser, `tests/hygiene/test_function_sizes.py`). Six JavaScript functions were over the limit until 2026-11-08 and were split in PLAN-016 (D47); `tests/pipeline/test_basemap.py` is exactly 300 lines and `frontend/src/app.js` 299.
 **Data and map:** IFS stops at 240 h although it has files to 360 h (D12, E007); a lone one-cell peak looks lighter on the smoothed pictures (D34); the rain levels use our own cut-offs (D41); the stored base map ends at zoom 7 and the map may be zoomed one level further (maximum 8), after that only enlarged shapes would show (D38, D46).
 **Hosting:** GitHub Pages sends no security headers except HSTS, so `nosniff`, `Permissions-Policy`, `Cross-Origin-Opener-Policy` and `frame-ancestors` are lost and the rest of the policy is in `<meta>` tags (D42); Pages caches for 10 minutes; GitHub's scheduler ran the 6-hourly job only twice in the first 19 hours of 2026-11-08 (at 09:10 and 18:53 UTC instead of 02:20, 08:20 and 14:20), and I did not look up why; a first visit loads 2.7 to 4.7 MB.
 **Not tested:** many simultaneous visitors on GitHub (only 1 to 3 were sent, about 21 MB in total, with no 403, 429 or 5xx; D43); a visitor on a Mac with Safari (the iPhone check was done by the user, without measurements); a Linux desktop. **Estimate, not a test:** at about 3.7 MB per first visit the soft Pages limit of 100 GB per month would allow roughly 27,000 first visits a month (repeat visits cost less), fewer if GitHub throttles earlier.

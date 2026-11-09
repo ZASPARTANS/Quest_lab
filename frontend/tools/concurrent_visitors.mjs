@@ -5,6 +5,7 @@
 //   node tools/concurrent_visitors.mjs https://zaspartans.github.io/Quest_lab 3 --approved "user go 2026-11-07 HH:MM"
 // SAFETY: a site that is not on this computer is refused unless --approved "<who, when>" is given, and then at most 3 visitors are allowed (about 12 MB).
 import { chromium } from 'playwright';
+import { skipGuide } from './guide_skip.mjs';
 
 const args = process.argv.slice(2);
 const [base, countText] = args;
@@ -23,6 +24,7 @@ const channel = process.env.SCREENSHOT_BROWSER_CHANNEL ?? 'msedge';
 
 async function visit(browser, number) {
   const context = await browser.newContext({ viewport: { width: 1100, height: 900 } });
+  await skipGuide(context);
   const page = await context.newPage();
   const errors = [];
   let bytes = 0;

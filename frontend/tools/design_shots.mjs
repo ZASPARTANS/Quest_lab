@@ -5,6 +5,7 @@
 import { mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { chromium } from 'playwright';
+import { skipGuide } from './guide_skip.mjs';
 
 const cfg = JSON.parse(readFileSync(new URL('../../config/frontend.json', import.meta.url), 'utf8')).design_shots;
 const base = process.env[cfg.base_url_env];
@@ -16,6 +17,7 @@ const browser = await chromium.launch(channel ? { channel } : { args: ['--no-san
 let failed = false;
 for (const width of cfg.widths) {
   const context = await browser.newContext({ viewport: { width, height: cfg.height } });
+  await skipGuide(context);
   const page = await context.newPage();
   const problems = [];
   page.on('console', (m) => { if (m.type() === 'error') problems.push(m.text().slice(0, 160)); });

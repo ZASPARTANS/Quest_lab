@@ -19,6 +19,7 @@ import { findPosition, onePerTime } from './locate.js';
 import { loadSeries } from './tiles.js';
 import { buildView } from './view.js';
 import { dataPath } from './sitepath.js';
+import { startGuide } from './guide.js';
 
 const cfg = { ...config, data_url_path: dataPath(import.meta.env.BASE_URL, config.data_url_path) }; // the site may live in a sub-folder (GitHub Pages project site)
 
@@ -273,6 +274,7 @@ function collect() {
 async function main() {
   pageMap.preloadMap(); // the map code downloads while the manifest loads
   collect();
+  startGuide(document, storage, cfg.guide.storage_key); // what the page is for, shown until the visitor says "Don't show again" (D48)
   loadSettings();
   state.saved = loadSaved(storage, cfg.saved_places.storage_key, cfg.saved_places.max);
   ui.customAccept.value = state.customLevel;

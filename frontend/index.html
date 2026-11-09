@@ -13,8 +13,11 @@
   <div class="layout">
     <div class="side">
       <header class="top">
-        <h1>Rain plan</h1>
-        <p class="lead">Choose a place and what you want to do. You get the best times in the next days, and how sure two forecast models are.</p>
+        <div class="title-row">
+          <h1>Rain plan</h1>
+          <button id="guide-open" type="button">How to use</button>
+        </div>
+        <p class="lead">When will it rain where you are in the next 10 days, and which times suit your plans? Choose a place and what you want to do.</p>
         <div class="provenance">
           <p id="freshness" role="status"></p>
           <p id="attribution"></p>
@@ -99,6 +102,29 @@
       <div id="map-tools" class="map-tools" hidden></div>
     </section>
   </div>
+  <dialog id="guide" class="guide" aria-labelledby="guide-h">
+    <h2 id="guide-h" tabindex="-1" autofocus>What this page does</h2>
+    <p>Rain plan shows when rain is expected at a place over the next 10 days, and picks the times when the rain stays under the limit of what you want to do.</p>
+    <h3>How to use it</h3>
+    <ol>
+      <li><strong>Where.</strong> Press "Use my location", search for a town, or click the map.</li>
+      <li><strong>What.</strong> Choose what you want to do, for example "Drying laundry" or "Commute". Each activity has its own rain limit; with "Custom" you set the limit yourself.</li>
+      <li><strong>Best times.</strong> The page lists the 6-hour blocks that stay under that limit. "Day by day" shows every block; tap one to see it on the map. The time bar on the map moves the rain map through the days.</li>
+    </ol>
+    <h3>The two forecasts, and which to pick</h3>
+    <p>The data is free and comes from ECMWF, the European weather centre. It has two forecasts, and a new run of each arrives about every 12 hours.</p>
+    <ul>
+      <li><strong>IFS</strong> is ECMWF's main forecast, calculated from the physics of the atmosphere.</li>
+      <li><strong>AIFS</strong> is ECMWF's machine-learning forecast, trained on past weather.</li>
+      <li><strong>Both models (agreement)</strong> shows where they agree: bright blue means both say rain, dim blue means only one does.</li>
+    </ul>
+    <p>The plan on the left always uses both and takes the wetter of the two, so it leans careful. On the map, start with "Both models (agreement)"; choose IFS or AIFS to see one model's own rain. Neither is right every time: where the page says "models differ", treat the forecast as less certain.</p>
+    <p class="note">"How to use" at the top opens this again.</p>
+    <div class="guide-buttons">
+      <button id="guide-close" type="button" class="primary">Close</button>
+      <button id="guide-hide" type="button">Don't show again</button>
+    </div>
+  </dialog>
   <noscript><p class="status">This page needs JavaScript to show the forecast.</p></noscript>
   <script type="module" src="/src/app.js"></script>
 </body>
