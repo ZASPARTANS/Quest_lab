@@ -29,9 +29,9 @@ Status: first finished 2026-11-08 21:15 UTC (step 12.4 and 12.5, 50.9 h after th
 - [x] **The base-map file on the public host equals the checked original.** 2026-11-08 18:49 UTC: `HEAD` of `.../data/basemap/world.pmtiles` = `Content-Length: 189610941`, `Accept-Ranges: bytes` (equals the size in `config/basemap.toml`); four sampled 64 KB ranges (start, one third, two thirds, end) answered `206` and are byte for byte equal to the local file, whose sha256 equals the configured sha256 (`1857567474…ded888be2`). **This is a size and sampled-range check, not a hash of all 190 MB from the public host**; the workflow itself checks size and sha256 of the full file before every deploy (`fetch-release`, also after an Actions cache restore). The 13 MB of fonts and sprites are in the repository and checked against `config/basemap_assets.lock.json` by a test and at every build.
 
 ## Left for the owner (decisions and actions that are not mine)
-2. **Decide whether the scheduled workflow stays on** (it runs every 6 hours until it is disabled: repository Actions tab, the workflow, Disable workflow). GitHub's scheduler is late or skips slots: 4 scheduled runs so far (2026-11-08 09:10, 18:53, 23:48; 2026-11-09 09:56 UTC).
-3. **Stop the dev server** I started on 2026-11-08 19:54 UTC and could not stop (E042): end the `node.exe` that started then (Task Manager); it listens on `localhost:5173` only.
-4. **Safari on an iPhone and on a Mac** were checked by the user, who reported that both work (2026-11-08 and 2026-11-09; no versions or measurements). `python:3.11-slim` has a newer digest than the pin (S08).
+1. **Decide whether the scheduled workflow stays on** (it runs every 6 hours until it is disabled: repository Actions tab, the workflow, Disable workflow). GitHub's scheduler is late or skips slots: 4 scheduled runs so far (2026-11-08 09:10, 18:53, 23:48; 2026-11-09 09:56 UTC).
+2. **Stop the dev server** I started on 2026-11-08 19:54 UTC and could not stop (E042): end the `node.exe` that started then (Task Manager); it listens on `localhost:5173` only.
+3. **Safari on an iPhone and on a Mac** were checked by the user, who reported that both work (2026-11-08 and 2026-11-09; no versions or measurements). `python:3.11-slim` has a newer digest than the pin (S08).
 
 
 ## Update 2026-11-09 16:27 UTC (after PLAN-017)
