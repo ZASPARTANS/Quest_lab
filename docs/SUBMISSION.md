@@ -31,8 +31,7 @@ Status: first finished 2026-11-08 21:15 UTC (step 12.4 and 12.5, 50.9 h after th
 ## Left for the owner (decisions and actions that are not mine)
 2. **Decide whether the scheduled workflow stays on** (it runs every 6 hours until it is disabled: repository Actions tab, the workflow, Disable workflow). GitHub's scheduler is late or skips slots: 4 scheduled runs so far (2026-11-08 09:10, 18:53, 23:48; 2026-11-09 09:56 UTC).
 3. **Stop the dev server** I started on 2026-11-08 19:54 UTC and could not stop (E042): end the `node.exe` that started then (Task Manager); it listens on `localhost:5173` only.
-4. **The C: drive is full** (0 bytes free at 2026-11-09 16:55 UTC, E046; Docker Desktop's disk file is about 34 GB there; compaction needs an administrator terminal, steps in `docs/ENVIRONMENT.md`); not a project problem, but it can break Docker builds.
-5. **Safari on an iPhone and on a Mac** were checked by the user, who reported that both work (2026-11-08 and 2026-11-09; no versions or measurements). `python:3.11-slim` has a newer digest than the pin (S08).
+4. **Safari on an iPhone and on a Mac** were checked by the user, who reported that both work (2026-11-08 and 2026-11-09; no versions or measurements). `python:3.11-slim` has a newer digest than the pin (S08).
 
 
 ## Update 2026-11-09 16:27 UTC (after PLAN-017)
