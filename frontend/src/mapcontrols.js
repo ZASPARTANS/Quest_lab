@@ -55,7 +55,7 @@ function swatch(colour) {
 export function createControls({ root, cfg, manifest, options, selectedModel, handlers }) {
   const view = segmented('map-mode', 'Map view', MODES, 'auto', handlers.onMode);
   const model = segmented('map-model', 'Model shown on the map', options, selectedModel, handlers.onModel);
-  const myPlace = el('button', { class: 'my-place', text: 'My place', attrs: { type: 'button', 'aria-label': 'Fly back to the chosen place' } });
+  const myPlace = el('button', { class: 'my-place', text: 'Recentre', attrs: { type: 'button', title: 'Fly the map back to the place you chose. Your saved places are in the list on the left.' } }); // returns to the place chosen now, not to a saved one (D50)
   myPlace.disabled = true;
   myPlace.addEventListener('click', () => handlers.onMyPlace());
   const note = el('p', { class: 'map-note', attrs: { role: 'status' } });

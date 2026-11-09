@@ -152,8 +152,7 @@ const scenarios = {
     if ((await mapState(page)) !== 'ready') return log; // no WebGL here (Firefox and WebKit in Docker): the message path is tested elsewhere
     await assertLanded(page, 13.08, 80.27, frontend.map.fly.zoom_by_source.address);
     const box = await page.locator('#map').boundingBox();
-    const cx = box.x + box.width / 2;
-    const cy = box.y + box.height / 2;
+    const [cx, cy] = [box.x + box.width / 2, box.y + box.height / 2];
     await page.mouse.move(cx, cy);
     await page.mouse.down();
     await page.mouse.move(cx - 300, cy - 150, { steps: 8 });
@@ -161,6 +160,7 @@ const scenarios = {
     await page.waitForTimeout(600);
     const moved = (await page.evaluate(() => document.getElementById('map').dataset.center)).split(',').map(Number);
     assert.ok(Math.abs(moved[0] - 80.27) > 0.05, 'dragging moved the map away from the place');
+    assert.deepEqual([await page.locator('.my-place').innerText(), /saved places/.test(await page.locator('.my-place').getAttribute('title'))], ['Recentre', true], 'the button says what it does and where saved places are (D50)');
     await page.click('.my-place');
     await assertLanded(page, 13.08, 80.27, frontend.map.fly.zoom_by_source.address);
     await shot(page, 'my-place');
